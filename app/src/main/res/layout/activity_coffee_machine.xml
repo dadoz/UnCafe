@@ -1,0 +1,20 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.application.material.takeacoffee.app.CoffeeMachineActivity"
+        android:orientation="vertical">
+
+    <include layout="@layout/action_bar"/>
+    <!-- FRAGMENT CONTENT -->
+    <LinearLayout
+            tools:context="uk.co.chrisjenx.calligraphy.sample.PlaceholderFragment"
+            tools:ignore="MissingPrefix"
+            android:id="@+id/coffeeAppFragmentContainerId"
+            android:background="@color/light_grey"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
+</LinearLayout>

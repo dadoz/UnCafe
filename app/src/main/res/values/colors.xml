@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="coffee_yellow">#f7c781</color>
+    <color name="light_grey">#eee</color>
+    <color name="middle_grey">#d5d5d5</color>
+    <color name="middle_grey_lighter">#dbdbdb</color>
+    <color name="dark_grey">#aaa</color>
+    <color name="stone_grey">#ababab</color>
+    <color name="coffee_dark">#877e6f</color>
+    <color name="coffee_light">#d1c6b3</color>
+    <color name="white">#fff</color>
+    <color name="light_black">#414141</color>
+    <color name="dark_black">#222</color>
+    <color name="light_red">#d45041</color>
+    <color name="light_green">#15E49F</color>
+    <color name="blue_cobalt">#2B60DE</color>
+    <color name="light_yellow">#FFC946</color>
+    <color name="light_yellow_lemon">#f3f564</color>
+    <color name="light_violet">#9657b6</color>
+    <color name="light_green_soft">#8ae2c4</color>
+    <color name="light_yellow_lemon_soft">#f4f5aa</color>
+    <color name="light_violet_soft">#aa63ce</color>
+</resources>
