@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.models;
 
 public class CoffeeMachine {
+    public static String COFFEE_MACHINE_ID_KEY = "COFFEE_MACHINE_ID";
     private final String objectId;
     private String iconPath;
 	private String name;

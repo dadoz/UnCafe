@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageView
+                android:layout_width="@dimen/huge_icon_size"
+                android:layout_height="@dimen/huge_icon_size"
+                android:src="@drawable/edit_icon_2"/>
+    <com.neopixl.pixlui.components.textview.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_medium_20"
+                android:text="Status : good"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="AmaticSC-Regular.ttf"/>
+
+</LinearLayout>

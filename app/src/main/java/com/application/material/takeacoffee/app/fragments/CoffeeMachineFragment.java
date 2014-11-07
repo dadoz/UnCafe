@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.*;
@@ -19,7 +18,6 @@ import com.application.material.takeacoffee.app.adapters.CoffeeMachineGridAdapte
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
 
 import java.util.ArrayList;
 import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
@@ -34,14 +32,21 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     private static FragmentActivity mainActivityRef;
     private View coffeeMachineView;
 
-    @InjectView(R.id.settingsLayoutId) LinearLayout settingsLayout;
-    @InjectView(R.id.emptyCoffeeMachineLayoutId) View emptyCoffeeMachineView;
+//    @InjectView(R.id.settingsLayoutId) LinearLayout settingsLayout;
+//    @InjectView(R.id.emptyCoffeeMachineLayoutId) View emptyCoffeeMachineView;
     @InjectView(R.id.coffeeMachineGridLayoutId) GridView coffeeMachineGridLayout;
-//    @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        if (!(activity instanceof OnLoadViewHandlerInterface)) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnLoadViewHandlerInterface");
+        }
+        if (!(activity instanceof OnChangeFragmentWrapperInterface)) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnLoadViewHandlerInterface");
+        }
         mainActivityRef =  (CoffeeMachineActivity) activity;
     }
 
@@ -53,12 +58,16 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         return coffeeMachineView;
     }
 
-    private void initOnLoadView() {
+    public void initOnLoadView() {
         getLoaderManager().initLoader(COFFEE_MACHINE_REQUEST.ordinal(), null, this).forceLoad();
-//        onLoadLayout.setVisibility(View.VISIBLE);
+        //initOnLoadView
+        ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
     }
 
     public void initView(ArrayList<CoffeeMachine> coffeeMachineList) {
+        //initOnLoadView
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+
         if(coffeeMachineList == null) {
             Log.e(TAG, "empty data - show empty list");
             return;
@@ -70,8 +79,13 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        CoffeeMachine coffeeMachine = (CoffeeMachine) adapterView.getAdapter().getItem(position);
+        Bundle bundle = new Bundle();
+        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachine.getId());
 
+        ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                .changeFragment(new DashboardReviewFragment(), null, null);
     }
 
 
@@ -105,8 +119,5 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     public void onLoaderReset(Loader loader) {
 
     }
-
-
-
 
 }

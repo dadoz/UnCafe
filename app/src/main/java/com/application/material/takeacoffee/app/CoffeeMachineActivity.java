@@ -1,6 +1,6 @@
 package com.application.material.takeacoffee.app;
 
-import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,11 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
+import com.application.material.takeacoffee.app.fragments.OnChangeFragmentWrapperInterface;
+import com.application.material.takeacoffee.app.fragments.OnLoadViewHandlerInterface;
 
 
-public class CoffeeMachineActivity extends ActionBarActivity {
+public class CoffeeMachineActivity extends ActionBarActivity implements
+        OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface {
     private static final String TAG = "CoffeeMachineActivity";
+    @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +91,25 @@ public class CoffeeMachineActivity extends ActionBarActivity {
 //        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
 //    }
 
-    public interface setLoadViewInterface {
-        public void initOnLoadView();
+    @Override
+    public void initOnLoadView() {
+        onLoadLayout.setVisibility(View.VISIBLE);
+    }
+    public void hideOnLoadView() {
+        onLoadLayout.setVisibility(View.GONE);
     }
 
+    @Override
+    public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
+        if(fragment == null) {
+            Log.e(TAG, "cannot change fragment!");
+            return;
+        }
+
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.coffeeAppFragmentContainerId, fragment)
+                .addToBackStack(tag)
+                .commit();
+    }
 }
