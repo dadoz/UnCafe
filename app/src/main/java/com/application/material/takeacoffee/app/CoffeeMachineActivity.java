@@ -5,13 +5,15 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class CoffeeMachineActivity extends ActionBarActivity {
@@ -20,13 +22,17 @@ public class CoffeeMachineActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CalligraphyConfig.initDefault("fonts/AmaticSC-Regular.ttf", R.attr.fontPath);
+//        CalligraphyConfig.initDefault("fonts/AmaticSC-Regular.ttf", R.attr.fontPath);
         setContentView(R.layout.activity_coffee_machine);
         ButterKnife.inject(this);
 
         //ACTION BAR
+        SpannableString s = new SpannableString("Take a coffee!");
+        s.setSpan(new TypefaceSpan("fonts/AmaticSC-Regular.ttf"), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
+            toolbar.setTitle(s);
             setSupportActionBar(toolbar);
 //            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         }
@@ -75,8 +81,13 @@ public class CoffeeMachineActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+//    }
+
+    public interface setLoadViewInterface {
+        public void initOnLoadView();
     }
+
 }

@@ -1,13 +1,13 @@
 package com.application.material.takeacoffee.app.models;
 
 public class CoffeeMachine {
-    private final String id;
+    private final String objectId;
     private String iconPath;
 	private String name;
 	private String address;
 
-	public CoffeeMachine(String id, final String name, String address , String iconPath) {
-        this.id = id;
+	public CoffeeMachine(String objectId, final String name, String address , String iconPath) {
+        this.objectId = objectId;
         this.iconPath = iconPath;
 		this.name = name;
 		this.address = address;
@@ -26,7 +26,7 @@ public class CoffeeMachine {
 	}
 
     public String getId(){
-        return this.id;
+        return this.objectId;
     }
 
 }

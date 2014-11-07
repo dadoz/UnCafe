@@ -9,4 +9,10 @@
     </style>
 
     <style name="AppTheme.Widget"/>
+
+    <!--<style name="pixlUICustomTextView" parent="android:style/Widget.TextView">-->
+        <!--<item name="pixlui:copyandpaste">false</item>-->
+        <!--<item name="pixlui:clearclipboardcontent">true</item>-->
+        <!--<item name="pixlui:typeface">AmaticSC-Regular.ttf</item>-->
+    <!--</style>-->
 </resources>

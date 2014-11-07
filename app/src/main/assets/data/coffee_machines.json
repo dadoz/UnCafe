@@ -1,0 +1,53 @@
+{
+    "results": [
+        {
+            "address": "Main Street - London",
+            "icon_path": "http://files.parsetfss.com/96d16904-46c1-4dfa-8bf2-fd6f238b8611/tfss-21c4290d-6d65-457a-899f-1ff85be2fb33-coffeeIcon.png",
+            "name": "New Kinder",
+            "createdAt": "2014-09-07T14:04:34.556Z",
+            "updatedAt": "2014-09-09T15:05:41.495Z",
+            "objectId": "PZrB82ZWVl"
+        },
+        {
+            "address": "Even village - Mexico",
+            "icon_path": "http://files.parsetfss.com/96d16904-46c1-4dfa-8bf2-fd6f238b8611/tfss-63cc761f-1b15-4d3a-b1ac-aa6091160eb3-coffeeIcon.png",
+            "name": "Hey Machine",
+            "createdAt": "2014-09-07T14:05:36.833Z",
+            "updatedAt": "2014-09-09T15:08:12.561Z",
+            "objectId": "On6SDHbcXN"
+        },
+        {
+            "address": "Hotel Placa - Berlin",
+            "icon_path": "http://files.parsetfss.com/96d16904-46c1-4dfa-8bf2-fd6f238b8611/tfss-55a204e2-0bec-4f86-acc6-77d45670a467-coffeeIcon3.png",
+            "name": "New Palace",
+            "createdAt": "2014-09-07T14:06:34.583Z",
+            "updatedAt": "2014-09-09T15:08:49.516Z",
+            "objectId": "VFoArqNVKf"
+        },
+        {
+            "address": "Boulevard Rouge - Paris",
+            "icon_path": "http://files.parsetfss.com/96d16904-46c1-4dfa-8bf2-fd6f238b8611/tfss-78c41a9a-8946-4c40-ba1c-eb2fdc9d78b6-coffeeIcon4.png",
+            "name": "Black Cat",
+            "createdAt": "2014-09-07T14:07:17.450Z",
+            "updatedAt": "2014-09-09T15:12:06.162Z",
+            "objectId": "kFFMaPaytU"
+        },
+        {
+            "address": "Main Street - London",
+            "icon_path": "http://files.parsetfss.com/96d16904-46c1-4dfa-8bf2-fd6f238b8611/tfss-21c4290d-6d65-457a-899f-1ff85be2fb33-coffeeIcon.png",
+            "name": "New Kinder2",
+            "createdAt": "2014-09-07T14:04:34.556Z",
+            "updatedAt": "2014-09-09T15:05:41.495Z",
+            "objectId": "PZrB82ZWVl"
+        },
+        {
+            "address": "Even village - Mexico",
+            "icon_path": "http://files.parsetfss.com/96d16904-46c1-4dfa-8bf2-fd6f238b8611/tfss-63cc761f-1b15-4d3a-b1ac-aa6091160eb3-coffeeIcon.png",
+            "name": "Hey Machine2",
+            "createdAt": "2014-09-07T14:05:36.833Z",
+            "updatedAt": "2014-09-09T15:08:12.561Z",
+            "objectId": "On6SDHbcXN"
+        }
+
+    ]
+}

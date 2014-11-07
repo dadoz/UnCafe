@@ -2,6 +2,7 @@
 
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
             android:id="@+id/coffeeMachineFragmentLayoutId"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -12,22 +13,30 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:orientation="vertical">
-            <TextView
+            <com.neopixl.pixlui.components.textview.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/title_text_size"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/light_black"
-                    android:text="Take a coffee!"/>
-            <TextView
+                    android:text="Take a coffee!"
+                    pixlui:copyandpaste="false"
+                    pixlui:clearclipboardcontent="true"
+                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+
+            <com.neopixl.pixlui.components.textview.TextView
                     android:layout_width="320dip"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_medium_20"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/dark_grey"
-                    android:text="READ or POST some review :O" />
+                    android:text="READ or POST some review :O"
+                    pixlui:copyandpaste="false"
+                    pixlui:clearclipboardcontent="true"
+                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+
         </LinearLayout>
         <!--EMPTY DATA-->
         <LinearLayout
@@ -37,11 +46,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-            <TextView
+            <com.neopixl.pixlui.components.textview.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="empty coffee machine list"
-                    android:textSize="@dimen/text_big_38"/>
+                    android:textSize="@dimen/text_big_38"
+                    pixlui:copyandpaste="false"
+                    pixlui:clearclipboardcontent="true"
+                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+
         </LinearLayout>
 
 
@@ -67,13 +80,16 @@
                     android:layout_width="@dimen/medium_icon_size"
                     android:layout_height="@dimen/medium_icon_size"
                     android:src="@drawable/settings_icon"/>-->
-            <TextView
+            <com.neopixl.pixlui.components.textview.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_big_26"
                     android:textColor="@color/light_grey"
                     android:layout_marginLeft="@dimen/small_padding"
-                    android:text="Settings"/>
+                    android:text="Settings"
+                    pixlui:copyandpaste="false"
+                    pixlui:clearclipboardcontent="true"
+                    pixlui:typeface="AmaticSC-Regular.ttf"/>
         </LinearLayout>
 
 

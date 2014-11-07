@@ -1,0 +1,13 @@
+{
+    "result": {
+        "PZrB82ZWVl": {
+            "1410400000000": {
+                "fromTimestamp": "1410200000000",
+                "toTimestamp": "1410400000000",
+                "GOOD": 5,
+                "NOTSOBAD": 1,
+                "WORST": 0
+            }
+        }
+    }
+}

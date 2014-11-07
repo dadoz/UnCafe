@@ -9,20 +9,17 @@ import static com.application.material.takeacoffee.app.models.ReviewStatus.Revie
 
 
 public class Review {
-
     private static final String TAG = "Review";
-    private String id;
-//    private boolean feedback;
+    private String objectId;
 	private ReviewStatusEnum status;
     private String comment;
     private long timestamp;
     private String userId;
     private String coffeeMachineId;
 
-	public Review(String id, String comment, ReviewStatusEnum status,
+	public Review(String objectId, String comment, ReviewStatusEnum status,
                   long timestamp, String userId, String coffeeMachineId) {
-
-        this.id = id;
+        this.objectId = objectId;
         this.userId = userId;
         this.status = status;
         this.comment = comment;
@@ -39,7 +36,7 @@ public class Review {
     }
 
     public String getId(){
-        return this.id;
+        return this.objectId;
     }
 
     public String getComment() {
@@ -54,27 +51,25 @@ public class Review {
         this.comment = value;
     }
 
-    public String getFormattedTimestamp(){
-        return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(timestamp));
-    }
-
     public ReviewStatusEnum getStatus() {
         return this.status;
     }
-
 
     public long getTimestamp() {
         return this.timestamp;
     }
 
-
     public static Date parseDate(long timestamp) {
         return new Date();
     }
 
+    public String getFormattedTimestamp() {
+        return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(timestamp));
+    }
+
     @Override
     public String toString() {
-        return "id: " + this.id +
+        return "id: " + this.objectId +
             "userId: " + this.userId +
             "status: " + this.status +
             "comment: " + this.comment +

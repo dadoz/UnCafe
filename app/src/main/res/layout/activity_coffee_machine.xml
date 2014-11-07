@@ -7,9 +7,10 @@
         android:orientation="vertical">
 
     <include layout="@layout/action_bar"/>
+    <!--LOADING TPL -->
+    <include layout="@layout/on_load_template"/>
     <!-- FRAGMENT CONTENT -->
     <LinearLayout
-            tools:context="uk.co.chrisjenx.calligraphy.sample.PlaceholderFragment"
             tools:ignore="MissingPrefix"
             android:id="@+id/coffeeAppFragmentContainerId"
             android:background="@color/light_grey"
