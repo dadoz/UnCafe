@@ -104,6 +104,13 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         ADD_REVIEW_BY_PARAMS,
         COFFEE_MACHINE_REQUEST
     }
+    public static String getActionByActionRequestEnum(int ordinal) {
+        try {
+            return RetrofitLoader.HTTPActionRequestEnum.values()[ordinal].name();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public class ParseAction {
         public static final String CLASSES = "/1/classes/";

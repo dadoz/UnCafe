@@ -1,47 +1,40 @@
-//package com.application.material.takeacoffee.app.adapters;
-//
-//import android.content.Context;
-//import android.graphics.Bitmap;
-//import android.graphics.BitmapFactory;
-//import android.support.v4.app.FragmentActivity;
-//import android.util.Log;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.widget.ArrayAdapter;
-//import android.widget.ImageView;
-//import android.widget.TextView;
-//import com.application.commons.Common;
-//import com.application.dataRequest.CoffeeAppController;
-//import com.application.extraMenu.ExtraMenuController;
-//import com.application.models.Review;
-//import com.application.models.User;
-//import com.application.takeacoffee.CoffeeMachineActivity;
-//import com.application.takeacoffee.R;
-//
-//import java.util.ArrayList;
-//
-///****ADAPTER****/
-//public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnClickListener {
-//    private static final String TAG = "ReviewListAdapter";
-//    private ArrayList<Review> reviewList;
+package com.application.material.takeacoffee.app.adapters;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.models.Review;
+
+import java.util.ArrayList;
+
+/****ADAPTER****/
+public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnClickListener {
+    private static final String TAG = "ReviewListAdapter";
+    private ArrayList<Review> reviewList;
 //    private int selectedItemIndex = Common.ITEM_NOT_SELECTED;
-//    private Bitmap defaultIcon;
-//    private String coffeeMachineId;
-//    private FragmentActivity mainActivityRef;
+    private Bitmap defaultIcon;
+    private String coffeeMachineId;
+    private FragmentActivity mainActivityRef;
 //    private CoffeeAppController coffeeAppController;
-//
-//    public ReviewListAdapter(FragmentActivity activity, int resource, ArrayList<Review> reviewList,
-//                               String coffeeMachineId) {
-//        super(activity.getApplicationContext(), resource, reviewList);
-//        this.mainActivityRef = activity;
-//        this.reviewList = reviewList;
-//        this.coffeeMachineId = coffeeMachineId;
-//        //SAVE MEMORY DEFAULT ICON ALLOCATION
-//        this.defaultIcon = BitmapFactory.decodeResource(mainActivityRef.getResources(), R.drawable.user_icon);
-//        this.coffeeAppController = ((CoffeeMachineActivity) mainActivityRef).getCoffeeAppController();
-//    }
-//
+
+    public ReviewListAdapter(FragmentActivity activity, int resource, ArrayList<Review> reviewList,
+                               String coffeeMachineId) {
+        super(activity.getApplicationContext(), resource, reviewList);
+        this.mainActivityRef = activity;
+        this.reviewList = reviewList;
+        this.coffeeMachineId = coffeeMachineId;
+        //SAVE MEMORY - DEFAULT ICON ALLOCATION
+        this.defaultIcon = BitmapFactory.decodeResource(mainActivityRef.getResources(), R.drawable.user_icon);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
 //    public ArrayList<Review> getList(){
 //        return this.reviewList;
 //    }
@@ -155,5 +148,5 @@
 //        }
 //
 //    }
-//
-//}
+
+}

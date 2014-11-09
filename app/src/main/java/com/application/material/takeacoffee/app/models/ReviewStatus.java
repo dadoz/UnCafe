@@ -1,12 +1,14 @@
 package com.application.material.takeacoffee.app.models;
 
 import android.util.Log;
+import com.application.material.takeacoffee.app.R;
 
 /**
  * Created by davide on 29/05/14.
  */
 public class ReviewStatus {
     private static final String TAG = "ReviewStatus";
+    public static final String REVIEW_STATUS_KEY = "REVIEW_STATUS_KEY";
 
     public enum ReviewStatusEnum {
         GOOD,
@@ -14,28 +16,59 @@ public class ReviewStatus {
         NOTSET,
         WORST
     }
-
-    private int position;
     private String name;
-    private int iconId;
+    private ReviewStatusEnum status;
+    private int weeklyReviewCnt;
+    private int reviewCnt;
 
+    public ReviewStatus(String status) {
+        this.status = parseStatus(status);
+    }
 
-    public ReviewStatus(int position,String name, int iconId) {
-        this.iconId = iconId;
+    public ReviewStatus(ReviewStatusEnum status) {
+        this.status = status;
+    }
+
+    public ReviewStatus(String status, String name, int weeklyReviewCnt, int reviewCnt) {
+        this.status = parseStatus(status);
         this.name = name;
-        this.position = position;
+        this.reviewCnt = reviewCnt;
+        this.weeklyReviewCnt = weeklyReviewCnt;
+    }
+    public ReviewStatus(ReviewStatusEnum status, String name, int weeklyReviewCnt, int reviewCnt) {
+        this.status = status;
+        this.name = name;
+        this.reviewCnt = reviewCnt;
+        this.weeklyReviewCnt = weeklyReviewCnt;
     }
 
-    public int getIconId() {
-        return iconId;
+    public ReviewStatusEnum getStatus() {
+        return this.status;
     }
-
     public String getName() {
-        return name;
+        return this.name;
+    }
+    public int getReviewCnt() {
+        return this.reviewCnt;
+    }
+    public int getWeeklyReviewCnt() {
+        return this.weeklyReviewCnt;
     }
 
-    public int getPosition() {
-        return position;
+    public static ReviewStatusEnum parseStatus(String reviewStatus) {
+        if(reviewStatus == null) {
+            Log.e(TAG, "status not set -");
+            return ReviewStatusEnum.NOTSET;
+        }
+        if(reviewStatus.equals("GOOD")) {
+            return ReviewStatusEnum.GOOD;
+        } else if(reviewStatus.equals("NOTSOBAD")) {
+            return ReviewStatusEnum.NOTSOBAD;
+        } else if(reviewStatus.equals("WORST")) {
+            return ReviewStatusEnum.WORST;
+        }
+        Log.e(TAG, "status not set -");
+        return ReviewStatusEnum.NOTSET;
     }
 
     public static ReviewStatusEnum parseStatusFromPageNumber(int pageNumber) {
@@ -56,21 +89,18 @@ public class ReviewStatus {
         return status;
     }
 
-    public static ReviewStatusEnum parseStatus(String reviewStatus) {
-        if(reviewStatus == null) {
-            Log.e(TAG, "status not set -");
-            return ReviewStatusEnum.NOTSET;
+    public int getIconIdByStatus() {
+        switch (this.status) {
+            case GOOD:
+                return R.drawable.crown_icon;
+            case NOTSOBAD:
+                return R.drawable.drink_icon;
+            case WORST:
+                return R.drawable.skull_icon;
+            default:
+                return R.drawable.coffee_cup_icon;
         }
-
-        if(reviewStatus.equals("GOOD")) {
-            return ReviewStatusEnum.GOOD;
-        } else if(reviewStatus.equals("NOTSOBAD")) {
-            return ReviewStatusEnum.NOTSOBAD;
-        } else if(reviewStatus.equals("WORST")) {
-            return ReviewStatusEnum.WORST;
-        }
-        Log.e(TAG, "status not set -");
-        return ReviewStatusEnum.NOTSET;
     }
+
 
 }

@@ -1,7 +1,5 @@
 package com.application.material.takeacoffee.app.loaders;
 import android.util.Log;
-import com.application.material.takeacoffee.app.models.User;
-import java.util.ArrayList;
 import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum;
 
 /**
@@ -45,6 +43,7 @@ public class RestResponse {
                 return this.data;
         }
     }
+
 /*
     public RestResponse(String data, int resultCode, HTTPActionRequestEnum requestType) {
         //TODO need to be implemented

@@ -1,9 +1,6 @@
 package com.application.material.takeacoffee.app.parsers;
 
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.ReviewCounter;
-import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.models.*;
 import com.google.gson.JsonParseException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +72,26 @@ public class ParserToJavaObject {
             return new Review(reviewId, reviewComment,
                     parseStatus(reviewStatus), timestamp,
                     reviewUserId, reviewCoffeeMachineId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ReviewStatus reviewStatusParser(String data) {
+        JSONObject reviewJsonObj = null;
+        try {
+            reviewJsonObj = new JSONObject(data).getJSONObject("result");
+            String status = reviewJsonObj
+                    .getString("status");
+            String name = reviewJsonObj
+                    .getString("name");
+            int weeklyReviewCnt = reviewJsonObj
+                    .getInt("weekly_review_cnt");
+            int reviewCnt = reviewJsonObj
+                    .getInt("review_cnt");
+
+            return new ReviewStatus(status, name, weeklyReviewCnt, reviewCnt);
         } catch (JSONException e) {
             e.printStackTrace();
         }

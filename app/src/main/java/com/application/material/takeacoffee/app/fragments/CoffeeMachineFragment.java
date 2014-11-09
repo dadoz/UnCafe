@@ -18,6 +18,7 @@ import com.application.material.takeacoffee.app.adapters.CoffeeMachineGridAdapte
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
 
 import java.util.ArrayList;
 import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
@@ -26,8 +27,7 @@ import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HT
 /**
  * Created by davide on 3/13/14.
  */
-public class CoffeeMachineFragment extends Fragment implements AdapterView.OnItemClickListener,
-        LoaderManager.LoaderCallbacks<RestResponse> {
+public class CoffeeMachineFragment extends Fragment implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
     private static final String TAG = "coffeeMachineFragment";
     private static FragmentActivity mainActivityRef;
     private View coffeeMachineView;
@@ -47,7 +47,13 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
             throw new ClassCastException(activity.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
+
         mainActivityRef =  (CoffeeMachineActivity) activity;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstance) {
+        super.onActivityCreated(savedInstance);
     }
 
     @Override
@@ -59,9 +65,11 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     }
 
     public void initOnLoadView() {
-        getLoaderManager().initLoader(COFFEE_MACHINE_REQUEST.ordinal(), null, this).forceLoad();
         //initOnLoadView
         ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
+
+        getLoaderManager().initLoader(COFFEE_MACHINE_REQUEST.ordinal(), null, this)
+                .forceLoad();
     }
 
     public void initView(ArrayList<CoffeeMachine> coffeeMachineList) {
@@ -74,7 +82,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         }
 
         coffeeMachineGridLayout.setAdapter(new CoffeeMachineGridAdapter(this.getActivity(),
-                R.layout.coffe_machine_template, coffeeMachineList));
+                R.layout.coffee_machine_template, coffeeMachineList));
         coffeeMachineGridLayout.setOnItemClickListener(this);
     }
 
@@ -88,15 +96,14 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
                 .changeFragment(new DashboardReviewFragment(), null, null);
     }
 
-
     @Override
     public Loader<RestResponse> onCreateLoader(int ordinal, Bundle params) {
 //        Uri action = Uri.parse(params.getString("action"));
 //        String requestType = params.getString("requestType");
 
         //get action
-        String action = RetrofitLoader.HTTPActionRequestEnum.values()[ordinal].name();
-        return new RetrofitLoader(this.getActivity(), action, params);
+        String action = RetrofitLoader.getActionByActionRequestEnum(ordinal);
+        return new RetrofitLoader(mainActivityRef, action, params);
     }
 
     @Override
@@ -107,10 +114,16 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 //            String filename = "coffee_machines.json";
 //            String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
 //            ArrayList<CoffeeMachine> coffeeMachinesList = ParserToJavaObject.coffeeMachineParser(data);
-            ArrayList<CoffeeMachine> coffeeMachinesList = (ArrayList<CoffeeMachine>)restResponse
-                    .getParsedData();
+
+            ArrayList<CoffeeMachine> coffeeMachinesList = (ArrayList<CoffeeMachine>) restResponse.getParsedData();
             initView(coffeeMachinesList);
+/*            initView(coffeeMachinesList);*/
         } catch (Exception e) {
+            ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+            String filename = "coffee_machines.json";
+            String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+            ArrayList<CoffeeMachine> coffeeMachinesList = ParserToJavaObject.coffeeMachineParser(data);
+            initView(coffeeMachinesList);
             e.printStackTrace();
         }
     }
@@ -119,5 +132,6 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     public void onLoaderReset(Loader loader) {
 
     }
+
 
 }

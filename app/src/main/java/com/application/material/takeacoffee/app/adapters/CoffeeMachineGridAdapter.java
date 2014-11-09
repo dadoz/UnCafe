@@ -42,7 +42,7 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
 //            if(convertView == null) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.coffe_machine_template, null);
+        convertView = inflater.inflate(R.layout.coffee_machine_template, null);
 
         holder = new ViewHolder();
         holder.nameTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineNameTextId));

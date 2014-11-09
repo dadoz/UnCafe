@@ -1,8 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <!--bottom bar-->
+    <RelativeLayout
+            android:id="@+id/footerChoiceReviewLayoutId"
+            android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="@dimen/button_height"
+            android:gravity="center"
+            android:background="@color/dark_black"
+            android:padding="@dimen/small_padding">
 
-</LinearLayout>
+        <com.neopixl.pixlui.components.textview.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_grey"
+                android:textSize="@dimen/text_big_24"
+                android:text="Add review"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="AmaticSC-Regular.ttf"/>
+    </RelativeLayout>
+
+
+    <!-- MAIN CONTENT -->
+    <RelativeLayout
+            android:id="@+id/reviewDashboardContainerLayoutId"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="@dimen/small_padding"
+            android:layout_above="@id/footerChoiceReviewLayoutId"
+            android:layout_alignParentLeft="true">
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical">
+            <include layout="@layout/dashboard_today_review_template"/>
+            <!--<include layout="@layout/header_coffee_machine_tpl"/>-->
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

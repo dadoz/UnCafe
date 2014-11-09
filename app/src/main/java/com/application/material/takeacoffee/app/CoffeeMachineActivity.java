@@ -1,7 +1,9 @@
 package com.application.material.takeacoffee.app;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +19,11 @@ import butterknife.InjectView;
 import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
 import com.application.material.takeacoffee.app.fragments.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.loaders.RestResponse;
+import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
+import com.application.material.takeacoffee.app.models.CoffeeMachine;
+
+import java.util.ArrayList;
 
 
 public class CoffeeMachineActivity extends ActionBarActivity implements
@@ -112,4 +119,5 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                 .addToBackStack(tag)
                 .commit();
     }
+
 }

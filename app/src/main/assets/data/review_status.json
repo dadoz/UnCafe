@@ -1,0 +1,8 @@
+{
+    "result": {
+        "status": "GOOD",
+        "name": "This is a good coffee",
+        "weekly_review_cnt": 5,
+        "review_cnt": 1
+    }
+}
