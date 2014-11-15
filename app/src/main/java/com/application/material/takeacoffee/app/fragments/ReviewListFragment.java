@@ -1,7 +1,6 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,18 +18,19 @@ import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.ReviewStatus;
+import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.COFFEE_MACHINE_REQUEST;
 import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.REVIEW_REQUEST;
+import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.USER_REQUEST;
 import static com.application.material.takeacoffee.app.models.ReviewStatus.ReviewStatusEnum;
 
 /**
@@ -71,7 +71,7 @@ public class ReviewListFragment extends Fragment
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        reviewListView = inflater.inflate(R.layout.review_list_fragment, container, false);
+        reviewListView = inflater.inflate(R.layout.fragment_review_list, container, false);
         ButterKnife.inject(this, reviewListView);
 //        moreReviewLoaderView = LayoutInflater.from(mainActivityRef.getApplicationContext())
 //                .inflate(R.layout.more_review_loader_layout, listView, false);
@@ -115,6 +115,12 @@ public class ReviewListFragment extends Fragment
     public void initView(ArrayList<Review> reviewList) {
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
+        //action bar
+        ((SetActionBarInterface) mainActivityRef)
+                .setActionBarCustomViewById(R.id.customActionBarReviewListLayoutId, null);
+        ((SetActionBarInterface) mainActivityRef)
+                .setCustomNavigation(ReviewListFragment.class);
+
         if (reviewList == null) {
             Log.e(TAG, "empty review list");
             listView.setEmptyView(emptyView);
@@ -130,22 +136,78 @@ public class ReviewListFragment extends Fragment
     }
 
     @Override
-    public Loader<RestResponse> onCreateLoader(int ordinal, Bundle params) {
+    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
         try {
-            String action = RetrofitLoader.getActionByActionRequestEnum(ordinal);
+            String action = RetrofitLoader.getActionByActionRequestEnum(id);
             return new RetrofitLoader(this.getActivity(), action, params);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public void onLoadFinished(Loader<RestResponse> restResponseLoader,
+    public void onLoadFinished(Loader<RestResponse> loader,
                                RestResponse restResponse) {
+        final int REVIEW_REQ = 1; //REVIEW_REQUEST.ordinal();
+        final int MORE_REVIEW_REQ = 2; //MORE_REVIEW_REQUEST.ordinal();
+        final int USER_REQ = 3; //MORE_REVIEW_REQUEST.ordinal();
+
+//        if(restResponse.getParsedData() == null) {
+//            Log.e(TAG, "empty data result - nothing to be done");
+//            return;
+//        }
+        Log.e(TAG, "id review_request" + REVIEW_REQUEST.ordinal());
         try {
-            ArrayList<Review> reviewList = (ArrayList<Review>) restResponse.getParsedData();
-            initView(reviewList);
+            switch (loader.getId()) {
+                case REVIEW_REQ:
+                    Log.e(TAG, "REVIEW_REQ");
+//                    ArrayList<Review> reviewList = (ArrayList<Review>) restResponse.getParsedData();
+//                    create new loader for user
+//                    Bundle params = new Bundle();
+//                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+//                    initView(reviewList);
+
+                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+                    String filename = "reviews.json";
+                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    ArrayList<Review> reviewList = ParserToJavaObject.getReviewListParser(data);
+                    Bundle params = new Bundle();
+                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+                    initView(reviewList);
+
+                    break;
+                case MORE_REVIEW_REQ:
+                    Log.e(TAG, "MORE_REVIEW_REQ");
+                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
+                    //create new loader for user
+                    params = new Bundle();
+                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+                    break;
+                case USER_REQ:
+                    Log.e(TAG, "USER_REQ");
+
+//                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
+
+                    //TODO TEST
+                    filename = "user.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    ArrayList<User> userList = ParserToJavaObject.getUserListParser(data);
+
+                    ((ReviewListAdapter) listView.getAdapter()).setUserList(userList);
+                    //UPDATE DATA on LIST
+                    if (listView.getAdapter() != null) {
+                        try {
+                            ((ReviewListAdapter) ((WrapperListAdapter) listView.getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+                        } catch (Exception e) {
+                            ((ReviewListAdapter) listView.getAdapter()).notifyDataSetChanged();
+                        }
+                    }
+
+                    break;
+            }
+
+
 //            Log.d(TAG, "this are data result" + restResponse.getData());
 //            if(restResponse.getRequestType() == null) {
 //                reviewResponse(restResponse);
@@ -169,15 +231,10 @@ public class ReviewListFragment extends Fragment
 //
 //            reviewResponse(restResponse);
         } catch (Exception e) {
-            ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-            String filename = "reviews.json";
-            String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-            ArrayList<Review> reviewList = ParserToJavaObject.getReviewListParser(data);
-            initView(reviewList);
-
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
+
 
     @Override
     public void onLoaderReset(Loader<RestResponse> restResponseLoader) {

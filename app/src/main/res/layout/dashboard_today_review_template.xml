@@ -17,6 +17,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_medium_20"
                     android:text="status: "
+                    android:textColor="@color/dark_black"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
                     pixlui:typeface="AmaticSC-Regular.ttf"/>
@@ -24,6 +25,7 @@
                     android:id="@+id/coffeeMachineStatusTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/dark_black"
                     android:textSize="@dimen/text_big_30"
                     android:text="Thats' Good"
                     pixlui:copyandpaste="false"
@@ -37,5 +39,31 @@
                 android:layout_height="@dimen/extra_huge_icon_size"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/crown_icon"/>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:orientation="horizontal">
+        <com.neopixl.pixlui.components.textview.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_medium_20"
+                android:text="Review for this week: "
+                android:textColor="@color/dark_black"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="AmaticSC-Regular.ttf"/>
+        <com.neopixl.pixlui.components.textview.TextView
+                android:id="@+id/coffeeMachineWeeklyReviewTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_black"
+                android:textSize="@dimen/text_big_30"
+                android:text="Thats' Good"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="AmaticSC-Regular.ttf"/>
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -19,7 +19,7 @@ public class ReviewStatus {
     private String name;
     private ReviewStatusEnum status;
     private int weeklyReviewCnt;
-    private int reviewCnt;
+    private boolean hasAtLeastOneReview;
 
     public ReviewStatus(String status) {
         this.status = parseStatus(status);
@@ -29,16 +29,16 @@ public class ReviewStatus {
         this.status = status;
     }
 
-    public ReviewStatus(String status, String name, int weeklyReviewCnt, int reviewCnt) {
+    public ReviewStatus(String status, String name, int weeklyReviewCnt, boolean hasAtLeastOneReview) {
         this.status = parseStatus(status);
         this.name = name;
-        this.reviewCnt = reviewCnt;
+        this.hasAtLeastOneReview = hasAtLeastOneReview;
         this.weeklyReviewCnt = weeklyReviewCnt;
     }
-    public ReviewStatus(ReviewStatusEnum status, String name, int weeklyReviewCnt, int reviewCnt) {
+    public ReviewStatus(ReviewStatusEnum status, String name, int weeklyReviewCnt, boolean hasAtLeastOneReview) {
         this.status = status;
         this.name = name;
-        this.reviewCnt = reviewCnt;
+        this.hasAtLeastOneReview = hasAtLeastOneReview;
         this.weeklyReviewCnt = weeklyReviewCnt;
     }
 
@@ -48,8 +48,8 @@ public class ReviewStatus {
     public String getName() {
         return this.name;
     }
-    public int getReviewCnt() {
-        return this.reviewCnt;
+    public boolean getHasAtLeastOneReview() {
+        return this.hasAtLeastOneReview;
     }
     public int getWeeklyReviewCnt() {
         return this.weeklyReviewCnt;

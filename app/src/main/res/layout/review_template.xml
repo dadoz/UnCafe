@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+            xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
     <LinearLayout
             android:id="@+id/mainItemViewId"
             android:layout_width="match_parent"
@@ -25,25 +26,14 @@
                         android:layout_width="@dimen/large_icon_size"
                         android:layout_height="@dimen/large_icon_size"
                         android:src="@drawable/user_icon" />
-                <!--                    <TextView
-                                            android:id="@+id/reviewUsernameTextId"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="reviewer username"
-                                            android:layout_marginTop="@dimen/small_padding"
-                                            android:background="@color/middle_grey"
-                                            android:paddingLeft="@dimen/small_padding"
-                                            android:paddingRight="@dimen/small_padding"
-                                            android:textColor="@color/light_black"
-                                            android:gravity="center"
-                                            android:textSize="@dimen/header_text_size" />-->
                 </LinearLayout>
                 <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/small_padding"
                         android:orientation="vertical" >
-                    <TextView
+                    <com.neopixl.pixlui.components.textview.TextView
+
                             android:id="@+id/reviewUsernameTextId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -54,8 +44,12 @@
                             android:paddingRight="@dimen/small_padding"
                             android:textColor="@color/light_black"
                             android:gravity="center"
-                            android:textSize="@dimen/header_text_size" />
-                    <TextView
+                            android:textSize="@dimen/header_text_size"
+                            pixlui:copyandpaste="false"
+                            pixlui:clearclipboardcontent="true"
+                            pixlui:typeface="AmaticSC-Regular.ttf"/>
+
+                    <com.neopixl.pixlui.components.textview.TextView
                             android:id="@+id/reviewCommentTextId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -64,7 +58,11 @@
                             android:maxLines="5"
                             android:ellipsize="end"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/text_big_22" />
+                            android:textSize="@dimen/text_big_22"
+                            pixlui:copyandpaste="false"
+                            pixlui:clearclipboardcontent="true"
+                            pixlui:typeface="AmaticSC-Regular.ttf"/>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -74,7 +72,7 @@
                     android:layout_gravity="right"
                     android:orientation="horizontal">
 
-                <TextView
+                <com.neopixl.pixlui.components.textview.TextView
                         android:id="@+id/reviewDateTextId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -83,7 +81,11 @@
                         android:paddingLeft="@dimen/small_padding"
                         android:paddingRight="@dimen/small_padding"
                         android:layout_marginRight="@dimen/small_padding"
-                        android:text=" 06.11.1990 " />
+                        android:text=" 06.11.1990 "
+                        pixlui:copyandpaste="false"
+                        pixlui:clearclipboardcontent="true"
+                        pixlui:typeface="AmaticSC-Regular.ttf"/>
+
             </LinearLayout>
     </LinearLayout>
     <!--<include layout="@layout/extra_menu_review_template" />-->

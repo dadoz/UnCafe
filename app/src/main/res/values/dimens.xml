@@ -32,6 +32,7 @@
     <dimen name="text_big_30">30dp</dimen>
     <dimen name="choice_review_pager_size">288dip</dimen>
     <dimen name="text_big_38">38dp</dimen>
+    <dimen name="text_big_40">40dp</dimen>
     <dimen name="title_width">280dip</dimen>
     <dimen name="text_huge_48">48sp</dimen>
     <dimen name="header_medium_size">60dip</dimen>

@@ -1,4 +1,4 @@
-package com.application.material.takeacoffee.app.fragments;
+package com.application.material.takeacoffee.app.fragments.interfaces;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -9,14 +9,22 @@ import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.restServices.RetrofitServiceInterface;
 import com.google.gson.*;
+import com.google.gson.annotations.SerializedName;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -33,16 +41,19 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
     public RetrofitLoader(FragmentActivity activity, String action, Object params) {
         super(activity);
         Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<List<CoffeeMachine>>(){}.getType();
+        Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
 
 
         mAction = HTTPActionRequestEnum.valueOf(action);
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(typeOfListOfCategory, new CustomDeserializer())
+                .registerTypeAdapter(typeOfListOfCategoryUser, new CustomDeserializerUser())
                 .create();
 
         restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://api.parse.com") // to baseUrl
+//                .setEndpoint("https://192.168.130.112:8888") // to baseUrl
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(gson))
                 .build();
@@ -78,6 +89,14 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                     Review review = (Review) params;
                     data = retrofitService.addReviewByParams(review);
                     break;
+                case USER_REQUEST:
+                    String [] array = {"4nmvMJNk1R","K8bwZOSmNo","8e2XwXZUKL"};
+//                    ArrayList<String> userIdArrayLIst = new ArrayList<String>();
+//                    userIdArrayLIst.addAll(Arrays.asList(array));
+//                    JSONObject userIdList = new JSONObject().put("userIdList", new JSONArray(userIdArrayLIst));
+                    UserParams userParams = new UserParams(array);
+                    retrofitService.listUserByIdList(userParams);
+                    break;
             }
             return new RestResponse(data, mAction); // We send a Response back
         } catch (Exception e) {
@@ -104,6 +123,20 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         ADD_REVIEW_BY_PARAMS,
         COFFEE_MACHINE_REQUEST
     }
+
+//    public class UserCallback implements  Callback<List<User>>  {
+//        @Override
+//        public void success(List<User> s, Response response) {
+//            Log.e(TAG, "success");
+//        }
+//
+//        @Override
+//        public void failure(RetrofitError retrofitError) {
+//            Log.e(TAG, "success" + retrofitError);
+//
+//        }
+//    }
+
     public static String getActionByActionRequestEnum(int ordinal) {
         try {
             return RetrofitLoader.HTTPActionRequestEnum.values()[ordinal].name();
@@ -113,13 +146,14 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
     }
 
     public class ParseAction {
-        public static final String CLASSES = "/1/classes/";
-        public static final String FUNCTIONS = "/1/functions/";
+        public static final String CLASSES = "1/classes/";
+        public static final String FUNCTIONS = "1/functions/";
 
         //action model
         public static final String COFFEE_MACHINE = "coffee_machines";
         public static final String REVIEW = "reviews";
         public static final String REVIEW_BY_TIMESTAMP_LIMIT = "getReviewByTimestampLimitOnResult";
+        public static final String USER_BY_ID_LIST= "getUserListByUserIdList";
         public static final String MORE_REVIEW = "getMoreReview";
         public static final String REVIEW_COUNTER_TIMESTAMP = "countOnReviewsWithTimestamp";
     }
@@ -146,6 +180,17 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
 
     }
 
+    public class UserParams {
+        List<String> userIdList;
+        public UserParams(String [] array) {
+//            userIdList = new ArrayList(Arrays.asList(array));
+            userIdList = new ArrayList<String>();
+            userIdList.add("4nmvMJNk1R");
+            userIdList.add("K8bwZOSmNo");
+            userIdList.add("8e2XwXZUKL");
+        }
+    }
+
     public static class CustomDeserializer implements JsonDeserializer<List<CoffeeMachine>> {
 
         @Override
@@ -164,5 +209,25 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
 
         }
     }
+
+    public static class CustomDeserializerUser implements JsonDeserializer<List<User>> {
+
+        @Override
+        public List<User> deserialize(JsonElement jsonElement, Type type,
+                                               JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
+//            Log.e(TAG, jsonElement.toString() + " - " + type.toString());
+            Log.e(TAG, type.toString());
+//            Class<? extends Type> classType = type.getClass();
+            ArrayList<User> userList = new ArrayList<User>();
+            JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonArray();
+            for(int i = 0; i < jsonArray.size(); i++) {
+                userList.add(jsonDeserializationContext.<User>deserialize(jsonArray.get(i), User.class));
+            }
+            return userList;
+
+        }
+    }
+
 
 }

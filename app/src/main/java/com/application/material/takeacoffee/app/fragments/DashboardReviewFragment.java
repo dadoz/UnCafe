@@ -1,6 +1,9 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -16,15 +19,15 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.ReviewStatus;
 import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
 
-import java.util.ArrayList;
-
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.COFFEE_MACHINE_REQUEST;
 import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.REVIEW_COUNT_REQUEST;
 
 /**
@@ -35,11 +38,18 @@ public class DashboardReviewFragment extends Fragment implements
     private static final String TAG = "DashboardReviewFragment";
     private CoffeeMachineActivity mainActivityRef;
     private View dashboardReviewView;
-    private int reviewCnt = -1;
+    private boolean hasAtLeastOneReview = false;
     private Bundle bundle;
     @InjectView(R.id.coffeeMachineStatusIconId) View coffeeMachineStatusIcon;
-    @InjectView(R.id.coffeeMachineStatusTextId) View coffeeMachineStatusText;
+    @InjectView(R.id.coffeeMachineStatusTextId) View coffeeMachineStatusTextView;
+    @InjectView(R.id.coffeeMachineWeeklyReviewTextId) View coffeeMachineWeeklyReviewTextView;
+
+//    @InjectView(R.id.coffeeMachineNameHeaderId) View coffeeMachineNameHeaderView;
+//    @InjectView(R.id.coffeeMachineLocationHeaderId) View coffeeMachineLocationHeaderView;
+    @InjectView(R.id.addReviewButtonId) View addReviewButton;
+
     private String coffeeMachineId;
+    private CoffeeMachine coffeeMachine;
 
 
     @Override
@@ -61,7 +71,9 @@ public class DashboardReviewFragment extends Fragment implements
         super.onActivityCreated(savedInstance);
         //get all bundle
         bundle = getArguments();
-//        coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY);
+        coffeeMachine = bundle.getParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
+        //TODO redundant
+        coffeeMachineId = coffeeMachine.getId();
     }
 
     @Override
@@ -86,6 +98,14 @@ public class DashboardReviewFragment extends Fragment implements
     private void initView(ReviewStatus reviewStatus) {
         mainActivityRef.hideOnLoadView();
         Log.e(TAG, reviewStatus.toString());
+        //set action bar view
+        mainActivityRef.setActionBarCustomViewById(R.id.customActionBarCoffeeMachineLayoutId,
+                coffeeMachine);
+        mainActivityRef.setCustomNavigation(DashboardReviewFragment.class);
+
+        //set coffee machine header
+//        ((TextView) coffeeMachineNameHeaderView).setText(coffeeMachine.getName());
+//        ((TextView) coffeeMachineLocationHeaderView).setText(coffeeMachine.getAddress());
 
         //set image status
         int iconId = reviewStatus.getIconIdByStatus();
@@ -93,12 +113,13 @@ public class DashboardReviewFragment extends Fragment implements
                 .setImageDrawable(getResources().getDrawable(iconId));
 
         //set week review name and cnt
-        ((TextView) coffeeMachineStatusText).setText(reviewStatus.getName());
-//        ((TextView) coffeeMachineStatusText).setText(reviewStatus.getWeeklyReviewCnt());
+        ((TextView) coffeeMachineStatusTextView).setText(reviewStatus.getName());
+        ((TextView) coffeeMachineWeeklyReviewTextView).setText(Integer.toString(reviewStatus.getWeeklyReviewCnt()));
 
         //set listener if there is sm review
-        reviewCnt = reviewStatus.getReviewCnt();
+        hasAtLeastOneReview = reviewStatus.getHasAtLeastOneReview();
         coffeeMachineStatusIcon.setOnClickListener(this);
+        addReviewButton.setOnClickListener(this);
     }
 
     @Override
@@ -125,7 +146,7 @@ public class DashboardReviewFragment extends Fragment implements
             ReviewStatus reviewStatus = ParserToJavaObject.reviewStatusParser(data);
             initView(reviewStatus);
 
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -138,7 +159,7 @@ public class DashboardReviewFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.coffeeMachineStatusIconId:
-                if(reviewCnt > 0) {
+                if(hasAtLeastOneReview) {
                     //get listview fragment
                     ((OnChangeFragmentWrapperInterface) mainActivityRef)
                             .changeFragment(new ReviewListFragment(), bundle, null);
@@ -148,6 +169,12 @@ public class DashboardReviewFragment extends Fragment implements
                 Log.e(TAG, "no review for this coffee machine!");
                 Toast.makeText(mainActivityRef, "No review!", Toast.LENGTH_SHORT);
                 break;
+            case R.id.addReviewButtonId:
+                //use library to handle this dialog with material design
+                Toast.makeText(mainActivityRef.getApplicationContext(),
+                        "hey add fragment", Toast.LENGTH_SHORT).show();
+                break;
+
         }
 
     }

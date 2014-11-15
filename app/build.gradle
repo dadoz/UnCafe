@@ -17,7 +17,7 @@ android {
     buildToolsVersion "21.0.1"
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 12
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -34,6 +34,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.retrofit:retrofit:1.7.1'
     compile 'com.jakewharton:butterknife:5.1.2'
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
 //    compile 'uk.co.chrisjenx:calligraphy:1.2.0'
     compile 'com.android.support:appcompat-v7:21.+'
+    compile 'com.android.support:cardview-v7:21.+'
 }

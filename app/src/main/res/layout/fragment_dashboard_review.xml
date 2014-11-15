@@ -7,25 +7,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
     <!--bottom bar-->
-    <RelativeLayout
-            android:id="@+id/footerChoiceReviewLayoutId"
+    <LinearLayout
+            android:id="@+id/addReviewButtonId"
             android:layout_width="fill_parent"
             android:layout_alignParentBottom="true"
-            android:layout_height="@dimen/button_height"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="@color/dark_black"
+            android:minHeight="@dimen/button_height"
+            android:background="@color/light_black"
             android:padding="@dimen/small_padding">
 
         <com.neopixl.pixlui.components.textview.TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/light_grey"
-                android:textSize="@dimen/text_big_24"
+                android:textSize="@dimen/text_big_30"
                 android:text="Add review"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
                 pixlui:typeface="AmaticSC-Regular.ttf"/>
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <!-- MAIN CONTENT -->
@@ -34,15 +35,15 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:padding="@dimen/small_padding"
-            android:layout_above="@id/footerChoiceReviewLayoutId"
+            android:layout_above="@id/addReviewButtonId"
             android:layout_alignParentLeft="true">
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_alignParentLeft="true"
                 android:orientation="vertical">
+            <!--<include layout="@layout/header_coffee_machine_template"/>-->
             <include layout="@layout/dashboard_today_review_template"/>
-            <!--<include layout="@layout/header_coffee_machine_tpl"/>-->
         </LinearLayout>
     </RelativeLayout>
 

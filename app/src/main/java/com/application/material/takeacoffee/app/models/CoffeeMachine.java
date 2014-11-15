@@ -1,7 +1,11 @@
 package com.application.material.takeacoffee.app.models;
 
-public class CoffeeMachine {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class CoffeeMachine implements Parcelable{
     public static String COFFEE_MACHINE_ID_KEY = "COFFEE_MACHINE_ID";
+    public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
     private final String objectId;
     private String iconPath;
 	private String name;
@@ -30,4 +34,12 @@ public class CoffeeMachine {
         return this.objectId;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    }
 }

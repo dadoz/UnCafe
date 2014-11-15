@@ -16,19 +16,16 @@ import java.util.ArrayList;
 /****ADAPTER****/
 public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
     private static final String TAG = "ReviewListAdapter";
-//    private final CoffeeAppController coffeeAppController;
     private ArrayList<CoffeeMachine> coffeeMachineList;
     private FragmentActivity mainActivityRef;
 
     public CoffeeMachineGridAdapter(FragmentActivity activity, int resource,
-                                    ArrayList<CoffeeMachine> coffeeMachineList) {
-        super(activity.getApplicationContext(), resource, coffeeMachineList);
-        this.mainActivityRef = activity;
-        this.coffeeMachineList = coffeeMachineList;
-//        this.coffeeAppController = ((CoffeeMachineActivity) mainActivityRef).getCoffeeAppController();
+                                    ArrayList<CoffeeMachine> list) {
+        super(activity.getApplicationContext(), resource, list);
+        mainActivityRef = activity;
+        coffeeMachineList = list;
         //SAVE MEMORY DEFAULT ICON ALLOCATION
 //        this.defaultIcon = BitmapFactory.decodeResource(mainActivityRef.getResources(), R.drawable.user_icon);
-
     }
 
     public ArrayList<CoffeeMachine> getList() {
@@ -39,7 +36,6 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         CoffeeMachine coffeeMachine = coffeeMachineList.get(position);
 
         ViewHolder holder;
-//            if(convertView == null) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.coffee_machine_template, null);
@@ -48,9 +44,6 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         holder.nameTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineNameTextId));
         holder.iconImageView = (ImageView) convertView.findViewById(R.id.coffeeIconId);
         convertView.setTag(holder);
-//            } else {
-//                holder = (ViewHolder) convertView.getTag();
-//            }
 
         holder.nameTextView.setText(coffeeMachine.getName());
         holder.nameTextView.setTextColor(mainActivityRef
@@ -58,10 +51,10 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         holder.iconImageView.setImageResource(R.drawable.coffee_cup_icon);
 
         //retrieve icon from server volley
-//        coffeeAppController.getCoffeeMachineIcon((coffeeMachine.getIconPath()), holder.iconImageView);
+        int defaultIconId = R.drawable.coffee_cup_icon;
+        ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
+                coffeeMachine.getIconPath(), holder.iconImageView, defaultIconId);
 
-        //TODO this gave me problem
-//        Common.setCustomFont(convertView, mainActivityRef.getAssets());
         return convertView;
     }
 
@@ -69,5 +62,4 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         public TextView nameTextView;
         public ImageView iconImageView;
     }
-
 }

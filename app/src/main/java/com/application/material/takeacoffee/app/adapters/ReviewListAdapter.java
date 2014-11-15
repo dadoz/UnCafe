@@ -3,26 +3,32 @@ package com.application.material.takeacoffee.app.adapters;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.VolleyImageRequestWrapper;
 import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.models.User;
+import com.neopixl.pixlui.components.textview.TextView;
 
 import java.util.ArrayList;
 
-/****ADAPTER****/
 public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnClickListener {
     private static final String TAG = "ReviewListAdapter";
     private ArrayList<Review> reviewList;
-//    private int selectedItemIndex = Common.ITEM_NOT_SELECTED;
     private Bitmap defaultIcon;
     private String coffeeMachineId;
     private FragmentActivity mainActivityRef;
-//    private CoffeeAppController coffeeAppController;
+    private ArrayList<User> userList;
 
     public ReviewListAdapter(FragmentActivity activity, int resource, ArrayList<Review> reviewList,
                                String coffeeMachineId) {
-        super(activity.getApplicationContext(), resource, reviewList);
+        //this constructor to handle empty getView function
+        super(activity.getApplicationContext(), resource, R.id.reviewCommentTextId, reviewList);
         this.mainActivityRef = activity;
         this.reviewList = reviewList;
         this.coffeeMachineId = coffeeMachineId;
@@ -30,9 +36,80 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
         this.defaultIcon = BitmapFactory.decodeResource(mainActivityRef.getResources(), R.drawable.user_icon);
     }
 
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        try {
+            convertView = LayoutInflater.from(mainActivityRef.getApplicationContext()).inflate(R.layout.review_template, parent, false);
+            Review review = reviewList.get(position);
+            ViewHolder holder = new ViewHolder();
+            holder.mainItemView = convertView.findViewById(R.id.mainItemViewId);
+//            holder.extraMenuItemView = convertView.findViewById(R.id.extraMenuItemViewId);
+            holder.usernameTextView = (TextView) convertView.findViewById(R.id.reviewUsernameTextId);
+            holder.reviewDateTextView = ((TextView) convertView.findViewById(R.id.reviewDateTextId));
+            holder.reviewCommentTextView = ((TextView) convertView.findViewById(R.id.reviewCommentTextId));
+            holder.profilePicImageView = ((ImageView) convertView.findViewById(R.id.profilePicReviewTemplateId));
+
+//          TODO SET DATA TO VIEW
+            holder.reviewCommentTextView.setText(review.getComment());
+            holder.reviewDateTextView.setText(review.getFormattedTimestamp());
+
+            //show extra menu
+            //TODO on action bar - so might add an interface to handle in main
+/*            if(selectedItemIndex == position) {
+                //set extra menu visibility
+                holder.mainItemView.setVisibility(View.GONE);
+                holder.extraMenuItemView.setVisibility(View.VISIBLE);
+//            setReviewListHeaderBackgroundLabel(holder.extraMenuItemView, false); TODO replace this
+                initExtraMenuAction(holder.extraMenuItemView);
+            }*/
+
+            if(userList == null) {
+                return convertView;
+            }
+
+            User user = getUserByUserId(review.getUserId());
+            if(user != null) {
+                holder.usernameTextView.setText(user.getUsername());
+
+                int defaultIconId = R.drawable.user_icon;
+                ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
+                        user.getProfilePicturePath(), holder.profilePicImageView, defaultIconId);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, " - " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+        return convertView;
+    }
+
+    public boolean setUserList(ArrayList<User> userList) {
+        this.userList = userList;
+        return true;
+    }
+
+    //TODO refactor it
+    private User getUserByUserId(String userId) {
+        for(User user : userList) {
+            if(user.getId().compareTo(userId) == 0) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onClick(View v) {
 
+    }
+
+    public static class ViewHolder {
+        View mainItemView;
+        View extraMenuItemView;
+        TextView reviewDateTextView;
+        TextView reviewCommentTextView;
+        ImageView profilePicImageView;
+        TextView usernameTextView;
     }
 
 //    public ArrayList<Review> getList(){

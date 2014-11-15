@@ -88,8 +88,8 @@ public class ParserToJavaObject {
                     .getString("name");
             int weeklyReviewCnt = reviewJsonObj
                     .getInt("weekly_review_cnt");
-            int reviewCnt = reviewJsonObj
-                    .getInt("review_cnt");
+            boolean reviewCnt = reviewJsonObj
+                    .getBoolean("has_at_least_one_review");
 
             return new ReviewStatus(status, name, weeklyReviewCnt, reviewCnt);
         } catch (JSONException e) {

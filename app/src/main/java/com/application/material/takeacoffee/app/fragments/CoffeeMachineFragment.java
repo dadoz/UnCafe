@@ -15,6 +15,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.adapters.CoffeeMachineGridAdapter;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
@@ -76,6 +79,12 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         //initOnLoadView
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
+        //set action bar view
+        ((SetActionBarInterface) mainActivityRef)
+                .setActionBarCustomViewById(R.id.customActionBarUserLayoutId, null);
+        ((SetActionBarInterface) mainActivityRef)
+                .setCustomNavigation(CoffeeMachineFragment.class);
+
         if(coffeeMachineList == null) {
             Log.e(TAG, "empty data - show empty list");
             return;
@@ -90,10 +99,11 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         CoffeeMachine coffeeMachine = (CoffeeMachine) adapterView.getAdapter().getItem(position);
         Bundle bundle = new Bundle();
-        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachine.getId());
+//        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachine.getId());
+        bundle.putParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY, coffeeMachine);
 
         ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                .changeFragment(new DashboardReviewFragment(), null, null);
+                .changeFragment(new DashboardReviewFragment(), bundle, null);
     }
 
     @Override
@@ -124,7 +134,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
             String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
             ArrayList<CoffeeMachine> coffeeMachinesList = ParserToJavaObject.coffeeMachineParser(data);
             initView(coffeeMachinesList);
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 

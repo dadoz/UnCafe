@@ -7,7 +7,6 @@ public class User {
 	private String username;
 //	private String reviewsListId;
     private String profilePicturePath;
-    private String userId;
 
     /*
         public User(String id, String username, ArrayList<Review> reviewsList){
@@ -62,11 +61,4 @@ public class User {
         this.username = username;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
 }

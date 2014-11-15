@@ -4,6 +4,7 @@ import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
+import org.json.JSONObject;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.*;
@@ -34,4 +35,10 @@ public interface RetrofitServiceInterface {
 
     @POST("/" + CLASSES + REVIEW)
     boolean addReviewByParams(@Body Review review);
+
+//    @GET("/" + FUNCTIONS + USER_BY_ID_LIST + "{userParams}")
+//    void listUserByIdList(@Path("userParams") RetrofitLoader.UserParams userParams);
+
+    @POST("/" + FUNCTIONS + USER_BY_ID_LIST)
+    void listUserByIdList(@Body RetrofitLoader.UserParams userParams);
 }
