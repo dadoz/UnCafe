@@ -9,6 +9,7 @@ import com.application.material.takeacoffee.app.R;
 public class ReviewStatus {
     private static final String TAG = "ReviewStatus";
     public static final String REVIEW_STATUS_KEY = "REVIEW_STATUS_KEY";
+    public static final String REVIEW_KEY = "REVIEW_KEY";
 
     public enum ReviewStatusEnum {
         GOOD,

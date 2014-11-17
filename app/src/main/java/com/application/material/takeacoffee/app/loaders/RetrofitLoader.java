@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.loaders;
 
 import android.content.res.AssetManager;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
@@ -36,9 +37,9 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
     private final HTTPActionRequestEnum mAction;
     private final RestAdapter restAdapter;
     private final RetrofitServiceInterface retrofitService;
-    private final Object params;
+    private final Bundle params;
 
-    public RetrofitLoader(FragmentActivity activity, String action, Object params) {
+    public RetrofitLoader(FragmentActivity activity, String action, Bundle params) {
         super(activity);
         Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<List<CoffeeMachine>>(){}.getType();
         Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
@@ -86,7 +87,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                     data = retrofitService.mapReviewCount();
                     break;
                 case ADD_REVIEW_BY_PARAMS:
-                    Review review = (Review) params;
+                    Review review = params.getParcelable(Review.REVIEW_KEY);
                     data = retrofitService.addReviewByParams(review);
                     break;
                 case USER_REQUEST:

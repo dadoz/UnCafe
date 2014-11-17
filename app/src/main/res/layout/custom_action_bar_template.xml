@@ -52,33 +52,7 @@
     </RelativeLayout>
 
     <!--user template -->
-    <LinearLayout
-            android:id="@+id/customActionBarUserLayoutId"
-            android:visibility="gone"
-            android:paddingBottom="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <ImageView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:src="@drawable/user_icon" />
-
-        <com.neopixl.pixlui.components.textview.TextView
-                android:textSize="@dimen/text_big_40"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/light_black"
-                android:paddingLeft="@dimen/small_padding"
-                android:text="username"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="AmaticSC-Regular.ttf"/>
-    </LinearLayout>
-
+    <include layout="@layout/header_user_template" />
     <!--review list template -->
     <LinearLayout
             android:id="@+id/customActionBarReviewListLayoutId"
@@ -87,23 +61,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <ImageView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:src="@drawable/delete_icon" />
-
-        <ImageView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:src="@drawable/edit_icon_2" />
-
-        <ImageView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:src="@drawable/edit_icon_2" />
 
     </LinearLayout>
 

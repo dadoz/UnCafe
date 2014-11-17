@@ -6,11 +6,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.*;
@@ -61,8 +60,10 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        coffeeMachineView = getActivity().getLayoutInflater().inflate(R.layout.fragment_coffee_machine, container, false);
+        coffeeMachineView = getActivity().getLayoutInflater()
+                .inflate(R.layout.fragment_coffee_machine, container, false);
         ButterKnife.inject(this, coffeeMachineView);
+        setHasOptionsMenu(true);
         initOnLoadView();
         return coffeeMachineView;
     }
@@ -144,4 +145,19 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.coffee_machine, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_position:
+                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
+    }
 }

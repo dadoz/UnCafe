@@ -2,8 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.application.material.takeacoffee.app.CoffeeMachineActivity" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+    <item
+            android:id="@+id/action_position"
+            android:title="position"
+            android:icon="@drawable/position_icon_small_w"
+            android:orderInCategory="100"
+            app:showAsAction="always" />
+    <item
+            android:id="@+id/action_settings"
+            android:title="settins"
+            android:icon="@drawable/settings_icon"
+            android:orderInCategory="100"
+            app:showAsAction="always" />
+
 </menu>

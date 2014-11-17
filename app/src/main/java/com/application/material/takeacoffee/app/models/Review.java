@@ -1,5 +1,7 @@
 package com.application.material.takeacoffee.app.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -8,8 +10,10 @@ import java.util.Date;
 import static com.application.material.takeacoffee.app.models.ReviewStatus.ReviewStatusEnum;
 
 
-public class Review {
+public class Review implements Parcelable {
     private static final String TAG = "Review";
+    public static final String ID_NOT_SET = "ID_NOT_SET";
+    public static final String REVIEW_KEY = "REVIEW_KEY";
     private String objectId;
 	private ReviewStatusEnum status;
     private String comment;
@@ -78,4 +82,28 @@ public class Review {
     }
 
 
+    public static ReviewStatusEnum parseStatus(float rating) {
+        switch (Float.floatToIntBits(rating)) {
+            case 0:
+            case 1:
+                return ReviewStatusEnum.WORST;
+            case 2:
+                return ReviewStatusEnum.NOTSOBAD;
+            case 3:
+                return ReviewStatusEnum.GOOD;
+            default:
+                return ReviewStatusEnum.NOTSET;
+        }
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }

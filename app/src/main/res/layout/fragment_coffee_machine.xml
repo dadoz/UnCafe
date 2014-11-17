@@ -59,37 +59,37 @@
         <!--</LinearLayout>-->
 
         <!--SETTING LAYOUT-->
-        <LinearLayout
-                android:id="@+id/settingsLayoutId"
-                android:layout_alignParentBottom="true"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/light_black"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:minHeight="@dimen/button_height"
-                android:padding="@dimen/small_padding">
-            <!--<ImageView
-                    android:layout_width="@dimen/medium_icon_size"
-                    android:layout_height="@dimen/medium_icon_size"
-                    android:src="@drawable/settings_icon"/>-->
-            <com.neopixl.pixlui.components.textview.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_big_30"
-                    android:textColor="@color/light_grey"
-                    android:layout_marginLeft="@dimen/small_padding"
-                    android:text="Settings"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
-        </LinearLayout>
+        <!--<LinearLayout-->
+                <!--android:id="@+id/settingsLayoutId"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/light_black"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:minHeight="@dimen/button_height"-->
+                <!--android:padding="@dimen/small_padding">-->
+            <!--&lt;!&ndash;<ImageView-->
+                    <!--android:layout_width="@dimen/medium_icon_size"-->
+                    <!--android:layout_height="@dimen/medium_icon_size"-->
+                    <!--android:src="@drawable/settings_icon"/>&ndash;&gt;-->
+            <!--<com.neopixl.pixlui.components.textview.TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/text_big_30"-->
+                    <!--android:textColor="@color/light_grey"-->
+                    <!--android:layout_marginLeft="@dimen/small_padding"-->
+                    <!--android:text="Settings"-->
+                    <!--pixlui:copyandpaste="false"-->
+                    <!--pixlui:clearclipboardcontent="true"-->
+                    <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
+        <!--</LinearLayout>-->
 
 
+    <!--android:layout_above="@id/settingsLayoutId"-->
         <GridView
                 android:id="@+id/coffeeMachineGridLayoutId"
                 android:layout_below="@id/titleContainerLayoutId"
-                android:layout_above="@id/settingsLayoutId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnWidth="90dp"

@@ -81,7 +81,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.coffee_machine, menu);
+        getMenuInflater().inflate(R.menu.take_a_coffee, menu);
         return true;
     }
 
@@ -94,11 +94,10 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         switch (id) {
             case android.R.id.home:
                 Log.d(TAG, "hey home button");
-//                NavUtils.navigateUpFromSameTask(this);
                 getSupportFragmentManager().popBackStack();
                 return true;
-            case R.id.action_settings:
-                return true;
+//            case R.id.action_settings:
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -144,6 +143,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
     @Override
     public void setActionBarCustomViewById(int id, Object data) {
+//        invalidateOptionsMenu();
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar == null) {
             return;
@@ -168,8 +168,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                         .setText(getResources().getText(R.string.titleTakeACoffee));
                 break;
             case R.id.customActionBarReviewListLayoutId:
-//                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
-//                        .setText(getResources().getText(R.string.titleTakeACoffee));
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setText("01.01.15 - 30.01.15");
                 break;
 
         }
@@ -182,7 +182,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             return;
         }
 
-        Log.e(TAG, id.toString());
         if(id.equals(CoffeeMachineFragment.class)) {
             actionBar.setDisplayHomeAsUpEnabled(false);
             return;

@@ -1,17 +1,19 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.WrapperListAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,6 +28,7 @@ import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
+import uk.me.lewisdeane.ldialogs.CustomDialog;
 
 import java.util.ArrayList;
 
@@ -38,7 +41,7 @@ import static com.application.material.takeacoffee.app.models.ReviewStatus.Revie
  */
 public class ReviewListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<RestResponse>,
-        AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+        AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener {
     private static final String TAG = "ReviewListFragment";
     private static FragmentActivity mainActivityRef = null;
 
@@ -76,7 +79,7 @@ public class ReviewListFragment extends Fragment
 //        moreReviewLoaderView = LayoutInflater.from(mainActivityRef.getApplicationContext())
 //                .inflate(R.layout.more_review_loader_layout, listView, false);
 //        emptyView = inflater.inflate(R.layout.empty_data_status_layout, container, false);
-//
+        setHasOptionsMenu(true);
         initOnLoadView();
 
         return reviewListView;
@@ -243,6 +246,13 @@ public class ReviewListFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
+                .setView(View.inflate(mainActivityRef,
+                        R.layout.review_dialog_template, null))
+                .setPositiveButton("Ok", this);
+        AlertDialog customDialog = builder.create();
+        customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customDialog.show();
 
     }
 
@@ -252,6 +262,32 @@ public class ReviewListFragment extends Fragment
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.review_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+//            case R.id.action_delete:
+//                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
+//                break;
+//            case R.id.action_edit_icon:
+//                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
+//                break;
+//            case R.id.action_my_review_list:
+//                Toast.makeText(mainActivityRef, "my own review list", Toast.LENGTH_SHORT).show();
+//                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        Log.e(TAG, "dismiss");
+    }
 
 
 

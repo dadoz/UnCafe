@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+                android:id="@+id/reviewsButtonId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <include layout="@layout/header_user_template" />
+
+        <ImageView
+                android:layout_height="@dimen/small_icon_size"
+                android:layout_width="@dimen/small_icon_size"
+                android:id="@+id/action_delete"
+                android:icon="@drawable/delete_icon" />
+        <ImageView
+                android:layout_height="@dimen/small_icon_size"
+                android:layout_width="@dimen/small_icon_size"
+                android:id="@+id/action_edit_icon"
+                android:icon="@drawable/edit_icon" />
+
+    </LinearLayout>
+
+    <com.neopixl.pixlui.components.textview.TextView
+            android:id="@+id/reviewDialogCommentTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="review content"
+            android:maxLines="5"
+            android:ellipsize="end"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/text_big_22"
+            pixlui:copyandpaste="false"
+            pixlui:clearclipboardcontent="true"
+            pixlui:typeface="AmaticSC-Regular.ttf"/>
+
+    <com.neopixl.pixlui.components.edittext.EditText
+            android:visibility="gone"
+            android:id="@+id/reviewDialogCommentEditTextId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_black"
+            android:paddingLeft="@dimen/text_big_26"
+            android:paddingRight="@dimen/text_big_26"
+            android:textColorHint="@color/dark_grey"
+            android:hint="Write something..."
+            android:textSize="@dimen/text_big_24"
+            android:minLines="6"
+            android:maxLines="6"
+            android:gravity="top"
+            android:background="@color/light_grey"
+            pixlui:copyandpaste="true"
+            pixlui:clearclipboardcontent="true"
+            pixlui:typeface="AmaticSC-Regular.ttf"/>
+
+
+</LinearLayout>
+
