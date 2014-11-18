@@ -1,7 +1,6 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,27 +11,19 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.WrapperListAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
+import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
-import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Setting;
-import com.application.material.takeacoffee.app.models.User;
-import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
 
 import java.util.ArrayList;
-
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.REVIEW_REQUEST;
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.USER_REQUEST;
-import static com.application.material.takeacoffee.app.models.ReviewStatus.ReviewStatusEnum;
 
 /**
  * Created by davide on 08/04/14.

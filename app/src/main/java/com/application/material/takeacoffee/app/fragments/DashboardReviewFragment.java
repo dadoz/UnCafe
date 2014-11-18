@@ -38,6 +38,7 @@ import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HT
 public class DashboardReviewFragment extends Fragment implements
         View.OnClickListener, LoaderManager.LoaderCallbacks<RestResponse>, DialogInterface.OnClickListener, DialogInterface.OnShowListener {
     private static final String TAG = "DashboardReviewFragment";
+    public static final String DASHBOARD_REVIEW_FRAG_TAG = "DASHBOARD_REVIEW_FRAG_TAG";
     private CoffeeMachineActivity mainActivityRef;
     private View dashboardReviewView;
     private boolean hasAtLeastOneReview = false;
@@ -168,7 +169,7 @@ public class DashboardReviewFragment extends Fragment implements
                 if(hasAtLeastOneReview) {
                     //get listview fragment
                     ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                            .changeFragment(new ReviewListFragment(), bundle, null);
+                            .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
                     break;
                 }
 

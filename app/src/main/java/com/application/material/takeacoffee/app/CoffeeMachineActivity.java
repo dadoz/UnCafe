@@ -35,6 +35,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private RequestQueue requestQueue;
     private ImageLoader imageLoader;
     private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
+    public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
+    private static String currentFragTag = null;
 
 
     @Override
@@ -43,6 +45,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_coffee_machine);
         ButterKnife.inject(this);
 
+        //TODO ALWAYS recreating this stuff - checkit out
         //ACTION BAR
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -60,12 +63,27 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         imageLoader = new ImageLoader(requestQueue, this);
 
         //INIT VIEW
-        initView();
+        if(savedInstanceState != null) {
+            //already init app - try retrieve frag from manager
+            //String fragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                    this.currentFragTag);
+            initView(fragment);
+            return;
+        }
+
+        this.currentFragTag = CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG;
+        initView(new CoffeeMachineFragment());
     }
 
-    private void initView() {
+    private void initView(Fragment fragment) {
+        if(fragment == null) {
+            //if sm error init again app
+            fragment = new CoffeeMachineFragment();
+        }
+
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.coffeeAppFragmentContainerId, new CoffeeMachineFragment())
+                .replace(R.id.coffeeAppFragmentContainerId, fragment, currentFragTag)
                 .commit();
     }
 
@@ -117,12 +135,18 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             Log.e(TAG, "cannot change fragment!");
             return;
         }
-
+//        getResources().putString(CURRENT_FRAGMENT_TAG, CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
+        this.setFragTag(tag);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.coffeeAppFragmentContainerId, fragment)
-                .addToBackStack(tag)
+                .replace(R.id.coffeeAppFragmentContainerId, fragment, tag)
+                .addToBackStack("TAG")
                 .commit();
+    }
+
+    @Override
+    public void setFragTag(String tag) {
+        currentFragTag = tag;
     }
 
     @Override
@@ -188,4 +212,18 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         }
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, currentFragTag);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+    }
+
 }

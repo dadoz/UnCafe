@@ -31,6 +31,7 @@ import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HT
  */
 public class CoffeeMachineFragment extends Fragment implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
     private static final String TAG = "coffeeMachineFragment";
+    public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
     private View coffeeMachineView;
 
@@ -104,7 +105,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         bundle.putParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY, coffeeMachine);
 
         ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                .changeFragment(new DashboardReviewFragment(), bundle, null);
+                .changeFragment(new DashboardReviewFragment(), bundle, DashboardReviewFragment.DASHBOARD_REVIEW_FRAG_TAG);
     }
 
     @Override
@@ -160,4 +161,12 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         }
         return true;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+//        savedInstanceState.putString(CoffeeMachineActivity.CURRENT_FRAGMENT_TAG,
+//                CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
+    }
+
 }

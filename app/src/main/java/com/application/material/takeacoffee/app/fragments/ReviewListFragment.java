@@ -43,6 +43,7 @@ public class ReviewListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<RestResponse>,
         AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener {
     private static final String TAG = "ReviewListFragment";
+    public static final String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
     private static FragmentActivity mainActivityRef = null;
 
 //    private Common.ReviewStatusEnum reviewStatus;
