@@ -52,7 +52,13 @@
     </RelativeLayout>
 
     <!--user template -->
-    <include layout="@layout/header_user_template" />
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/customActionBarUserLayoutId"
+            android:visibility="gone">
+        <include layout="@layout/header_user_template" />
+    </LinearLayout>
     <!--review list template -->
     <LinearLayout
             android:id="@+id/customActionBarReviewListLayoutId"

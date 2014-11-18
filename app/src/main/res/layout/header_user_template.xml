@@ -2,8 +2,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
-        android:id="@+id/customActionBarUserLayoutId"
-        android:visibility="gone"
         android:paddingBottom="@dimen/small_padding"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -11,7 +9,6 @@
         android:layout_height="match_parent">
 
         <ImageView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="@dimen/small_icon_size"
                 android:layout_height="@dimen/small_icon_size"
                 android:src="@drawable/user_icon" />

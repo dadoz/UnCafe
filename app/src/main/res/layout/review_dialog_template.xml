@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+                xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+                android:background="@color/light_grey"
                 android:id="@+id/reviewsButtonId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
+
+    <include layout="@layout/header_user_template" />
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <include layout="@layout/header_user_template" />
 
         <ImageView
                 android:layout_height="@dimen/small_icon_size"
                 android:layout_width="@dimen/small_icon_size"
                 android:id="@+id/action_delete"
-                android:icon="@drawable/delete_icon" />
+                android:src="@drawable/delete_icon" />
         <ImageView
                 android:layout_height="@dimen/small_icon_size"
                 android:layout_width="@dimen/small_icon_size"
                 android:id="@+id/action_edit_icon"
-                android:icon="@drawable/edit_icon" />
+                android:src="@drawable/edit_icon" />
 
     </LinearLayout>
 
