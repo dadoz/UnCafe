@@ -14,29 +14,30 @@
                 android:layout_alignParentTop="true"
                 android:orientation="vertical">
             <com.neopixl.pixlui.components.textview.TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/title_text_size"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/light_black"
-                    android:text="Coffee machines"
+                    android:text="Politecnico"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
                     pixlui:typeface="AmaticSC-Regular.ttf"/>
 
-            <com.neopixl.pixlui.components.textview.TextView
-                    android:layout_width="320dip"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_medium_20"
-                    android:paddingBottom="@dimen/medium_padding"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/dark_grey"
-                    android:text="at Politecnico."
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+            <!--<com.neopixl.pixlui.components.textview.TextView-->
+                    <!--android:layout_width="320dip"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/text_medium_20"-->
+                    <!--android:paddingBottom="@dimen/medium_padding"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:gravity="center"-->
+                    <!--android:textColor="@color/dark_grey"-->
+                    <!--android:text="at Politecnico."-->
+                    <!--pixlui:copyandpaste="false"-->
+                    <!--pixlui:clearclipboardcontent="true"-->
+                    <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
 
         </LinearLayout>
         <!--EMPTY DATA-->
@@ -69,10 +70,10 @@
                 <!--android:gravity="center_vertical"-->
                 <!--android:minHeight="@dimen/button_height"-->
                 <!--android:padding="@dimen/small_padding">-->
-            <!--&lt;!&ndash;<ImageView-->
+            <!--<ImageView-->
                     <!--android:layout_width="@dimen/medium_icon_size"-->
                     <!--android:layout_height="@dimen/medium_icon_size"-->
-                    <!--android:src="@drawable/settings_icon"/>&ndash;&gt;-->
+                    <!--android:src="@drawable/settings_icon"/>-->-->
             <!--<com.neopixl.pixlui.components.textview.TextView-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->

@@ -18,6 +18,7 @@
             android:id="@+id/coffeeMachineNameTextId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/light_black"
             android:text="Coffee machine name"
             android:textSize="@dimen/header_text_size"
             pixlui:copyandpaste="false"

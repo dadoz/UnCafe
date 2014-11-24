@@ -10,10 +10,10 @@
             android:icon="@drawable/delete_icon"
             android:orderInCategory="100"
             app:showAsAction="always" />
-    <item
-            android:id="@+id/action_edit_icon"
-            android:title="position"
-            android:icon="@drawable/edit_icon"
-            android:orderInCategory="100"
-            app:showAsAction="always" />
+    <!--<item-->
+            <!--android:id="@+id/action_edit_icon"-->
+            <!--android:title="position"-->
+            <!--android:icon="@drawable/edit_icon"-->
+            <!--android:orderInCategory="100"-->
+            <!--app:showAsAction="always" />-->
 </menu>

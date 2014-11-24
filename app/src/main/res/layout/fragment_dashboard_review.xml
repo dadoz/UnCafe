@@ -14,13 +14,13 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minHeight="@dimen/button_height"
-            android:background="@color/light_black"
+            android:background="@color/dark_black"
             android:padding="@dimen/small_padding">
 
         <com.neopixl.pixlui.components.textview.TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/light_grey"
+                android:textColor="@color/chocolate_yellow"
                 android:textSize="@dimen/text_big_30"
                 android:text="Add review"
                 pixlui:copyandpaste="false"

@@ -2,14 +2,29 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
-              android:background="@color/light_grey"
                 android:id="@+id/reviewsButtonId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
-    <include layout="@layout/header_user_template" />
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="left"
+                  android:layout_marginTop="@dimen/text_small_16"
+                  android:layout_marginLeft="@dimen/text_small_16"
+                  android:layout_marginRight="@dimen/text_small_16">
+        <include layout="@layout/header_user_template" />
+    </LinearLayout>
+    <RatingBar
+            android:id="@+id/setStatusRatingBarViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_big_26"
+            android:layout_marginRight="@dimen/text_big_26"
+            android:layout_gravity="left"
+            android:stepSize="1"
+            android:numStars="3"/>
 
     <com.neopixl.pixlui.components.edittext.EditText
             android:id="@+id/reviewCommentTextId"
@@ -21,21 +36,13 @@
             android:textColorHint="@color/dark_grey"
             android:hint="Write something..."
             android:textSize="@dimen/text_big_24"
-            android:minLines="6"
+            android:minLines="3"
             android:maxLines="6"
             android:gravity="top"
-            android:background="@color/light_grey"
+
             pixlui:copyandpaste="true"
             pixlui:clearclipboardcontent="true"
             pixlui:typeface="AmaticSC-Regular.ttf"/>
-    <RatingBar
-            android:id="@+id/setStatusRatingBarViewId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:stepSize="1"
-            android:layout_marginLeft="@dimen/text_big_26"
-            android:numStars="3"/>
 
 
 </LinearLayout>

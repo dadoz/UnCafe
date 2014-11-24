@@ -14,12 +14,22 @@ public class Review implements Parcelable {
     private static final String TAG = "Review";
     public static final String ID_NOT_SET = "ID_NOT_SET";
     public static final String REVIEW_KEY = "REVIEW_KEY";
+    public static String REVIEW_OBJ_KEY = "REVIEW_OBJ_KEY";
     private String objectId;
 	private ReviewStatusEnum status;
     private String comment;
     private long timestamp;
     private String userId;
     private String coffeeMachineId;
+
+    public Review(Parcel in) {
+        this.objectId = in.readString();
+        this.userId = in.readString();
+        this.status = ReviewStatus.parseStatus(in.readString());
+        this.comment = in.readString();
+        this.timestamp = in.readLong();
+        this.coffeeMachineId = in.readString();
+    }
 
 	public Review(String objectId, String comment, ReviewStatusEnum status,
                   long timestamp, String userId, String coffeeMachineId) {
@@ -97,6 +107,19 @@ public class Review implements Parcelable {
 
     }
 
+    public static float parseStatusToRating(ReviewStatusEnum status) {
+        if(status == ReviewStatusEnum.WORST) {
+            return 1;
+        }
+        if(status == ReviewStatusEnum.NOTSOBAD) {
+            return 2;
+        }
+        if(status == ReviewStatusEnum.GOOD) {
+            return 3;
+        }
+        return 0;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -104,6 +127,23 @@ public class Review implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(this.objectId);
+        dest.writeString(this.userId);
+        dest.writeString(this.status.name());
+        dest.writeString(comment);
+        dest.writeLong(this.timestamp);
+        dest.writeString(this.coffeeMachineId);
     }
+
+    public static Creator CREATOR = new Creator() {
+        @Override
+        public Review createFromParcel(Parcel source) {
+            return new Review(source);
+        }
+
+        @Override
+        public Review[] newArray(int size) {
+            return new Review[size];
+        }
+    };
 }

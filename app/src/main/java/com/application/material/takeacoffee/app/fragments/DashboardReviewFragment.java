@@ -185,7 +185,7 @@ public class DashboardReviewFragment extends Fragment implements
                         .setPositiveButton("Add", this);
                 customDialog = builder.create();
                 customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setOnShowListener( this);
+                customDialog.setOnShowListener(this);
                 customDialog.show();
                 break;
         }
@@ -200,11 +200,10 @@ public class DashboardReviewFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_position_coffee_machine:
-//                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
-//                break;
             case R.id.action_status:
-                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .changeFragment(new StatusFragment(), null,
+                                StatusFragment.STATUS_FRAG_TAG);
                 break;
         }
         return true;

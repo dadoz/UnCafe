@@ -89,7 +89,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     }
 
     //TODO refactor it
-    private User getUserByUserId(String userId) {
+    public User getUserByUserId(String userId) {
         for(User user : userList) {
             if(user.getId().compareTo(userId) == 0) {
                 return user;

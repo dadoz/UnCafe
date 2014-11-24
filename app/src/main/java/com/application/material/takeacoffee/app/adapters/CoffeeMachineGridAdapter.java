@@ -46,8 +46,8 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         convertView.setTag(holder);
 
         holder.nameTextView.setText(coffeeMachine.getName());
-        holder.nameTextView.setTextColor(mainActivityRef
-                .getResources().getColor(R.color.light_black));
+//        holder.nameTextView.setTextColor(mainActivityRef
+//                .getResources().getColor(R.color.light_black));
         holder.iconImageView.setImageResource(R.drawable.coffee_cup_icon);
 
         //retrieve icon from server volley

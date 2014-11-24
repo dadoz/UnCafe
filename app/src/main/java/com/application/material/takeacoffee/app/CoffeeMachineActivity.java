@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -23,12 +24,15 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFra
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.models.User;
 
 
 public class CoffeeMachineActivity extends ActionBarActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
         ImageLoader.ImageCache, VolleyImageRequestWrapper, SetActionBarInterface {
     private static final String TAG = "CoffeeMachineActivity";
+    public static String ACTION_EDIT_REVIEW_RESULT = "RESULT";
     @InjectView(R.id.onLoadLayoutId)
     View onLoadLayout;
     //Volley lib
@@ -37,6 +41,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
+    public static final int ACTION_EDIT_REVIEW = 1;
 
 
     @Override
@@ -145,6 +150,32 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
     @Override
+    public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle) {
+        Intent intent = new Intent(this, activityClassName);
+        //EditReviewActivity
+        if(activityClassName.equals(EditReviewActivity.class)) {
+            try {
+                intent.putExtras(bundle);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            switch(requestCode) {
+                case CoffeeMachineActivity.ACTION_EDIT_REVIEW:
+                    Log.e(TAG, "hey return form edit review");
+                    break;
+            }
+        }
+    }
+
+    @Override
     public void setFragTag(String tag) {
         currentFragTag = tag;
     }
@@ -190,10 +221,20 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             case R.id.customActionBarUserLayoutId:
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                         .setText(getResources().getText(R.string.titleTakeACoffee));
+//                ((TextView) actionBar.getCustomView().findViewById(R.id.usernameTextId))
+//                        .setTextColor(getResources().getColor(R.color.light_grey));
+                ((TextView) actionBar.getCustomView().findViewById(R.id.usernameTextId))
+                        .setText("fake david");
+//                ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId)).setImageDrawable(getDrawable(R.drawable.user));
+
                 break;
             case R.id.customActionBarReviewListLayoutId:
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                         .setText("01.01.15 - 30.01.15");
+                break;
+            case R.id.customActionBarMapLayoutId:
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setText("Politecnico di Torino");
                 break;
 
         }

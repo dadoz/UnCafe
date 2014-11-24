@@ -18,6 +18,7 @@ import android.widget.WrapperListAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
+import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -28,6 +29,8 @@ import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
+import com.neopixl.pixlui.components.textview.TextView;
+import org.w3c.dom.Text;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
 
 import java.util.ArrayList;
@@ -41,7 +44,8 @@ import static com.application.material.takeacoffee.app.models.ReviewStatus.Revie
  */
 public class ReviewListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<RestResponse>,
-        AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener {
+        AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener,
+        DialogInterface.OnClickListener, View.OnClickListener {
     private static final String TAG = "ReviewListFragment";
     public static final String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
     private static FragmentActivity mainActivityRef = null;
@@ -52,12 +56,14 @@ public class ReviewListFragment extends Fragment
     private String coffeeMachineId;
     private ArrayList<Review> reviewListDataStorage;
     private Bundle bundle;
+    private Bundle bundle2;
     private ReviewStatusEnum reviewStatus;
 
 
     @InjectView(R.id.reviewsContainerListViewId) ListView listView;
     private View moreReviewLoaderView;
     private View emptyView;
+    private AlertDialog customDialog;
 
 
     @Override
@@ -92,6 +98,7 @@ public class ReviewListFragment extends Fragment
         super.onActivityCreated(savedInstance);
         //get all bundle
         bundle = getArguments();
+        bundle2 = new Bundle();
 //        coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY);
 //        reviewStatus = ReviewStatusEnum.valueOf(bundle
 //                .getString(ReviewStatus.REVIEW_STATUS_KEY));
@@ -246,12 +253,27 @@ public class ReviewListFragment extends Fragment
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        Review review = (Review) adapterView.getItemAtPosition(position);
+        View reviewDialogView = View.inflate(mainActivityRef,
+                R.layout.review_dialog_template, null);
+        User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
+
+//        set data i need
+        //tempPos review
+        bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
+        bundle2.putParcelable(User.USER_OBJ_KEY, user);
+        ((TextView) reviewDialogView
+                .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
+        ((TextView) reviewDialogView
+                .findViewById(R.id.reviewDialogCommentTextId)).setText(review.getComment());
+        reviewDialogView
+                .findViewById(R.id.editDialogIconId).setOnClickListener(this);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-                .setView(View.inflate(mainActivityRef,
-                        R.layout.review_dialog_template, null))
-                .setPositiveButton("Ok", this);
-        AlertDialog customDialog = builder.create();
+                .setView(reviewDialogView)
+                .setPositiveButton("Done", this);
+        customDialog = builder.create();
         customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customDialog.show();
 
@@ -288,6 +310,21 @@ public class ReviewListFragment extends Fragment
     @Override
     public void onClick(DialogInterface dialog, int which) {
         Log.e(TAG, "dismiss");
+    }
+
+    @Override
+    public void onClick(View v) {
+        //dialog button
+        switch (v.getId()) {
+            case R.id.editDialogIconId:
+                //dismiss dialog
+                if(customDialog != null) {
+                    customDialog.dismiss();
+                }
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .startActivityWrapper(EditReviewActivity.class, CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
+                break;
+        }
     }
 
 

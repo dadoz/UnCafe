@@ -29,7 +29,8 @@ import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HT
 /**
  * Created by davide on 3/13/14.
  */
-public class CoffeeMachineFragment extends Fragment implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
+public class CoffeeMachineFragment extends Fragment implements
+        AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
@@ -42,11 +43,11 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (!(activity instanceof OnLoadViewHandlerInterface)) {
+        if (! (activity instanceof OnLoadViewHandlerInterface)) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        if (!(activity instanceof OnChangeFragmentWrapperInterface)) {
+        if (! (activity instanceof OnChangeFragmentWrapperInterface)) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
@@ -156,7 +157,14 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_position:
-                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .changeFragment(new MapFragment(), null,
+                                MapFragment.MAP_FRAG_TAG);
+                break;
+            case R.id.action_settings:
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .changeFragment(new SettingListFragment(), null,
+                                SettingListFragment.SETTING_LIST_FRAG_TAG);
                 break;
         }
         return true;

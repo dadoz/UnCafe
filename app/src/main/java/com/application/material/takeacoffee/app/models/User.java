@@ -1,8 +1,12 @@
 package com.application.material.takeacoffee.app.models;
 
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
     private static final String EMPTY_PIC_PATH = "EMPTY_PIC_PATH";
+    public static String USER_OBJ_KEY = "USER_OBJ_KEY";
     private String id;
 	private String username;
 //	private String reviewsListId;
@@ -15,6 +19,12 @@ public class User {
             this.reviewsList = reviewsList;
         }
     */
+    public User(Parcel in) {
+        this.id = in.readString();
+        this.username = in.readString();
+        this.profilePicturePath = in.readString();
+    }
+
 	public User(String id, String profilePicturePath, String username) {
 		this.id = id;
 		this.username = username;
@@ -60,5 +70,29 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.username);
+        dest.writeString(this.profilePicturePath);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+
 
 }

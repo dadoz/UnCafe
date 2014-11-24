@@ -33,6 +33,7 @@ public class SettingListFragment extends Fragment
         AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener {
     private static final String TAG = "ReviewListFragment";
     private static FragmentActivity mainActivityRef = null;
+    public static String SETTING_LIST_FRAG_TAG = "SETTING_LIST_FRAG_TAG";
 
     private View reviewListView;
     private String coffeeMachineId;
@@ -77,10 +78,9 @@ public class SettingListFragment extends Fragment
     }
 
     private void initOnLoadView() {
-//        ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
-//        getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
-//                .forceLoad();
         ArrayList<Setting> settingList = new ArrayList<Setting>();
+        //STATIC DATA :D load form asset even if you want or provide it by this list as u wish
+        settingList.add(new Setting("ID", 0, R.drawable.monsieur_icon, "MONSIUER"));
         initView(settingList);
     }
 
@@ -94,9 +94,9 @@ public class SettingListFragment extends Fragment
                 .setCustomNavigation(SettingListFragment.class);
 
 
-        SettingListAdapter reviewListenerAdapter = new SettingListAdapter(mainActivityRef,
-                R.layout.review_template, reviewList, coffeeMachineId);
-        listView.setAdapter(reviewListenerAdapter);
+        SettingListAdapter settingListAdapter = new SettingListAdapter(mainActivityRef,
+                R.layout.review_template, reviewList);
+        listView.setAdapter(settingListAdapter);
 
         listView.setOnItemClickListener(this);
     }

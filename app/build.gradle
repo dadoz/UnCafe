@@ -21,7 +21,6 @@ android {
     buildToolsVersion "21.0.1"
 
     defaultConfig {
-//        applicationId "com.afollestad.materialdialogssample"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -31,10 +30,23 @@ android {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.debug
+
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
     lintOptions {
         abortOnError false
+    }
+    signingConfigs {
+        debug {
+            storeFile file("../keystore/debug-keystore.jks")
+            storePassword "dadoxx86"
+            keyAlias "davide"
+            keyPassword "dadoxx86"
+        }
     }
 }
 
@@ -44,8 +56,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:5.1.2'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile 'com.android.support:appcompat-v7:21.+'
-    //material-dialogs - then will be removed
-//    compile 'com.afollestad:material-dialogs:0.0.8'
     compile 'uk.me.lewisdeane.ldialogs:ldialogs@aar'
-//    compile 'me.drakeet.materialdialog:library:1.0.9'
+    compile 'com.google.android.gms:play-services:6.+'
 }

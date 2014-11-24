@@ -9,4 +9,6 @@ import android.support.v4.app.Fragment;
 public interface OnChangeFragmentWrapperInterface {
     public void changeFragment(Fragment fragment, Bundle bundle, String tag);
     public void setFragTag(String tag);
+    public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle);
+
 }
