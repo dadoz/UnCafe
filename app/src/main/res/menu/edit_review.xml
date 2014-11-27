@@ -7,13 +7,13 @@
     <item
             android:id="@+id/action_delete"
             android:title="position"
-            android:icon="@drawable/delete_icon"
+            android:icon="@drawable/delete_icon_ultra_small_b"
             android:orderInCategory="100"
             app:showAsAction="always" />
-    <!--<item-->
-            <!--android:id="@+id/action_edit_icon"-->
-            <!--android:title="position"-->
-            <!--android:icon="@drawable/edit_icon"-->
-            <!--android:orderInCategory="100"-->
-            <!--app:showAsAction="always" />-->
+    <item
+            android:id="@+id/action_edit_icon"
+            android:title="position"
+            android:icon="@drawable/edit_icon_ultra_small_b"
+            android:orderInCategory="100"
+            app:showAsAction="always" />
 </menu>

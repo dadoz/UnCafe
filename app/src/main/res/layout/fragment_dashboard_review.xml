@@ -2,31 +2,35 @@
 
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    <!--bottom bar-->
-    <LinearLayout
-            android:id="@+id/addReviewButtonId"
-            android:layout_width="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="@dimen/button_height"
-            android:background="@color/dark_black"
-            android:padding="@dimen/small_padding">
 
-        <com.neopixl.pixlui.components.textview.TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/chocolate_yellow"
-                android:textSize="@dimen/text_big_30"
-                android:text="Add review"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="AmaticSC-Regular.ttf"/>
-    </LinearLayout>
+    <!--bottom bar-->
+    <!--<LinearLayout-->
+            <!--android:id="@+id/addReviewButtonId"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:minHeight="@dimen/button_height"-->
+            <!--android:background="@color/material_text_black"-->
+            <!--android:padding="@dimen/small_padding">-->
+
+        <!--<com.neopixl.pixlui.components.textview.TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColor="@color/material_amber"-->
+                <!--android:textSize="@dimen/text_big_30"-->
+                <!--android:text="Add review"-->
+                <!--pixlui:copyandpaste="false"-->
+                <!--pixlui:clearclipboardcontent="true"-->
+                <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
+
+    <!--</LinearLayout>-->
 
 
     <!-- MAIN CONTENT -->
@@ -35,7 +39,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:padding="@dimen/small_padding"
-            android:layout_above="@id/addReviewButtonId"
             android:layout_alignParentLeft="true">
         <LinearLayout
                 android:layout_width="fill_parent"
@@ -46,5 +49,18 @@
             <include layout="@layout/dashboard_today_review_template"/>
         </LinearLayout>
     </RelativeLayout>
+
+
+    <com.shamanland.fab.FloatingActionButton
+            android:id="@+id/addReviewFabId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/floating_action_button_margin_normal_minus"
+            android:layout_marginRight="@dimen/floating_action_button_margin_normal"
+            app:floatingActionButtonColor="@color/material_amber"
+            android:src="@drawable/edit_icon_ultra_small_b"/>
 
 </RelativeLayout>

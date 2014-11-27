@@ -2,6 +2,8 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -45,20 +47,18 @@ import static com.application.material.takeacoffee.app.models.ReviewStatus.Revie
 public class ReviewListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<RestResponse>,
         AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener,
-        DialogInterface.OnClickListener, View.OnClickListener {
+        DialogInterface.OnClickListener, View.OnClickListener, ActionMode.Callback {
     private static final String TAG = "ReviewListFragment";
     public static final String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
     private static FragmentActivity mainActivityRef = null;
 
-//    private Common.ReviewStatusEnum reviewStatus;
-//    private View reviewListView, emptyView, moreReviewLoaderView;
     private View reviewListView;
     private String coffeeMachineId;
     private ArrayList<Review> reviewListDataStorage;
     private Bundle bundle;
     private Bundle bundle2;
     private ReviewStatusEnum reviewStatus;
-
+    private String meUserId = "4nmvMJNk1R";
 
     @InjectView(R.id.reviewsContainerListViewId) ListView listView;
     private View moreReviewLoaderView;
@@ -254,34 +254,39 @@ public class ReviewListFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Review review = (Review) adapterView.getItemAtPosition(position);
         View reviewDialogView = View.inflate(mainActivityRef,
                 R.layout.review_dialog_template, null);
+        Review review = (Review) adapterView.getItemAtPosition(position);
         User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
 
-//        set data i need
-        //tempPos review
-        bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
-        bundle2.putParcelable(User.USER_OBJ_KEY, user);
         ((TextView) reviewDialogView
                 .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
         ((TextView) reviewDialogView
                 .findViewById(R.id.reviewDialogCommentTextId)).setText(review.getComment());
-        reviewDialogView
-                .findViewById(R.id.editDialogIconId).setOnClickListener(this);
+
+        View doneDialogButton = reviewDialogView
+                .findViewById(R.id.doneDialogIconId);
+
+        doneDialogButton.setOnClickListener(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-                .setView(reviewDialogView)
-                .setPositiveButton("Done", this);
+                .setView(reviewDialogView);
         customDialog = builder.create();
         customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customDialog.show();
-
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+        Review review = (Review) adapterView.getItemAtPosition(position);
+        User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
+
+        if(user.getId().equals(meUserId)) {
+            bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
+            bundle2.putParcelable(User.USER_OBJ_KEY, user);
+            mainActivityRef.startActionMode(this);
+        }
+        return true;
     }
 
 
@@ -293,7 +298,7 @@ public class ReviewListFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+//        switch (item.getItemId()) {
 //            case R.id.action_delete:
 //                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
 //                break;
@@ -303,7 +308,7 @@ public class ReviewListFragment extends Fragment
 //            case R.id.action_my_review_list:
 //                Toast.makeText(mainActivityRef, "my own review list", Toast.LENGTH_SHORT).show();
 //                break;
-        }
+//        }
         return true;
     }
 
@@ -316,18 +321,67 @@ public class ReviewListFragment extends Fragment
     public void onClick(View v) {
         //dialog button
         switch (v.getId()) {
-            case R.id.editDialogIconId:
-                //dismiss dialog
-                if(customDialog != null) {
-                    customDialog.dismiss();
-                }
-                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .startActivityWrapper(EditReviewActivity.class, CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
+            case R.id.doneDialogIconId:
+                customDialog.dismiss();
                 break;
         }
     }
 
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        MenuInflater inflater = mainActivityRef.getMenuInflater();
+        inflater.inflate(R.menu.edit_review, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_icon:
+                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .startActivityWrapper(EditReviewActivity.class, CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
+                break;
+            case R.id.action_delete:
+                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
+                        .setMessage("Sure to delete this review?")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+//                                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
+//                                        .forceLoad();
+                                Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
+                                ((ReviewListAdapter) listView.getAdapter()).deleteReview(review.getId());
+                                ((ReviewListAdapter) listView.getAdapter()).notifyDataSetChanged();
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                Dialog dialog = builder.create();
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.show();
+                break;
+        }
+
+        mode.finish();
+        return true;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+
+    }
 
 
 /*

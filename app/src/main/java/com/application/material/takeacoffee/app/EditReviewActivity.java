@@ -99,11 +99,7 @@ public class EditReviewActivity extends ActionBarActivity implements
 
         currentView.setVisibility(View.VISIBLE);
         ((TextView) currentView.findViewById(R.id.usernameTextId))
-                .setTextColor(getResources().getColor(R.color.light_grey));
-        ((TextView) currentView.findViewById(R.id.usernameTextId))
                 .setText("fake david");
-
-
     }
 
 

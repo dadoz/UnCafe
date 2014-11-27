@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.ReviewStatus;
 import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
+import com.shamanland.fab.FloatingActionButton;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
 
 import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.ADD_REVIEW_BY_PARAMS;
@@ -46,10 +48,10 @@ public class DashboardReviewFragment extends Fragment implements
     @InjectView(R.id.coffeeMachineStatusIconId) View coffeeMachineStatusIcon;
     @InjectView(R.id.coffeeMachineStatusTextId) View coffeeMachineStatusTextView;
     @InjectView(R.id.coffeeMachineWeeklyReviewTextId) View coffeeMachineWeeklyReviewTextView;
-
+    @InjectView(R.id.addReviewFabId) View addReviewButton;
 //    @InjectView(R.id.coffeeMachineNameHeaderId) View coffeeMachineNameHeaderView;
 //    @InjectView(R.id.coffeeMachineLocationHeaderId) View coffeeMachineLocationHeaderView;
-    @InjectView(R.id.addReviewButtonId) View addReviewButton;
+//    @InjectView(R.id.addReviewButtonId) View addReviewButton;
 
     private String coffeeMachineId;
     private CoffeeMachine coffeeMachine;
@@ -124,6 +126,8 @@ public class DashboardReviewFragment extends Fragment implements
         //set listener if there is sm review
         hasAtLeastOneReview = reviewStatus.getHasAtLeastOneReview();
         coffeeMachineStatusIcon.setOnClickListener(this);
+//        ((FloatingActionButton) addReviewButton).setColor(getResources().getColor(R.color.material_amber));
+//        ((FloatingActionButton) addReviewButton).initBackground();
         addReviewButton.setOnClickListener(this);
     }
 
@@ -176,7 +180,7 @@ public class DashboardReviewFragment extends Fragment implements
                 Log.e(TAG, "no review for this coffee machine!");
                 Toast.makeText(mainActivityRef, "No review!", Toast.LENGTH_SHORT);
                 break;
-            case R.id.addReviewButtonId:
+            case R.id.addReviewFabId:
                 addReviewDialogTemplate = View.inflate(mainActivityRef,
                         R.layout.add_review_dialog_template, null);
 
@@ -202,7 +206,7 @@ public class DashboardReviewFragment extends Fragment implements
         switch (item.getItemId()) {
             case R.id.action_status:
                 ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .changeFragment(new StatusFragment(), null,
+                        .changeFragment(new StatusFragment(), bundle,
                                 StatusFragment.STATUS_FRAG_TAG);
                 break;
         }

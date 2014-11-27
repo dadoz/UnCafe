@@ -30,7 +30,6 @@
                 <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/small_padding"
                         android:orientation="vertical" >
                     <com.neopixl.pixlui.components.textview.TextView
 
@@ -38,16 +37,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="username"
-                            android:layout_marginTop="@dimen/small_padding"
-                            android:background="@color/middle_grey"
-                            android:paddingLeft="@dimen/small_padding"
-                            android:paddingRight="@dimen/small_padding"
-                            android:textColor="@color/light_black"
+                            android:textColor="@color/material_brown"
                             android:gravity="center"
-                            android:textSize="@dimen/header_text_size"
+                            android:textSize="@dimen/text_big_40"
                             pixlui:copyandpaste="false"
                             pixlui:clearclipboardcontent="true"
-                            pixlui:typeface="AmaticSC-Regular.ttf"/>
+                            pixlui:typeface="Amatic-Bold.ttf"/>
 
                     <com.neopixl.pixlui.components.textview.TextView
                             android:id="@+id/reviewCommentTextId"
@@ -76,7 +71,7 @@
                         android:id="@+id/reviewDateTextId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/light_black"
+                        android:textColor="@color/material_text_black"
                         android:textSize="@dimen/text_small"
                         android:paddingLeft="@dimen/small_padding"
                         android:paddingRight="@dimen/small_padding"

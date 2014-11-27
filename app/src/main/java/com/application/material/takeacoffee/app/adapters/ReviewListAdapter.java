@@ -103,6 +103,29 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
 
     }
 
+    public boolean updateReview(Review data) {
+        for(Review review : reviewList) {
+            if(review.getId().equals(data.getId())) {
+                review.setComment(data.getComment());
+                review.setStatus(data.getStatus());
+                notifyDataSetChanged();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteReview(String id) {
+        for(int i = 0; i < reviewList.size(); i ++) {
+            if(reviewList.get(i).getId().equals(id)) {
+                reviewList.remove(i);
+                notifyDataSetChanged();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class ViewHolder {
         View mainItemView;
         View extraMenuItemView;

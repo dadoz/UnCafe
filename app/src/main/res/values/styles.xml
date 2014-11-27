@@ -2,6 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="android:actionModeStyle">@style/AppTheme.ActionMode</item>
         <item name="android:textColor">@color/material_amber</item>
         <item name="colorPrimary">@color/material_text_black</item>
         <item name="colorPrimaryDark">@color/material_text_black</item>
@@ -10,6 +11,14 @@
     </style>
 
     <style name="AppTheme.Widget"/>
+
+    <style name="AppTheme.ActionMode" parent="@android:style/Theme.Holo.Light">
+        <item name="android:background">@color/material_amber</item>
+        <!--<item name="android:backgroundSplit">?android:attr/actionModeSplitBackground</item>-->
+        <!--<item name="android:height">?android:attr/actionBarSize</item>-->
+        <!--<item name="android:titleTextStyle">@android:style/TextAppearance.Widget.ActionMode.Title</item>-->
+        <!--<item name="android:subtitleTextStyle">@android:style/TextAppearance.Widget.ActionMode.Subtitle</item>-->
+    </style>
 
     <!--<style name="pixlUICustomTextView" parent="android:style/Widget.TextView">-->
         <!--<item name="pixlui:copyandpaste">false</item>-->

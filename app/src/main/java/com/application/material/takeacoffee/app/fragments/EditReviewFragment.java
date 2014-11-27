@@ -5,26 +5,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
-import android.widget.EditText;
-import android.widget.RatingBar;
-import android.widget.TextView;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.loaders.RestResponse;
+import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
+import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.models.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
+
+import java.util.ArrayList;
+
+import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
 
 
 /**
  * Created by davide on 14/11/14.
  */
-public class EditReviewFragment extends Fragment implements View.OnClickListener {
+public class EditReviewFragment extends Fragment implements
+        View.OnClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
     private static final String TAG = "EditReviewFragment";
     private EditReviewActivity editActivityRef;
     private Bundle bundle;
@@ -69,7 +80,6 @@ public class EditReviewFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         addReviewView = inflater.inflate(R.layout.fragment_edit_review, container, false);
         ButterKnife.inject(this, addReviewView);
-        setHasOptionsMenu(true);
         initOnLoadView();
         return addReviewView;
     }
@@ -88,42 +98,90 @@ public class EditReviewFragment extends Fragment implements View.OnClickListener
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
 
+    public boolean updateReview() {
+        String editComment = ((EditText) editReviewCommentText)
+                .getText().toString();
+        ReviewStatus.ReviewStatusEnum editStatus = Review.parseStatus(
+                ((RatingBar) editStatusRatingBarView).getRating());
+
+        if(review.getComment().equals(editComment) &&
+               review.getStatus().name().equals(editStatus.name())) {
+            return false;
+        }
+
+        review.setComment(editComment);
+        review.setStatus(editStatus);
+        return true;
+    }
+
+    @Override
+    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
+        try {
+            String action = RetrofitLoader.getActionByActionRequestEnum(id);
+            return new RetrofitLoader(this.getActivity(), action, params);
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<RestResponse> loader,
+                               RestResponse restResponse) {
+    }
+
+
+    @Override
+    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
+
+    }
+
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.saveReviewButtonId:
                 Log.e(TAG, "Save");
+                if(! updateReview()) {
+                    Toast.makeText(editActivityRef, "No changes", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                //crete loader to save
+//                getLoaderManager().initLoader(SAVE_EDIT_REVIEW.ordinal(), null, this)
+//                        .forceLoad();
+
+                //on callback
                 intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
+                intent.putExtra(Review.REVIEW_OBJ_KEY, review);
                 editActivityRef.setResult(Activity.RESULT_OK, intent);
                 editActivityRef.finish();
                 break;
-//            case R.id.editDeleteIconId:
-//                Log.e(TAG, "delete");
-//                intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
-//                editActivityRef.setResult(CoffeeMachineActivity.ACTION_EDIT_REVIEW, intent);
-//                editActivityRef.finish();
-//                break;
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.edit_review, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent();
-
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
-                editActivityRef.setResult(Activity.RESULT_OK, intent);
-                editActivityRef.finish();
-                break;
-        }
+//        Intent intent = new Intent();
+//        Log.e(TAG, "Delete");
+//        switch (item.getItemId()) {
+//            case R.id.action_delete:
+////                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
+////                        .forceLoad();
+//
+//                //on callback
+//                intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "DELETE");
+//                intent.putExtra(Review.REVIEW_OBJ_KEY, review);
+//                editActivityRef.setResult(Activity.RESULT_OK, intent);
+//                editActivityRef.finish();
+//                break;
+//        }
         return true;
     }
 

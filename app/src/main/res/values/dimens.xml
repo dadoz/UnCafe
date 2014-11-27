@@ -38,5 +38,6 @@
     <dimen name="header_medium_size">60dip</dimen>
     <dimen name="medium_button_size">75dip</dimen>
     <dimen name="text_huge_60">60dip</dimen>
+    <dimen name="medium_button_width">80dip</dimen>
 
 </resources>

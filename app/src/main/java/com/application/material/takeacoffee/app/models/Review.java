@@ -65,6 +65,9 @@ public class Review implements Parcelable {
         this.comment = value;
     }
 
+    public void setStatus(ReviewStatusEnum status) {
+        this.status = status;
+    }
     public ReviewStatusEnum getStatus() {
         return this.status;
     }

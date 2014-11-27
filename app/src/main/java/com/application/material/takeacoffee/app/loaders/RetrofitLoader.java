@@ -122,7 +122,9 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         USER_REQUEST,
         REVIEW_COUNT_REQUEST,
         ADD_REVIEW_BY_PARAMS,
-        COFFEE_MACHINE_REQUEST
+        COFFEE_MACHINE_REQUEST,
+        SAVE_EDIT_REVIEW,
+        DELETE_REVIEW
     }
 
 //    public class UserCallback implements  Callback<List<User>>  {

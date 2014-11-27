@@ -107,6 +107,7 @@ public class CoffeeMachineFragment extends Fragment implements
 
         ((OnChangeFragmentWrapperInterface) mainActivityRef)
                 .changeFragment(new DashboardReviewFragment(), bundle, DashboardReviewFragment.DASHBOARD_REVIEW_FRAG_TAG);
+//                .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
     }
 
     @Override

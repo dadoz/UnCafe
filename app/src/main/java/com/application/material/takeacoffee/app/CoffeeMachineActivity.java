@@ -13,13 +13,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
 import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
+import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
@@ -72,12 +76,12 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             //already init app - try retrieve frag from manager
             //String fragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                    this.currentFragTag);
+                    currentFragTag);
             initView(fragment);
             return;
         }
 
-        this.currentFragTag = CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG;
+        currentFragTag = CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG;
         initView(new CoffeeMachineFragment());
     }
 
@@ -169,8 +173,44 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         if(resultCode == RESULT_OK) {
             switch(requestCode) {
                 case CoffeeMachineActivity.ACTION_EDIT_REVIEW:
-                    Log.e(TAG, "hey return form edit review");
-                    break;
+                    //get current frag
+                    try {
+                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                                currentFragTag);
+                        ReviewListAdapter adapter = (ReviewListAdapter) ((ListView) fragment
+                                .getView().findViewById(R.id.reviewsContainerListViewId))
+                                .getAdapter();
+    //                    View currentView = fragment.getView();
+
+                        //get data
+                        Bundle bundle = data.getExtras();
+                        String action = bundle.getString(
+                                CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT);
+                        Review review = (Review) bundle.get(
+                                Review.REVIEW_OBJ_KEY);
+                        if(action == null || review == null) {
+                            Log.e(TAG, "error onActivityResult - no action or empty data");
+                            break;
+                        }
+
+                        if(action.equals("SAVE")) {
+                            Log.e(TAG, "save " + review.getId());
+                            adapter.updateReview(review);
+                            break;
+                        }
+
+//                        if(action.equals("DELETE")) {
+//                            Log.e(TAG, "remove " + review.getId());
+//                            adapter.deleteReview(review.getId());
+//                            break;
+//                        }
+                        Log.e(TAG, "hey return form edit review");
+                        break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        break;
+                    }
+
             }
         }
     }
@@ -213,8 +253,11 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         currentView.setVisibility(View.VISIBLE);
         switch (id) {
             case R.id.customActionBarCoffeeMachineLayoutId:
+                if(data == null) {
+                    return;
+                }
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
-                .setText(((CoffeeMachine) data).getName());
+                    .setText(((CoffeeMachine) data).getName());
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarCoffeeMachineLocationId))
                         .setText(((CoffeeMachine) data).getAddress());
                 break;

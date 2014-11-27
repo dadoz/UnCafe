@@ -91,6 +91,7 @@
         <GridView
                 android:id="@+id/coffeeMachineGridLayoutId"
                 android:layout_below="@id/titleContainerLayoutId"
+                android:listSelector="@color/listview_selector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnWidth="90dp"
