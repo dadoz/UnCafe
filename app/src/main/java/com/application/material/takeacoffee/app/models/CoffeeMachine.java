@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class CoffeeMachine implements Parcelable{
     public static String COFFEE_MACHINE_ID_KEY = "COFFEE_MACHINE_ID";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
+    public static String COFFEE_MACHINE_STRING_KEY = "COFFEE_MACHINE_STRING_KEY";
     private final String objectId;
     private String iconPath;
 	private String name;

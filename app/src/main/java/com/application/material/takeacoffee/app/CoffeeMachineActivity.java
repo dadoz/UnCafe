@@ -28,6 +28,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFra
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
 
@@ -36,7 +37,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
         ImageLoader.ImageCache, VolleyImageRequestWrapper, SetActionBarInterface {
     private static final String TAG = "CoffeeMachineActivity";
-    public static String ACTION_EDIT_REVIEW_RESULT = "RESULT";
     @InjectView(R.id.onLoadLayoutId)
     View onLoadLayout;
     //Volley lib
@@ -45,7 +45,10 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
+    public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
+    public static String ACTION_ADD_REVIEW_RESULT = "ADD_RESULT";
     public static final int ACTION_EDIT_REVIEW = 1;
+    public static final int ACTION_ADD_REVIEW = 2;
 
 
     @Override
@@ -171,46 +174,52 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK) {
+            Bundle bundle;
+            ReviewListAdapter adapter;
+            try {
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                        currentFragTag);
+                 adapter = (ReviewListAdapter) ((ListView) fragment
+                        .getView().findViewById(R.id.reviewsContainerListViewId))
+                        .getAdapter();
+                //get data
+                bundle = data.getExtras();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
             switch(requestCode) {
                 case CoffeeMachineActivity.ACTION_EDIT_REVIEW:
-                    //get current frag
-                    try {
-                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                                currentFragTag);
-                        ReviewListAdapter adapter = (ReviewListAdapter) ((ListView) fragment
-                                .getView().findViewById(R.id.reviewsContainerListViewId))
-                                .getAdapter();
-    //                    View currentView = fragment.getView();
-
-                        //get data
-                        Bundle bundle = data.getExtras();
-                        String action = bundle.getString(
-                                CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT);
-                        Review review = (Review) bundle.get(
-                                Review.REVIEW_OBJ_KEY);
-                        if(action == null || review == null) {
-                            Log.e(TAG, "error onActivityResult - no action or empty data");
-                            break;
-                        }
-
-                        if(action.equals("SAVE")) {
-                            Log.e(TAG, "save " + review.getId());
-                            adapter.updateReview(review);
-                            break;
-                        }
-
-//                        if(action.equals("DELETE")) {
-//                            Log.e(TAG, "remove " + review.getId());
-//                            adapter.deleteReview(review.getId());
-//                            break;
-//                        }
-                        Log.e(TAG, "hey return form edit review");
-                        break;
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    String action = bundle.getString(
+                            CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT);
+                    Review review = (Review) bundle.get(
+                            Review.REVIEW_OBJ_KEY);
+                    if(action == null || review == null) {
+                        Log.e(TAG, "error onActivityResult - no action or empty data");
                         break;
                     }
 
+                    if(action.equals("SAVE")) {
+                        Log.e(TAG, "save " + review.getId());
+                        adapter.updateReview(review);
+                        break;
+                    }
+
+                    Log.e(TAG, "hey return form edit review");
+                    break;
+                case CoffeeMachineActivity.ACTION_ADD_REVIEW:
+                    //get current frag
+                    review = (Review) bundle.get(
+                            Review.REVIEW_OBJ_KEY);
+                    if(review == null) {
+                        Log.e(TAG, "error onActivityResult - no action or empty data");
+                        break;
+                    }
+
+                    Log.e(TAG, "add " + review.getId());
+                    adapter.addReview(review);
+                    break;
             }
         }
     }
@@ -272,8 +281,12 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
                 break;
             case R.id.customActionBarReviewListLayoutId:
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarPeriodTextId))
+                        .setText(((Bundle) data)
+                                .getString(CoffeeMachineStatus.COFFEE_MACHINE_STATUS_STRING_KEY));
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
-                        .setText("01.01.15 - 30.01.15");
+                        .setText(((Bundle) data)
+                                .getString(CoffeeMachine.COFFEE_MACHINE_STRING_KEY));
                 break;
             case R.id.customActionBarMapLayoutId:
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))

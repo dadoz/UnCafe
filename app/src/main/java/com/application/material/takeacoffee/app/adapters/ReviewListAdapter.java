@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.VolleyImageRequestWrapper;
 import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
-import com.neopixl.pixlui.components.textview.TextView;
 
 import java.util.ArrayList;
 
@@ -38,29 +40,22 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         try {
-            convertView = LayoutInflater.from(mainActivityRef.getApplicationContext()).inflate(R.layout.review_template, parent, false);
+            convertView = LayoutInflater.from(mainActivityRef
+                    .getApplicationContext()).inflate(R.layout.review_template, parent, false);
             Review review = reviewList.get(position);
             ViewHolder holder = new ViewHolder();
-            holder.mainItemView = convertView.findViewById(R.id.mainItemViewId);
-//            holder.extraMenuItemView = convertView.findViewById(R.id.extraMenuItemViewId);
             holder.usernameTextView = (TextView) convertView.findViewById(R.id.reviewUsernameTextId);
             holder.reviewDateTextView = ((TextView) convertView.findViewById(R.id.reviewDateTextId));
             holder.reviewCommentTextView = ((TextView) convertView.findViewById(R.id.reviewCommentTextId));
             holder.profilePicImageView = ((ImageView) convertView.findViewById(R.id.profilePicReviewTemplateId));
+            holder.statusRatingBarView = ((RatingBar) convertView.findViewById(R.id.statusRatingBarId));
 
 //          TODO SET DATA TO VIEW
             holder.reviewCommentTextView.setText(review.getComment());
             holder.reviewDateTextView.setText(review.getFormattedTimestamp());
-
-            //show extra menu
-            //TODO on action bar - so might add an interface to handle in main
-/*            if(selectedItemIndex == position) {
-                //set extra menu visibility
-                holder.mainItemView.setVisibility(View.GONE);
-                holder.extraMenuItemView.setVisibility(View.VISIBLE);
-//            setReviewListHeaderBackgroundLabel(holder.extraMenuItemView, false); TODO replace this
-                initExtraMenuAction(holder.extraMenuItemView);
-            }*/
+            holder.statusRatingBarView.setRating(ReviewStatus.parseStatusToRating(review.getStatus()));
+//            ((TextView) convertView.findViewById(R.id.statusRatingBarId)).setText(
+//                    String.valueOf(ReviewStatus.parseStatusToRating(review.getStatus())));
 
             if(userList == null) {
                 return convertView;
@@ -126,9 +121,18 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
         return false;
     }
 
+    public boolean addReview(Review review) {
+        if(review == null) {
+            return false;
+        }
+        reviewList.add(review);
+        notifyDataSetChanged();
+        return true;
+    }
+
     public static class ViewHolder {
         View mainItemView;
-        View extraMenuItemView;
+        RatingBar statusRatingBarView;
         TextView reviewDateTextView;
         TextView reviewCommentTextView;
         ImageView profilePicImageView;

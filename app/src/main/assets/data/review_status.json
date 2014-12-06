@@ -1,8 +1,7 @@
 {
     "result": {
         "status": "GOOD",
-        "name": "This is a good coffee",
-        "weekly_review_cnt": 5,
-        "has_at_least_one_review": true
+        "good_review_percentage": "30",
+        "description": "This is a good coffee"
     }
 }

@@ -7,6 +7,7 @@ import android.os.Parcelable;
 public class User implements Parcelable {
     private static final String EMPTY_PIC_PATH = "EMPTY_PIC_PATH";
     public static String USER_OBJ_KEY = "USER_OBJ_KEY";
+    public static String USER_ID_KEY = "USER_ID_KEY";
     private String id;
 	private String username;
 //	private String reviewsListId;

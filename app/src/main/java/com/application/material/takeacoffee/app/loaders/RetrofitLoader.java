@@ -73,22 +73,15 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
 
             Object data = null;
             switch (mAction) {
-                case COFFEE_MACHINE_REQUEST:
-                    data = retrofitService.listCoffeeMachine();
-                    break;
-                case MORE_REVIEW_REQUEST:
-                    User user = null;
-                    data = retrofitService.listMoreReview(user);
+                case ADD_REVIEW_REQUEST:
+                    //TODO never implemented
                     break;
                 case REVIEW_REQUEST:
                     data = retrofitService.listReview();
                     break;
-                case REVIEW_COUNT_REQUEST:
-                    data = retrofitService.mapReviewCount();
-                    break;
-                case ADD_REVIEW_BY_PARAMS:
-                    Review review = params.getParcelable(Review.REVIEW_KEY);
-                    data = retrofitService.addReviewByParams(review);
+                case MORE_REVIEW_REQUEST:
+                    User user = null;
+                    data = retrofitService.listMoreReview(user);
                     break;
                 case USER_REQUEST:
                     String [] array = {"4nmvMJNk1R","K8bwZOSmNo","8e2XwXZUKL"};
@@ -96,12 +89,38 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
 //                    userIdArrayLIst.addAll(Arrays.asList(array));
 //                    JSONObject userIdList = new JSONObject().put("userIdList", new JSONArray(userIdArrayLIst));
                     UserParams userParams = new UserParams(array);
-                    retrofitService.listUserByIdList(userParams);
+                    //retrofitService.listUserByIdList(userParams);
                     break;
+                case REVIEW_COUNT_REQUEST:
+                    //TODO not used anymore
+//                    data = retrofitService.mapReviewCount();
+                    break;
+                case ADD_REVIEW_BY_PARAMS:
+                    Review review = params.getParcelable(Review.REVIEW_KEY);
+                    data = retrofitService.addReviewByParams(review);
+                    break;
+                case COFFEE_MACHINE_REQUEST:
+                    data = retrofitService.listCoffeeMachine();
+                    break;
+                case SAVE_EDIT_REVIEW:
+                    review = null;
+                    retrofitService.saveEditReview(review);
+                    break;
+                case DELETE_REVIEW:
+                    String reviewId = "TEST";
+                    retrofitService.deleteReview(reviewId);
+                    break;
+                case GET_COFFEE_MACHINE_STATUS:
+                    String coffeeMachineId = "TEST";
+                    String array2[] = { coffeeMachineId };
+                    retrofitService.getCoffeeMachineStatus(new UserParams(array2));
+                    break;
+
             }
             return new RestResponse(data, mAction); // We send a Response back
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Log.e(TAG, "RetrofitLoader error :" + e.getMessage());
         }
         return null;
     }
@@ -124,7 +143,8 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         ADD_REVIEW_BY_PARAMS,
         COFFEE_MACHINE_REQUEST,
         SAVE_EDIT_REVIEW,
-        DELETE_REVIEW
+        DELETE_REVIEW,
+        GET_COFFEE_MACHINE_STATUS
     }
 
 //    public class UserCallback implements  Callback<List<User>>  {
@@ -155,10 +175,11 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         //action model
         public static final String COFFEE_MACHINE = "coffee_machines";
         public static final String REVIEW = "reviews";
-        public static final String REVIEW_BY_TIMESTAMP_LIMIT = "getReviewByTimestampLimitOnResult";
-        public static final String USER_BY_ID_LIST= "getUserListByUserIdList";
-        public static final String MORE_REVIEW = "getMoreReview";
-        public static final String REVIEW_COUNTER_TIMESTAMP = "countOnReviewsWithTimestamp";
+        public static final String REVIEW_BY_TIMESTAMP_LIMIT = "getReviewsFromTimestamp";
+        public static final String USER_BY_ID_LIST= "getUsersByUserIdList";
+        public static final String MORE_REVIEW = "getMoreReviews";
+        public static final String GET_COFFEE_MACHINE_STATUS = "getCoffeeMachineStatus";
+//        public static final String REVIEW_COUNTER_TIMESTAMP = "countOnReviewsWithTimestamp";
     }
 
     //TODO TEST

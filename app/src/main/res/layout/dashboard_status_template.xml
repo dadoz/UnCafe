@@ -1,23 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+        android:id="@+id/dashboardStatusLayoutId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/small_padding">
         <ImageView
-                android:layout_width="@dimen/huge_icon_size"
-                android:layout_height="@dimen/huge_icon_size"
-                android:src="@drawable/edit_icon_2"/>
-    <com.neopixl.pixlui.components.textview.TextView
+                android:id="@+id/statusCoffeeIconId"
+                android:layout_width="@dimen/coffee_icon_size"
+                android:layout_height="@dimen/coffee_icon_size"
+                android:src="@drawable/coffee_cup_icon" />
+
+        <LinearLayout
+                android:layout_toRightOf="@id/statusCoffeeIconId"
+                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_medium_20"
-                android:text="Status : good"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="AmaticSC-Regular.ttf"/>
+                android:orientation="vertical">
+            <com.neopixl.pixlui.components.textview.TextView
+                    android:id="@+id/goodReviewPercentageTextId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/material_deep_purple"
+                    android:textSize="@dimen/text_huge_60"
+                    android:text="- %"
+                    pixlui:copyandpaste="false"
+                    pixlui:clearclipboardcontent="true"
+                    pixlui:typeface="Amatic-Bold.ttf"/>
 
-</LinearLayout>
+            <com.neopixl.pixlui.components.textview.TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/material_text_black"
+                    android:textSize="@dimen/text_medium_20"
+                    android:text="of good review"
+                    pixlui:copyandpaste="false"
+                    pixlui:clearclipboardcontent="true"
+                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+            <ImageView
+                    android:id="@+id/leftArrowIconId"
+                    android:layout_width="@dimen/medium_icon_size"
+                    android:layout_height="@dimen/medium_icon_size"
+                    android:src="@drawable/left_arrow" />
+
+            <!--<com.neopixl.pixlui.components.textview.TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/text_medium_20"-->
+                    <!--android:text="prev reviews"-->
+                    <!--android:textColor="@color/material_text_black"-->
+                    <!--pixlui:copyandpaste="false"-->
+                    <!--pixlui:clearclipboardcontent="true"-->
+                    <!--pixlui:typeface="Amatic-Bold.ttf"/>-->
+
+        </LinearLayout>
+
+
+</RelativeLayout>

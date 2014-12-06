@@ -9,29 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <!--bottom bar-->
-    <!--<LinearLayout-->
-            <!--android:id="@+id/addReviewButtonId"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center"-->
-            <!--android:minHeight="@dimen/button_height"-->
-            <!--android:background="@color/material_text_black"-->
-            <!--android:padding="@dimen/small_padding">-->
-
-        <!--<com.neopixl.pixlui.components.textview.TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="@color/material_amber"-->
-                <!--android:textSize="@dimen/text_big_30"-->
-                <!--android:text="Add review"-->
-                <!--pixlui:copyandpaste="false"-->
-                <!--pixlui:clearclipboardcontent="true"-->
-                <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
-
-    <!--</LinearLayout>-->
-
 
     <!-- MAIN CONTENT -->
     <RelativeLayout

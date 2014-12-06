@@ -35,17 +35,10 @@ public class SettingListFragment extends Fragment
     private static FragmentActivity mainActivityRef = null;
     public static String SETTING_LIST_FRAG_TAG = "SETTING_LIST_FRAG_TAG";
 
-    private View reviewListView;
+    private View settingListView;
     private String coffeeMachineId;
-//    private ArrayList<Review> reviewListDataStorage;
     private Bundle bundle;
-//    private ReviewStatusEnum reviewStatus;
-
-
-    @InjectView(R.id.reviewsContainerListViewId) ListView listView;
-//    private View moreReviewLoaderView;
-//    private View emptyView;
-
+    @InjectView(R.id.settingsContainerListViewId) ListView listView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -62,11 +55,11 @@ public class SettingListFragment extends Fragment
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        reviewListView = inflater.inflate(R.layout.fragment_review_list, container, false);
-        ButterKnife.inject(this, reviewListView);
+        settingListView = inflater.inflate(R.layout.fragment_settings, container, false);
+        ButterKnife.inject(this, settingListView);
         setHasOptionsMenu(true);
         initOnLoadView();
-        return reviewListView;
+        return settingListView;
     }
 
 
@@ -80,7 +73,10 @@ public class SettingListFragment extends Fragment
     private void initOnLoadView() {
         ArrayList<Setting> settingList = new ArrayList<Setting>();
         //STATIC DATA :D load form asset even if you want or provide it by this list as u wish
-        settingList.add(new Setting("ID", 0, R.drawable.monsieur_icon, "MONSIUER"));
+        settingList.add(new Setting("ID", 0, R.drawable.monsieur_icon, "setting 1"));
+        settingList.add(new Setting("ID", 1, R.drawable.drink_icon, "setting 2"));
+        settingList.add(new Setting("ID", 2, R.drawable.crown_icon, "setting 3"));
+        settingList.add(new Setting("ID", 3, R.drawable.barometer_icon, "setting 4"));
         initView(settingList);
     }
 
@@ -89,7 +85,7 @@ public class SettingListFragment extends Fragment
 
         //action bar
         ((SetActionBarInterface) mainActivityRef)
-                .setActionBarCustomViewById(R.id.customActionBarReviewListLayoutId, null);
+                .setActionBarCustomViewById(R.id.customActionSettingsLayoutId, null);
         ((SetActionBarInterface) mainActivityRef)
                 .setCustomNavigation(SettingListFragment.class);
 
@@ -97,7 +93,6 @@ public class SettingListFragment extends Fragment
         SettingListAdapter settingListAdapter = new SettingListAdapter(mainActivityRef,
                 R.layout.review_template, reviewList);
         listView.setAdapter(settingListAdapter);
-
         listView.setOnItemClickListener(this);
     }
 
@@ -137,7 +132,7 @@ public class SettingListFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.review_list, menu);
+        menuInflater.inflate(R.menu.review_list_no_edit, menu);
     }
 
     @Override

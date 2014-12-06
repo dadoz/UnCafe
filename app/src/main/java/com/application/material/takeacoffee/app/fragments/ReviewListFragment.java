@@ -3,22 +3,19 @@ package com.application.material.takeacoffee.app.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.WrapperListAdapter;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
@@ -28,18 +25,22 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewH
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
+import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
 import com.neopixl.pixlui.components.textview.TextView;
-import org.w3c.dom.Text;
-import uk.me.lewisdeane.ldialogs.CustomDialog;
+import com.shamanland.fab.ShowHideOnScroll;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.REVIEW_REQUEST;
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.USER_REQUEST;
-import static com.application.material.takeacoffee.app.models.ReviewStatus.ReviewStatusEnum;
+import static com.application.material.takeacoffee.app.models.Review.REVIEW_KEY;
+import static com.application.material.takeacoffee.app.models.Review.ReviewStatus;
+import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
+
 
 /**
  * Created by davide on 08/04/14.
@@ -54,16 +55,24 @@ public class ReviewListFragment extends Fragment
 
     private View reviewListView;
     private String coffeeMachineId;
-    private ArrayList<Review> reviewListDataStorage;
     private Bundle bundle;
     private Bundle bundle2;
-    private ReviewStatusEnum reviewStatus;
+    private CoffeeMachineStatus coffeeMachineStatus;
     private String meUserId = "4nmvMJNk1R";
 
     @InjectView(R.id.reviewsContainerListViewId) ListView listView;
+    @InjectView(R.id.addReviewFabId) View addReviewFabButton;
+    @InjectView(R.id.goodReviewPercentageTextId) TextView goodReviewPercentageView;
+    @InjectView(R.id.statusCoffeeIconId) ImageView statusCoffeeIcon;
+    @InjectView(R.id.leftArrowIconId) ImageView leftArrowIcon;
+
     private View moreReviewLoaderView;
     private View emptyView;
     private AlertDialog customDialog;
+    private View addReviewDialogTemplate;
+    private ArrayList<Review> reviewList;
+    private ArrayList<User> userList;
+    private CoffeeMachine coffeeMachine;
 
 
     @Override
@@ -86,6 +95,16 @@ public class ReviewListFragment extends Fragment
 //        moreReviewLoaderView = LayoutInflater.from(mainActivityRef.getApplicationContext())
 //                .inflate(R.layout.more_review_loader_layout, listView, false);
 //        emptyView = inflater.inflate(R.layout.empty_data_status_layout, container, false);
+
+        bundle = getArguments();
+        bundle2 = new Bundle(); //TODO please implement parcelable in coffeeMachine
+        coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY);
+        coffeeMachine = bundle.getParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
+//        reviewStatus = ReviewStatus.ReviewStatusEnum.valueOf(bundle
+//                .getString(ReviewStatus.REVIEW_STATUS_KEY));
+
+        restoreSavedInstance(savedInstance);
+
         setHasOptionsMenu(true);
         initOnLoadView();
 
@@ -96,21 +115,25 @@ public class ReviewListFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstance) {
         super.onActivityCreated(savedInstance);
-        //get all bundle
-        bundle = getArguments();
-        bundle2 = new Bundle();
-//        coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY);
-//        reviewStatus = ReviewStatusEnum.valueOf(bundle
-//                .getString(ReviewStatus.REVIEW_STATUS_KEY));
-
     }
+
 
     private void initOnLoadView() {
         ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
-        getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
+        Log.w(TAG, "call initLoader getCoffeeMachineStatus");
+
+        if(reviewList != null) {
+            initView();
+            return;
+        }
+
+        getLoaderManager().initLoader(GET_COFFEE_MACHINE_STATUS.ordinal(), null, this)
                 .forceLoad();
 
-        //TODO REFACTORIZE IT
+//        getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
+//                .forceLoad();
+
+        //TODO REFACTORING
 /*        long fromTimestamp = bundle.getLong(Common.FROM_TIMESTAMP_KEY);
         long toTimestamp = bundle.getLong(Common.TO_TIMESTAMP_KEY);
         Bundle params = RestResponse.createBundleReview(coffeeMachineId, fromTimestamp, toTimestamp);
@@ -123,20 +146,32 @@ public class ReviewListFragment extends Fragment
 
     }
 
-    public void initView(ArrayList<Review> reviewList) {
+    public void initView() {
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
+        if(coffeeMachineStatus != null) {
+            goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
+//            statusCoffeeIcon.setImageDrawable();
+        }
         //action bar
+        Bundle actionbarBundle = new Bundle();
+        actionbarBundle.putString(CoffeeMachineStatus.COFFEE_MACHINE_STATUS_STRING_KEY,
+                "01.12 - today");
+        actionbarBundle.putString(CoffeeMachine.COFFEE_MACHINE_STRING_KEY,
+                coffeeMachine.getName());
         ((SetActionBarInterface) mainActivityRef)
-                .setActionBarCustomViewById(R.id.customActionBarReviewListLayoutId, null);
+                .setActionBarCustomViewById(R.id.customActionBarReviewListLayoutId,
+                        actionbarBundle);
         ((SetActionBarInterface) mainActivityRef)
                 .setCustomNavigation(ReviewListFragment.class);
 
         if (reviewList == null) {
-            Log.e(TAG, "empty review list");
+            Log.w(TAG, "empty review list");
             listView.setEmptyView(emptyView);
             return;
         }
+
+        leftArrowIcon.setOnClickListener(this);
 
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 R.layout.review_template, reviewList, coffeeMachineId);
@@ -144,6 +179,8 @@ public class ReviewListFragment extends Fragment
 
         listView.setOnItemLongClickListener(this);
         listView.setOnItemClickListener(this);
+        listView.setOnTouchListener(new ShowHideOnScroll(addReviewFabButton));
+        addReviewFabButton.setOnClickListener(this);
     }
 
     @Override
@@ -160,19 +197,31 @@ public class ReviewListFragment extends Fragment
     @Override
     public void onLoadFinished(Loader<RestResponse> loader,
                                RestResponse restResponse) {
+        //TODO FIX IT
         final int REVIEW_REQ = 1; //REVIEW_REQUEST.ordinal();
-        final int MORE_REVIEW_REQ = 2; //MORE_REVIEW_REQUEST.ordinal();
+        final int MORE_REVIEW_REQ = -1; //MORE_REVIEW_REQUEST.ordinal();
         final int USER_REQ = 3; //MORE_REVIEW_REQUEST.ordinal();
+        final int STATUS_REQ = 9; //.ordinal();
 
-//        if(restResponse.getParsedData() == null) {
-//            Log.e(TAG, "empty data result - nothing to be done");
-//            return;
-//        }
-        Log.e(TAG, "id review_request" + REVIEW_REQUEST.ordinal());
+        Log.i(TAG, "id review_request " + loader.getId());
         try {
             switch (loader.getId()) {
+                case STATUS_REQ:
+                    Log.i(TAG, "STATUS_REQ");
+
+                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+//                    reviewStatus = (ReviewStatus) restResponse.getParsedData();
+
+                    //MOCKUP
+                    String filename = "review_status.json";
+                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    coffeeMachineStatus = ParserToJavaObject.coffeeMachineStatusParser(data);
+
+                    getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
+                            .forceLoad();
+                    break;
                 case REVIEW_REQ:
-                    Log.e(TAG, "REVIEW_REQ");
+                    Log.i(TAG, "REVIEW_REQ");
 //                    ArrayList<Review> reviewList = (ArrayList<Review>) restResponse.getParsedData();
 //                    create new loader for user
 //                    Bundle params = new Bundle();
@@ -180,36 +229,37 @@ public class ReviewListFragment extends Fragment
 //                    initView(reviewList);
 
                     ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-                    String filename = "reviews.json";
-                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    ArrayList<Review> reviewList = ParserToJavaObject.getReviewListParser(data);
+                    filename = "reviews.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    reviewList = ParserToJavaObject.getReviewListParser(data);
                     Bundle params = new Bundle();
                     getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                    initView(reviewList);
+                    initView();
 
                     break;
                 case MORE_REVIEW_REQ:
-                    Log.e(TAG, "MORE_REVIEW_REQ");
+                    Log.i(TAG, "MORE_REVIEW_REQ");
                     reviewList = (ArrayList<Review>) restResponse.getParsedData();
                     //create new loader for user
                     params = new Bundle();
                     getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
                     break;
                 case USER_REQ:
-                    Log.e(TAG, "USER_REQ");
+                    Log.i(TAG, "USER_REQ");
 
 //                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
 
                     //TODO TEST
                     filename = "user.json";
                     data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    ArrayList<User> userList = ParserToJavaObject.getUserListParser(data);
+                    userList = ParserToJavaObject.getUserListParser(data);
 
                     ((ReviewListAdapter) listView.getAdapter()).setUserList(userList);
                     //UPDATE DATA on LIST
                     if (listView.getAdapter() != null) {
                         try {
-                            ((ReviewListAdapter) ((WrapperListAdapter) listView.getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+                            ((ReviewListAdapter) ((WrapperListAdapter) listView.getAdapter())
+                                    .getWrappedAdapter()).notifyDataSetChanged();
                         } catch (Exception e) {
                             ((ReviewListAdapter) listView.getAdapter()).notifyDataSetChanged();
                         }
@@ -281,11 +331,15 @@ public class ReviewListFragment extends Fragment
         Review review = (Review) adapterView.getItemAtPosition(position);
         User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
 
-        if(user.getId().equals(meUserId)) {
+        //clear prev bundle
+        bundle2.putParcelable(Review.REVIEW_OBJ_KEY, null);
+        bundle2.putParcelable(User.USER_OBJ_KEY, null);
+        //set
+        if(user != null && user.getId().equals(meUserId)) {
             bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
             bundle2.putParcelable(User.USER_OBJ_KEY, user);
-            mainActivityRef.startActionMode(this);
         }
+        mainActivityRef.startActionMode(this);
         return true;
     }
 
@@ -298,17 +352,17 @@ public class ReviewListFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
+        switch (item.getItemId()) {
 //            case R.id.action_delete:
 //                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
 //                break;
 //            case R.id.action_edit_icon:
 //                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
 //                break;
-//            case R.id.action_my_review_list:
-//                Toast.makeText(mainActivityRef, "my own review list", Toast.LENGTH_SHORT).show();
-//                break;
-//        }
+            case R.id.action_old_review:
+                Toast.makeText(mainActivityRef, "old review list", Toast.LENGTH_SHORT).show();
+                break;
+        }
         return true;
     }
 
@@ -324,12 +378,32 @@ public class ReviewListFragment extends Fragment
             case R.id.doneDialogIconId:
                 customDialog.dismiss();
                 break;
+            case R.id.addReviewFabId:
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .startActivityWrapper(AddReviewActivity.class,
+                                CoffeeMachineActivity.ACTION_ADD_REVIEW, null);
+                break;
+            case R.id.leftArrowIconId:
+                Toast.makeText(mainActivityRef, "got statistics on machine",
+                        Toast.LENGTH_SHORT).show();
+//                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+//                        .startActivityWrapper(AddReviewActivity.class,
+//                                CoffeeMachineActivity.ACTION_ADD_REVIEW, null);
+                break;
+
         }
     }
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mainActivityRef.getMenuInflater();
+        //trying to get data
+        if(bundle2.get(Review.REVIEW_OBJ_KEY) == null ||
+                bundle2.get(User.USER_OBJ_KEY) == null) {
+            //not allowed to edit data
+            inflater.inflate(R.menu.review_list_no_edit, menu);
+            return true;
+        }
         inflater.inflate(R.menu.edit_review, menu);
         return true;
     }
@@ -345,7 +419,8 @@ public class ReviewListFragment extends Fragment
             case R.id.action_edit_icon:
                 Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
                 ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .startActivityWrapper(EditReviewActivity.class, CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
+                        .startActivityWrapper(EditReviewActivity.class,
+                                CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
                 break;
             case R.id.action_delete:
                 Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
@@ -383,6 +458,64 @@ public class ReviewListFragment extends Fragment
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstance) {
+        super.onSaveInstanceState(savedInstance);
+
+        //Status
+        savedInstance.putParcelable(CoffeeMachineStatus.COFFEE_MACHINE_STATUS, coffeeMachineStatus);
+
+        //review
+        if(reviewList == null) {
+            return;
+        }
+
+        Parcelable[] parcelableArray = new Parcelable[reviewList.size()];
+        Iterator iterator = reviewList.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+                parcelableArray[i] = (Parcelable) iterator.next();
+            i ++;
+        }
+        savedInstance.putParcelableArray(REVIEW_KEY, parcelableArray);
+
+        //user
+        if(userList == null) {
+            return;
+        }
+
+        parcelableArray = new Parcelable[userList.size()];
+        iterator = userList.iterator();
+        i = 0;
+        while (iterator.hasNext()) {
+            parcelableArray[i] = (Parcelable) iterator.next();
+            i ++;
+        }
+        savedInstance.putParcelableArray(User.USER_OBJ_KEY, parcelableArray);
+
+    }
+
+    private boolean restoreSavedInstance(Bundle savedInstance) {
+        if(savedInstance == null ||
+                savedInstance.getParcelableArray(REVIEW_KEY) == null) {
+            return false;
+        }
+
+        //restore data from savedInstance
+        reviewList = new ArrayList<Review>();
+        Parcelable[] temp = savedInstance.getParcelableArray(REVIEW_KEY);
+        for(int i = 0; i < temp.length; i ++) {
+            reviewList.add((Review) temp[i]);
+        }
+
+        userList = new ArrayList<User>();
+        temp = savedInstance.getParcelableArray(User.USER_OBJ_KEY);
+        for(int i = 0; i < temp.length; i ++) {
+            userList.add((User) temp[i]);
+        }
+
+        return true;
+    }
 
 /*
     private void moreReviewResponse(RestResponse restResponse) {

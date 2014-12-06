@@ -7,7 +7,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.application.material.takeacoffee.app.models.ReviewStatus.ReviewStatusEnum;
+import static com.application.material.takeacoffee.app.models.Review.ReviewStatus.ReviewStatusEnum;
 
 
 public class Review implements Parcelable {
@@ -95,33 +95,6 @@ public class Review implements Parcelable {
     }
 
 
-    public static ReviewStatusEnum parseStatus(float rating) {
-        switch (Float.floatToIntBits(rating)) {
-            case 0:
-            case 1:
-                return ReviewStatusEnum.WORST;
-            case 2:
-                return ReviewStatusEnum.NOTSOBAD;
-            case 3:
-                return ReviewStatusEnum.GOOD;
-            default:
-                return ReviewStatusEnum.NOTSET;
-        }
-
-    }
-
-    public static float parseStatusToRating(ReviewStatusEnum status) {
-        if(status == ReviewStatusEnum.WORST) {
-            return 1;
-        }
-        if(status == ReviewStatusEnum.NOTSOBAD) {
-            return 2;
-        }
-        if(status == ReviewStatusEnum.GOOD) {
-            return 3;
-        }
-        return 0;
-    }
 
     @Override
     public int describeContents() {
@@ -149,4 +122,78 @@ public class Review implements Parcelable {
             return new Review[size];
         }
     };
+
+
+
+    public static class ReviewStatus {
+        private static final String TAG = "ReviewStatus";
+        public static final String REVIEW_STATUS_KEY = "REVIEW_STATUS_KEY";
+
+        public enum ReviewStatusEnum {
+            GOOD,
+            NOTSOBAD,
+            NOTSET,
+            WORST
+        }
+        private ReviewStatusEnum status;
+
+        public ReviewStatus(String status) {
+            this.status = parseStatus(status);
+        }
+
+        public ReviewStatus(ReviewStatusEnum status) {
+            this.status = status;
+        }
+
+        public ReviewStatusEnum getStatus() {
+            return this.status;
+        }
+
+        public static ReviewStatusEnum parseStatus(String reviewStatus) {
+            if(reviewStatus == null) {
+                Log.e(TAG, "Hey - null status");
+                return ReviewStatusEnum.NOTSET;
+            }
+            if(reviewStatus.equals("GOOD")) {
+                return ReviewStatusEnum.GOOD;
+            } else if(reviewStatus.equals("NOTSOBAD")) {
+                return ReviewStatusEnum.NOTSOBAD;
+            } else if(reviewStatus.equals("WORST")) {
+                return ReviewStatusEnum.WORST;
+            }
+            Log.e(TAG, reviewStatus);
+            Log.e(TAG, "Hey - status not set");
+            return ReviewStatusEnum.NOTSET;
+        }
+
+        public static ReviewStatusEnum parseStatus(float rating) {
+            switch ((int) rating) {
+                case 0:
+                case 1:
+                    return ReviewStatusEnum.WORST;
+                case 2:
+                    return ReviewStatusEnum.NOTSOBAD;
+                case 3:
+                    return ReviewStatusEnum.GOOD;
+                default:
+                    return ReviewStatusEnum.NOTSET;
+            }
+
+        }
+
+        public static float parseStatusToRating(ReviewStatusEnum status) {
+            if(status == ReviewStatusEnum.WORST) {
+                return 1;
+            }
+            if(status == ReviewStatusEnum.NOTSOBAD) {
+                return 2;
+            }
+            if(status == ReviewStatusEnum.GOOD) {
+                return 3;
+            }
+            return 0;
+        }
+
+    }
+
 }

@@ -5,100 +5,54 @@
             xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
             android:id="@+id/coffeeMachineFragmentLayoutId"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/small_padding">
-        <LinearLayout
-                android:id="@+id/titleContainerLayoutId"
-                android:layout_width="fill_parent"
+            android:layout_height="match_parent">
+
+    <GridView
+            android:id="@+id/coffeeMachineGridLayoutId"
+            android:listSelector="@color/listview_selector"
+            android:layout_marginTop="@dimen/medium_padding"
+            android:layout_marginBottom="@dimen/button_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnWidth="90dp"
+            android:numColumns="2"
+            android:verticalSpacing="@dimen/small_padding"
+            android:horizontalSpacing="@dimen/small_padding"
+            android:stretchMode="columnWidth"
+            android:gravity="center"/>
+
+    <LinearLayout
+            android:id="@+id/titleContainerLayoutId"
+            android:background="@color/material_text_black"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/small_padding"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <com.neopixl.pixlui.components.textview.TextView
+               android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:orientation="vertical">
-            <com.neopixl.pixlui.components.textview.TextView
+                android:textSize="@dimen/text_big_26"
+                android:textColor="@color/light_grey"
+                android:layout_gravity="center_horizontal"
+                android:text="Politecnico di torino - c.so Vinzaglio"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="Amatic-Bold.ttf"/>
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/title_text_size"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/light_black"
-                    android:text="Politecnico"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+        <!--<com.neopixl.pixlui.components.textview.TextView-->
+        <!--android:layout_width="320dip"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/text_medium_20"-->
+        <!--android:paddingBottom="@dimen/medium_padding"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/dark_grey"-->
+        <!--android:text="at Politecnico."-->
+        <!--pixlui:copyandpaste="false"-->
+        <!--pixlui:clearclipboardcontent="true"-->
+        <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
 
-            <!--<com.neopixl.pixlui.components.textview.TextView-->
-                    <!--android:layout_width="320dip"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textSize="@dimen/text_medium_20"-->
-                    <!--android:paddingBottom="@dimen/medium_padding"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:gravity="center"-->
-                    <!--android:textColor="@color/dark_grey"-->
-                    <!--android:text="at Politecnico."-->
-                    <!--pixlui:copyandpaste="false"-->
-                    <!--pixlui:clearclipboardcontent="true"-->
-                    <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
-
-        </LinearLayout>
-        <!--EMPTY DATA-->
-        <!--<LinearLayout-->
-                <!--android:id="@+id/emptyCoffeeMachineLayoutId"-->
-                <!--android:layout_below="@id/titleContainerLayoutId"-->
-                <!--android:visibility="gone"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="vertical">-->
-            <!--<com.neopixl.pixlui.components.textview.TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="empty coffee machine list"-->
-                    <!--android:textSize="@dimen/text_big_38"-->
-                    <!--pixlui:copyandpaste="false"-->
-                    <!--pixlui:clearclipboardcontent="true"-->
-                    <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
-
-        <!--</LinearLayout>-->
-
-        <!--SETTING LAYOUT-->
-        <!--<LinearLayout-->
-                <!--android:id="@+id/settingsLayoutId"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/light_black"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:minHeight="@dimen/button_height"-->
-                <!--android:padding="@dimen/small_padding">-->
-            <!--<ImageView-->
-                    <!--android:layout_width="@dimen/medium_icon_size"-->
-                    <!--android:layout_height="@dimen/medium_icon_size"-->
-                    <!--android:src="@drawable/settings_icon"/>-->-->
-            <!--<com.neopixl.pixlui.components.textview.TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textSize="@dimen/text_big_30"-->
-                    <!--android:textColor="@color/light_grey"-->
-                    <!--android:layout_marginLeft="@dimen/small_padding"-->
-                    <!--android:text="Settings"-->
-                    <!--pixlui:copyandpaste="false"-->
-                    <!--pixlui:clearclipboardcontent="true"-->
-                    <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
-        <!--</LinearLayout>-->
-
-
-    <!--android:layout_above="@id/settingsLayoutId"-->
-        <GridView
-                android:id="@+id/coffeeMachineGridLayoutId"
-                android:layout_below="@id/titleContainerLayoutId"
-                android:listSelector="@color/listview_selector"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnWidth="90dp"
-                android:numColumns="2"
-                android:verticalSpacing="@dimen/small_padding"
-                android:horizontalSpacing="@dimen/small_padding"
-                android:stretchMode="columnWidth"
-                android:gravity="center"/>
+    </LinearLayout>
 
 </RelativeLayout>

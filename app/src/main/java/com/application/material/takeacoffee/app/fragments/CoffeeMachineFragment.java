@@ -106,15 +106,11 @@ public class CoffeeMachineFragment extends Fragment implements
         bundle.putParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY, coffeeMachine);
 
         ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                .changeFragment(new DashboardReviewFragment(), bundle, DashboardReviewFragment.DASHBOARD_REVIEW_FRAG_TAG);
-//                .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
+                .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
     }
 
     @Override
     public Loader<RestResponse> onCreateLoader(int ordinal, Bundle params) {
-//        Uri action = Uri.parse(params.getString("action"));
-//        String requestType = params.getString("requestType");
-
         //get action
         String action = RetrofitLoader.getActionByActionRequestEnum(ordinal);
         return new RetrofitLoader(mainActivityRef, action, params);
@@ -144,7 +140,7 @@ public class CoffeeMachineFragment extends Fragment implements
 
     @Override
     public void onLoaderReset(Loader loader) {
-
+        //TODO need to be implemented
     }
 
 
@@ -174,8 +170,6 @@ public class CoffeeMachineFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-//        savedInstanceState.putString(CoffeeMachineActivity.CURRENT_FRAGMENT_TAG,
-//                CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
     }
 
 }

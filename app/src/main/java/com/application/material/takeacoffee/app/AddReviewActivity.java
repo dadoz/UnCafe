@@ -13,22 +13,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
+import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.models.User;
 
 
-public class EditReviewActivity extends ActionBarActivity implements
+public class AddReviewActivity extends ActionBarActivity implements
         OnLoadViewHandlerInterface, ImageLoader.ImageCache,
         VolleyImageRequestWrapper {
     private static final String TAG = "CoffeeMachineActivity";
-    private static String EDIT_REVIEW_FRAG_TAG = "EDIT_REVIEW_FRAG_TAG";
+    private static String ADD_REVIEW_FRAG_TAG = "ADD_REVIEW_FRAG_TAG";
     @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
     //Volley lib
     private RequestQueue requestQueue;
@@ -42,7 +42,7 @@ public class EditReviewActivity extends ActionBarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_review);
+        setContentView(R.layout.activity_add_review);
         ButterKnife.inject(this);
 
         bundle = getIntent().getExtras();
@@ -74,17 +74,17 @@ public class EditReviewActivity extends ActionBarActivity implements
             return;
         }
 
-        currentFragTag = EditReviewActivity.EDIT_REVIEW_FRAG_TAG;
-        initView(new EditReviewFragment(), null);
+        currentFragTag = AddReviewActivity.ADD_REVIEW_FRAG_TAG;
+        initView(new AddReviewFragment(), null);
     }
 
     private void initView(Fragment fragment, Bundle savedInstanceState) {
         if(savedInstanceState == null) {
             fragment.setArguments(bundle);
         }
-
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.editReviewFragmentContainerId, fragment, currentFragTag)
+                .replace(R.id.addReviewFragmentContainerId,
+                        fragment, currentFragTag)
                 .commit();
     }
 

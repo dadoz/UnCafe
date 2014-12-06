@@ -3,12 +3,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+              android:padding="@dimen/small_padding"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <ImageView
             android:layout_width="@dimen/medium_icon_size"
             android:layout_height="@dimen/medium_icon_size"
-            android:src="@drawable/user_icon" />
+            android:layout_marginLeft="@dimen/medium_padding"
+            android:layout_marginRight="@dimen/medium_padding"
+            android:src="@drawable/settings_icon_small_b" />
     <com.neopixl.pixlui.components.textview.TextView
 
             android:layout_width="wrap_content"

@@ -29,7 +29,7 @@
 
             <com.neopixl.pixlui.components.textview.TextView
                     android:id="@+id/cActBarCoffeeMachineLocationId"
-                    android:textSize="@dimen/text_medium_20"
+                    android:textSize="@dimen/text_big_26"
                     android:textColor="@color/material_text_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -38,17 +38,6 @@
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
                     pixlui:typeface="AmaticSC-Regular.ttf"/>
-        <!--<ImageView-->
-                <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-                <!--android:layout_width="@dimen/small_icon_size"-->
-                <!--android:layout_height="@dimen/small_icon_size"-->
-                <!--android:src="@drawable/position_icon" />-->
-        <!--<ImageView-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_width="@dimen/small_icon_size"-->
-                <!--android:layout_height="@dimen/small_icon_size"-->
-                <!--android:src="@drawable/barometer_icon" />-->
-
     </RelativeLayout>
 
     <!--user template -->
@@ -59,22 +48,44 @@
             android:visibility="gone">
         <include layout="@layout/header_user_template" />
     </LinearLayout>
+
     <!--review list template -->
     <LinearLayout
             android:id="@+id/customActionBarReviewListLayoutId"
+            android:visibility="gone"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/small_padding"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+        <com.neopixl.pixlui.components.textview.TextView
+                android:id="@+id/cActBarPeriodTextId"
+                android:textSize="@dimen/text_big_26"
+                android:textColor="@color/material_text_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/small_padding"
+                android:text=" - "
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="AmaticSC-Regular.ttf"/>
+
     </LinearLayout>
 
     <!--review list template -->
     <LinearLayout
             android:id="@+id/customActionBarMapLayoutId"
+            android:visibility="gone"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/small_padding"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
     </LinearLayout>
+    <!--Settings-->
+    <LinearLayout
+            android:id="@+id/customActionSettingsLayoutId"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    </LinearLayout>
+
 
 </LinearLayout>

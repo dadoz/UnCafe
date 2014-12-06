@@ -6,35 +6,42 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.*;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.SeekBar;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
-import com.application.material.takeacoffee.app.EditReviewActivity;
+import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
-import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.views.FilledCircleView;
+
+import java.util.Date;
+
 
 /**
  * Created by davide on 14/11/14.
  */
-public class EditReviewFragment extends Fragment implements
+public class AddReviewFragment extends Fragment implements
         View.OnClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
     private static final String TAG = "EditReviewFragment";
-    private EditReviewActivity editActivityRef;
+    private AddReviewActivity addActivityRef;
     private Bundle bundle;
     private View addReviewView;
-    private User user;
-    private Review review;
-    @InjectView(R.id.editReviewCommentTextId) View editReviewCommentText;
-    @InjectView(R.id.editStatusRatingBarViewId) View editStatusRatingBarView;
-    @InjectView(R.id.saveReviewButtonId) View saveReviewButton;
+    private String meUserId = "4nmvMJNk1R";
+    @InjectView(R.id.commentTextId) View commentTextView;
+    @InjectView(R.id.statusRatingBarId) View statusRatingBarView;
+    @InjectView(R.id.addReviewButtonId) View addReviewButton;
+    @InjectView(R.id.filledCircleId) View filledCircleView;
+    @InjectView(R.id.seekBarId) View seekBarView;
+
+    private String coffeeMachineId;
 //    @InjectView(R.id.usernameTextId) View usernameText;
 //    @InjectView(R.id.userIconId) View userIconView;
 //    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
@@ -47,16 +54,15 @@ public class EditReviewFragment extends Fragment implements
             throw new ClassCastException(activity.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        editActivityRef =  (EditReviewActivity) activity;
+        addActivityRef =  (AddReviewActivity) activity;
 
         //getArgs
         bundle = getArguments();
-        try {
-            user = bundle.getParcelable(User.USER_OBJ_KEY);
-            review = bundle.getParcelable(Review.REVIEW_OBJ_KEY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            meUserId = bundle.getString(User.USER_ID_KEY);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -68,7 +74,7 @@ public class EditReviewFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        addReviewView = inflater.inflate(R.layout.fragment_edit_review, container, false);
+        addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
         ButterKnife.inject(this, addReviewView);
         initOnLoadView();
         return addReviewView;
@@ -76,32 +82,36 @@ public class EditReviewFragment extends Fragment implements
 
     private void initOnLoadView() {
         //initOnLoadView
-        editActivityRef.initOnLoadView();
+        addActivityRef.initOnLoadView();
         initView();
     }
 
     private void initView() {
-        editActivityRef.hideOnLoadView();
-        ((RatingBar) editStatusRatingBarView).setRating(ReviewStatus.parseStatusToRating(review.getStatus()));
-        ((EditText) editReviewCommentText).setText(review.getComment());
-        saveReviewButton.setOnClickListener(this);
-//        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
-    }
+        try {
+            ((SeekBar) seekBarView).setProgress((int) ((FilledCircleView) filledCircleView).getValue());
+            ((SeekBar) seekBarView).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser)
+                        ((FilledCircleView) filledCircleView).setValue(progress);
+                }
 
-    public boolean updateReview() {
-        String editComment = ((EditText) editReviewCommentText)
-                .getText().toString();
-        ReviewStatus.ReviewStatusEnum editStatus = ReviewStatus.parseStatus(
-                ((RatingBar) editStatusRatingBarView).getRating());
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-        if(review.getComment().equals(editComment) &&
-               review.getStatus().name().equals(editStatus.name())) {
-            return false;
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        review.setComment(editComment);
-        review.setStatus(editStatus);
-        return true;
+        addActivityRef.hideOnLoadView();
+        addReviewButton.setOnClickListener(this);
+//        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
 
     @Override
@@ -130,22 +140,26 @@ public class EditReviewFragment extends Fragment implements
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.saveReviewButtonId:
-                Log.e(TAG, "Save");
-                if(! updateReview()) {
-                    Toast.makeText(editActivityRef, "No changes", Toast.LENGTH_SHORT).show();
-                    break;
+            case R.id.addReviewButtonId:
+                //on callback
+                String comment = ((EditText) commentTextView).getText().toString();
+                if(comment == null || comment.compareTo("") == 0) {
+                    Toast.makeText(addActivityRef.getApplicationContext(),
+                            "Failed - write some comment!", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
-                //crete loader to save
-//                getLoaderManager().initLoader(SAVE_EDIT_REVIEW.ordinal(), null, this)
+//                getLoaderManager().initLoader(ADD_REVIEW_BY_PARAMS.ordinal(), null, this)
 //                        .forceLoad();
-
-                //on callback
-                intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
+                //move this on Success callback
+                ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
+                        ((RatingBar) statusRatingBarView).getRating());
+                long timestamp = new Date().getTime();
+                Review review = new Review("FAKE_ID", comment,
+                        status, timestamp, meUserId, null);//TODO this is wrong
                 intent.putExtra(Review.REVIEW_OBJ_KEY, review);
-                editActivityRef.setResult(Activity.RESULT_OK, intent);
-                editActivityRef.finish();
+                addActivityRef.setResult(Activity.RESULT_OK, intent);
+                addActivityRef.finish();
                 break;
         }
     }
@@ -158,20 +172,6 @@ public class EditReviewFragment extends Fragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        Intent intent = new Intent();
-//        Log.e(TAG, "Delete");
-//        switch (item.getItemId()) {
-//            case R.id.action_delete:
-////                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
-////                        .forceLoad();
-//
-//                //on callback
-//                intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "DELETE");
-//                intent.putExtra(Review.REVIEW_OBJ_KEY, review);
-//                editActivityRef.setResult(Activity.RESULT_OK, intent);
-//                editActivityRef.finish();
-//                break;
-//        }
         return true;
     }
 

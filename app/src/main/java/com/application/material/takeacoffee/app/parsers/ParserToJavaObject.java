@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static com.application.material.takeacoffee.app.models.ReviewStatus.parseStatus;
+import static com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 
 /**
  * Created by davide on 05/11/14.
@@ -17,41 +17,41 @@ import static com.application.material.takeacoffee.app.models.ReviewStatus.parse
 public class ParserToJavaObject {
 
     /***** DATA PARSER ****/
-    public static ReviewCounter parseCountOnReviewsData(String data) {
-//            {"result":{"PZrB82ZWVl":{"GOOD":13,"NOTSOBAD":3,"WORST":1}}
-
-        ReviewCounter reviewCounter = null;
-        try {
-            JSONObject objectFirst = new JSONObject(data).getJSONObject("result");
-            Iterator keysIterator = objectFirst.keys();
-
-            while(keysIterator.hasNext()) {
-                String key = keysIterator.next().toString();
-                JSONObject objectTwo = objectFirst.getJSONObject(key);
-
-                Iterator keysIteratorTwo = objectTwo.keys();
-
-                while(keysIteratorTwo.hasNext()) {
-                    String keyTimestamp = keysIteratorTwo.next().toString();
-                    JSONObject objectThree = objectTwo.getJSONObject(keyTimestamp);
-                    //TODO to be replaced
-                    reviewCounter = new ReviewCounter(key,
-                            Long.parseLong(keyTimestamp),
-                            objectThree.getInt("GOOD"),
-                            objectThree.getInt("NOTSOBAD"),
-                            objectThree.getInt("WORST"));
-                }
-            }
-            return reviewCounter;
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    public static ReviewCounter parseCountOnReviewsData(String data) {
+////            {"result":{"PZrB82ZWVl":{"GOOD":13,"NOTSOBAD":3,"WORST":1}}
+//
+//        ReviewCounter reviewCounter = null;
+//        try {
+//            JSONObject objectFirst = new JSONObject(data).getJSONObject("result");
+//            Iterator keysIterator = objectFirst.keys();
+//
+//            while(keysIterator.hasNext()) {
+//                String key = keysIterator.next().toString();
+//                JSONObject objectTwo = objectFirst.getJSONObject(key);
+//
+//                Iterator keysIteratorTwo = objectTwo.keys();
+//
+//                while(keysIteratorTwo.hasNext()) {
+//                    String keyTimestamp = keysIteratorTwo.next().toString();
+//                    JSONObject objectThree = objectTwo.getJSONObject(keyTimestamp);
+//                    //TODO to be replaced
+//                    reviewCounter = new ReviewCounter(key,
+//                            Long.parseLong(keyTimestamp),
+//                            objectThree.getInt("GOOD"),
+//                            objectThree.getInt("NOTSOBAD"),
+//                            objectThree.getInt("WORST"));
+//                }
+//            }
+//            return reviewCounter;
+//        } catch (JsonParseException e) {
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     private static Review reviewParser(String data) {
         JSONObject reviewJsonObj = null;
@@ -70,7 +70,7 @@ public class ParserToJavaObject {
                     .getString("status");
 
             return new Review(reviewId, reviewComment,
-                    parseStatus(reviewStatus), timestamp,
+                    ReviewStatus.parseStatus(reviewStatus), timestamp,
                     reviewUserId, reviewCoffeeMachineId);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -78,20 +78,22 @@ public class ParserToJavaObject {
         return null;
     }
 
-    public static ReviewStatus reviewStatusParser(String data) {
+    public static CoffeeMachineStatus coffeeMachineStatusParser(String data) {
         JSONObject reviewJsonObj = null;
         try {
             reviewJsonObj = new JSONObject(data).getJSONObject("result");
             String status = reviewJsonObj
                     .getString("status");
-            String name = reviewJsonObj
-                    .getString("name");
-            int weeklyReviewCnt = reviewJsonObj
-                    .getInt("weekly_review_cnt");
-            boolean reviewCnt = reviewJsonObj
-                    .getBoolean("has_at_least_one_review");
+            String description = reviewJsonObj
+                    .getString("description");
+            int goodReviewPercentage = reviewJsonObj
+                    .getInt("good_review_percentage");
+//            int weeklyReviewCnt = reviewJsonObj
+//                    .getInt("weekly_review_cnt");
+//            boolean reviewCnt = reviewJsonObj
+//                    .getBoolean("has_at_least_one_review");
 
-            return new ReviewStatus(status, name, weeklyReviewCnt, reviewCnt);
+            return new CoffeeMachineStatus(status, description, goodReviewPercentage);
         } catch (JSONException e) {
             e.printStackTrace();
         }

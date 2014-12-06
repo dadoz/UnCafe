@@ -61,7 +61,8 @@
                     android:layout_marginRight="@dimen/text_big_26"
                     android:layout_gravity="left"
                     android:stepSize="1"
-                    android:numStars="3"/>
+                    android:numStars="3"
+                    style="@style/AppTheme.RatingBar"/>
 
             <com.neopixl.pixlui.components.edittext.EditText
                     android:id="@+id/editReviewCommentTextId"
@@ -71,6 +72,7 @@
                     android:paddingLeft="@dimen/text_big_26"
                     android:paddingRight="@dimen/text_big_26"
                     android:textColorHint="@color/dark_grey"
+                    android:background="@color/light_grey"
                     android:hint="Write something..."
                     android:textSize="@dimen/text_big_24"
                     android:minLines="3"

@@ -3,11 +3,7 @@ package com.application.material.takeacoffee.app.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -21,24 +17,22 @@ import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.ReviewStatus;
-import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
-import com.shamanland.fab.FloatingActionButton;
-import uk.me.lewisdeane.ldialogs.CustomDialog;
+import static com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.ADD_REVIEW_BY_PARAMS;
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.REVIEW_COUNT_REQUEST;
+import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
+import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
+
+import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
 
 /**
  * Created by davide on 07/11/14.
  */
 public class DashboardReviewFragment extends Fragment implements
-        View.OnClickListener, LoaderManager.LoaderCallbacks<RestResponse>, DialogInterface.OnClickListener, DialogInterface.OnShowListener {
+        View.OnClickListener, LoaderManager.LoaderCallbacks<RestResponse>,
+        DialogInterface.OnClickListener {
     private static final String TAG = "DashboardReviewFragment";
     public static final String DASHBOARD_REVIEW_FRAG_TAG = "DASHBOARD_REVIEW_FRAG_TAG";
     private CoffeeMachineActivity mainActivityRef;
@@ -95,14 +89,14 @@ public class DashboardReviewFragment extends Fragment implements
         //initOnLoadView
         mainActivityRef.initOnLoadView();
 
-       getLoaderManager().initLoader(REVIEW_COUNT_REQUEST.ordinal(), null, this)
+       getLoaderManager().initLoader(GET_COFFEE_MACHINE_STATUS.ordinal(), null, this)
                 .forceLoad();
 
         //after loading smthing if u need
 //        initView(reviewStatus);
     }
 
-    private void initView(ReviewStatus reviewStatus) {
+    private void initView(CoffeeMachineStatus reviewStatus) {
         mainActivityRef.hideOnLoadView();
         Log.e(TAG, reviewStatus.toString());
         //set action bar view
@@ -115,16 +109,17 @@ public class DashboardReviewFragment extends Fragment implements
 //        ((TextView) coffeeMachineLocationHeaderView).setText(coffeeMachine.getAddress());
 
         //set image status
-        int iconId = reviewStatus.getIconIdByStatus();
+//        int iconId = reviewStatus.getIconIdByStatus();
+        int iconId = -1;
         ((ImageView) coffeeMachineStatusIcon)
                 .setImageDrawable(getResources().getDrawable(iconId));
 
         //set week review name and cnt
-        ((TextView) coffeeMachineStatusTextView).setText(reviewStatus.getName());
-        ((TextView) coffeeMachineWeeklyReviewTextView).setText(Integer.toString(reviewStatus.getWeeklyReviewCnt()));
+//        ((TextView) coffeeMachineStatusTextView).setText(reviewStatus.getDescription());
+//        ((TextView) coffeeMachineWeeklyReviewTextView).setText(Integer.toString(reviewStatus.getWeeklyReviewCnt()));
 
         //set listener if there is sm review
-        hasAtLeastOneReview = reviewStatus.getHasAtLeastOneReview();
+//        hasAtLeastOneReview = reviewStatus.getHasAtLeastOneReview();
         coffeeMachineStatusIcon.setOnClickListener(this);
 //        ((FloatingActionButton) addReviewButton).setColor(getResources().getColor(R.color.material_amber));
 //        ((FloatingActionButton) addReviewButton).initBackground();
@@ -146,13 +141,13 @@ public class DashboardReviewFragment extends Fragment implements
         Log.e(TAG, "hey - finish load resources");
 
         try {
-            ReviewStatus reviewStatus = (ReviewStatus) restResponse.getParsedData();
+            CoffeeMachineStatus reviewStatus = (CoffeeMachineStatus) restResponse.getParsedData();
             initView(reviewStatus);
         } catch (Exception e) {
             ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
             String filename = "review_status.json";
             String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-            ReviewStatus reviewStatus = ParserToJavaObject.reviewStatusParser(data);
+            CoffeeMachineStatus reviewStatus = ParserToJavaObject.coffeeMachineStatusParser(data);
             initView(reviewStatus);
 
 //            e.printStackTrace();
@@ -182,14 +177,14 @@ public class DashboardReviewFragment extends Fragment implements
                 break;
             case R.id.addReviewFabId:
                 addReviewDialogTemplate = View.inflate(mainActivityRef,
-                        R.layout.add_review_dialog_template, null);
+                        R.layout.fragment_add_review, null);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
                         .setView(addReviewDialogTemplate)
                         .setPositiveButton("Add", this);
                 customDialog = builder.create();
                 customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setOnShowListener(this);
+//                customDialog.setOnShowListener(this);
                 customDialog.show();
                 break;
         }
@@ -213,49 +208,49 @@ public class DashboardReviewFragment extends Fragment implements
         return true;
     }
 
-    @Override
-    public void onShow(final DialogInterface dialog) {
-        //ADD REVIEW BY PARAMS
-        try {
-            Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        //add review function
-                        String comment = ((EditText) addReviewDialogTemplate
-                                .findViewById(R.id.reviewCommentTextId)).getText().toString();
-                        float rating = ((RatingBar) addReviewDialogTemplate
-                                .findViewById(R.id.setStatusRatingBarViewId)).getRating();
-
-                        if(comment == null || comment.compareTo("") == 0) {
-                            Toast.makeText(mainActivityRef.getApplicationContext(),
-                                    "Failed - write some comment!", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-
-                        dialog.dismiss();
-                        Log.e(TAG, comment + " " + rating);
-                        Bundle params = new Bundle();
-                        params.putParcelable(Review.REVIEW_KEY, new Review(Review.ID_NOT_SET,
-                                comment, Review.parseStatus(rating),
-                                (long) 123456,
-                                "USER_ID", coffeeMachineId));
-//                        getLoaderManager().initLoader(ADD_REVIEW_BY_PARAMS.ordinal(), params,
-//                                (LoaderManager.LoaderCallbacks<Object>) getFragmentManager().getFragment(bundle, "TAG"))
-//                                .forceLoad();
-                        //NOTIFY USER
-                        Toast.makeText(mainActivityRef.getApplicationContext(),
-                                "Added review with success", Toast.LENGTH_LONG).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void onShow(final DialogInterface dialog) {
+//        //ADD REVIEW BY PARAMS
+//        try {
+//            Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+//            positiveButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
+//                        //add review function
+//                        String comment = ((EditText) addReviewDialogTemplate
+//                                .findViewById(R.id.reviewCommentTextId)).getText().toString();
+//                        float rating = ((RatingBar) addReviewDialogTemplate
+//                                .findViewById(R.id.setStatusRatingBarViewId)).getRating();
+//
+//                        if(comment == null || comment.compareTo("") == 0) {
+//                            Toast.makeText(mainActivityRef.getApplicationContext(),
+//                                    "Failed - write some comment!", Toast.LENGTH_LONG).show();
+//                            return;
+//                        }
+//
+//                        dialog.dismiss();
+//                        Log.e(TAG, comment + " " + rating);
+//                        Bundle params = new Bundle();
+//                        params.putParcelable(Review.REVIEW_KEY, new Review(Review.ID_NOT_SET,
+//                                comment, Review.parseStatus(rating),
+//                                (long) 123456,
+//                                "USER_ID", coffeeMachineId));
+////                        getLoaderManager().initLoader(ADD_REVIEW_BY_PARAMS.ordinal(), params,
+////                                (LoaderManager.LoaderCallbacks<Object>) getFragmentManager().getFragment(bundle, "TAG"))
+////                                .forceLoad();
+//                        //NOTIFY USER
+//                        Toast.makeText(mainActivityRef.getApplicationContext(),
+//                                "Added review with success", Toast.LENGTH_LONG).show();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
