@@ -5,5 +5,5 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_deep_teal_500">
+        android:background="@color/light_black">
     </android.support.v7.widget.Toolbar>

@@ -5,9 +5,9 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.application.material.takeacoffee.app.CoffeeMachineActivity" >
     <item
-            android:id="@+id/action_old_review"
+            android:id="@+id/action_coffee_machine_position"
             android:title="old reviews"
-            android:icon="@drawable/barometer_icon_small_b"
+            android:icon="@drawable/position_icon"
             android:orderInCategory="100"
             app:showAsAction="always" />
 

@@ -42,5 +42,6 @@
     <dimen name="coffee_icon_size">130dip</dimen>
     <dimen name="timestamp_width">50dip</dimen>
     <dimen name="ultra_huge_icon_size">250dp</dimen>
+    <dimen name="top_header_height">150dip</dimen>
 
 </resources>

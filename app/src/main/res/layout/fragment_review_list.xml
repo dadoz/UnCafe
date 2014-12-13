@@ -3,21 +3,24 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-    <include layout="@layout/dashboard_status_template"/>
 
-    <ListView
-            android:id="@+id/reviewsContainerListViewId"
-            android:layout_below="@id/dashboardStatusLayoutId"
-            android:layout_width="match_parent"
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:listSelector="@color/listview_selector"
-            android:divider="@color/middle_grey"
-            android:dividerHeight="0.5dp"
-            android:orientation="vertical" />
+            android:id="@+id/swipeRefreshLayoutId">
+        <ListView
+                android:id="@+id/reviewsContainerListViewId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/listview_selector"
+                android:divider="@color/middle_grey"
+                android:dividerHeight="0.5dp"
+                android:orientation="vertical" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.shamanland.fab.FloatingActionButton
             android:id="@+id/addReviewFabId"
@@ -27,8 +30,14 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/floating_action_button_margin_normal"
             android:layout_marginRight="@dimen/floating_action_button_margin_normal"
-            app:floatingActionButtonColor="@color/material_amber"
+            app:floatingActionButtonColor="@color/material_red_200"
             android:src="@drawable/edit_icon_ultra_small_b"/>
+                <!--<RelativeLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content">-->
+            <!--</RelativeLayout>-->
+
+    <include layout="@layout/dashboard_status_template"/>
 
 
 </RelativeLayout>
