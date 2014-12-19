@@ -6,7 +6,7 @@
         tools:context="com.application.material.takeacoffee.app.CoffeeMachineActivity"
         android:orientation="vertical">
 
-    <include layout="@layout/action_bar"/>
+    <!--<include layout="@layout/action_bar"/>-->
     <!--LOADING TPL -->
     <include layout="@layout/on_load_template"/>
     <!-- FRAGMENT CONTENT -->

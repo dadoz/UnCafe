@@ -9,8 +9,8 @@
 
             <ImageView
                     android:id="@+id/profilePicReviewTemplateId"
-                    android:layout_width="@dimen/large_icon_size"
-                    android:layout_height="@dimen/large_icon_size"
+                    android:layout_width="@dimen/medium_icon_size"
+                    android:layout_height="@dimen/medium_icon_size"
                     android:layout_marginLeft="@dimen/medium_padding"
                     android:layout_marginRight="@dimen/medium_padding"
                     android:src="@drawable/user_icon" />
@@ -32,7 +32,7 @@
                     android:text=" - "
                     android:textColor="@color/material_blue_200"
                     android:gravity="top"
-                    android:textSize="@dimen/text_huge_48"
+                    android:textSize="@dimen/title_text_size"
                     android:maxLines="1"
                     android:ellipsize="end"
                     pixlui:copyandpaste="false"
@@ -48,7 +48,7 @@
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:textColor="@color/material_text_black"
-                    android:textSize="@dimen/text_big_30"
+                    android:textSize="@dimen/content_text_size"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
                     pixlui:typeface="AmaticSC-Regular.ttf"/>
@@ -65,7 +65,7 @@
                 android:layout_marginRight="@dimen/small_padding"
                 android:layout_marginEnd="@dimen/small_padding"
                 android:textColor="@color/material_grey"
-                android:textSize="@dimen/text_medium_20"
+                android:textSize="@dimen/content_text_size"
                 android:text=" - "
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
@@ -73,7 +73,7 @@
 
         <RatingBar
                 android:id="@+id/statusRatingBarId"
-                android:layout_centerHorizontal="true"
+                android:layout_alignParentRight="true"
                 android:layout_below="@id/reviewContainerId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

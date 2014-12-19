@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app.restServices;
 
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
@@ -26,10 +27,10 @@ public interface RetrofitServiceInterface {
     List<CoffeeMachine> listCoffeeMachine();
 
     @POST("/" + FUNCTIONS + MORE_REVIEW)
-    Response listMoreReview(@Body User user);
+    List<Review> listMoreReview(@Body User user);
 
-    @GET("/" + FUNCTIONS + REVIEW_BY_TIMESTAMP_LIMIT)
-    Response listReview();
+    @POST("/" + FUNCTIONS + WEEK_REVIEWS)
+    List<Review> listReview(@Body Review.Params reviewParams);
 
 //    @GET("/" + FUNCTIONS + REVIEW_COUNTER_TIMESTAMP)
 //    Response mapReviewCount();
@@ -49,7 +50,7 @@ public interface RetrofitServiceInterface {
     @DELETE("/" + FUNCTIONS + MORE_REVIEW)
     ReviewStatus deleteReview(@Body String reviewObjectId);
 
-    @GET("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS + "{coffeeMachineId}")
-    ReviewStatus getCoffeeMachineStatus(@Path("coffeeMachineId") RetrofitLoader.UserParams coffeeMachineId);
+    @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS + "{coffeeMachineId}")
+    ReviewStatus getCoffeeMachineStatus(CoffeeMachineStatus.Params coffeeMachineId);
 
 }

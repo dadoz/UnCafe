@@ -6,4 +6,7 @@ package com.application.material.takeacoffee.app.fragments.interfaces;
 public interface SetActionBarInterface {
     public void setActionBarCustomViewById(int id, Object data);
     public void setCustomNavigation(Class<?> id);
-}
+    public void setActionBarEditSelection(boolean itemSelected);
+    public boolean getItemSelected();
+
+    }

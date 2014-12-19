@@ -54,6 +54,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.reviewCommentTextView.setText(review.getComment());
             holder.reviewDateTextView.setText(review.getFormattedTimestamp());
             holder.statusRatingBarView.setRating(ReviewStatus.parseStatusToRating(review.getStatus()));
+//            holder.statusRatingBarView.setVisibility(View.GONE);
 //            ((TextView) convertView.findViewById(R.id.statusRatingBarId)).setText(
 //                    String.valueOf(ReviewStatus.parseStatusToRating(review.getStatus())));
 

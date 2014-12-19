@@ -3,25 +3,21 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionModeBackground">@color/material_amber</item>
-        <item name="android:textColor">@color/material_red_200</item>
-        <item name="colorPrimary">@color/material_text_black</item>
-        <item name="colorPrimaryDark">@color/material_text_black</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/material_red_200</item>
+        <!--<item name="actionBarSize">150dp</item>-->
+        <!--<item name="colorPrimaryDark">@color/material_text_black</item>-->
+        <!--<item name="android:textColor">@color/material_red_200</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<item name="windowActionBar">false</item>-->
     </style>
-
-    <!--<style name="AppTheme.ActionMode" parent="@android:style/Theme.Holo.Light">-->
-        <!--<item name="android:background">@color/material_amber</item>-->
-        <!--<item name="android:backgroundSplit">?android:attr/actionModeSplitBackground</item>-->
-        <!--<item name="android:height">?android:attr/actionBarSize</item>-->
-        <!--<item name="android:titleTextStyle">@android:style/TextAppearance.Widget.ActionMode.Title</item>-->
-        <!--<item name="android:subtitleTextStyle">@android:style/TextAppearance.Widget.ActionMode.Subtitle</item>-->
-    <!--</style>-->
 
     <style name="AppTheme.RatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_bar_custom_full</item>
         <item name="android:minHeight">@dimen/small_icon_size</item>
+        <item name="android:maxHeight">@dimen/small_icon_size</item>
         <item name="android:minWidth">@dimen/small_icon_size</item>
+        <item name="android:maxWidth">@dimen/small_icon_size</item>
     </style>
 
 

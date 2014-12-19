@@ -6,16 +6,13 @@
               android:layout_width="fill_parent"
               android:layout_height="match_parent">
 
-    <com.neopixl.pixlui.components.textview.TextView
+    <TextView
             android:id="@+id/cActBarTitleId"
-            android:textSize="@dimen/text_big_38"
+            android:textSize="@dimen/text_big_24"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/small_padding"
-            android:text="@string/titleTakeACoffee"
-            pixlui:copyandpaste="false"
-            pixlui:clearclipboardcontent="true"
-            pixlui:typeface="AmaticSC-Regular.ttf"/>
+            android:text="@string/titleTakeACoffee"/>
 
     <!--coffee machine template -->
     <RelativeLayout
@@ -27,17 +24,14 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent">
 
-            <com.neopixl.pixlui.components.textview.TextView
+            <TextView
                     android:id="@+id/cActBarCoffeeMachineLocationId"
                     android:textSize="@dimen/text_big_26"
                     android:textColor="@color/material_text_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="@dimen/small_padding"
-                    android:text="location"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+                    android:text="location"/>
     </RelativeLayout>
 
     <!--user template -->
@@ -45,6 +39,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/customActionBarUserLayoutId"
+            android:gravity="center_vertical"
             android:visibility="gone">
         <include layout="@layout/header_user_template" />
     </LinearLayout>
@@ -56,17 +51,13 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <com.neopixl.pixlui.components.textview.TextView
+        <TextView
                 android:id="@+id/cActBarPeriodTextId"
-                android:textSize="@dimen/text_big_26"
-                android:textColor="@color/material_text_black"
+                android:textSize="@dimen/text_small_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/small_padding"
-                android:text=" - "
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="AmaticSC-Regular.ttf"/>
+                android:text=" - "/>
 
     </LinearLayout>
 

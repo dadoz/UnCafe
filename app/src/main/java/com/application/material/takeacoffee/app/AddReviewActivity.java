@@ -48,18 +48,19 @@ public class AddReviewActivity extends ActionBarActivity implements
         bundle = getIntent().getExtras();
 //        User user = bundle.getParcelable(User.USER_OBJ_KEY);
         //TODO ALWAYS recreating this stuff - check it out
-        //ACTION BAR
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-            setSupportActionBar(toolbar);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayShowCustomEnabled(true);
-            getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
-        }
-        this.setActionBarCustomViewById(R.id.customActionBarUserLayoutId);
+//        //ACTION BAR
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        if (toolbar != null) {
+//            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+//            setSupportActionBar(toolbar);
+//
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayShowTitleEnabled(false);
+//            getSupportActionBar().setDisplayShowCustomEnabled(true);
+//            getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
+//        }
+//        this.setActionBarCustomViewById(R.id.customActionBarUserLayoutId);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
 
         //VOLLEY stuff
         requestQueue = Volley.newRequestQueue(this.getApplicationContext());

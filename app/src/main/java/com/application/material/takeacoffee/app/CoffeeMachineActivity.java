@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -49,6 +50,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     public static String ACTION_ADD_REVIEW_RESULT = "ADD_RESULT";
     public static final int ACTION_EDIT_REVIEW = 1;
     public static final int ACTION_ADD_REVIEW = 2;
+    private boolean itemSelected;
+    private String tempActionBarTitle;
 
 
     @Override
@@ -58,17 +61,20 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         ButterKnife.inject(this);
 
         //TODO ALWAYS recreating this stuff - checkit out
-        //ACTION BAR
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-            setSupportActionBar(toolbar);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayShowCustomEnabled(true);
-            getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
-        }
+//        //ACTION BAR
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        if (toolbar != null) {
+//            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+//            setSupportActionBar(toolbar);
+//
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//            getSupportActionBar().setDisplayShowTitleEnabled(false);
+//            getSupportActionBar().setDisplayShowCustomEnabled(true);
+//            getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
+//        }
+        //custom actionBar
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
 
         //VOLLEY stuff
         requestQueue = Volley.newRequestQueue(this.getApplicationContext());
@@ -117,19 +123,26 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                Log.d(TAG, "hey home button");
-                getSupportFragmentManager().popBackStack();
+                onBackPressed();
                 return true;
-//            case R.id.action_settings:
-//                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "hey home button");
+        if(itemSelected) {
+            //no item popped out
+            setActionBarEditSelection(false);
+            itemSelected = false;
+            return;
+        }
+        //else
+        super.onBackPressed();
     }
 
     @Override
@@ -246,8 +259,41 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
     @Override
+    public void setActionBarEditSelection(boolean value) {
+        itemSelected = value;
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(
+                        itemSelected ? R.color.material_grey : R.color.material_red_200)));
+        invalidateOptionsMenu();
+        //set new title on actionBar
+        try {
+            if(itemSelected) {
+//                tempActionBarTitle = getSupportActionBar().getTitle().toString();
+//                getSupportActionBar().setTitle(ReviewListFragment.EDIT_REVIEW_STRING);
+                tempActionBarTitle = ((TextView) getSupportActionBar()
+                        .getCustomView().findViewById(R.id.cActBarTitleId)).getText().toString();
+                ((TextView) getSupportActionBar()
+                        .getCustomView().findViewById(R.id.cActBarTitleId)).setText(ReviewListFragment.EDIT_REVIEW_STRING);
+
+                return;
+            }
+//            getSupportActionBar().setTitle(tempActionBarTitle);
+            ((TextView) getSupportActionBar()
+                    .getCustomView().findViewById(R.id.cActBarTitleId)).setText(tempActionBarTitle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public boolean getItemSelected() {
+        return itemSelected;
+    }
+
+    @Override
     public void setActionBarCustomViewById(int id, Object data) {
-//        invalidateOptionsMenu();
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar == null) {
             return;
@@ -266,21 +312,23 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                     return;
                 }
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setVisibility(View.VISIBLE);
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                     .setText(((CoffeeMachine) data).getName());
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarCoffeeMachineLocationId))
                         .setText(((CoffeeMachine) data).getAddress());
                 break;
             case R.id.customActionBarUserLayoutId:
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
-                        .setText(getResources().getText(R.string.titleTakeACoffee));
-//                ((TextView) actionBar.getCustomView().findViewById(R.id.usernameTextId))
-//                        .setTextColor(getResources().getColor(R.color.light_grey));
+                        .setVisibility(View.GONE);
+//                        .setText(getResources().getText(R.string.titleTakeACoffee));
                 ((TextView) actionBar.getCustomView().findViewById(R.id.usernameTextId))
                         .setText("fake david");
-//                ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId)).setImageDrawable(getDrawable(R.drawable.user));
 
                 break;
             case R.id.customActionBarReviewListLayoutId:
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setVisibility(View.VISIBLE);
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarPeriodTextId))
                         .setText(((Bundle) data)
                                 .getString(CoffeeMachineStatus.COFFEE_MACHINE_STATUS_STRING_KEY));
@@ -289,6 +337,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                                 .getString(CoffeeMachine.COFFEE_MACHINE_STRING_KEY));
                 break;
             case R.id.customActionBarMapLayoutId:
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setVisibility(View.VISIBLE);
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                         .setText("Politecnico di Torino");
                 break;

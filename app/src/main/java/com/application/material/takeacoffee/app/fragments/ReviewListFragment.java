@@ -1,9 +1,11 @@
 package com.application.material.takeacoffee.app.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
@@ -56,6 +59,7 @@ public class ReviewListFragment extends Fragment
     private static final String TAG = "ReviewListFragment";
     public static final String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
     private static FragmentActivity mainActivityRef = null;
+    public static String EDIT_REVIEW_STRING = "Edit";
 
     private View reviewListView;
     private String coffeeMachineId;
@@ -79,7 +83,6 @@ public class ReviewListFragment extends Fragment
     private ArrayList<Review> reviewList;
     private ArrayList<User> userList;
     private CoffeeMachine coffeeMachine;
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -237,10 +240,14 @@ public class ReviewListFragment extends Fragment
 //                    reviewStatus = (ReviewStatus) restResponse.getParsedData();
 
                     //MOCKUP
-                    String filename = "review_status.json";
-                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    coffeeMachineStatus = ParserToJavaObject.coffeeMachineStatusParser(data);
+//                    String filename = "review_status.json";
+//                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+//                    coffeeMachineStatus = ParserToJavaObject.coffeeMachineStatusParser(data);
 
+                    //real json data
+                    coffeeMachineStatus = (CoffeeMachineStatus) restResponse.getParsedData();
+                    //show loader
+                    ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
                     if(getLoaderManager().getLoader(REVIEW_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(REVIEW_REQUEST.ordinal(), null, this).forceLoad();
                         goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
@@ -252,16 +259,16 @@ public class ReviewListFragment extends Fragment
                     break;
                 case REVIEW_REQ:
                     Log.i(TAG, "REVIEW_REQ");
-//                    ArrayList<Review> reviewList = (ArrayList<Review>) restResponse.getParsedData();
-//                    create new loader for user
-//                    Bundle params = new Bundle();
-//                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-//                    initView(reviewList);
 
                     ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-                    filename = "reviews.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    reviewList = ParserToJavaObject.getReviewListParser(data);
+
+//                    filename = "reviews.json";
+//                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+//                    reviewList = ParserToJavaObject.getReviewListParser(data);
+
+                    //real json data
+                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
+
                     Bundle params = new Bundle();
                     if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
@@ -288,12 +295,12 @@ public class ReviewListFragment extends Fragment
                 case USER_REQ:
                     Log.i(TAG, "USER_REQ");
 
-//                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
-
                     //TODO TEST
-                    filename = "user.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    String filename = "user.json";
+                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
                     userList = ParserToJavaObject.getUserListParser(data);
+
+//                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
 
                     ((ReviewListAdapter) listView.getAdapter()).setUserList(userList);
                     notifyDataChangeOnListview();
@@ -340,29 +347,34 @@ public class ReviewListFragment extends Fragment
         if(view.getId() == R.id.moreReviewTemplateId) {
             Log.e(TAG, "moreReviewTemplateId");
             Toast.makeText(mainActivityRef, "loading previous review", Toast.LENGTH_SHORT).show();
+            swipeRefreshLayout.setRefreshing(true);
             return;
         }
+        try {
+            View reviewDialogView = View.inflate(mainActivityRef,
+                    R.layout.review_dialog_template, null);
+            Review review = (Review) adapterView.getItemAtPosition(position);
+            User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
 
-        View reviewDialogView = View.inflate(mainActivityRef,
-                R.layout.review_dialog_template, null);
-        Review review = (Review) adapterView.getItemAtPosition(position);
-        User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
+            ((TextView) reviewDialogView
+                    .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
+            ((TextView) reviewDialogView
+                    .findViewById(R.id.reviewDialogCommentTextId)).setText(review.getComment());
 
-        ((TextView) reviewDialogView
-                .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
-        ((TextView) reviewDialogView
-                .findViewById(R.id.reviewDialogCommentTextId)).setText(review.getComment());
+            View doneDialogButton = reviewDialogView
+                    .findViewById(R.id.doneDialogIconId);
 
-        View doneDialogButton = reviewDialogView
-                .findViewById(R.id.doneDialogIconId);
+            doneDialogButton.setOnClickListener(this);
 
-        doneDialogButton.setOnClickListener(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
+                    .setView(reviewDialogView);
+            customDialog = builder.create();
+            customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            customDialog.show();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-                .setView(reviewDialogView);
-        customDialog = builder.create();
-        customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        customDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -371,19 +383,25 @@ public class ReviewListFragment extends Fragment
             Log.e(TAG, "moreReviewTemplateId");
             return true;
         }
+        try {
+            Review review = (Review) adapterView.getItemAtPosition(position);
+            User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
 
-        Review review = (Review) adapterView.getItemAtPosition(position);
-        User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
-
-        //clear prev bundle
-        bundle2.putParcelable(Review.REVIEW_OBJ_KEY, null);
-        bundle2.putParcelable(User.USER_OBJ_KEY, null);
-        //set
-        if(user != null && user.getId().equals(meUserId)) {
-            bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
-            bundle2.putParcelable(User.USER_OBJ_KEY, user);
+            //clear prev bundle
+            bundle2.putParcelable(Review.REVIEW_OBJ_KEY, null);
+            bundle2.putParcelable(User.USER_OBJ_KEY, null);
+            //set
+            if (user != null && user.getId().equals(meUserId)) {
+                bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
+                bundle2.putParcelable(User.USER_OBJ_KEY, user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        mainActivityRef.startActionMode(this);
+//        mainActivityRef.startActionMode(this);
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+        ((SetActionBarInterface) mainActivityRef)
+                .setActionBarEditSelection(true);
         return true;
     }
 
@@ -391,6 +409,11 @@ public class ReviewListFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
+        Log.e(TAG, "create option menu");
+        if(((SetActionBarInterface) mainActivityRef).getItemSelected()) {
+            menuInflater.inflate(R.menu.edit_review, menu);
+            return;
+        }
         menuInflater.inflate(R.menu.review_list, menu);
     }
 
@@ -600,6 +623,7 @@ public class ReviewListFragment extends Fragment
             e.printStackTrace();
         }
     }
+
 
 /*
     private void moreReviewResponse(RestResponse restResponse) {

@@ -196,4 +196,13 @@ public class Review implements Parcelable {
 
     }
 
+    public static class Params {
+        private String coffeeMachineId;
+        private double timestamp;
+
+        public Params(String coffeeMachineId, double timestamp) {
+            this.coffeeMachineId = coffeeMachineId;
+            this.timestamp = timestamp;
+        }
+    }
 }

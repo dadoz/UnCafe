@@ -10,8 +10,8 @@
 
         <ImageView
                 android:id="@+id/userIconId"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
+                android:layout_width="@dimen/medium_small_icon_size"
+                android:layout_height="@dimen/medium_small_icon_size"
                 android:src="@drawable/user_icon" />
 
         <com.neopixl.pixlui.components.textview.TextView

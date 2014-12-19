@@ -50,4 +50,14 @@ public class CoffeeMachineStatus implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
 
     }
+
+    public class Params {
+        private String coffeeMachineId;
+
+        public Params(String coffeeMachineId, double timestamp) {
+            this.coffeeMachineId = coffeeMachineId;
+        }
+    }
+
+
 }

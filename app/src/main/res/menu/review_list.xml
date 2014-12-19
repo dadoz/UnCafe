@@ -7,7 +7,7 @@
     <item
             android:id="@+id/action_coffee_machine_position"
             android:title="old reviews"
-            android:icon="@drawable/position_icon"
+            android:icon="@drawable/position_icon_small_b"
             android:orderInCategory="100"
             app:showAsAction="always" />
 

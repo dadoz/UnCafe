@@ -7,7 +7,7 @@
     <dimen name="small_button_height">40dp</dimen>
     <dimen name="tag_height">100dp</dimen>
     <dimen name="header_text_size">30dp</dimen>
-    <dimen name="title_text_size">45dp</dimen>
+    <dimen name="title_text_size">30sp</dimen>
     <dimen name="header_button_text">24dp</dimen>
     <dimen name="text_big_26">26dp</dimen>
     <dimen name="text_medium_20">20dp</dimen>
@@ -22,8 +22,9 @@
     <dimen name="text_big_22">22dip</dimen>
     <dimen name="small_padding_5">5dip</dimen>
     <dimen name="big_button_size">300dip</dimen>
-    <dimen name="small_icon_size">40dp</dimen>
-    <dimen name="medium_icon_size">60dp</dimen>
+    <dimen name="small_icon_size">15dp</dimen>
+    <dimen name="medium_small_icon_size">40dp</dimen>
+    <dimen name="medium_icon_size">55dp</dimen>
     <dimen name="large_icon_size">80dp</dimen>
     <dimen name="huge_icon_size">100dp</dimen>
     <dimen name="extra_huge_icon_size">140dp</dimen>
@@ -39,9 +40,12 @@
     <dimen name="medium_button_size">75dip</dimen>
     <dimen name="text_huge_60">60dip</dimen>
     <dimen name="medium_button_width">80dip</dimen>
-    <dimen name="coffee_icon_size">130dip</dimen>
+    <dimen name="coffee_icon_size">85dip</dimen>
+    <!--<dimen name="coffee_icon_size">130dip</dimen>-->
     <dimen name="timestamp_width">50dip</dimen>
     <dimen name="ultra_huge_icon_size">250dp</dimen>
-    <dimen name="top_header_height">150dip</dimen>
+    <dimen name="top_header_height">80dip</dimen>
+    <dimen name="content_text_size">20dp</dimen>
+    <dimen name="small_content_text_size">14sp</dimen>
 
 </resources>
