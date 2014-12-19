@@ -44,7 +44,7 @@
     <!--<dimen name="coffee_icon_size">130dip</dimen>-->
     <dimen name="timestamp_width">50dip</dimen>
     <dimen name="ultra_huge_icon_size">250dp</dimen>
-    <dimen name="top_header_height">80dip</dimen>
+    <dimen name="top_header_height">90dip</dimen>
     <dimen name="content_text_size">20dp</dimen>
     <dimen name="small_content_text_size">14sp</dimen>
 

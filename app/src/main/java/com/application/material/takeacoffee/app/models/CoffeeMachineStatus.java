@@ -51,10 +51,10 @@ public class CoffeeMachineStatus implements Parcelable {
 
     }
 
-    public class Params {
+    public static class Params {
         private String coffeeMachineId;
 
-        public Params(String coffeeMachineId, double timestamp) {
+        public Params(String coffeeMachineId) {
             this.coffeeMachineId = coffeeMachineId;
         }
     }

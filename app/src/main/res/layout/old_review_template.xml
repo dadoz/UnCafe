@@ -7,15 +7,16 @@
               android:layout_height="wrap_content"
               android:paddingTop="@dimen/top_header_height"
               android:paddingBottom="@dimen/small_padding"
+              android:background="@color/light_black"
               android:id="@+id/moreReviewTemplateId">
 
     <com.neopixl.pixlui.components.textview.TextView
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/light_black"
+            android:textColor="@color/light_grey"
             android:textSize="@dimen/text_big_24"
-            android:text="prev reviews"
+            android:text="old reviews"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
             pixlui:typeface="Amatic-Bold.ttf"/>

@@ -143,10 +143,10 @@ public class ParserToJavaObject {
         return false;
     }
 
-    public static ArrayList<Review> getReviewListParser(String data) {
+    public static ReviewDataContainer getReviewListParser(String data) {
         try {
             JSONObject dataObject = new JSONObject(data);
-//                boolean hasMoreReviews = (dataObject.getJSONObject("result")).getBoolean("hasMoreReviews");
+                boolean hasMoreReviews = (dataObject.getJSONObject("result")).getBoolean("hasMoreReviews");
             JSONArray reviewJsonArray = (dataObject.getJSONObject("result")).getJSONArray("data");
             ArrayList<Review> reviewsList = new ArrayList<Review>();
             for (int j = 0; j < reviewJsonArray.length(); j ++) {
@@ -154,7 +154,7 @@ public class ParserToJavaObject {
                 reviewsList.add(reviewParser(reviewJsonObj.toString()));
             }
 
-            return reviewsList;
+            return new ReviewDataContainer(hasMoreReviews, reviewsList);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {

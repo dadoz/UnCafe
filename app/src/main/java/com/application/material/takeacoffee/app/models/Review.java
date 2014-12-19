@@ -205,4 +205,13 @@ public class Review implements Parcelable {
             this.timestamp = timestamp;
         }
     }
+
+    public static class MoreReviewsParams {
+        private String coffeeMachineId;
+        private String fromReviewId;
+        public MoreReviewsParams(String coffeeMachineId, String fromReviewId) {
+            this.coffeeMachineId = coffeeMachineId;
+            this.fromReviewId = fromReviewId;
+        }
+    }
 }

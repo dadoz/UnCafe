@@ -1,11 +1,8 @@
 package com.application.material.takeacoffee.app.restServices;
 
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
-import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
-import com.application.material.takeacoffee.app.models.User;
 import org.json.JSONObject;
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -27,10 +24,10 @@ public interface RetrofitServiceInterface {
     List<CoffeeMachine> listCoffeeMachine();
 
     @POST("/" + FUNCTIONS + MORE_REVIEW)
-    List<Review> listMoreReview(@Body User user);
+    List<Review> listMoreReview(@Body Review.MoreReviewsParams user);
 
     @POST("/" + FUNCTIONS + WEEK_REVIEWS)
-    List<Review> listReview(@Body Review.Params reviewParams);
+    ReviewDataContainer listReview(@Body Review.Params reviewParams);
 
 //    @GET("/" + FUNCTIONS + REVIEW_COUNTER_TIMESTAMP)
 //    Response mapReviewCount();
@@ -42,7 +39,7 @@ public interface RetrofitServiceInterface {
 //    void listUserByIdList(@Path("userParams") RetrofitLoader.UserParams userParams);
 
     @POST("/" + FUNCTIONS + USER_BY_ID_LIST)
-    void listUserByIdList(@Body RetrofitLoader.UserParams userParams);
+    List<User> listUserByIdList(@Body User.Params userParams);
 
     @PUT("/" + FUNCTIONS + MORE_REVIEW)
     ReviewStatus saveEditReview(@Body Review review);
@@ -50,7 +47,7 @@ public interface RetrofitServiceInterface {
     @DELETE("/" + FUNCTIONS + MORE_REVIEW)
     ReviewStatus deleteReview(@Body String reviewObjectId);
 
-    @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS + "{coffeeMachineId}")
-    ReviewStatus getCoffeeMachineStatus(CoffeeMachineStatus.Params coffeeMachineId);
+    @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS)
+    CoffeeMachineStatus getCoffeeMachineStatus(@Body CoffeeMachineStatus.Params coffeeMachineId);
 
 }

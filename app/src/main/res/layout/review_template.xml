@@ -20,7 +20,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="-15dip"
                 android:layout_marginRight="@dimen/timestamp_width"
                 android:layout_marginEnd="@dimen/small_padding"
                 android:layout_toRightOf="@id/profilePicReviewTemplateId">
@@ -66,7 +65,7 @@
                 android:layout_marginEnd="@dimen/small_padding"
                 android:textColor="@color/material_grey"
                 android:textSize="@dimen/content_text_size"
-                android:text=" - "
+                android:text="bla"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
                 pixlui:typeface="AmaticSC-Regular.ttf"/>

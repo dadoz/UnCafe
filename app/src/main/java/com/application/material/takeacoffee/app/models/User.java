@@ -4,6 +4,9 @@ package com.application.material.takeacoffee.app.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class User implements Parcelable {
     private static final String EMPTY_PIC_PATH = "EMPTY_PIC_PATH";
     public static String USER_OBJ_KEY = "USER_OBJ_KEY";
@@ -95,5 +98,11 @@ public class User implements Parcelable {
     };
 
 
+    public static class Params {
+        ArrayList<String> userIdList;
+        public Params(ArrayList<String> list) {
+            userIdList = list;
+        }
 
+    }
 }

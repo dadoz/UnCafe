@@ -33,10 +33,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewH
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
-import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
 import com.neopixl.pixlui.components.textview.TextView;
 import com.shamanland.fab.ShowHideOnScroll;
@@ -75,6 +72,7 @@ public class ReviewListFragment extends Fragment
     @InjectView(R.id.leftArrowIconId) ImageView leftArrowIcon;
     @InjectView(R.id.swipeRefreshLayoutId) SwipeRefreshLayout swipeRefreshLayout;
     @InjectView(R.id.dashboardStatusLayoutId) View dashboardStatusLayout;
+//    @InjectView(R.id.moreReviewTemplateId) View moreReviewTemplate;
 
     private View moreReviewLoaderView;
     private View emptyView;
@@ -83,6 +81,8 @@ public class ReviewListFragment extends Fragment
     private ArrayList<Review> reviewList;
     private ArrayList<User> userList;
     private CoffeeMachine coffeeMachine;
+    private boolean hasMoreReviews;
+    private View oldReviewView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -102,11 +102,12 @@ public class ReviewListFragment extends Fragment
         reviewListView = inflater.inflate(R.layout.fragment_review_list, container, false);
         ButterKnife.inject(this, reviewListView);
         moreReviewLoaderView = inflater.inflate(R.layout.more_review_template, listView, false);
+        oldReviewView = inflater.inflate(R.layout.old_review_template, listView, false);
 //        emptyView = inflater.inflate(R.layout.empty_data_status_layout, listView, false);
 
         bundle = getArguments();
         bundle2 = new Bundle(); //TODO please implement parcelable in coffeeMachine
-        coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY);
+        coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY); //TODO fix it this crash app
         coffeeMachine = bundle.getParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
 //        reviewStatus = ReviewStatus.ReviewStatusEnum.valueOf(bundle
 //                .getString(ReviewStatus.REVIEW_STATUS_KEY));
@@ -172,7 +173,12 @@ public class ReviewListFragment extends Fragment
 
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 R.layout.review_template, reviewList, coffeeMachineId);
-        listView.addHeaderView(moreReviewLoaderView); //TODO FIX it - this gonna make disappear name on reviews
+
+        View headerView = moreReviewLoaderView;
+        if(! hasMoreReviews) {
+            headerView = oldReviewView;
+        }
+        listView.addHeaderView(headerView); //TODO FIX it - this gonna make disappear name on reviews
         listView.setAdapter(reviewListenerAdapter);
 
         listView.setOnItemLongClickListener(this);
@@ -199,6 +205,12 @@ public class ReviewListFragment extends Fragment
     }
 
     private void notifyDataChangeOnListview() {
+        View headerView = moreReviewLoaderView;
+        if(! hasMoreReviews) {
+            headerView = oldReviewView;
+        }
+        listView.removeHeaderView(headerView);
+
         //UPDATE DATA on LIST
         if (listView.getAdapter() != null) {
             try {
@@ -209,6 +221,7 @@ public class ReviewListFragment extends Fragment
                 e.printStackTrace();
             }
         }
+//        listView.addHeaderView(headerView);
     }
 
     @Override
@@ -240,14 +253,13 @@ public class ReviewListFragment extends Fragment
 //                    reviewStatus = (ReviewStatus) restResponse.getParsedData();
 
                     //MOCKUP
-//                    String filename = "review_status.json";
-//                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-//                    coffeeMachineStatus = ParserToJavaObject.coffeeMachineStatusParser(data);
+                    String filename = "review_status.json";
+                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    coffeeMachineStatus = ParserToJavaObject.coffeeMachineStatusParser(data);
 
                     //real json data
-                    coffeeMachineStatus = (CoffeeMachineStatus) restResponse.getParsedData();
-                    //show loader
-                    ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
+//                    coffeeMachineStatus = (CoffeeMachineStatus) restResponse.getParsedData();
+
                     if(getLoaderManager().getLoader(REVIEW_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(REVIEW_REQUEST.ordinal(), null, this).forceLoad();
                         goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
@@ -262,12 +274,14 @@ public class ReviewListFragment extends Fragment
 
                     ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
-//                    filename = "reviews.json";
-//                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-//                    reviewList = ParserToJavaObject.getReviewListParser(data);
-
+                    filename = "reviews.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    ReviewDataContainer reviewDataContainer = ParserToJavaObject.getReviewListParser(data);
                     //real json data
-                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
+//                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
+
+                    reviewList = reviewDataContainer.getReviewList();
+                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
 
                     Bundle params = new Bundle();
                     if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
@@ -296,8 +310,8 @@ public class ReviewListFragment extends Fragment
                     Log.i(TAG, "USER_REQ");
 
                     //TODO TEST
-                    String filename = "user.json";
-                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    filename = "user.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
                     userList = ParserToJavaObject.getUserListParser(data);
 
 //                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();

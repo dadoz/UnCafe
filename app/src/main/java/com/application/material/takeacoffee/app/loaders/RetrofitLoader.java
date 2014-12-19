@@ -5,19 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.restServices.RetrofitServiceInterface;
 import com.google.gson.*;
-import com.google.gson.annotations.SerializedName;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 import java.io.IOException;
@@ -25,7 +17,6 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -43,6 +34,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         super(activity);
         Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<List<CoffeeMachine>>(){}.getType();
         Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
+        Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<List<Review>>(){}.getType();
 
 
         mAction = HTTPActionRequestEnum.valueOf(action);
@@ -50,6 +42,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(typeOfListOfCategory, new CustomDeserializer())
                 .registerTypeAdapter(typeOfListOfCategoryUser, new CustomDeserializerUser())
+                .registerTypeAdapter(typeOfListOfCategoryReview, new CustomDeserializerReview())
                 .create();
 
         restAdapter = new RestAdapter.Builder()
@@ -74,28 +67,23 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
             Object data = null;
             switch (mAction) {
                 case ADD_REVIEW_REQUEST:
-                    //TODO never implemented
+                    //TODO not implemented yet
                     break;
                 case REVIEW_REQUEST:
-                    data = retrofitService.listReview();
+                    data = retrofitService.listReview(new Review.Params("PZrB82ZWVl", Double.parseDouble("1410696082045")));
                     break;
                 case MORE_REVIEW_REQUEST:
-                    User user = null;
-                    data = retrofitService.listMoreReview(user);
+                    data = retrofitService.listMoreReview(new Review.MoreReviewsParams("PZrB82ZWVl", "qaeWjprTDF"));
                     break;
                 case USER_REQUEST:
-                    String [] array = {"4nmvMJNk1R","K8bwZOSmNo","8e2XwXZUKL"};
-//                    ArrayList<String> userIdArrayLIst = new ArrayList<String>();
-//                    userIdArrayLIst.addAll(Arrays.asList(array));
-//                    JSONObject userIdList = new JSONObject().put("userIdList", new JSONArray(userIdArrayLIst));
-                    UserParams userParams = new UserParams(array);
-                    //retrofitService.listUserByIdList(userParams);
+                    String [] array = {"4nmvMJNk1R", "K8bwZOSmNo", "8e2XwXZUKL"};
+                    data = retrofitService.listUserByIdList(new User.Params(new ArrayList(Arrays.asList(array))));
                     break;
                 case REVIEW_COUNT_REQUEST:
                     //TODO not used anymore
-//                    data = retrofitService.mapReviewCount();
                     break;
                 case ADD_REVIEW_BY_PARAMS:
+                    //TODO not implemented yet
                     Review review = params.getParcelable(Review.REVIEW_KEY);
                     data = retrofitService.addReviewByParams(review);
                     break;
@@ -103,17 +91,18 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                     data = retrofitService.listCoffeeMachine();
                     break;
                 case SAVE_EDIT_REVIEW:
+                    //TODO not implemented yet
                     review = null;
                     retrofitService.saveEditReview(review);
                     break;
                 case DELETE_REVIEW:
-                    String reviewId = "TEST";
+                    //TODO not implemented yet
+                    String reviewId = null;
                     retrofitService.deleteReview(reviewId);
                     break;
                 case GET_COFFEE_MACHINE_STATUS:
-                    String coffeeMachineId = "TEST";
-                    String array2[] = { coffeeMachineId };
-                    retrofitService.getCoffeeMachineStatus(new UserParams(array2));
+                    String coffeeMachineId = "PZrB82ZWVl";
+                    data = retrofitService.getCoffeeMachineStatus(new CoffeeMachineStatus.Params(coffeeMachineId));
                     break;
 
             }
@@ -175,7 +164,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         //action model
         public static final String COFFEE_MACHINE = "coffee_machines";
         public static final String REVIEW = "reviews";
-        public static final String REVIEW_BY_TIMESTAMP_LIMIT = "getReviewsFromTimestamp";
+        public static final String WEEK_REVIEWS = "getWeekReviews";
         public static final String USER_BY_ID_LIST= "getUsersByUserIdList";
         public static final String MORE_REVIEW = "getMoreReviews";
         public static final String GET_COFFEE_MACHINE_STATUS = "getCoffeeMachineStatus";
@@ -204,17 +193,6 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
 
     }
 
-    public class UserParams {
-        List<String> userIdList;
-        public UserParams(String [] array) {
-//            userIdList = new ArrayList(Arrays.asList(array));
-            userIdList = new ArrayList<String>();
-            userIdList.add("4nmvMJNk1R");
-            userIdList.add("K8bwZOSmNo");
-            userIdList.add("8e2XwXZUKL");
-        }
-    }
-
     public static class CustomDeserializer implements JsonDeserializer<List<CoffeeMachine>> {
 
         @Override
@@ -230,6 +208,29 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                 coffeeMachineList.add(jsonDeserializationContext.<CoffeeMachine>deserialize(jsonArray.get(i), CoffeeMachine.class));
             }
             return coffeeMachineList;
+
+        }
+    }
+
+    public static class CustomDeserializerReview implements JsonDeserializer<ReviewDataContainer> {
+
+        @Override
+        public ReviewDataContainer deserialize(JsonElement jsonElement, Type type,
+                                               JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
+//            Log.e(TAG, jsonElement.toString() + " - " + type.toString());
+            Log.e(TAG, type.toString());
+//            Class<? extends Type> classType = type.getClass();
+            ArrayList<Review> reviewList = new ArrayList<Review>();
+            JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("data").getAsJsonArray();
+            for(int i = 0; i < jsonArray.size(); i++) {
+                reviewList.add(jsonDeserializationContext.<Review>deserialize(jsonArray.get(i), Review.class));
+            }
+            boolean hasMoreReviews = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("hasMoreReviews").getAsBoolean();
+
+            return  new ReviewDataContainer(hasMoreReviews, reviewList);
+
+//            return reviewList;
 
         }
     }
