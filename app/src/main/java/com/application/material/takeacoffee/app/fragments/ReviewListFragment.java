@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -73,6 +74,7 @@ public class ReviewListFragment extends Fragment
     @InjectView(R.id.leftArrowIconId) ImageView leftArrowIcon;
     @InjectView(R.id.swipeRefreshLayoutId) SwipeRefreshLayout swipeRefreshLayout;
     @InjectView(R.id.dashboardStatusLayoutId) View dashboardStatusLayout;
+
 //    @InjectView(R.id.moreReviewTemplateId) View moreReviewTemplate;
 
     private View moreReviewLoaderView;
@@ -85,7 +87,9 @@ public class ReviewListFragment extends Fragment
     private boolean hasMoreReviews;
     private View oldReviewView;
     private boolean isAllowToEdit = false;
-
+    private View selectedView;
+    private ArrayList<Review> prevReviewList;
+    private View headerView;
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -103,9 +107,10 @@ public class ReviewListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         reviewListView = inflater.inflate(R.layout.fragment_review_list, container, false);
         ButterKnife.inject(this, reviewListView);
-        moreReviewLoaderView = inflater.inflate(R.layout.more_review_template, listView, false);
-        oldReviewView = inflater.inflate(R.layout.old_review_template, listView, false);
         emptyView = inflater.inflate(R.layout.empty_data_status_layout, listView, false);
+        headerView = inflater.inflate(R.layout.header_listview_template, listView, false);
+        oldReviewView = headerView.findViewById(R.id.oldReviewTemplateId);
+        moreReviewLoaderView = headerView.findViewById(R.id.moreReviewTemplateId);
 
         bundle = getArguments();
         bundle2 = new Bundle(); //TODO please implement parcelable in coffeeMachine
@@ -173,11 +178,12 @@ public class ReviewListFragment extends Fragment
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 R.layout.review_template, reviewList, coffeeMachineId);
 
-        View headerView = moreReviewLoaderView;
-        if(! hasMoreReviews) {
-            headerView = oldReviewView;
-        }
+//        View headerView = moreReviewLoaderView;
+//        if(! hasMoreReviews) {
+//            headerView = oldReviewView;
+//        }
         listView.addHeaderView(headerView);
+        setHasMoreReviewView();
         listView.setAdapter(reviewListenerAdapter);
 
         listView.setOnItemLongClickListener(this);
@@ -227,7 +233,7 @@ public class ReviewListFragment extends Fragment
         //TODO REFACTORIZE IT - add a new class with an interface
         //TODO FIX IT
         final int REVIEW_REQ = 1; //REVIEW_REQUEST.ordinal();
-        final int MORE_REVIEW_REQ = -1; //MORE_REVIEW_REQUEST.ordinal();
+        final int MORE_REVIEW_REQ = 2; //MORE_REVIEW_REQUEST.ordinal();
         final int USER_REQ = 3; //MORE_REVIEW_REQUEST.ordinal();
         final int STATUS_REQ = 9; //.ordinal();
         Log.i(TAG, "id review_request " + loader.getId());
@@ -272,6 +278,7 @@ public class ReviewListFragment extends Fragment
 
                     Bundle params = new Bundle();
                     if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
+                        setHasMoreReviewView();
                         getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
 
                         getAdapterWrapper().setReviewList(reviewList);
@@ -284,7 +291,18 @@ public class ReviewListFragment extends Fragment
                     break;
                 case MORE_REVIEW_REQ:
                     Log.i(TAG, "MORE_REVIEW_REQ");
-                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
+                    swipeRefreshLayout.setRefreshing(false);
+
+                    filename = "prev_reviews.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    reviewDataContainer = ParserToJavaObject.getReviewListParser(data);
+                    prevReviewList = reviewDataContainer.getReviewList();
+                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
+                    setHasMoreReviewView();
+//                    prevReviewList = (ArrayList<Review>) restResponse.getParsedData();
+
+                    //TODO add review to adapter
+                    getAdapterWrapper().setPrevReview(prevReviewList);
                     //create new loader for user
                     params = new Bundle();
                     if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
@@ -315,6 +333,16 @@ public class ReviewListFragment extends Fragment
         }
     }
 
+    private void setHasMoreReviewView() {
+        if(hasMoreReviews) {
+            oldReviewView.setVisibility(View.GONE);
+            moreReviewLoaderView.setVisibility(View.VISIBLE);
+            return;
+        }
+        moreReviewLoaderView.setVisibility(View.GONE);
+        oldReviewView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
         //called on release resources - on back press and when loader is deleted/abandoned
@@ -323,12 +351,28 @@ public class ReviewListFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        if(view.getId() == R.id.moreReviewTemplateId) {
-            Log.e(TAG, "moreReviewTemplateId");
-            Toast.makeText(mainActivityRef, "loading previous review", Toast.LENGTH_SHORT).show();
-            swipeRefreshLayout.setRefreshing(true);
-            return;
+        //get more review
+        if(view.getId() == R.id.headerTemplateId) {
+            if(view.findViewById(R.id.moreReviewTemplateId).getVisibility() == View.VISIBLE) {
+                Log.e(TAG, "get previous review");
+                swipeRefreshLayout.setRefreshing(true); //show dialog spinner (but doesnt refresh I hope)
+
+                if(getLoaderManager().getLoader(MORE_REVIEW_REQUEST.ordinal()) != null) {
+                    getLoaderManager().restartLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
+                            .forceLoad();
+                    return;
+                }
+                getLoaderManager().initLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
+                        .forceLoad();
+                return;
+            }
+            if(view.findViewById(R.id.oldReviewTemplateId).getVisibility() == View.VISIBLE) {
+                Log.e(TAG, "get old review");
+                Toast.makeText(mainActivityRef, "load old review", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
+
         try {
             View reviewDialogView = View.inflate(mainActivityRef,
                     R.layout.review_dialog_template, null);
@@ -381,13 +425,27 @@ public class ReviewListFragment extends Fragment
             e.printStackTrace();
         }
 
-        ((SetActionBarInterface) mainActivityRef)
-                .setActionBarEditSelection(true);
         //disable onItemLongClick (only one edit per time)
-        listView.setOnItemLongClickListener(null);
+        updateSelectedItem(view);
         return true;
     }
 
+    //move in main activity
+    public void updateSelectedItem(View view) {
+        boolean isItemSelected = view != null;
+
+        ((SetActionBarInterface) mainActivityRef)
+                .setActionBarEditSelection(isItemSelected);
+        listView.setOnItemLongClickListener(isItemSelected ? null : this);
+
+        if(isItemSelected) {
+            selectedView = view;
+            view.setBackgroundColor(getResources().getColor(R.color.material_red_200));
+            return;
+        }
+        //unselect item
+        selectedView.setBackgroundColor(0x00000000);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -403,7 +461,7 @@ public class ReviewListFragment extends Fragment
             return;
         }
         menuInflater.inflate(R.menu.review_list, menu);
-        listView.setOnItemLongClickListener(this);
+//        listView.setOnItemLongClickListener(this);
     }
 
     @Override
@@ -421,6 +479,8 @@ public class ReviewListFragment extends Fragment
                 ((OnChangeFragmentWrapperInterface) mainActivityRef)
                         .startActivityWrapper(EditReviewActivity.class,
                                 CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
+                //deselect Item
+                updateSelectedItem(null);
                 break;
             case R.id.action_delete:
                 Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
@@ -446,6 +506,9 @@ public class ReviewListFragment extends Fragment
                 Dialog dialog = builder.create();
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
+
+                //deselect Item
+                updateSelectedItem(null);
                 break;
 
         }
@@ -639,6 +702,7 @@ public class ReviewListFragment extends Fragment
             e.printStackTrace();
         }
     }
+
 
 
 /*

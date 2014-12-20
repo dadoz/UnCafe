@@ -2,13 +2,14 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+              android:id="@+id/oldReviewTemplateId"
+              android:visibility="gone"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:paddingTop="@dimen/top_header_height"
               android:paddingBottom="@dimen/small_padding"
-              android:background="@color/light_black"
-              android:id="@+id/moreReviewTemplateId">
+              android:background="@color/light_black">
 
     <com.neopixl.pixlui.components.textview.TextView
             android:layout_gravity="center_horizontal"

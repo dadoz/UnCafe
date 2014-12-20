@@ -134,8 +134,17 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         Log.d(TAG, "hey home button");
         if(itemSelected) {
             //no item popped out
-            setActionBarEditSelection(false);
+//            setActionBarEditSelection(false);
             itemSelected = false;
+
+            try {
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                        currentFragTag);
+                ((ReviewListFragment) fragment).updateSelectedItem(null); //means restore selectedItem
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             return;
         }
         //else
@@ -189,14 +198,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             try {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                         currentFragTag);
-
-                ListView listView = ((ListView) fragment
-                        .getView().findViewById(R.id.reviewsContainerListViewId));
-                adapter = listView.getAdapter().getClass() == ReviewListAdapter.class ?
-                        ((ReviewListAdapter) listView.getAdapter()) :
-                        ((ReviewListAdapter) ((HeaderViewListAdapter) listView.getAdapter())
-                                .getWrappedAdapter());
-
+                adapter = getAdapterByFragment(fragment);
                 //get data
                 bundle = data.getExtras();
             } catch (Exception e) {
@@ -239,6 +241,14 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         }
     }
 
+    private ReviewListAdapter getAdapterByFragment(Fragment fragment) throws Exception {
+        ListView listView = ((ListView) fragment
+                .getView().findViewById(R.id.reviewsContainerListViewId));
+        return listView.getAdapter().getClass() == ReviewListAdapter.class ?
+                ((ReviewListAdapter) listView.getAdapter()) :
+                ((ReviewListAdapter) ((HeaderViewListAdapter) listView.getAdapter())
+                        .getWrappedAdapter());
+    }
     @Override
     public void setFragTag(String tag) {
         currentFragTag = tag;
