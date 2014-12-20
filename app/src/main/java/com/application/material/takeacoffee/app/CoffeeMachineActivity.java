@@ -13,10 +13,7 @@ import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.RequestQueue;
@@ -192,9 +189,14 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             try {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                         currentFragTag);
-                 adapter = (ReviewListAdapter) ((ListView) fragment
-                        .getView().findViewById(R.id.reviewsContainerListViewId))
-                        .getAdapter();
+
+                ListView listView = ((ListView) fragment
+                        .getView().findViewById(R.id.reviewsContainerListViewId));
+                adapter = listView.getAdapter().getClass() == ReviewListAdapter.class ?
+                        ((ReviewListAdapter) listView.getAdapter()) :
+                        ((ReviewListAdapter) ((HeaderViewListAdapter) listView.getAdapter())
+                                .getWrappedAdapter());
+
                 //get data
                 bundle = data.getExtras();
             } catch (Exception e) {
@@ -288,7 +290,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
     @Override
-    public boolean getItemSelected() {
+    public boolean isItemSelected() {
         return itemSelected;
     }
 

@@ -52,7 +52,7 @@ import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HT
 public class ReviewListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<RestResponse>,
         AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener,
-        DialogInterface.OnClickListener, View.OnClickListener, ActionMode.Callback,
+        DialogInterface.OnClickListener, View.OnClickListener,
         OnRefreshListener, AbsListView.OnScrollListener {
     private static final String TAG = "ReviewListFragment";
     public static final String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
@@ -84,6 +84,7 @@ public class ReviewListFragment extends Fragment
     private CoffeeMachine coffeeMachine;
     private boolean hasMoreReviews;
     private View oldReviewView;
+    private boolean isAllowToEdit = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -104,7 +105,7 @@ public class ReviewListFragment extends Fragment
         ButterKnife.inject(this, reviewListView);
         moreReviewLoaderView = inflater.inflate(R.layout.more_review_template, listView, false);
         oldReviewView = inflater.inflate(R.layout.old_review_template, listView, false);
-//        emptyView = inflater.inflate(R.layout.empty_data_status_layout, listView, false);
+        emptyView = inflater.inflate(R.layout.empty_data_status_layout, listView, false);
 
         bundle = getArguments();
         bundle2 = new Bundle(); //TODO please implement parcelable in coffeeMachine
@@ -137,9 +138,6 @@ public class ReviewListFragment extends Fragment
 
         getLoaderManager().initLoader(GET_COFFEE_MACHINE_STATUS.ordinal(), null, this)
                 .forceLoad();
-
-//        getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
-//                .forceLoad();
 
         //TODO REFACTORING
 /*        long fromTimestamp = bundle.getLong(Common.FROM_TIMESTAMP_KEY);
@@ -179,7 +177,7 @@ public class ReviewListFragment extends Fragment
         if(! hasMoreReviews) {
             headerView = oldReviewView;
         }
-        listView.addHeaderView(headerView); //TODO FIX it - this gonna make disappear name on reviews
+        listView.addHeaderView(headerView);
         listView.setAdapter(reviewListenerAdapter);
 
         listView.setOnItemLongClickListener(this);
@@ -226,6 +224,7 @@ public class ReviewListFragment extends Fragment
     @Override
     public void onLoadFinished(Loader<RestResponse> loader,
                                RestResponse restResponse) {
+        //TODO REFACTORIZE IT - add a new class with an interface
         //TODO FIX IT
         final int REVIEW_REQ = 1; //REVIEW_REQUEST.ordinal();
         final int MORE_REVIEW_REQ = -1; //MORE_REVIEW_REQUEST.ordinal();
@@ -274,6 +273,8 @@ public class ReviewListFragment extends Fragment
                     Bundle params = new Bundle();
                     if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+
+                        getAdapterWrapper().setReviewList(reviewList);
                         getAdapterWrapper().notifyDataSetChanged();
                         return;
                     }
@@ -368,19 +369,22 @@ public class ReviewListFragment extends Fragment
             //clear prev bundle
             bundle2.putParcelable(Review.REVIEW_OBJ_KEY, null);
             bundle2.putParcelable(User.USER_OBJ_KEY, null);
+            isAllowToEdit = false;
             //set
             if (user != null &&
                     user.getId().equals(meUserId)) {
                 bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
                 bundle2.putParcelable(User.USER_OBJ_KEY, user);
+                isAllowToEdit = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        mainActivityRef.startActionMode(this);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
+
         ((SetActionBarInterface) mainActivityRef)
                 .setActionBarEditSelection(true);
+        //disable onItemLongClick (only one edit per time)
+        listView.setOnItemLongClickListener(null);
         return true;
     }
 
@@ -389,28 +393,61 @@ public class ReviewListFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
         Log.e(TAG, "create option menu");
-        if(((SetActionBarInterface) mainActivityRef).getItemSelected()) {
-            menuInflater.inflate(R.menu.edit_review, menu);
+        if(((SetActionBarInterface) mainActivityRef).isItemSelected()) {
+            if(isAllowToEdit) {
+                menuInflater.inflate(R.menu.edit_review, menu);
+                return;
+            }
+
+            menuInflater.inflate(R.menu.review_list, menu);
             return;
         }
         menuInflater.inflate(R.menu.review_list, menu);
+        listView.setOnItemLongClickListener(this);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_delete:
-//                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.action_edit_icon:
-//                Toast.makeText(mainActivityRef, "map calling", Toast.LENGTH_SHORT).show();
-//                break;
             case R.id.action_coffee_machine_position:
                     Toast.makeText(mainActivityRef, "get machine pos", Toast.LENGTH_SHORT).show();
-//                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-//                        .changeFragment(new MapFragment(),
-//                                bundle, MapFragment.MAP_FRAG_TAG);
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .changeFragment(new MapFragment(),
+                                bundle, MapFragment.MAP_FRAG_TAG);
                 break;
+
+            case R.id.action_edit_icon:
+                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
+                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+                        .startActivityWrapper(EditReviewActivity.class,
+                                CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
+                break;
+            case R.id.action_delete:
+                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
+                        .setMessage("Sure to delete this review?")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+//                                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
+//                                        .forceLoad();
+                                Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
+                                getAdapterWrapper().deleteReview(review.getId());
+                                getAdapterWrapper().notifyDataSetChanged();
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                Dialog dialog = builder.create();
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.show();
+                break;
+
         }
         return true;
     }
@@ -443,69 +480,69 @@ public class ReviewListFragment extends Fragment
         }
     }
 
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        MenuInflater inflater = mainActivityRef.getMenuInflater();
-        //trying to get data
-        if(bundle2.get(Review.REVIEW_OBJ_KEY) == null ||
-                bundle2.get(User.USER_OBJ_KEY) == null) {
-            //not allowed to edit data
-            inflater.inflate(R.menu.review_list_no_edit, menu);
-            return true;
-        }
-        inflater.inflate(R.menu.edit_review, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+//        MenuInflater inflater = mainActivityRef.getMenuInflater();
+//        //trying to get data
+//        if(bundle2.get(Review.REVIEW_OBJ_KEY) == null ||
+//                bundle2.get(User.USER_OBJ_KEY) == null) {
+//            //not allowed to edit data
+//            inflater.inflate(R.menu.review_list_no_edit, menu);
+//            return true;
+//        }
+//        inflater.inflate(R.menu.edit_review, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_edit_icon:
-                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
-                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .startActivityWrapper(EditReviewActivity.class,
-                                CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
-                break;
-            case R.id.action_delete:
-                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-                        .setMessage("Sure to delete this review?")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-//                                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
-//                                        .forceLoad();
-                                Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
-                                getAdapterWrapper().deleteReview(review.getId());
-                                getAdapterWrapper().notifyDataSetChanged();
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-                Dialog dialog = builder.create();
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
-                break;
-        }
-
-        mode.finish();
-        return true;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-
-    }
+//    @Override
+//    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_edit_icon:
+//                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
+//                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+//                        .startActivityWrapper(EditReviewActivity.class,
+//                                CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
+//                break;
+//            case R.id.action_delete:
+//                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
+//                        .setMessage("Sure to delete this review?")
+//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int id) {
+////                                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
+////                                        .forceLoad();
+//                                Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
+//                                getAdapterWrapper().deleteReview(review.getId());
+//                                getAdapterWrapper().notifyDataSetChanged();
+//                                dialog.dismiss();
+//                            }
+//                        })
+//                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.dismiss();
+//                            }
+//                        });
+//                Dialog dialog = builder.create();
+//                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                dialog.show();
+//                break;
+//        }
+//
+//        mode.finish();
+//        return true;
+//    }
+//
+//    @Override
+//    public void onDestroyActionMode(ActionMode mode) {
+//
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {

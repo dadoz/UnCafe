@@ -84,6 +84,12 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
         return true;
     }
 
+    public boolean setReviewList(ArrayList<Review> reviewList) {
+        this.reviewList.clear();
+        this.reviewList.addAll(reviewList);
+        return true;
+    }
+
     //TODO refactor it
     public User getUserByUserId(String userId) {
         for(User user : userList) {
