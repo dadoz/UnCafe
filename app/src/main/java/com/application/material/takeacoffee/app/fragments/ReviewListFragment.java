@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.widget.ListViewCompat;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
@@ -204,24 +205,11 @@ public class ReviewListFragment extends Fragment
                 .setCustomNavigation(ReviewListFragment.class);
     }
 
-    private void notifyDataChangeOnListview() {
-        View headerView = moreReviewLoaderView;
-        if(! hasMoreReviews) {
-            headerView = oldReviewView;
-        }
-        listView.removeHeaderView(headerView);
-
-        //UPDATE DATA on LIST
-        if (listView.getAdapter() != null) {
-            try {
+    private ReviewListAdapter getAdapterWrapper() {
+        return listView.getAdapter().getClass() == ReviewListAdapter.class ?
+                ((ReviewListAdapter) listView.getAdapter()) :
                 ((ReviewListAdapter) ((HeaderViewListAdapter) listView.getAdapter())
-                        .getWrappedAdapter()).notifyDataSetChanged();
-            } catch (Exception e) {
-                ((ReviewListAdapter) listView.getAdapter()).notifyDataSetChanged();
-                e.printStackTrace();
-            }
-        }
-//        listView.addHeaderView(headerView);
+                    .getWrappedAdapter());
     }
 
     @Override
@@ -286,7 +274,7 @@ public class ReviewListFragment extends Fragment
                     Bundle params = new Bundle();
                     if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                        notifyDataChangeOnListview();
+                        getAdapterWrapper().notifyDataSetChanged();
                         return;
                     }
 
@@ -300,7 +288,7 @@ public class ReviewListFragment extends Fragment
                     params = new Bundle();
                     if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                        notifyDataChangeOnListview();
+                        getAdapterWrapper().notifyDataSetChanged();
                         return;
                     }
 
@@ -315,38 +303,14 @@ public class ReviewListFragment extends Fragment
                     userList = ParserToJavaObject.getUserListParser(data);
 
 //                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
-
-                    ((ReviewListAdapter) listView.getAdapter()).setUserList(userList);
-                    notifyDataChangeOnListview();
+                    getAdapterWrapper().setUserList(userList);
+                    getAdapterWrapper().notifyDataSetChanged();
 //                    swipeRefreshLayout.setRefreshing(false);
                     break;
             }
 
-
-//            Log.d(TAG, "this are data result" + restResponse.getData());
-//            if(restResponse.getRequestType() == null) {
-//                reviewResponse(restResponse);
-//                return;
-//            }
-//
-//            switch(restResponse.getRequestType()) {
-//                case RestLoaderRetrofit.HTTPAction.REVIEW_REQUEST:
-//                    reviewResponse(restResponse);
-//                    break;
-//                case RestLoaderRetrofit.HTTPAction.USER_REQUEST:
-//                    userResponse(restResponse);
-//                    break;
-//                case RestLoaderRetrofit.HTTPAction.MORE_REVIEW_REQUEST:
-//                    moreReviewResponse(restResponse);
-//                    break;
-//                default:
-//                    Log.e(TAG, "error - no valid response");
-//                    break;
-//            }
-//
-//            reviewResponse(restResponse);
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -368,7 +332,7 @@ public class ReviewListFragment extends Fragment
             View reviewDialogView = View.inflate(mainActivityRef,
                     R.layout.review_dialog_template, null);
             Review review = (Review) adapterView.getItemAtPosition(position);
-            User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
+            User user = getAdapterWrapper().getUserByUserId(review.getUserId());
 
             ((TextView) reviewDialogView
                     .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
@@ -399,13 +363,14 @@ public class ReviewListFragment extends Fragment
         }
         try {
             Review review = (Review) adapterView.getItemAtPosition(position);
-            User user = ((ReviewListAdapter) adapterView.getAdapter()).getUserByUserId(review.getUserId());
+            User user = getAdapterWrapper().getUserByUserId(review.getUserId());
 
             //clear prev bundle
             bundle2.putParcelable(Review.REVIEW_OBJ_KEY, null);
             bundle2.putParcelable(User.USER_OBJ_KEY, null);
             //set
-            if (user != null && user.getId().equals(meUserId)) {
+            if (user != null &&
+                    user.getId().equals(meUserId)) {
                 bundle2.putParcelable(Review.REVIEW_OBJ_KEY, review);
                 bundle2.putParcelable(User.USER_OBJ_KEY, user);
             }
@@ -516,8 +481,8 @@ public class ReviewListFragment extends Fragment
 //                                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
 //                                        .forceLoad();
                                 Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
-                                ((ReviewListAdapter) listView.getAdapter()).deleteReview(review.getId());
-                                ((ReviewListAdapter) listView.getAdapter()).notifyDataSetChanged();
+                                getAdapterWrapper().deleteReview(review.getId());
+                                getAdapterWrapper().notifyDataSetChanged();
                                 dialog.dismiss();
                             }
                         })
