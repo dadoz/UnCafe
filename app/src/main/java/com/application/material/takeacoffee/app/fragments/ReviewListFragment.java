@@ -43,6 +43,7 @@ import com.shamanland.fab.ShowHideOnScroll;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.COFFEE_MACHINE_STATUS_REQUEST;
 import static com.application.material.takeacoffee.app.models.Review.REVIEW_KEY;
 import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
 
@@ -140,7 +141,7 @@ public class ReviewListFragment extends Fragment
             return;
         }
 
-        getLoaderManager().initLoader(GET_COFFEE_MACHINE_STATUS.ordinal(), null, this)
+        getLoaderManager().initLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
                 .forceLoad();
 
         //TODO REFACTORING
@@ -226,14 +227,14 @@ public class ReviewListFragment extends Fragment
                                RestResponse restResponse) {
         //TODO REFACTORIZE IT - add a new class with an interface
         //TODO FIX IT
-        final int REVIEW_REQ = 1; //REVIEW_REQUEST.ordinal();
-        final int MORE_REVIEW_REQ = 2; //MORE_REVIEW_REQUEST.ordinal();
-        final int USER_REQ = 3; //MORE_REVIEW_REQUEST.ordinal();
-        final int STATUS_REQ = 9; //.ordinal();
-        Log.i(TAG, "id review_request " + loader.getId());
+        final int REVIEW_REQ = 0; //REVIEW_REQUEST.ordinal();
+        final int MORE_REVIEW_REQ = 1; //MORE_REVIEW_REQUEST.ordinal();
+        final int USER_REQ = 6; //USER_REQUEST.ordinal();
+        final int COFFEE_MACHINE_STATUS_REQ = 5; //.ordinal();
+        Log.i(TAG, "request id - " + loader.getId());
         try {
             switch (loader.getId()) {
-                case STATUS_REQ:
+                case COFFEE_MACHINE_STATUS_REQ:
                     Log.i(TAG, "STATUS_REQ");
 
                     ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
@@ -421,7 +422,7 @@ public class ReviewListFragment extends Fragment
 
         //disable onItemLongClick (only one edit per time)
         ((SetActionBarInterface) mainActivityRef)
-                .updateSelectedItem(this, listView, view);
+                .updateSelectedItem(this, listView, view, position);
         return true;
     }
 
@@ -455,7 +456,7 @@ public class ReviewListFragment extends Fragment
                                 CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
                 //deselect Item
                 ((SetActionBarInterface) mainActivityRef)
-                        .updateSelectedItem(this, listView, null);
+                        .updateSelectedItem(this, listView, null, -1);
                 break;
             case R.id.action_delete:
                 Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
@@ -485,7 +486,7 @@ public class ReviewListFragment extends Fragment
 
                 //deselect Item
                 ((SetActionBarInterface) mainActivityRef)
-                        .updateSelectedItem(this, listView, null);
+                        .updateSelectedItem(this, listView, null, -1);
                 break;
 
         }
@@ -647,7 +648,7 @@ public class ReviewListFragment extends Fragment
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(false);
         Toast.makeText(mainActivityRef, "refresh", Toast.LENGTH_SHORT).show();
-        getLoaderManager().restartLoader(GET_COFFEE_MACHINE_STATUS.ordinal(), null, this)
+        getLoaderManager().restartLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
                 .forceLoad();
     }
 

@@ -129,6 +129,10 @@ public class Review implements Parcelable {
         private static final String TAG = "ReviewStatus";
         public static final String REVIEW_STATUS_KEY = "REVIEW_STATUS_KEY";
 
+        public static String toString(ReviewStatusEnum status) {
+            return status.name();
+        }
+
         public enum ReviewStatusEnum {
             GOOD,
             NOTSOBAD,
@@ -203,6 +207,45 @@ public class Review implements Parcelable {
         public Params(String coffeeMachineId, double timestamp) {
             this.coffeeMachineId = coffeeMachineId;
             this.timestamp = timestamp;
+        }
+    }
+
+    public static class AddReviewParams implements Parcelable {
+        private String status;
+        private String comment;
+        private long timestamp;
+        private String userId;
+        private String coffeeMachineId;
+
+        public AddReviewParams(String comment, String status,
+                               long timestamp, String userId, String coffeeMachineId) {
+            this.status = status;
+            this.comment = comment;
+            this.timestamp = timestamp;
+            this.userId = userId;
+            this.coffeeMachineId = coffeeMachineId;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getComment() {
+            return comment;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
         }
     }
 

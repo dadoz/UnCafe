@@ -32,22 +32,32 @@ public interface RetrofitServiceInterface {
 //    @GET("/" + FUNCTIONS + REVIEW_COUNTER_TIMESTAMP)
 //    Response mapReviewCount();
 
-    @POST("/" + CLASSES + REVIEW)
-    boolean addReviewByParams(@Body Review review);
-
 //    @GET("/" + FUNCTIONS + USER_BY_ID_LIST + "{userParams}")
 //    void listUserByIdList(@Path("userParams") RetrofitLoader.UserParams userParams);
 
     @POST("/" + FUNCTIONS + USER_BY_ID_LIST)
     List<User> listUserByIdList(@Body User.Params userParams);
 
-    @PUT("/" + FUNCTIONS + MORE_REVIEW)
-    ReviewStatus saveEditReview(@Body Review review);
+    /**** REVIEW ACTIONS ****/
+    @PUT("/" + CLASSES + REVIEW + "/" + "{reviewId}")
+    void updateReview(@Path("reviewId") String reviewId, @Body Review review);
 
-    @DELETE("/" + FUNCTIONS + MORE_REVIEW)
-    ReviewStatus deleteReview(@Body String reviewObjectId);
+    @POST("/" + CLASSES + REVIEW)
+    void addReviewByParams(@Body Review review);
+
+    @DELETE("/" + CLASSES + REVIEW + "/" + "{reviewId}")
+    void deleteReview(@Path("reviewId") String reviewId);
+
+    /**** USER ACTIONS ****/
+    @PUT("/" + CLASSES + USER + "/" + "{userId}")
+    void updateUser(@Path("userId") String userId, @Body User user);
+
+    @POST("/" + CLASSES + USER)
+    void addUserByParams(@Body User user);
+
+    @DELETE("/" + CLASSES + USER + "/" + "{userId}")
+    void deleteUser(@Path("userId") String userId);
 
     @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS)
     CoffeeMachineStatus getCoffeeMachineStatus(@Body CoffeeMachineStatus.Params coffeeMachineId);
-
 }

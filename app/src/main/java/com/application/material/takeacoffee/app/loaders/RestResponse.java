@@ -35,9 +35,9 @@ public class RestResponse {
                 return this.data;
             case MORE_REVIEW_REQUEST:
                 return this.data; //no need to be parsed (GSON makes the trick)
-            case REVIEW_COUNT_REQUEST:
-                return this.data;
-            case ADD_REVIEW_BY_PARAMS:
+//            case REVIEW_COUNT_REQUEST:
+//                return this.data;
+            case ADD_REVIEW_BY_PARAMS_REQUEST:
                 return this.data;
             default:
                 return this.data;

@@ -46,8 +46,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                 .create();
 
         restAdapter = new RestAdapter.Builder()
-                .setEndpoint("https://api.parse.com") // to baseUrl
-//                .setEndpoint("https://192.168.130.112:8888") // to baseUrl
+                .setEndpoint("https://api.parse.com") // set baseUrl
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(gson))
                 .build();
@@ -66,9 +65,6 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
 
             Object data = null;
             switch (mAction) {
-                case ADD_REVIEW_REQUEST:
-                    //TODO not implemented yet
-                    break;
                 case REVIEW_REQUEST:
                     data = retrofitService.listReview(new Review.Params("PZrB82ZWVl", Double.parseDouble("1410696082045")));
                     break;
@@ -79,30 +75,40 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                     String [] array = {"4nmvMJNk1R", "K8bwZOSmNo", "8e2XwXZUKL"};
                     data = retrofitService.listUserByIdList(new User.Params(new ArrayList(Arrays.asList(array))));
                     break;
-                case REVIEW_COUNT_REQUEST:
-                    //TODO not used anymore
-                    break;
-                case ADD_REVIEW_BY_PARAMS:
-                    //TODO not implemented yet
-                    Review review = params.getParcelable(Review.REVIEW_KEY);
-                    data = retrofitService.addReviewByParams(review);
-                    break;
+//                case REVIEW_COUNT_REQUEST:
+//                    TODO not used anymore
+//                    break;
                 case COFFEE_MACHINE_REQUEST:
                     data = retrofitService.listCoffeeMachine();
                     break;
-                case SAVE_EDIT_REVIEW:
-                    //TODO not implemented yet
-                    review = null;
-                    retrofitService.saveEditReview(review);
+                case UPDATE_REVIEW_REQUEST:
+                    Review review = null;
+                    retrofitService.updateReview("LerbzRfN95", review);
                     break;
-                case DELETE_REVIEW:
-                    //TODO not implemented yet
-                    String reviewId = null;
+                case ADD_REVIEW_BY_PARAMS_REQUEST:
+                     review = params.getParcelable(Review.REVIEW_KEY);
+                    retrofitService.addReviewByParams(review);
+                    break;
+                case DELETE_REVIEW_REQUEST:
+                    String reviewId = "LerbzRfN95";
                     retrofitService.deleteReview(reviewId);
                     break;
-                case GET_COFFEE_MACHINE_STATUS:
+                case COFFEE_MACHINE_STATUS_REQUEST:
                     String coffeeMachineId = "PZrB82ZWVl";
-                    data = retrofitService.getCoffeeMachineStatus(new CoffeeMachineStatus.Params(coffeeMachineId));
+                    data = retrofitService.getCoffeeMachineStatus(
+                            new CoffeeMachineStatus.Params(coffeeMachineId));
+                    break;
+                case UPDATE_USER_REQUEST:
+                    User user = null;
+                    retrofitService.updateUser("LerbzRfN95", user);
+                    break;
+                case ADD_USER_BY_PARAMS_REQUEST:
+                    user = params.getParcelable(User.USER_OBJ_KEY);
+                    retrofitService.addUserByParams(user);
+                    break;
+                case DELETE_USER_REQUEST:
+                    String userId = "LerbzRfN95";
+                    retrofitService.deleteUser(userId);
                     break;
 
             }
@@ -124,16 +130,17 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
     };
 
     public enum HTTPActionRequestEnum {
-        ADD_REVIEW_REQUEST,
         REVIEW_REQUEST,
         MORE_REVIEW_REQUEST,
+        ADD_REVIEW_BY_PARAMS_REQUEST,
+        UPDATE_REVIEW_REQUEST,
+        DELETE_REVIEW_REQUEST,
+        COFFEE_MACHINE_STATUS_REQUEST,
         USER_REQUEST,
-        REVIEW_COUNT_REQUEST,
-        ADD_REVIEW_BY_PARAMS,
         COFFEE_MACHINE_REQUEST,
-        SAVE_EDIT_REVIEW,
-        DELETE_REVIEW,
-        GET_COFFEE_MACHINE_STATUS
+        UPDATE_USER_REQUEST,
+        ADD_USER_BY_PARAMS_REQUEST,
+        DELETE_USER_REQUEST
     }
 
 //    public class UserCallback implements  Callback<List<User>>  {
@@ -164,6 +171,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         //action model
         public static final String COFFEE_MACHINE = "coffee_machines";
         public static final String REVIEW = "reviews";
+        public static final String USER = "users";
         public static final String WEEK_REVIEWS = "getWeekReviews";
         public static final String USER_BY_ID_LIST= "getUsersByUserIdList";
         public static final String MORE_REVIEW = "getMoreReviews";

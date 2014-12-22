@@ -89,7 +89,7 @@ public class DashboardReviewFragment extends Fragment implements
         //initOnLoadView
         mainActivityRef.initOnLoadView();
 
-       getLoaderManager().initLoader(GET_COFFEE_MACHINE_STATUS.ordinal(), null, this)
+       getLoaderManager().initLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
                 .forceLoad();
 
         //after loading smthing if u need
@@ -98,7 +98,7 @@ public class DashboardReviewFragment extends Fragment implements
 
     private void initView(CoffeeMachineStatus reviewStatus) {
         mainActivityRef.hideOnLoadView();
-        Log.e(TAG, reviewStatus.toString());
+//        Log.e(TAG, "" + reviewStatus.toString());
         //set action bar view
         mainActivityRef.setActionBarCustomViewById(R.id.customActionBarCoffeeMachineLayoutId,
                 coffeeMachine);

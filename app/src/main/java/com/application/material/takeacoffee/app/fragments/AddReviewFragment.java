@@ -21,6 +21,7 @@ import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.views.FilledCircleView;
+import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
 
 import java.util.Date;
 
@@ -42,6 +43,7 @@ public class AddReviewFragment extends Fragment implements
     @InjectView(R.id.seekBarId) View seekBarView;
 
     private String coffeeMachineId;
+    private Review.AddReviewParams reviewParams;
 //    @InjectView(R.id.usernameTextId) View usernameText;
 //    @InjectView(R.id.userIconId) View userIconView;
 //    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
@@ -76,7 +78,8 @@ public class AddReviewFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
         ButterKnife.inject(this, addReviewView);
-        initOnLoadView();
+        //initOnLoadView();
+        initView();
         return addReviewView;
     }
 
@@ -128,6 +131,9 @@ public class AddReviewFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<RestResponse> loader,
                                RestResponse restResponse) {
+        Object data = restResponse.getParsedData(); // in this obj reviewId is stored
+        String reviewId = data.toString(); //get reviewId from server
+        addReviewOnLoadFinished(reviewId);
     }
 
 
@@ -138,28 +144,29 @@ public class AddReviewFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.addReviewButtonId:
+                addActivityRef.initOnLoadView(); //get spinner
+
                 //on callback
                 String comment = ((EditText) commentTextView).getText().toString();
-                if(comment == null || comment.compareTo("") == 0) {
+                if(comment.compareTo("") == 0) {
                     Toast.makeText(addActivityRef.getApplicationContext(),
                             "Failed - write some comment!", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-//                getLoaderManager().initLoader(ADD_REVIEW_BY_PARAMS.ordinal(), null, this)
-//                        .forceLoad();
-                //move this on Success callback
                 ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
                         ((RatingBar) statusRatingBarView).getRating());
+
                 long timestamp = new Date().getTime();
-                Review review = new Review("FAKE_ID", comment,
-                        status, timestamp, meUserId, null);//TODO this is wrong
-                intent.putExtra(Review.REVIEW_OBJ_KEY, review);
-                addActivityRef.setResult(Activity.RESULT_OK, intent);
-                addActivityRef.finish();
+
+                Bundle params = new Bundle();
+                reviewParams = new Review.AddReviewParams(comment, ReviewStatus.toString(status),
+                        timestamp, meUserId, coffeeMachineId);
+
+                params.putParcelable(Review.REVIEW_KEY, reviewParams);
+                getLoaderManager().initLoader(ADD_USER_BY_PARAMS_REQUEST.ordinal(), params, this)
+                        .forceLoad();
                 break;
         }
     }
@@ -173,6 +180,18 @@ public class AddReviewFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return true;
+    }
+
+    public void addReviewOnLoadFinished(String reviewId) {
+        Review review = new Review(reviewId, reviewParams.getComment(),
+                ReviewStatus.parseStatus(reviewParams.getStatus()),
+                reviewParams.getTimestamp(), meUserId, coffeeMachineId);
+
+        Intent intent = new Intent();
+
+        intent.putExtra(Review.REVIEW_OBJ_KEY, review);
+        addActivityRef.setResult(Activity.RESULT_OK, intent);
+        addActivityRef.finish();
     }
 
 }

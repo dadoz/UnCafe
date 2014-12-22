@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.VolleyImageRequestWrapper;
+import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
@@ -72,7 +73,11 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             }
 
             //TODO check if selectedItem then background color middle grey
-
+            if(((SetActionBarInterface) mainActivityRef).isItemSelected() &&
+                ((SetActionBarInterface) mainActivityRef).getSelectedItemPosition() == position + 1) {
+                //due to header on listview
+                        convertView.setBackgroundColor(mainActivityRef.getResources().getColor(R.color.material_red_200));
+            }
         } catch (Exception e) {
             Log.e(TAG, " - " + e.getMessage());
             e.printStackTrace();
