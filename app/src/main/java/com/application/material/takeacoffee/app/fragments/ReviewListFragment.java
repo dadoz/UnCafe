@@ -87,7 +87,6 @@ public class ReviewListFragment extends Fragment
     private boolean hasMoreReviews;
     private View oldReviewView;
     private boolean isAllowToEdit = false;
-    private View selectedView;
     private ArrayList<Review> prevReviewList;
     private View headerView;
     @Override
@@ -178,10 +177,6 @@ public class ReviewListFragment extends Fragment
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 R.layout.review_template, reviewList, coffeeMachineId);
 
-//        View headerView = moreReviewLoaderView;
-//        if(! hasMoreReviews) {
-//            headerView = oldReviewView;
-//        }
         listView.addHeaderView(headerView);
         setHasMoreReviewView();
         listView.setAdapter(reviewListenerAdapter);
@@ -193,7 +188,6 @@ public class ReviewListFragment extends Fragment
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setProgressViewOffset(true, 100, 200); //TODO replace please with dimen size
         addReviewFabButton.setOnClickListener(this);
-
     }
 
     private void setActionBarData() {
@@ -402,7 +396,7 @@ public class ReviewListFragment extends Fragment
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        if(view.getId() == R.id.moreReviewTemplateId) {
+        if(view.getId() == R.id.headerTemplateId) {
             Log.e(TAG, "moreReviewTemplateId");
             return true;
         }
@@ -426,25 +420,9 @@ public class ReviewListFragment extends Fragment
         }
 
         //disable onItemLongClick (only one edit per time)
-        updateSelectedItem(view);
-        return true;
-    }
-
-    //move in main activity
-    public void updateSelectedItem(View view) {
-        boolean isItemSelected = view != null;
-
         ((SetActionBarInterface) mainActivityRef)
-                .setActionBarEditSelection(isItemSelected);
-        listView.setOnItemLongClickListener(isItemSelected ? null : this);
-
-        if(isItemSelected) {
-            selectedView = view;
-            view.setBackgroundColor(getResources().getColor(R.color.material_red_200));
-            return;
-        }
-        //unselect item
-        selectedView.setBackgroundColor(0x00000000);
+                .updateSelectedItem(this, listView, view);
+        return true;
     }
 
     @Override
@@ -452,12 +430,8 @@ public class ReviewListFragment extends Fragment
         super.onCreateOptionsMenu(menu, menuInflater);
         Log.e(TAG, "create option menu");
         if(((SetActionBarInterface) mainActivityRef).isItemSelected()) {
-            if(isAllowToEdit) {
-                menuInflater.inflate(R.menu.edit_review, menu);
-                return;
-            }
-
-            menuInflater.inflate(R.menu.review_list, menu);
+            menuInflater.inflate(isAllowToEdit ? R.menu.edit_review : R.menu.clipboard_review,
+                    menu);
             return;
         }
         menuInflater.inflate(R.menu.review_list, menu);
@@ -480,7 +454,8 @@ public class ReviewListFragment extends Fragment
                         .startActivityWrapper(EditReviewActivity.class,
                                 CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
                 //deselect Item
-                updateSelectedItem(null);
+                ((SetActionBarInterface) mainActivityRef)
+                        .updateSelectedItem(this, listView, null);
                 break;
             case R.id.action_delete:
                 Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
@@ -507,8 +482,10 @@ public class ReviewListFragment extends Fragment
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
+
                 //deselect Item
-                updateSelectedItem(null);
+                ((SetActionBarInterface) mainActivityRef)
+                        .updateSelectedItem(this, listView, null);
                 break;
 
         }

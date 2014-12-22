@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
@@ -47,8 +46,10 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     public static String ACTION_ADD_REVIEW_RESULT = "ADD_RESULT";
     public static final int ACTION_EDIT_REVIEW = 1;
     public static final int ACTION_ADD_REVIEW = 2;
-    private boolean itemSelected;
+    private boolean isItemSelected;
     private String tempActionBarTitle;
+    private View selectedView;
+    private ListView reviewListview;
 
 
     @Override
@@ -102,15 +103,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                 .commit();
     }
 
-//    public static void launch(MainActivity activity, View transitionView, String url) {
-//        ActivityOptionsCompat options =
-//                ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        activity, transitionView, EXTRA_IMAGE);
-//        Intent intent = new Intent(activity, DetailActivity.class);
-//        intent.putExtra(EXTRA_IMAGE, url);
-//        ActivityCompat.startActivity(activity, intent, options.toBundle());
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -132,22 +124,18 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     @Override
     public void onBackPressed() {
         Log.d(TAG, "hey home button");
-        if(itemSelected) {
+        if(currentFragTag.compareTo(ReviewListFragment.REVIEW_LIST_FRAG_TAG) == 0 &&
+                isItemSelected) {
+            isItemSelected = false;
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                    currentFragTag);
             //no item popped out
-//            setActionBarEditSelection(false);
-            itemSelected = false;
-
-            try {
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                        currentFragTag);
-                ((ReviewListFragment) fragment).updateSelectedItem(null); //means restore selectedItem
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            updateSelectedItem((AdapterView.OnItemLongClickListener) fragment,
+                    reviewListview, null);
             return;
+
         }
-        //else
+
         super.onBackPressed();
     }
 
@@ -249,6 +237,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                 ((ReviewListAdapter) ((HeaderViewListAdapter) listView.getAdapter())
                         .getWrappedAdapter());
     }
+
     @Override
     public void setFragTag(String tag) {
         currentFragTag = tag;
@@ -272,14 +261,14 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
     @Override
     public void setActionBarEditSelection(boolean value) {
-        itemSelected = value;
+        isItemSelected = value;
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(
-                        itemSelected ? R.color.material_grey : R.color.material_red_200)));
+                        isItemSelected ? R.color.material_grey : R.color.material_red_200)));
         invalidateOptionsMenu();
         //set new title on actionBar
         try {
-            if(itemSelected) {
+            if(isItemSelected) {
 //                tempActionBarTitle = getSupportActionBar().getTitle().toString();
 //                getSupportActionBar().setTitle(ReviewListFragment.EDIT_REVIEW_STRING);
                 tempActionBarTitle = ((TextView) getSupportActionBar()
@@ -301,8 +290,22 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
     @Override
     public boolean isItemSelected() {
-        return itemSelected;
+        return isItemSelected;
     }
+
+    @Override
+    public void updateSelectedItem(AdapterView.OnItemLongClickListener listener,
+                                   ListView listView, View view) {
+        isItemSelected = view != null;
+        reviewListview = listView;
+        selectedView = isItemSelected ? view : selectedView;
+
+        setActionBarEditSelection(isItemSelected);
+        reviewListview.setOnItemLongClickListener(isItemSelected ? null : listener);
+        selectedView.setBackgroundColor(isItemSelected ?
+                getResources().getColor(R.color.material_red_200) : 0x00000000);
+    }
+
 
     @Override
     public void setActionBarCustomViewById(int id, Object data) {
