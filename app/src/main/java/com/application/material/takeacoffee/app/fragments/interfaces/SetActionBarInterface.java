@@ -11,9 +11,9 @@ import android.widget.ListView;
 public interface SetActionBarInterface {
     public void setActionBarCustomViewById(int id, Object data);
     public void setCustomNavigation(Class<?> id);
-    public void setActionBarEditSelection();
     public boolean isItemSelected();
     public int getSelectedItemPosition();
+    public void setSelectedItemView(View selectedItemView);
     public void updateSelectedItem(AdapterView.OnItemLongClickListener listener,
                                    ListView listView, View view, int itemPos);
 

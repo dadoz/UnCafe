@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -14,10 +15,12 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.AddReviewActivity;
+import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
+import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.views.FilledCircleView;
@@ -130,10 +133,18 @@ public class AddReviewFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<RestResponse> loader,
-                               RestResponse restResponse) {
-        Object data = restResponse.getParsedData(); // in this obj reviewId is stored
-        String reviewId = data.toString(); //get reviewId from server
-        addReviewOnLoadFinished(reviewId);
+                                   RestResponse restResponse) {
+        String reviewId;
+        try {
+            Object data = restResponse.getParsedData(); // in this obj reviewId is stored
+            reviewId = data.toString(); //get reviewId from server
+        } catch (Exception e) {
+            Log.e(TAG, "failed to save data" + e.getMessage());
+            addReviewErrorCallback();
+            return;
+        }
+
+        addReviewSuccessCallback(reviewId);
     }
 
 
@@ -153,6 +164,7 @@ public class AddReviewFragment extends Fragment implements
                 if(comment.compareTo("") == 0) {
                     Toast.makeText(addActivityRef.getApplicationContext(),
                             "Failed - write some comment!", Toast.LENGTH_LONG).show();
+                    addActivityRef.hideOnLoadView(); //get spinner
                     return;
                 }
                 ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
@@ -164,7 +176,7 @@ public class AddReviewFragment extends Fragment implements
                 reviewParams = new Review.AddReviewParams(comment, ReviewStatus.toString(status),
                         timestamp, meUserId, coffeeMachineId);
 
-                params.putParcelable(Review.REVIEW_KEY, reviewParams);
+                params.putParcelable(Review.REVIEW_PARAMS_KEY, reviewParams);
                 getLoaderManager().initLoader(ADD_USER_BY_PARAMS_REQUEST.ordinal(), params, this)
                         .forceLoad();
                 break;
@@ -182,7 +194,7 @@ public class AddReviewFragment extends Fragment implements
         return true;
     }
 
-    public void addReviewOnLoadFinished(String reviewId) {
+    public void addReviewSuccessCallback(String reviewId) {
         Review review = new Review(reviewId, reviewParams.getComment(),
                 ReviewStatus.parseStatus(reviewParams.getStatus()),
                 reviewParams.getTimestamp(), meUserId, coffeeMachineId);
@@ -194,4 +206,11 @@ public class AddReviewFragment extends Fragment implements
         addActivityRef.finish();
     }
 
+    public void addReviewErrorCallback() {
+        Intent intent = new Intent();
+        intent.putExtra(CoffeeMachineActivity.ERROR_MESSAGE_KEY, Review.ERROR_MESSAGE);
+        addActivityRef.setResult(CoffeeMachineActivity.RESULT_FAILED, intent);
+        addActivityRef.finish();
+
+    }
 }

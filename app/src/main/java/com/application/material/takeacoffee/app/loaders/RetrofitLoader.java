@@ -8,8 +8,11 @@ import android.util.Log;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.restServices.RetrofitServiceInterface;
 import com.google.gson.*;
+import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 import java.io.IOException;
@@ -63,6 +66,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                 return null; //TODO HANDLE It
             }
 
+            Object callback = null;
             Object data = null;
             switch (mAction) {
                 case REVIEW_REQUEST:
@@ -86,7 +90,7 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
                     retrofitService.updateReview("LerbzRfN95", review);
                     break;
                 case ADD_REVIEW_BY_PARAMS_REQUEST:
-                     review = params.getParcelable(Review.REVIEW_KEY);
+                    review = params.getParcelable(Review.REVIEW_PARAMS_KEY);
                     retrofitService.addReviewByParams(review);
                     break;
                 case DELETE_REVIEW_REQUEST:
@@ -142,19 +146,6 @@ public class RetrofitLoader extends AsyncTaskLoader<RestResponse> {
         ADD_USER_BY_PARAMS_REQUEST,
         DELETE_USER_REQUEST
     }
-
-//    public class UserCallback implements  Callback<List<User>>  {
-//        @Override
-//        public void success(List<User> s, Response response) {
-//            Log.e(TAG, "success");
-//        }
-//
-//        @Override
-//        public void failure(RetrofitError retrofitError) {
-//            Log.e(TAG, "success" + retrofitError);
-//
-//        }
-//    }
 
     public static String getActionByActionRequestEnum(int ordinal) {
         try {

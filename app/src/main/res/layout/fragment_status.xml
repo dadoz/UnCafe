@@ -19,7 +19,7 @@
             android:textSize="@dimen/header_text_size"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
-            pixlui:typeface="AmaticSC-Regular.ttf"/>
+            pixlui:typeface="chimphand-light.ttf"/>
 
 
 </LinearLayout>

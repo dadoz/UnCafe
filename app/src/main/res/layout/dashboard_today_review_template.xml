@@ -20,7 +20,7 @@
                     android:textColor="@color/dark_black"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+                    pixlui:typeface="chimphand-light.ttf"/>
             <com.neopixl.pixlui.components.textview.TextView
                     android:id="@+id/coffeeMachineStatusTextId"
                     android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
                     android:text="Thats' Good"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+                    pixlui:typeface="chimphand-light.ttf"/>
         </LinearLayout>
 
         <ImageView
@@ -52,7 +52,7 @@
                 android:textColor="@color/dark_black"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
-                pixlui:typeface="AmaticSC-Regular.ttf"/>
+                pixlui:typeface="chimphand-light.ttf"/>
         <com.neopixl.pixlui.components.textview.TextView
                 android:id="@+id/coffeeMachineWeeklyReviewTextId"
                 android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
                 android:text="Thats' Good"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
-                pixlui:typeface="AmaticSC-Regular.ttf"/>
+                pixlui:typeface="chimphand-light.ttf"/>
     </LinearLayout>
 
 

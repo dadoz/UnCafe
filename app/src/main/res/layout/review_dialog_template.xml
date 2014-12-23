@@ -19,7 +19,7 @@
                     android:text="username"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="Amatic-Bold.ttf"/>
+                    pixlui:typeface="chimphand-regular.ttf"/>
 
             <com.neopixl.pixlui.components.textview.TextView
                     android:id="@+id/reviewDialogCommentTextId"
@@ -35,7 +35,7 @@
                     android:textSize="@dimen/text_big_22"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+                    pixlui:typeface="chimphand-light.ttf"/>
 
             <com.neopixl.pixlui.components.edittext.EditText
                     android:visibility="gone"
@@ -54,7 +54,7 @@
                     android:background="@color/light_grey"
                     pixlui:copyandpaste="true"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+                    pixlui:typeface="chimphand-light.ttf"/>
 
 
             <!-- first right aligned -->
@@ -74,7 +74,7 @@
                         android:text="done"
                         pixlui:copyandpaste="false"
                         pixlui:clearclipboardcontent="true"
-                        pixlui:typeface="Amatic-Bold.ttf"/>
+                        pixlui:typeface="chimphand-regular.ttf"/>
             </LinearLayout>
 </LinearLayout>
 

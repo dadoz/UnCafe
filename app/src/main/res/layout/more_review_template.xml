@@ -19,6 +19,6 @@
             android:text="prev reviews"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
-            pixlui:typeface="Amatic-Bold.ttf"/>
+            pixlui:typeface="chimphand-regular.ttf"/>
 
 </LinearLayout>

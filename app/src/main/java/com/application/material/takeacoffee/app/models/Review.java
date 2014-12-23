@@ -14,7 +14,9 @@ public class Review implements Parcelable {
     private static final String TAG = "Review";
     public static final String ID_NOT_SET = "ID_NOT_SET";
     public static final String REVIEW_KEY = "REVIEW_KEY";
+    public static final String ERROR_MESSAGE = "Sorry! there's a problem to save or retrieve review data! Try again later";
     public static String REVIEW_OBJ_KEY = "REVIEW_OBJ_KEY";
+    public static String REVIEW_PARAMS_KEY = "REVIEW_PARAMS_KEY";
     private String objectId;
 	private ReviewStatusEnum status;
     private String comment;

@@ -211,6 +211,10 @@ public class ReviewListFragment extends Fragment
                     .getWrappedAdapter());
     }
 
+    public ListView getListView() {
+        return listView;
+    }
+
     @Override
     public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
         try {
@@ -347,52 +351,52 @@ public class ReviewListFragment extends Fragment
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         //get more review
-        if(view.getId() == R.id.headerTemplateId) {
-            if(view.findViewById(R.id.moreReviewTemplateId).getVisibility() == View.VISIBLE) {
-                Log.e(TAG, "get previous review");
-                swipeRefreshLayout.setRefreshing(true); //show dialog spinner (but doesnt refresh I hope)
+        switch (view.getId()) {
+            case R.id.headerTemplateId :
+                if(view.findViewById(R.id.moreReviewTemplateId).getVisibility() == View.VISIBLE) {
+                    Log.e(TAG, "get previous review");
+                    swipeRefreshLayout.setRefreshing(true); //show dialog spinner (but doesnt refresh I hope)
 
-                if(getLoaderManager().getLoader(MORE_REVIEW_REQUEST.ordinal()) != null) {
-                    getLoaderManager().restartLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
+                    if(getLoaderManager().getLoader(MORE_REVIEW_REQUEST.ordinal()) != null) {
+                        getLoaderManager().restartLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
+                                .forceLoad();
+                        return;
+                    }
+                    getLoaderManager().initLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
                             .forceLoad();
                     return;
                 }
-                getLoaderManager().initLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
-                        .forceLoad();
-                return;
-            }
-            if(view.findViewById(R.id.oldReviewTemplateId).getVisibility() == View.VISIBLE) {
-                Log.e(TAG, "get old review");
-                Toast.makeText(mainActivityRef, "load old review", Toast.LENGTH_SHORT).show();
-                return;
-            }
+
+                if(view.findViewById(R.id.oldReviewTemplateId).getVisibility() == View.VISIBLE) {
+                    Log.e(TAG, "get old review");
+                    Toast.makeText(mainActivityRef, "load old review", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
 
-        try {
-            View reviewDialogView = View.inflate(mainActivityRef,
-                    R.layout.review_dialog_template, null);
-            Review review = (Review) adapterView.getItemAtPosition(position);
-            User user = getAdapterWrapper().getUserByUserId(review.getUserId());
 
-            ((TextView) reviewDialogView
-                    .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
-            ((TextView) reviewDialogView
-                    .findViewById(R.id.reviewDialogCommentTextId)).setText(review.getComment());
+        //expand listview
+//        View reviewDialogView = View.inflate(mainActivityRef,
+//                R.layout.review_dialog_template, null);
+//        Review review = (Review) adapterView.getItemAtPosition(position);
+//        User user = getAdapterWrapper().getUserByUserId(review.getUserId());
+//
+//        ((TextView) reviewDialogView
+//                .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
+//        ((TextView) reviewDialogView
+//                .findViewById(R.id.reviewDialogCommentTextId)).setText(review.getComment());
+//
+//        View doneDialogButton = reviewDialogView
+//                .findViewById(R.id.doneDialogIconId);
+//
+//        doneDialogButton.setOnClickListener(this);
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
+//                .setView(reviewDialogView);
+//        customDialog = builder.create();
+//        customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        customDialog.show();
 
-            View doneDialogButton = reviewDialogView
-                    .findViewById(R.id.doneDialogIconId);
-
-            doneDialogButton.setOnClickListener(this);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-                    .setView(reviewDialogView);
-            customDialog = builder.create();
-            customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            customDialog.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -520,70 +524,6 @@ public class ReviewListFragment extends Fragment
 
         }
     }
-
-//    @Override
-//    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//        MenuInflater inflater = mainActivityRef.getMenuInflater();
-//        //trying to get data
-//        if(bundle2.get(Review.REVIEW_OBJ_KEY) == null ||
-//                bundle2.get(User.USER_OBJ_KEY) == null) {
-//            //not allowed to edit data
-//            inflater.inflate(R.menu.review_list_no_edit, menu);
-//            return true;
-//        }
-//        inflater.inflate(R.menu.edit_review, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_edit_icon:
-//                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
-//                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-//                        .startActivityWrapper(EditReviewActivity.class,
-//                                CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle2);
-//                break;
-//            case R.id.action_delete:
-//                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-//                        .setMessage("Sure to delete this review?")
-//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int id) {
-////                                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
-////                                        .forceLoad();
-//                                Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
-//                                getAdapterWrapper().deleteReview(review.getId());
-//                                getAdapterWrapper().notifyDataSetChanged();
-//                                dialog.dismiss();
-//                            }
-//                        })
-//                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                Dialog dialog = builder.create();
-//                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//                dialog.show();
-//                break;
-//        }
-//
-//        mode.finish();
-//        return true;
-//    }
-//
-//    @Override
-//    public void onDestroyActionMode(ActionMode mode) {
-//
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstance) {

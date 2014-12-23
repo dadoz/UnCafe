@@ -38,7 +38,7 @@
                 android:text="Politecnico di torino - c.so Vinzaglio"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
-                pixlui:typeface="Amatic-Bold.ttf"/>
+                pixlui:typeface="chimphand-regular.ttf"/>
 
         <!--<com.neopixl.pixlui.components.textview.TextView-->
         <!--android:layout_width="320dip"-->
@@ -51,7 +51,7 @@
         <!--android:text="at Politecnico."-->
         <!--pixlui:copyandpaste="false"-->
         <!--pixlui:clearclipboardcontent="true"-->
-        <!--pixlui:typeface="AmaticSC-Regular.ttf"/>-->
+        <!--pixlui:typeface="chimphand-light.ttf"/>-->
 
     </LinearLayout>
 

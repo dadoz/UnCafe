@@ -34,6 +34,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
         ImageLoader.ImageCache, VolleyImageRequestWrapper, SetActionBarInterface {
     private static final String TAG = "CoffeeMachineActivity";
+    public static final int RESULT_FAILED = 111;
     @InjectView(R.id.onLoadLayoutId)
     View onLoadLayout;
     //Volley lib
@@ -44,11 +45,12 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private static String currentFragTag = null;
     public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
     public static String ACTION_ADD_REVIEW_RESULT = "ADD_RESULT";
+    public static final String ERROR_MESSAGE_KEY = "EMK";
     public static final int ACTION_EDIT_REVIEW = 1;
     public static final int ACTION_ADD_REVIEW = 2;
-    private int selectedItemPosition;
+    private int selectedItemPosition = -1;
     private String tempActionBarTitle;
-    private View selectedView;
+    private View selectedItemView;
     private ListView reviewListview;
 
 
@@ -131,7 +133,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                     currentFragTag);
             //no item popped out
             updateSelectedItem((AdapterView.OnItemLongClickListener) fragment,
-                    reviewListview, null, -1);
+                    ((ReviewListFragment) fragment).getListView(), null, -1);
             return;
 
         }
@@ -180,52 +182,65 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
-            Bundle bundle;
-            ReviewListAdapter adapter;
-            try {
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                        currentFragTag);
-                adapter = getAdapterByFragment(fragment);
-                //get data
-                bundle = data.getExtras();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
+        switch (resultCode) {
+            case RESULT_OK:
+                Bundle bundle;
+                ReviewListAdapter adapter;
+                try {
+                    Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                            currentFragTag);
+                    adapter = getAdapterByFragment(fragment);
+                    //get data
+                    bundle = data.getExtras();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
 
-            switch(requestCode) {
-                case CoffeeMachineActivity.ACTION_EDIT_REVIEW:
-                    String action = bundle.getString(
-                            CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT);
-                    Review review = (Review) bundle.get(
-                            Review.REVIEW_OBJ_KEY);
-                    if(action == null || review == null) {
-                        Log.e(TAG, "error onActivityResult - no action or empty data");
+                switch (requestCode) {
+                    case CoffeeMachineActivity.ACTION_EDIT_REVIEW:
+                        String action = bundle.getString(
+                                CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT);
+                        Review review = (Review) bundle.get(
+                                Review.REVIEW_OBJ_KEY);
+                        if (action == null || review == null) {
+                            Log.e(TAG, "error onActivityResult - no action or empty data");
+                            break;
+                        }
+
+                        if (action.equals("SAVE")) {
+                            Log.e(TAG, "save " + review.getId());
+                            adapter.updateReview(review);
+                            break;
+                        }
+
+                        Log.e(TAG, "hey return form edit review");
                         break;
-                    }
+                    case CoffeeMachineActivity.ACTION_ADD_REVIEW:
+                        //get current frag
+                        review = (Review) bundle.get(
+                                Review.REVIEW_OBJ_KEY);
+                        if (review == null) {
+                            Log.e(TAG, "error onActivityResult - no action or empty data");
+                            break;
+                        }
 
-                    if(action.equals("SAVE")) {
-                        Log.e(TAG, "save " + review.getId());
-                        adapter.updateReview(review);
+                        Log.e(TAG, "add " + review.getId());
+                        adapter.addReview(review);
                         break;
-                    }
-
-                    Log.e(TAG, "hey return form edit review");
-                    break;
-                case CoffeeMachineActivity.ACTION_ADD_REVIEW:
-                    //get current frag
-                    review = (Review) bundle.get(
-                            Review.REVIEW_OBJ_KEY);
-                    if(review == null) {
-                        Log.e(TAG, "error onActivityResult - no action or empty data");
-                        break;
-                    }
-
-                    Log.e(TAG, "add " + review.getId());
-                    adapter.addReview(review);
-                    break;
-            }
+                }
+                break;
+            case RESULT_CANCELED:
+//                String message =  data.getExtras().getString(ERROR_MESSAGE_KEY);
+//                String message = "error";
+//                Log.e(TAG, "error got from above activity" + message);
+//                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                break;
+            case CoffeeMachineActivity.RESULT_FAILED:
+                String message =  data.getExtras().getString(ERROR_MESSAGE_KEY);
+                Log.e(TAG, "error got from above activity" + message);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -260,34 +275,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void setActionBarEditSelection() {
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(
-                        isItemSelected() ? R.color.material_grey : R.color.material_red_200)));
-        invalidateOptionsMenu();
-        //set new title on actionBar
-        try {
-            if(isItemSelected()) {
-//                tempActionBarTitle = getSupportActionBar().getTitle().toString();
-//                getSupportActionBar().setTitle(ReviewListFragment.EDIT_REVIEW_STRING);
-                tempActionBarTitle = ((TextView) getSupportActionBar()
-                        .getCustomView().findViewById(R.id.cActBarTitleId)).getText().toString();
-                ((TextView) getSupportActionBar()
-                        .getCustomView().findViewById(R.id.cActBarTitleId)).setText(ReviewListFragment.EDIT_REVIEW_STRING);
-
-                return;
-            }
-//            getSupportActionBar().setTitle(tempActionBarTitle);
-            ((TextView) getSupportActionBar()
-                    .getCustomView().findViewById(R.id.cActBarTitleId)).setText(tempActionBarTitle);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
     public boolean isItemSelected() {
         return selectedItemPosition != -1;
     }
@@ -298,16 +285,54 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
     @Override
+    public void setSelectedItemView(View view) {
+        selectedItemView = view;
+        selectedItemView.setBackgroundColor(isItemSelected() ?
+                getResources().getColor(R.color.material_red_200) : 0x00000000);
+    }
+
+
+    @Override
     public void updateSelectedItem(AdapterView.OnItemLongClickListener listener,
                                    ListView listView, View view, int itemPos) {
-        selectedItemPosition = itemPos; // due to header on listview
-        reviewListview = listView;
-        selectedView = isItemSelected() ? view : selectedView;
+        try {
+            selectedItemPosition = itemPos; // due to header on listview
+            reviewListview = listView;
+            selectedItemView = isItemSelected() ? view : selectedItemView;
 
-        setActionBarEditSelection();
-        reviewListview.setOnItemLongClickListener(isItemSelected() ? null : listener);
-        selectedView.setBackgroundColor(isItemSelected() ?
-                getResources().getColor(R.color.material_red_200) : 0x00000000);
+            setActionBarSelected();
+            reviewListview.setOnItemLongClickListener(isItemSelected() ? null : listener);
+            if(selectedItemView != null) {
+                selectedItemView.setBackgroundColor(isItemSelected() ?
+                        getResources().getColor(R.color.material_red_200) : 0x00000000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setActionBarSelected() {
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(
+                        isItemSelected() ? R.color.material_grey : R.color.material_red_200)));
+        invalidateOptionsMenu();
+        //set new title on actionBar
+        try {
+            if(isItemSelected()) {
+                tempActionBarTitle = ((TextView) getSupportActionBar()
+                        .getCustomView().findViewById(R.id.cActBarTitleId)).getText().toString();
+                ((TextView) getSupportActionBar()
+                        .getCustomView().findViewById(R.id.cActBarTitleId)).setText(ReviewListFragment.EDIT_REVIEW_STRING);
+
+                return;
+            }
+            ((TextView) getSupportActionBar()
+                    .getCustomView().findViewById(R.id.cActBarTitleId)).setText(tempActionBarTitle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 

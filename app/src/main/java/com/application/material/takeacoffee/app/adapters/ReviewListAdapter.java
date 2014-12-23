@@ -76,7 +76,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             if(((SetActionBarInterface) mainActivityRef).isItemSelected() &&
                 ((SetActionBarInterface) mainActivityRef).getSelectedItemPosition() == position + 1) {
                 //due to header on listview
-                        convertView.setBackgroundColor(mainActivityRef.getResources().getColor(R.color.material_red_200));
+                ((SetActionBarInterface) mainActivityRef).setSelectedItemView(convertView);
             }
         } catch (Exception e) {
             Log.e(TAG, " - " + e.getMessage());

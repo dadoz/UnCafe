@@ -25,7 +25,7 @@
                 android:text="Save your changes"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
-                pixlui:typeface="AmaticSC-Regular.ttf"/>
+                pixlui:typeface="chimphand-light.ttf"/>
     </LinearLayout>
 
 
@@ -81,7 +81,7 @@
 
                     pixlui:copyandpaste="true"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="AmaticSC-Regular.ttf"/>
+                    pixlui:typeface="chimphand-light.ttf"/>
 
         </LinearLayout>
 
