@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.*;
@@ -17,20 +16,19 @@ import com.application.material.takeacoffee.app.adapters.CoffeeMachineGridAdapte
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
-import com.application.material.takeacoffee.app.loaders.RestResponse;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
+import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
+import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
+import com.application.material.takeacoffee.app.services.HttpIntentService;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
 
 
 /**
  * Created by davide on 3/13/14.
  */
-public class CoffeeMachineFragment extends Fragment implements
-        AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
+public class CoffeeMachineFragment extends Fragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
@@ -74,8 +72,11 @@ public class CoffeeMachineFragment extends Fragment implements
         //initOnLoadView
         ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
 
-        getLoaderManager().initLoader(COFFEE_MACHINE_REQUEST.ordinal(), null, this)
-                .forceLoad();
+//        getLoaderManager().initLoader(COFFEE_MACHINE_REQUEST.ordinal(), null, this)
+//                .forceLoad();
+
+        //request coffee machine list
+        HttpIntentService.coffeeMachineInitParamsRequest(this.getActivity());
     }
 
     public void initView(ArrayList<CoffeeMachine> coffeeMachineList) {
@@ -108,7 +109,7 @@ public class CoffeeMachineFragment extends Fragment implements
         ((OnChangeFragmentWrapperInterface) mainActivityRef)
                 .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
     }
-
+/*
     @Override
     public Loader<RestResponse> onCreateLoader(int ordinal, Bundle params) {
         //get action
@@ -127,7 +128,6 @@ public class CoffeeMachineFragment extends Fragment implements
 
             ArrayList<CoffeeMachine> coffeeMachinesList = (ArrayList<CoffeeMachine>) restResponse.getParsedData();
             initView(coffeeMachinesList);
-/*            initView(coffeeMachinesList);*/
         } catch (Exception e) {
             ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
             String filename = "coffee_machines.json";
@@ -143,7 +143,7 @@ public class CoffeeMachineFragment extends Fragment implements
         //TODO need to be implemented
     }
 
-
+*/
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
@@ -171,5 +171,28 @@ public class CoffeeMachineFragment extends Fragment implements
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
     }
+
+    @Subscribe
+    public void onNetworkRespose(ArrayList<CoffeeMachine> coffeeMachinesList){
+        Log.d(TAG, "Response  getMessages");
+
+        if(coffeeMachinesList == null) {
+            return;
+        }
+        Log.e(TAG, "data retrived" + coffeeMachinesList.toString());
+
+        try {
+            initView(coffeeMachinesList);
+        } catch (Exception e) {
+            ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+            String filename = "coffee_machines.json";
+            String data = JSONParserToObject.getMockupData(this.getActivity(), filename);
+            coffeeMachinesList = JSONParserToObject.coffeeMachineParser(data);
+            initView(coffeeMachinesList);
+            e.printStackTrace();
+        }
+
+    }
+
 
 }

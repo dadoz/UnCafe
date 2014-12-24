@@ -202,13 +202,23 @@ public class Review implements Parcelable {
 
     }
 
-    public static class Params {
+    public static class Params implements Parcelable {
         private String coffeeMachineId;
         private double timestamp;
 
         public Params(String coffeeMachineId, double timestamp) {
             this.coffeeMachineId = coffeeMachineId;
             this.timestamp = timestamp;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+
         }
     }
 

@@ -19,8 +19,6 @@ import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.loaders.RestResponse;
-import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.Setting;
 
 import java.util.ArrayList;
@@ -29,8 +27,8 @@ import java.util.ArrayList;
  * Created by davide on 08/04/14.
  */
 public class SettingListFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<RestResponse>,
-        AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener {
+        implements AdapterView.OnItemLongClickListener,
+        AdapterView.OnItemClickListener, DialogInterface.OnClickListener {
     private static final String TAG = "ReviewListFragment";
     private static FragmentActivity mainActivityRef = null;
     public static String SETTING_LIST_FRAG_TAG = "SETTING_LIST_FRAG_TAG";
@@ -94,28 +92,6 @@ public class SettingListFragment extends Fragment
                 R.layout.review_template, reviewList);
         listView.setAdapter(settingListAdapter);
         listView.setOnItemClickListener(this);
-    }
-
-    @Override
-    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
-        try {
-            String action = RetrofitLoader.getActionByActionRequestEnum(id);
-            return new RetrofitLoader(this.getActivity(), action, params);
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<RestResponse> loader,
-                               RestResponse restResponse) {
-    }
-
-
-    @Override
-    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
-
     }
 
     @Override

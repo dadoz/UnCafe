@@ -15,8 +15,6 @@ import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.loaders.RestResponse;
-import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
@@ -25,7 +23,7 @@ import com.application.material.takeacoffee.app.models.User;
  * Created by davide on 14/11/14.
  */
 public class EditReviewFragment extends Fragment implements
-        View.OnClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
+        View.OnClickListener {
     private static final String TAG = "EditReviewFragment";
     private EditReviewActivity editActivityRef;
     private Bundle bundle;
@@ -103,7 +101,7 @@ public class EditReviewFragment extends Fragment implements
         review.setStatus(editStatus);
         return true;
     }
-
+/*
     @Override
     public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
         try {
@@ -125,7 +123,7 @@ public class EditReviewFragment extends Fragment implements
     public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
 
     }
-
+*/
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();

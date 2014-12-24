@@ -1,11 +1,15 @@
 package com.application.material.takeacoffee.app.parsers;
 
+import android.content.res.AssetManager;
+import android.support.v4.app.FragmentActivity;
 import com.application.material.takeacoffee.app.models.*;
 import com.google.gson.JsonParseException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,7 +18,28 @@ import static com.application.material.takeacoffee.app.models.Review.ReviewStatu
 /**
  * Created by davide on 05/11/14.
  */
-public class ParserToJavaObject {
+public class JSONParserToObject {
+    //TODO TEST
+    public static String getMockupData(FragmentActivity fragmentActivity, String filename) {
+        AssetManager assetManager = fragmentActivity.getAssets();
+        InputStream input;
+        try {
+            input = assetManager.open("data/" + filename);
+
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
+
+            // byte buffer into a string
+            return new String(buffer);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
     /***** DATA PARSER ****/
 //    public static ReviewCounter parseCountOnReviewsData(String data) {

@@ -18,13 +18,9 @@ import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.loaders.RestResponse;
-import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.views.FilledCircleView;
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
 
 import java.util.Date;
 
@@ -33,7 +29,7 @@ import java.util.Date;
  * Created by davide on 14/11/14.
  */
 public class AddReviewFragment extends Fragment implements
-        View.OnClickListener, LoaderManager.LoaderCallbacks<RestResponse> {
+        View.OnClickListener {
     private static final String TAG = "EditReviewFragment";
     private AddReviewActivity addActivityRef;
     private Bundle bundle;
@@ -119,7 +115,7 @@ public class AddReviewFragment extends Fragment implements
         addReviewButton.setOnClickListener(this);
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
-
+/*
     @Override
     public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
         try {
@@ -152,7 +148,7 @@ public class AddReviewFragment extends Fragment implements
     public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
 
     }
-
+*/
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -177,8 +173,8 @@ public class AddReviewFragment extends Fragment implements
                         timestamp, meUserId, coffeeMachineId);
 
                 params.putParcelable(Review.REVIEW_PARAMS_KEY, reviewParams);
-                getLoaderManager().initLoader(ADD_USER_BY_PARAMS_REQUEST.ordinal(), params, this)
-                        .forceLoad();
+//                getLoaderManager().initLoader(ADD_USER_BY_PARAMS_REQUEST.ordinal(), params, this)
+//                        .forceLoad();
                 break;
         }
     }

@@ -1,27 +1,17 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.internal.widget.ListViewCompat;
 import android.util.Log;
 import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,27 +23,23 @@ import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.loaders.RestResponse;
-import com.application.material.takeacoffee.app.loaders.RetrofitLoader;
 import com.application.material.takeacoffee.app.models.*;
-import com.application.material.takeacoffee.app.parsers.ParserToJavaObject;
+import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.neopixl.pixlui.components.textview.TextView;
 import com.shamanland.fab.ShowHideOnScroll;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.COFFEE_MACHINE_STATUS_REQUEST;
 import static com.application.material.takeacoffee.app.models.Review.REVIEW_KEY;
-import static com.application.material.takeacoffee.app.loaders.RetrofitLoader.HTTPActionRequestEnum.*;
 
 
 /**
  * Created by davide on 08/04/14.
  */
 public class ReviewListFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<RestResponse>,
-        AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener,
+        implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener,
         DialogInterface.OnClickListener, View.OnClickListener,
         OnRefreshListener, AbsListView.OnScrollListener {
     private static final String TAG = "ReviewListFragment";
@@ -141,8 +127,8 @@ public class ReviewListFragment extends Fragment
             return;
         }
 
-        getLoaderManager().initLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
-                .forceLoad();
+//        getLoaderManager().initLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
+//                .forceLoad();
 
         //TODO REFACTORING
 /*        long fromTimestamp = bundle.getLong(Common.FROM_TIMESTAMP_KEY);
@@ -215,7 +201,7 @@ public class ReviewListFragment extends Fragment
         return listView;
     }
 
-    @Override
+/*    @Override
     public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
         try {
             String action = RetrofitLoader.getActionByActionRequestEnum(id);
@@ -247,7 +233,7 @@ public class ReviewListFragment extends Fragment
                     //MOCKUP
                     String filename = "review_status.json";
                     String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    coffeeMachineStatus = ParserToJavaObject.coffeeMachineStatusParser(data);
+                    coffeeMachineStatus = JSONParserToObject.coffeeMachineStatusParser(data);
 
                     //real json data
 //                    coffeeMachineStatus = (CoffeeMachineStatus) restResponse.getParsedData();
@@ -268,7 +254,7 @@ public class ReviewListFragment extends Fragment
 
                     filename = "reviews.json";
                     data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    ReviewDataContainer reviewDataContainer = ParserToJavaObject.getReviewListParser(data);
+                    ReviewDataContainer reviewDataContainer = JSONParserToObject.getReviewListParser(data);
                     //real json data
 //                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
 
@@ -294,7 +280,7 @@ public class ReviewListFragment extends Fragment
 
                     filename = "prev_reviews.json";
                     data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    reviewDataContainer = ParserToJavaObject.getReviewListParser(data);
+                    reviewDataContainer = JSONParserToObject.getReviewListParser(data);
                     prevReviewList = reviewDataContainer.getReviewList();
                     hasMoreReviews = reviewDataContainer.getHasMoreReviews();
                     setHasMoreReviewView();
@@ -318,7 +304,7 @@ public class ReviewListFragment extends Fragment
                     //TODO TEST
                     filename = "user.json";
                     data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    userList = ParserToJavaObject.getUserListParser(data);
+                    userList = JSONParserToObject.getUserListParser(data);
 
 //                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
                     getAdapterWrapper().setUserList(userList);
@@ -332,6 +318,13 @@ public class ReviewListFragment extends Fragment
         }
     }
 
+    @Override
+    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
+        //called on release resources - on back press and when loader is deleted/abandoned
+        Log.e(TAG, "reset loader");
+    }
+
+*/
     private void setHasMoreReviewView() {
         if(hasMoreReviews) {
             oldReviewView.setVisibility(View.GONE);
@@ -343,12 +336,6 @@ public class ReviewListFragment extends Fragment
     }
 
     @Override
-    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
-        //called on release resources - on back press and when loader is deleted/abandoned
-        Log.e(TAG, "reset loader");
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         //get more review
         switch (view.getId()) {
@@ -356,7 +343,7 @@ public class ReviewListFragment extends Fragment
                 if(view.findViewById(R.id.moreReviewTemplateId).getVisibility() == View.VISIBLE) {
                     Log.e(TAG, "get previous review");
                     swipeRefreshLayout.setRefreshing(true); //show dialog spinner (but doesnt refresh I hope)
-
+/*
                     if(getLoaderManager().getLoader(MORE_REVIEW_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
                                 .forceLoad();
@@ -364,6 +351,8 @@ public class ReviewListFragment extends Fragment
                     }
                     getLoaderManager().initLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
                             .forceLoad();
+
+                    */
                     return;
                 }
 
@@ -588,8 +577,8 @@ public class ReviewListFragment extends Fragment
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(false);
         Toast.makeText(mainActivityRef, "refresh", Toast.LENGTH_SHORT).show();
-        getLoaderManager().restartLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
-                .forceLoad();
+//        getLoaderManager().restartLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
+//                .forceLoad();
     }
 
     @Override
@@ -621,7 +610,18 @@ public class ReviewListFragment extends Fragment
         }
     }
 
-
+    @Subscribe
+    public void onNetworkRespose(CoffeeMachineStatus response){
+        Log.d(TAG, "Response  getMessages");
+        coffeeMachineStatus = response;
+        if(response == null) {
+            return;
+        }
+        //request review
+        long timestamp = 123456; //TODO replace with joda time
+        HttpIntentService.reviewListInitParamsRequest(this.getActivity(),
+                coffeeMachineId, timestamp);
+    }
 
 /*
     private void moreReviewResponse(RestResponse restResponse) {
