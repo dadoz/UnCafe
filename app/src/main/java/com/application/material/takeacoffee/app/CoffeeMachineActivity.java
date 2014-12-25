@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.RequestQueue;
@@ -28,6 +29,7 @@ import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
+import com.neopixl.pixlui.components.imageview.*;
 import com.squareup.otto.Subscribe;
 
 
@@ -366,9 +368,13 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             case R.id.customActionBarUserLayoutId:
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                         .setVisibility(View.GONE);
-//                        .setText(getResources().getText(R.string.titleTakeACoffee));
-                ((TextView) actionBar.getCustomView().findViewById(R.id.usernameTextId))
+
+                ((TextView) actionBar.getCustomView().findViewById(R.id.usernameId))
                         .setText("fake david");
+                ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId))
+                        .setVisibility(View.VISIBLE);
+//                ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId))
+//                        .setImageDrawable();
 
                 break;
             case R.id.customActionBarReviewListLayoutId:
@@ -386,6 +392,12 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                         .setVisibility(View.VISIBLE);
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                         .setText("Politecnico di Torino");
+                break;
+            case R.id.customActionSettingsLayoutId:
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setVisibility(View.VISIBLE);
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setText("Settings");
                 break;
 
         }

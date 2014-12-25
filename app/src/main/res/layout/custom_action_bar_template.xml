@@ -6,6 +6,7 @@
               android:layout_width="fill_parent"
               android:layout_height="match_parent">
 
+
     <TextView
             android:id="@+id/cActBarTitleId"
             android:textSize="@dimen/text_big_24"
@@ -39,9 +40,23 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/customActionBarUserLayoutId"
-            android:gravity="center_vertical"
-            android:visibility="gone">
-        <include layout="@layout/header_user_template" />
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/userIconId"
+                    android:layout_width="@dimen/medium_small_icon_size"
+                    android:layout_height="@dimen/medium_small_icon_size"
+                    android:src="@drawable/user_icon_small_b" />
+
+            <TextView
+                    android:id="@+id/usernameId"
+                    android:textSize="@dimen/text_big_24"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/small_padding"
+                    android:text=" - "/>
     </LinearLayout>
 
     <!--review list template -->

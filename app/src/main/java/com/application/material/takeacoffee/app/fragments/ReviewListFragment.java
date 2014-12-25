@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,6 +19,7 @@ import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
+import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
@@ -27,13 +27,9 @@ import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.neopixl.pixlui.components.textview.TextView;
-import com.shamanland.fab.ShowHideOnScroll;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import static com.application.material.takeacoffee.app.models.Review.REVIEW_KEY;
 
 
 /**
@@ -53,7 +49,7 @@ public class ReviewListFragment extends Fragment
     private Bundle bundle;
     private Bundle bundle2;
     private CoffeeMachineStatus coffeeMachineStatus;
-    private String meUserId = "4nmvMJNk1R";
+    private String meUserId;
 
     @InjectView(R.id.reviewsContainerListViewId) ListView listView;
     @InjectView(R.id.addReviewFabId) View addReviewFabButton;
@@ -78,6 +74,8 @@ public class ReviewListFragment extends Fragment
     private ArrayList<Review> prevReviewList;
     private View headerView;
     private boolean isMoreReviewRequest = false;
+    private DataApplication dataApplication;
+    private boolean isRefreshAction = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -91,6 +89,8 @@ public class ReviewListFragment extends Fragment
                     + " must implement OnLoadViewHandlerInterface");
         }
         mainActivityRef =  (CoffeeMachineActivity) activity;
+        dataApplication = ((DataApplication) mainActivityRef.getApplication());
+        meUserId = dataApplication.getUserId();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
@@ -107,10 +107,15 @@ public class ReviewListFragment extends Fragment
         coffeeMachine = bundle.getParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
 //        reviewStatus = ReviewStatus.ReviewStatusEnum.valueOf(bundle
 //                .getString(ReviewStatus.REVIEW_STATUS_KEY));
-        restoreSavedInstance(savedInstance);
-        setHasOptionsMenu(true);
-        initOnLoadView();
 
+        setHasOptionsMenu(true);
+        if(savedInstance != null) {
+            restoreData();
+            initView();
+            return reviewListView;
+        }
+
+        initOnLoadView();
         return reviewListView;
     }
 
@@ -144,20 +149,49 @@ public class ReviewListFragment extends Fragment
         long timestamp = 2;
         HttpIntentService.coffeeMachineStatusRequest(mainActivityRef.getApplicationContext(),
                 coffeeMachineId, timestamp);
-//        getLoaderManager().initLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
-//                .forceLoad();
 
         //TODO REFACTORING
 /*        long fromTimestamp = bundle.getLong(Common.FROM_TIMESTAMP_KEY);
         long toTimestamp = bundle.getLong(Common.TO_TIMESTAMP_KEY);
         Bundle params = RestResponse.createBundleReview(coffeeMachineId, fromTimestamp, toTimestamp);
-        if (getLoaderManager().getLoader(RestLoader.HTTPVerb.POST) == null) {
-            getLoaderManager().initLoader(RestLoader.HTTPVerb.POST, params, this)
-                    .forceLoad();
-        } else {
-            initView(reviewListDataStorage, coffeeMachineId);
-        }*/
+*/
+    }
 
+    private void restoreData() {
+        try {
+            userList = dataApplication.restoreUserList();
+            ReviewDataContainer reviewDataContainer = dataApplication.restoreReviewDataContainer();
+            if(reviewDataContainer != null) {
+                reviewList = reviewDataContainer.getReviewList();
+                hasMoreReviews = reviewDataContainer.getHasMoreReviews();
+            }
+            coffeeMachineStatus = dataApplication.restoreCoffeeMachineStatus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshView() {
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+
+        if(coffeeMachineStatus != null) {
+            goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
+//            statusCoffeeIcon.setImageDrawable();
+        }
+
+        if (reviewList == null) {
+            Log.w(TAG, "empty review list");
+            listView.setEmptyView(emptyView);
+            return;
+        }
+
+        setHasMoreReviewView();
+        getAdapterWrapper().setReviewList(reviewList);
+        //retrieve user if are not null
+        if(userList != null) {
+            getAdapterWrapper().setUserList(userList);
+            getAdapterWrapper().notifyDataSetChanged();
+        }
     }
 
     public void initView() {
@@ -183,15 +217,22 @@ public class ReviewListFragment extends Fragment
 
         listView.addHeaderView(headerView);
         setHasMoreReviewView();
+
         listView.setAdapter(reviewListenerAdapter);
 
         listView.setOnItemLongClickListener(this);
         listView.setOnItemClickListener(this);
         listView.setOnScrollListener(this);
-        listView.setOnTouchListener(new ShowHideOnScroll(addReviewFabButton));
+//        listView.setOnTouchListener(new ShowHideOnScroll(addReviewFabButton));
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setProgressViewOffset(true, 100, 200); //TODO replace please with dimen size
         addReviewFabButton.setOnClickListener(this);
+
+        //retrieve user if are not null
+        if(userList != null) {
+            getAdapterWrapper().setUserList(userList);
+            getAdapterWrapper().notifyDataSetChanged();
+        }
     }
 
     private void setActionBarData() {
@@ -415,75 +456,18 @@ public class ReviewListFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstance) {
-        super.onSaveInstanceState(savedInstance);
-
-        //Status
-        savedInstance.putParcelable(CoffeeMachineStatus.COFFEE_MACHINE_STATUS, coffeeMachineStatus);
-
-        //review
-        if(reviewList == null) {
-            return;
-        }
-
-        Parcelable[] parcelableArray = new Parcelable[reviewList.size()];
-        Iterator iterator = reviewList.iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-                parcelableArray[i] = (Parcelable) iterator.next();
-            i ++;
-        }
-        savedInstance.putParcelableArray(REVIEW_KEY, parcelableArray);
-
-        //user
-        if(userList == null) {
-            return;
-        }
-
-        parcelableArray = new Parcelable[userList.size()];
-        iterator = userList.iterator();
-        i = 0;
-        while (iterator.hasNext()) {
-            parcelableArray[i] = (Parcelable) iterator.next();
-            i ++;
-        }
-        savedInstance.putParcelableArray(User.USER_OBJ_KEY, parcelableArray);
-
-    }
-
-    private boolean restoreSavedInstance(Bundle savedInstance) {
-        try {
-            if(savedInstance == null ||
-                    savedInstance.getParcelableArray(REVIEW_KEY) == null) {
-                return false;
-            }
-
-            //restore data from savedInstance
-            reviewList = new ArrayList<Review>();
-            Parcelable[] temp = savedInstance.getParcelableArray(REVIEW_KEY);
-            for(int i = 0; i < temp.length; i ++) {
-                reviewList.add((Review) temp[i]);
-            }
-
-            userList = new ArrayList<User>();
-            temp = savedInstance.getParcelableArray(User.USER_OBJ_KEY);
-            for(int i = 0; i < temp.length; i ++) {
-                userList.add((User) temp[i]);
-            }
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(false);
         Toast.makeText(mainActivityRef, "refresh", Toast.LENGTH_SHORT).show();
-//        getLoaderManager().restartLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
-//                .forceLoad();
+        isRefreshAction = true;
+        //clear data on application
+        int [] dataLabels = {0, 1, 2};
+        dataApplication.clearData(dataLabels);
+
+        long timestamp = 1;
+        HttpIntentService.coffeeMachineStatusRequest(this.getActivity(),
+                coffeeMachineId, timestamp);
+        isMoreReviewRequest = false;
     }
 
     @Override
@@ -522,8 +506,9 @@ public class ReviewListFragment extends Fragment
         if(response == null) {
             return;
         }
-
         coffeeMachineStatus = response;
+        dataApplication.saveCoffeeMachineStatus(coffeeMachineStatus);
+
         goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
 
         //request review
@@ -541,6 +526,7 @@ public class ReviewListFragment extends Fragment
             //TODO handle adapter with empty data
             return;
         }
+        dataApplication.saveReviewDataContainer(reviewDataContainer);
 
         reviewList = reviewDataContainer.getReviewList();
         hasMoreReviews = reviewDataContainer.getHasMoreReviews();
@@ -562,8 +548,14 @@ public class ReviewListFragment extends Fragment
             return;
         }
 
-        initView();
+//        if() //TODO add refreshstatus -
+        if(isRefreshAction) {
+            refreshView();
+            isRefreshAction = false;
+            return;
+        }
 
+        initView();
     }
 
     @Subscribe
@@ -575,6 +567,7 @@ public class ReviewListFragment extends Fragment
             //TODO handle adapter with empty data
             return;
         }
+        dataApplication.saveUserList(userList);
 
         getAdapterWrapper().setUserList(userList);
         getAdapterWrapper().notifyDataSetChanged();
@@ -704,38 +697,6 @@ public class ReviewListFragment extends Fragment
         Log.e(TAG, "reset loader");
     }
 
-*/
-
-
-
-
-
-
-
-/*    @Subscribe
-    public void onNetworkRespose(ReviewDataContainer reviewDataContainer) {
-        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        Log.i(TAG, "MORE_REVIEW_REQ");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-
-        if(reviewDataContainer == null) {
-            //TODO handle adapter with empty data
-            return;
-        }
-
-        swipeRefreshLayout.setRefreshing(false);
-
-//        filename = "prev_reviews.json";
-//        data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-//        reviewDataContainer = JSONParserToObject.getReviewListParser(data);
-        prevReviewList = reviewDataContainer.getReviewList();
-        hasMoreReviews = reviewDataContainer.getHasMoreReviews();
-        setHasMoreReviewView();
-
-        //TODO add review to adapter
-        getAdapterWrapper().setPrevReview(prevReviewList);
-        getAdapterWrapper().notifyDataSetChanged();
-    }
 */
 
 }
