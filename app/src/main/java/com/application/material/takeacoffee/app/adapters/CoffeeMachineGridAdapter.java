@@ -52,8 +52,13 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
 
         //retrieve icon from server volley
         int defaultIconId = R.drawable.coffee_cup_icon;
-        ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
-                coffeeMachine.getIconPath(), holder.iconImageView, defaultIconId);
+        try {
+            ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
+                    coffeeMachine.getIconPath(), holder.iconImageView, defaultIconId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return convertView;
     }

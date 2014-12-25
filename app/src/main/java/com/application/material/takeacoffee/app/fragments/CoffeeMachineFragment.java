@@ -20,9 +20,11 @@ import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -68,6 +70,18 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         return coffeeMachineView;
     }
 
+    @Override
+    public void onResume(){
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        BusSingleton.getInstance().unregister(this);
+        super.onPause();
+    }
+
     public void initOnLoadView() {
         //initOnLoadView
         ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
@@ -76,7 +90,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 //                .forceLoad();
 
         //request coffee machine list
-        HttpIntentService.coffeeMachineInitParamsRequest(this.getActivity());
+        HttpIntentService.coffeeMachineRequest(mainActivityRef);
     }
 
     public void initView(ArrayList<CoffeeMachine> coffeeMachineList) {
@@ -109,41 +123,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         ((OnChangeFragmentWrapperInterface) mainActivityRef)
                 .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
     }
-/*
-    @Override
-    public Loader<RestResponse> onCreateLoader(int ordinal, Bundle params) {
-        //get action
-        String action = RetrofitLoader.getActionByActionRequestEnum(ordinal);
-        return new RetrofitLoader(mainActivityRef, action, params);
-    }
 
-    @Override
-    public void onLoadFinished(Loader<RestResponse> restResponseLoader, RestResponse restResponse) {
-        Log.e(TAG, "hey - finish load resources");
-
-        try {
-//            String filename = "coffee_machines.json";
-//            String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-//            ArrayList<CoffeeMachine> coffeeMachinesList = ParserToJavaObject.coffeeMachineParser(data);
-
-            ArrayList<CoffeeMachine> coffeeMachinesList = (ArrayList<CoffeeMachine>) restResponse.getParsedData();
-            initView(coffeeMachinesList);
-        } catch (Exception e) {
-            ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-            String filename = "coffee_machines.json";
-            String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-            ArrayList<CoffeeMachine> coffeeMachinesList = ParserToJavaObject.coffeeMachineParser(data);
-            initView(coffeeMachinesList);
-//            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-        //TODO need to be implemented
-    }
-
-*/
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
@@ -174,25 +154,15 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 
     @Subscribe
     public void onNetworkRespose(ArrayList<CoffeeMachine> coffeeMachinesList){
-        Log.d(TAG, "Response  getMessages");
+        Log.d(TAG, "get response from bus");
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
         if(coffeeMachinesList == null) {
+            //TODO handle adapter with empty data
             return;
         }
-        Log.e(TAG, "data retrived" + coffeeMachinesList.toString());
 
-        try {
-            initView(coffeeMachinesList);
-        } catch (Exception e) {
-            ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-            String filename = "coffee_machines.json";
-            String data = JSONParserToObject.getMockupData(this.getActivity(), filename);
-            coffeeMachinesList = JSONParserToObject.coffeeMachineParser(data);
-            initView(coffeeMachinesList);
-            e.printStackTrace();
-        }
-
+        initView(coffeeMachinesList);
     }
-
 
 }

@@ -40,6 +40,25 @@ public class JSONParserToObject {
         return null;
 
     }
+    public static String getMockupData(AssetManager assetManager, String filename) {
+        InputStream input;
+        try {
+            input = assetManager.open("data/" + filename);
+
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
+
+            // byte buffer into a string
+            return new String(buffer);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
     /***** DATA PARSER ****/
 //    public static ReviewCounter parseCountOnReviewsData(String data) {

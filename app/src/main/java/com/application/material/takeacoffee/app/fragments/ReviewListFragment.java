@@ -25,6 +25,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewH
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.neopixl.pixlui.components.textview.TextView;
 import com.shamanland.fab.ShowHideOnScroll;
 import com.squareup.otto.Subscribe;
@@ -117,6 +118,17 @@ public class ReviewListFragment extends Fragment
         super.onActivityCreated(savedInstance);
     }
 
+    @Override
+    public void onResume(){
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        BusSingleton.getInstance().unregister(this);
+        super.onPause();
+    }
 
     private void initOnLoadView() {
         ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
@@ -127,6 +139,7 @@ public class ReviewListFragment extends Fragment
             return;
         }
 
+        HttpIntentService.reviewListRequest(mainActivityRef.getApplicationContext(), null, 0);
 //        getLoaderManager().initLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
 //                .forceLoad();
 
@@ -613,158 +626,87 @@ public class ReviewListFragment extends Fragment
     @Subscribe
     public void onNetworkRespose(CoffeeMachineStatus response){
         Log.d(TAG, "Response  getMessages");
-        coffeeMachineStatus = response;
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
         if(response == null) {
             return;
         }
+
+        coffeeMachineStatus = response;
+        goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
+
         //request review
         long timestamp = 123456; //TODO replace with joda time
-        HttpIntentService.reviewListInitParamsRequest(this.getActivity(),
+        HttpIntentService.reviewListRequest(this.getActivity(),
                 coffeeMachineId, timestamp);
     }
 
-/*
-    private void moreReviewResponse(RestResponse restResponse) {
-        if(! restResponse.getHasMoreReviews()) {
-            listView.removeHeaderView(moreReviewLoaderView);
+    @Subscribe
+    public void onNetworkRespose(ReviewDataContainer reviewDataContainer){
+        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+
+        if(reviewDataContainer == null) {
+            //TODO handle adapter with empty data
+            return;
         }
 
-        String filename = "reviews.json";
-        String data = RestResponse.getJSONDataMockup(this.getActivity(), filename);
-        ArrayList<Review> reviewList = restResponse.getReviewListParser(data);
+        reviewList = reviewDataContainer.getReviewList();
+        hasMoreReviews = reviewDataContainer.getHasMoreReviews();
 
-        Collections.reverse(reviewList);
+        HttpIntentService.userListRequest(mainActivityRef, null);
+//        Bundle params = new Bundle();
+//        add user request
 
-        reviewListDataStorage.addAll(0, reviewList);
+        //notify changes
+//        setHasMoreReviewView();
+//        getAdapterWrapper().setReviewList(reviewList);
+//        getAdapterWrapper().notifyDataSetChanged();
 
-        ArrayList<String> userIdList = new ArrayList<>();
-        for (Review review : reviewList) {
-            userIdList.add(review.getUserId());
-        }
-        Bundle bundle = RestResponse.createBundleUser(userIdList);
-        Log.d(TAG, "hey " + bundle.getString("requestType"));
-        getLoaderManager().restartLoader(RestLoader.HTTPVerb.POST, bundle, this).forceLoad();
-
-        if (listView.getAdapter() != null) {
-            try {
-                ((ReviewListAdapter) ((WrapperListAdapter) listView.getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
-            } catch (Exception e) {
-                ((ReviewListAdapter) listView.getAdapter()).notifyDataSetChanged();
-            }
-        }
+        //or init view
+        initView();
 
     }
 
-    private void userResponse(RestResponse restResponse) {
-        ArrayList<User> userList = restResponse.getUserListParser();
-        //TODO move in coffeeAppLogic
-        coffeeAppController.addUserOnLocalListByList(userList);
-        if (listView.getAdapter() != null) {
-            try {
-                ((ReviewListAdapter) ((WrapperListAdapter) listView.getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
-            } catch (Exception e) {
-                ((ReviewListAdapter) listView.getAdapter()).notifyDataSetChanged();
-            }
+    @Subscribe
+    public void onNetworkRespose(ArrayList<User> userList){
+        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+
+        if(userList == null) {
+            //TODO handle adapter with empty data
+            return;
         }
+
+        getAdapterWrapper().setUserList(userList);
+        getAdapterWrapper().notifyDataSetChanged();
+//                    swipeRefreshLayout.setRefreshing(false);
     }
 
-    private void reviewResponse(RestResponse restResponse) {
-        if(restResponse.getHasMoreReviews()) {
-            listView.addHeaderView(moreReviewLoaderView);
+/*    @Subscribe
+    public void onNetworkRespose(ReviewDataContainer reviewDataContainer) {
+        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
+        Log.i(TAG, "MORE_REVIEW_REQ");
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+
+        if(reviewDataContainer == null) {
+            //TODO handle adapter with empty data
+            return;
         }
 
+        swipeRefreshLayout.setRefreshing(false);
 
-        String filename = "reviews.json";
-        String data = RestResponse.getJSONDataMockup(this.getActivity(), filename);
+//        filename = "prev_reviews.json";
+//        data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+//        reviewDataContainer = JSONParserToObject.getReviewListParser(data);
+        prevReviewList = reviewDataContainer.getReviewList();
+        hasMoreReviews = reviewDataContainer.getHasMoreReviews();
+        setHasMoreReviewView();
 
-        ArrayList<Review> reviewList = RestResponse.getReviewListParser(data);
-
-        reviewListDataStorage = reviewList;
-
-        ArrayList<String> userIdList = new ArrayList<>();
-        for (Review review : reviewList) {
-            userIdList.add(review.getUserId());
-        }
-        Bundle bundle = RestResponse.createBundleUser(userIdList);
-        Log.d(TAG, "hey " + bundle.getString("requestType"));
-        getLoaderManager().restartLoader(RestLoader.HTTPVerb.POST, bundle, this).forceLoad();
-
-        initView(reviewList, coffeeMachineId);
+        //TODO add review to adapter
+        getAdapterWrapper().setPrevReview(prevReviewList);
+        getAdapterWrapper().notifyDataSetChanged();
     }
-
-
-
-
-
-
-
-
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        //USEFUL
-        Log.e(TAG, "on item click " + position + "id - " + view.getId());
-        if(view.getId() == R.id.linearLayout) {
-            Log.e(TAG, " id: linearLayout");
-        }
-        //more review click
-        if(view.getId() == R.id.loadOlderReviewLayoutId) {
-            try{
-                Review firstReview = reviewListDataStorage.get(0);
-                String latestReviewId = firstReview.getId();
-                DateTime dateTime = new DateTime(firstReview.getTimestamp());
-                long fromTimestamp = TimestampHandler.getOneWeekAgoTimestamp(dateTime);
-                Bundle bundle = RestResponse.createBundleMoreReview(coffeeMachineId, latestReviewId, fromTimestamp);
-                Log.d(TAG, "hey " + bundle.getString("requestType"));
-                getLoaderManager().restartLoader(RestLoader.HTTPVerb.POST, bundle, this).forceLoad();
-            } catch (Exception e) {
-                Log.e(TAG, "failed to load more review");
-            }
-        }
-    }
-
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-        if(view.getId() == R.id.loadOlderReviewLayoutId) {
-            return true;
-        }
-
-        Review reviewObj = (Review) adapterView.getItemAtPosition(position);
-        final View mainItemView = view.findViewById(R.id.mainItemViewId);
-
-        //TODO CHECK THIS STATEMENT
-        if (mainItemView != null &&
-                mainItemView.getVisibility() == View.VISIBLE &&
-                coffeeAppController.checkIsMe(reviewObj.getUserId())) {
-            try {
-                final View extraMenuItemView = view.findViewById(R.id.extraMenuItemViewId);
-                ReviewListAdapter adapter = ((ReviewListAdapter) adapterView.getAdapter());
-
-                mainItemView.setVisibility(View.GONE);
-                extraMenuItemView.setVisibility(View.VISIBLE);
-                setReviewListHeaderBackgroundLabel(extraMenuItemView, false);
-
-                int prevSelectedItemPosition = adapter
-                        .getSelectedItemIndex();
-
-                //DESELECT prev item
-                if (prevSelectedItemPosition != Common.ITEM_NOT_SELECTED) {
-                    int index = prevSelectedItemPosition - adapterView.getFirstVisiblePosition();
-                    View v = adapterView.getChildAt(index);
-                    v.findViewById(R.id.mainItemViewId).setVisibility(View.VISIBLE);
-                    v.findViewById(R.id.extraMenuItemViewId).setVisibility(View.GONE);
-                }
-
-                adapter.setSelectedItemIndex(position);
-                adapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return true;
-    }*/
-
+*/
 
 }
 

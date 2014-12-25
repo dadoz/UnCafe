@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import com.application.material.takeacoffee.app.models.*;
+import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.restServices.CustomErrorHandler;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.google.gson.*;
@@ -61,6 +62,7 @@ public class HttpIntentService extends IntentService {
     private static final String DELETE_USER_REQUEST = "DELETE_USER_REQUEST";
 
     private static String EXTRA_REVIEW = "EXTRA_REVIEW";
+    private static String EXTRA_USER = "EXTRA_REVIEW";
 
 //    private static final String EXTRA_NUMBER = "it.ennova.myhd.networking.extra.NUMBER";
 //    private static final String EXTRA_TICKET_ID = "it.ennova.myhd.networking.extra.TICKETID";
@@ -140,8 +142,17 @@ public class HttpIntentService extends IntentService {
         context.startService(intent);
     }
 */
-    public static void reviewListInitParamsRequest(Context context,
-                                                   String coffeeMachineId, long timestamp) {
+    public static void userListRequest(Context context,
+                                         ArrayList<String> userIdList) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(USER_REQUEST);
+//        intent.putExtra(EXTRA_USER, params);
+        context.startService(intent);
+    }
+
+    public static void reviewListRequest(Context context,
+                                         String coffeeMachineId, long timestamp) {
         Intent intent = new Intent(context, HttpIntentService.class);
         Review.Params params = new Review.Params("PZrB82ZWVl",
                 Double.parseDouble("1410696082045"));
@@ -151,7 +162,7 @@ public class HttpIntentService extends IntentService {
         context.startService(intent);
     }
 
-    public static void coffeeMachineInitParamsRequest(Context context) {
+    public static void coffeeMachineRequest(Context context) {
         Intent intent = new Intent(context, HttpIntentService.class);
         intent.setAction(COFFEE_MACHINE_REQUEST);
         context.startService(intent);
@@ -193,14 +204,22 @@ public class HttpIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+//        Log.e(TAG, "onHandleIntent called" + intent.getAction());
         if (intent != null) {
             final String action = intent.getAction();
 
             if (REVIEW_REQUEST.equals(action)) {
                 try {
-                    Review.Params params = (Review.Params) intent.getExtras().get(EXTRA_REVIEW);
-                    BusSingleton.getInstance().post(
-                            service.listReview(params));
+                    //TODO MOCKUP
+                    ReviewDataContainer reviewDataContainer = JSONParserToObject
+                            .getReviewListParser(JSONParserToObject.
+                                    getMockupData(this.getApplicationContext().getAssets(),
+                                            "reviews.json"));
+                    BusSingleton.getInstance().post(reviewDataContainer);
+
+//                    Review.Params params = (Review.Params) intent.getExtras().get(EXTRA_REVIEW);
+//                    BusSingleton.getInstance().post(
+//                            service.listReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -230,7 +249,17 @@ public class HttpIntentService extends IntentService {
 
             if (COFFEE_MACHINE_REQUEST.equals(action)) {
                 try{
-                    BusSingleton.getInstance().post(service.listCoffeeMachine());
+//                    BusSingleton.getInstance().post(service.listCoffeeMachine());
+                    ArrayList<CoffeeMachine> coffeeMachineList = JSONParserToObject
+                            .coffeeMachineParser(JSONParserToObject.
+                                    getMockupData(this.getApplicationContext().getAssets(),
+                                            "coffee_machines.json"));
+                    if(coffeeMachineList == null) {
+                        Log.e(TAG, "HTTPIntentService - empty data");
+                        return;
+                    }
+                    BusSingleton.getInstance().post(coffeeMachineList);
+
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -318,7 +347,7 @@ public class HttpIntentService extends IntentService {
 
         //get coffee machine
         @GET("/" + CLASSES + COFFEE_MACHINE)
-        List<CoffeeMachine> listCoffeeMachine();
+        ArrayList<CoffeeMachine> listCoffeeMachine();
 
         @POST("/" + FUNCTIONS + MORE_REVIEW)
         List<Review> listMoreReview(@Body Review.MoreReviewsParams user);
