@@ -28,6 +28,7 @@ import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
+import com.squareup.otto.Subscribe;
 
 
 public class CoffeeMachineActivity extends ActionBarActivity implements
@@ -416,5 +417,14 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         super.onRestoreInstanceState(savedInstanceState);
         currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
     }
+
+    @Subscribe
+    public void onHandlingError(Throwable cause) {
+        String message = cause.getMessage();
+        int code = Integer.parseInt(cause.getCause().getMessage());
+
+        Log.e(TAG, "error - " + message + code);
+    }
+
 
 }

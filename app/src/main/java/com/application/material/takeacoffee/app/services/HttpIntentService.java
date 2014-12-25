@@ -93,55 +93,8 @@ public class HttpIntentService extends IntentService {
         intent.putExtra(EXTRA_SUBJECT,subject);
         context.startService(intent);
     }
-
-    public static void startActionGetFirstSlot(Context context, String subject) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_GET_FIRST_SLOT);
-        intent.putExtra(EXTRA_SUBJECT,subject);
-        context.startService(intent);
-    }
-
-    public static void startActionGetAvailableSlots(Context context, String data) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_GET_AVAILABLE_SLOTS);
-        intent.putExtra(EXTRA_SUBJECT,data);
-        context.startService(intent);
-    }
-
-    public static void startActionRevokeTicket(Context context, String ticketID) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_REVOKE_TICKET);
-        intent.putExtra(EXTRA_TICKET_ID, ticketID);
-        context.startService(intent);
-    }
-
-    public static void startActionRescheduleTicket(Context context, String ticketID, String timesStamp) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_RESCHEDULE_TICKET);
-        intent.putExtra(EXTRA_TICKET_ID,ticketID);
-        intent.putExtra(EXTRA_TIMESTAMP,timesStamp);
-        context.startService(intent);
-    }
-
-    public static void startActionCreateInApp(Context context , String number) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_CREATE_IN_APP);
-        intent.putExtra(EXTRA_NUMBER, number);
-        context.startService(intent);
-    }
-
-    public static void startActionGetListTicket(Context context) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_GET_LIST_TICKET);
-        context.startService(intent);
-    }
-
-    public static void startActionGetListMessage(Context context) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_GET_MESSAGES);
-        context.startService(intent);
-    }
 */
+
     public static void userListRequest(Context context,
                                          ArrayList<String> userIdList) {
         Intent intent = new Intent(context, HttpIntentService.class);
@@ -161,6 +114,16 @@ public class HttpIntentService extends IntentService {
         intent.putExtra(EXTRA_REVIEW, params);
         context.startService(intent);
     }
+    public static void moreReviewListRequest(Context context,
+                                         String coffeeMachineId, long timestamp) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+        Review.Params params = new Review.Params("PZrB82ZWVl",
+                Double.parseDouble("1410696082045"));
+
+        intent.setAction(MORE_REVIEW_REQUEST);
+        intent.putExtra(EXTRA_REVIEW, params);
+        context.startService(intent);
+    }
 
     public static void coffeeMachineRequest(Context context) {
         Intent intent = new Intent(context, HttpIntentService.class);
@@ -168,6 +131,14 @@ public class HttpIntentService extends IntentService {
         context.startService(intent);
     }
 
+    public static void coffeeMachineStatusRequest(Context context,
+                                                  String coffeeMachineId, long timestamp) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(COFFEE_MACHINE_STATUS_REQUEST);
+//        intent.putExtra(EXTRA_USER, params);
+        context.startService(intent);
+    }
 
 
     private RetrofitServiceInterface service;
@@ -228,8 +199,15 @@ public class HttpIntentService extends IntentService {
 
             if (MORE_REVIEW_REQUEST.equals(action)) {
                 try{
-                    Review.MoreReviewsParams params = new Review.MoreReviewsParams("PZrB82ZWVl", "qaeWjprTDF");
-                    BusSingleton.getInstance().post(service.listMoreReview(params));
+//                    Review.MoreReviewsParams params = new Review.MoreReviewsParams("PZrB82ZWVl", "qaeWjprTDF");
+//                    BusSingleton.getInstance().post(service.listMoreReview(params));
+                    //TODO MOCKUP
+                    ReviewDataContainer reviewDataContainer = JSONParserToObject
+                            .getReviewListParser(JSONParserToObject.
+                                    getMockupData(this.getApplicationContext().getAssets(),
+                                            "prev_reviews.json"));
+                    BusSingleton.getInstance().post(reviewDataContainer);
+
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -238,9 +216,15 @@ public class HttpIntentService extends IntentService {
 
             if (USER_REQUEST.equals(action)) {
                 try {
-                    String [] array = {"4nmvMJNk1R", "K8bwZOSmNo", "8e2XwXZUKL"};
-                    User.Params params = new User.Params(new ArrayList(Arrays.asList(array)));
-                    BusSingleton.getInstance().post(service.listUserByIdList(params));
+//                    String [] array = {"4nmvMJNk1R", "K8bwZOSmNo", "8e2XwXZUKL"};
+//                    User.Params params = new User.Params(new ArrayList(Arrays.asList(array)));
+//                    BusSingleton.getInstance().post(service.listUserByIdList(params));
+                    ArrayList<User> userList = JSONParserToObject
+                            .getUserListParser(JSONParserToObject.
+                                    getMockupData(this.getApplicationContext().getAssets(),
+                                            "user.json"));
+                    BusSingleton.getInstance().post(userList);
+
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -300,9 +284,15 @@ public class HttpIntentService extends IntentService {
 
             if (COFFEE_MACHINE_STATUS_REQUEST.equals(action)) {
                 try{
-                    String coffeeMachineId = "PZrB82ZWVl";
-                    CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId);
-                    BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
+//                    String coffeeMachineId = "PZrB82ZWVl";
+//                    CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId);
+//                    BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
+                    CoffeeMachineStatus coffeeMachineStatus = JSONParserToObject
+                            .coffeeMachineStatusParser(JSONParserToObject.
+                                    getMockupData(this.getApplicationContext().getAssets(),
+                                            "review_status.json"));
+                    BusSingleton.getInstance().post(coffeeMachineStatus);
+
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -350,7 +340,7 @@ public class HttpIntentService extends IntentService {
         ArrayList<CoffeeMachine> listCoffeeMachine();
 
         @POST("/" + FUNCTIONS + MORE_REVIEW)
-        List<Review> listMoreReview(@Body Review.MoreReviewsParams user);
+        ReviewDataContainer listMoreReview(@Body Review.MoreReviewsParams user);
 
         @POST("/" + FUNCTIONS + WEEK_REVIEWS)
         ReviewDataContainer listReview(@Body Review.Params reviewParams);

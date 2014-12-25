@@ -77,6 +77,8 @@ public class ReviewListFragment extends Fragment
     private boolean isAllowToEdit = false;
     private ArrayList<Review> prevReviewList;
     private View headerView;
+    private boolean isMoreReviewRequest = false;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -139,7 +141,9 @@ public class ReviewListFragment extends Fragment
             return;
         }
 
-        HttpIntentService.reviewListRequest(mainActivityRef.getApplicationContext(), null, 0);
+        long timestamp = 2;
+        HttpIntentService.coffeeMachineStatusRequest(mainActivityRef.getApplicationContext(),
+                coffeeMachineId, timestamp);
 //        getLoaderManager().initLoader(COFFEE_MACHINE_STATUS_REQUEST.ordinal(), null, this)
 //                .forceLoad();
 
@@ -214,130 +218,6 @@ public class ReviewListFragment extends Fragment
         return listView;
     }
 
-/*    @Override
-    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
-        try {
-            String action = RetrofitLoader.getActionByActionRequestEnum(id);
-            return new RetrofitLoader(this.getActivity(), action, params);
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<RestResponse> loader,
-                               RestResponse restResponse) {
-        //TODO REFACTORIZE IT - add a new class with an interface
-        //TODO FIX IT
-        final int REVIEW_REQ = 0; //REVIEW_REQUEST.ordinal();
-        final int MORE_REVIEW_REQ = 1; //MORE_REVIEW_REQUEST.ordinal();
-        final int USER_REQ = 6; //USER_REQUEST.ordinal();
-        final int COFFEE_MACHINE_STATUS_REQ = 5; //.ordinal();
-        Log.i(TAG, "request id - " + loader.getId());
-        try {
-            switch (loader.getId()) {
-                case COFFEE_MACHINE_STATUS_REQ:
-                    Log.i(TAG, "STATUS_REQ");
-
-                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-//                    reviewStatus = (ReviewStatus) restResponse.getParsedData();
-
-                    //MOCKUP
-                    String filename = "review_status.json";
-                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    coffeeMachineStatus = JSONParserToObject.coffeeMachineStatusParser(data);
-
-                    //real json data
-//                    coffeeMachineStatus = (CoffeeMachineStatus) restResponse.getParsedData();
-
-                    if(getLoaderManager().getLoader(REVIEW_REQUEST.ordinal()) != null) {
-                        getLoaderManager().restartLoader(REVIEW_REQUEST.ordinal(), null, this).forceLoad();
-                        goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
-                        return;
-                    }
-
-                    getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
-                            .forceLoad();
-                    break;
-                case REVIEW_REQ:
-                    Log.i(TAG, "REVIEW_REQ");
-
-                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-
-                    filename = "reviews.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    ReviewDataContainer reviewDataContainer = JSONParserToObject.getReviewListParser(data);
-                    //real json data
-//                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
-
-                    reviewList = reviewDataContainer.getReviewList();
-                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
-
-                    Bundle params = new Bundle();
-                    if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
-                        setHasMoreReviewView();
-                        getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-
-                        getAdapterWrapper().setReviewList(reviewList);
-                        getAdapterWrapper().notifyDataSetChanged();
-                        return;
-                    }
-
-                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                    initView();
-                    break;
-                case MORE_REVIEW_REQ:
-                    Log.i(TAG, "MORE_REVIEW_REQ");
-                    swipeRefreshLayout.setRefreshing(false);
-
-                    filename = "prev_reviews.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    reviewDataContainer = JSONParserToObject.getReviewListParser(data);
-                    prevReviewList = reviewDataContainer.getReviewList();
-                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
-                    setHasMoreReviewView();
-//                    prevReviewList = (ArrayList<Review>) restResponse.getParsedData();
-
-                    //TODO add review to adapter
-                    getAdapterWrapper().setPrevReview(prevReviewList);
-                    //create new loader for user
-                    params = new Bundle();
-                    if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
-                        getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                        getAdapterWrapper().notifyDataSetChanged();
-                        return;
-                    }
-
-                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                    break;
-                case USER_REQ:
-                    Log.i(TAG, "USER_REQ");
-
-                    //TODO TEST
-                    filename = "user.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    userList = JSONParserToObject.getUserListParser(data);
-
-//                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
-                    getAdapterWrapper().setUserList(userList);
-                    getAdapterWrapper().notifyDataSetChanged();
-//                    swipeRefreshLayout.setRefreshing(false);
-                    break;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
-        //called on release resources - on back press and when loader is deleted/abandoned
-        Log.e(TAG, "reset loader");
-    }
-
-*/
     private void setHasMoreReviewView() {
         if(hasMoreReviews) {
             oldReviewView.setVisibility(View.GONE);
@@ -356,6 +236,13 @@ public class ReviewListFragment extends Fragment
                 if(view.findViewById(R.id.moreReviewTemplateId).getVisibility() == View.VISIBLE) {
                     Log.e(TAG, "get previous review");
                     swipeRefreshLayout.setRefreshing(true); //show dialog spinner (but doesnt refresh I hope)
+
+                    //request review
+                    long timestamp = 123456; //TODO replace with joda time
+                    HttpIntentService.moreReviewListRequest(this.getActivity(),
+                            coffeeMachineId, timestamp);
+                    isMoreReviewRequest = true;
+
 /*
                     if(getLoaderManager().getLoader(MORE_REVIEW_REQUEST.ordinal()) != null) {
                         getLoaderManager().restartLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
@@ -565,25 +452,30 @@ public class ReviewListFragment extends Fragment
     }
 
     private boolean restoreSavedInstance(Bundle savedInstance) {
-        if(savedInstance == null ||
-                savedInstance.getParcelableArray(REVIEW_KEY) == null) {
+        try {
+            if(savedInstance == null ||
+                    savedInstance.getParcelableArray(REVIEW_KEY) == null) {
+                return false;
+            }
+
+            //restore data from savedInstance
+            reviewList = new ArrayList<Review>();
+            Parcelable[] temp = savedInstance.getParcelableArray(REVIEW_KEY);
+            for(int i = 0; i < temp.length; i ++) {
+                reviewList.add((Review) temp[i]);
+            }
+
+            userList = new ArrayList<User>();
+            temp = savedInstance.getParcelableArray(User.USER_OBJ_KEY);
+            for(int i = 0; i < temp.length; i ++) {
+                userList.add((User) temp[i]);
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
-
-        //restore data from savedInstance
-        reviewList = new ArrayList<Review>();
-        Parcelable[] temp = savedInstance.getParcelableArray(REVIEW_KEY);
-        for(int i = 0; i < temp.length; i ++) {
-            reviewList.add((Review) temp[i]);
-        }
-
-        userList = new ArrayList<User>();
-        temp = savedInstance.getParcelableArray(User.USER_OBJ_KEY);
-        for(int i = 0; i < temp.length; i ++) {
-            userList.add((User) temp[i]);
-        }
-
-        return true;
     }
 
     @Override
@@ -654,8 +546,6 @@ public class ReviewListFragment extends Fragment
         hasMoreReviews = reviewDataContainer.getHasMoreReviews();
 
         HttpIntentService.userListRequest(mainActivityRef, null);
-//        Bundle params = new Bundle();
-//        add user request
 
         //notify changes
 //        setHasMoreReviewView();
@@ -663,6 +553,15 @@ public class ReviewListFragment extends Fragment
 //        getAdapterWrapper().notifyDataSetChanged();
 
         //or init view
+        if(isMoreReviewRequest) {
+            isMoreReviewRequest = false;
+            swipeRefreshLayout.setRefreshing(false);
+
+            setHasMoreReviewView();
+            getAdapterWrapper().setPrevReview(reviewList);
+            return;
+        }
+
         initView();
 
     }
@@ -681,6 +580,137 @@ public class ReviewListFragment extends Fragment
         getAdapterWrapper().notifyDataSetChanged();
 //                    swipeRefreshLayout.setRefreshing(false);
     }
+
+/*    @Override
+    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
+        try {
+            String action = RetrofitLoader.getActionByActionRequestEnum(id);
+            return new RetrofitLoader(this.getActivity(), action, params);
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<RestResponse> loader,
+                               RestResponse restResponse) {
+        //TODO REFACTORIZE IT - add a new class with an interface
+        //TODO FIX IT
+        final int REVIEW_REQ = 0; //REVIEW_REQUEST.ordinal();
+        final int MORE_REVIEW_REQ = 1; //MORE_REVIEW_REQUEST.ordinal();
+        final int USER_REQ = 6; //USER_REQUEST.ordinal();
+        final int COFFEE_MACHINE_STATUS_REQ = 5; //.ordinal();
+        Log.i(TAG, "request id - " + loader.getId());
+        try {
+            switch (loader.getId()) {
+                case COFFEE_MACHINE_STATUS_REQ:
+                    Log.i(TAG, "STATUS_REQ");
+
+                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+//                    reviewStatus = (ReviewStatus) restResponse.getParsedData();
+
+                    //MOCKUP
+                    String filename = "review_status.json";
+                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    coffeeMachineStatus = JSONParserToObject.coffeeMachineStatusParser(data);
+
+                    //real json data
+//                    coffeeMachineStatus = (CoffeeMachineStatus) restResponse.getParsedData();
+
+                    if(getLoaderManager().getLoader(REVIEW_REQUEST.ordinal()) != null) {
+                        getLoaderManager().restartLoader(REVIEW_REQUEST.ordinal(), null, this).forceLoad();
+                        goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
+                        return;
+                    }
+
+                    getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
+                            .forceLoad();
+                    break;
+                case REVIEW_REQ:
+                    Log.i(TAG, "REVIEW_REQ");
+
+                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+
+                    filename = "reviews.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    ReviewDataContainer reviewDataContainer = JSONParserToObject.getReviewListParser(data);
+                    //real json data
+//                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
+
+                    reviewList = reviewDataContainer.getReviewList();
+                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
+
+                    Bundle params = new Bundle();
+                    if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
+                        setHasMoreReviewView();
+                        getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+
+                        getAdapterWrapper().setReviewList(reviewList);
+                        getAdapterWrapper().notifyDataSetChanged();
+                        return;
+                    }
+
+                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+                    initView();
+                    break;
+                case MORE_REVIEW_REQ:
+                    Log.i(TAG, "MORE_REVIEW_REQ");
+                    swipeRefreshLayout.setRefreshing(false);
+
+                    filename = "prev_reviews.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    reviewDataContainer = JSONParserToObject.getReviewListParser(data);
+                    prevReviewList = reviewDataContainer.getReviewList();
+                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
+                    setHasMoreReviewView();
+//                    prevReviewList = (ArrayList<Review>) restResponse.getParsedData();
+
+                    //TODO add review to adapter
+                    getAdapterWrapper().setPrevReview(prevReviewList);
+                    //create new loader for user
+                    params = new Bundle();
+                    if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
+                        getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+                        getAdapterWrapper().notifyDataSetChanged();
+                        return;
+                    }
+
+                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
+                    break;
+                case USER_REQ:
+                    Log.i(TAG, "USER_REQ");
+
+                    //TODO TEST
+                    filename = "user.json";
+                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
+                    userList = JSONParserToObject.getUserListParser(data);
+
+//                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
+                    getAdapterWrapper().setUserList(userList);
+                    getAdapterWrapper().notifyDataSetChanged();
+//                    swipeRefreshLayout.setRefreshing(false);
+                    break;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
+        //called on release resources - on back press and when loader is deleted/abandoned
+        Log.e(TAG, "reset loader");
+    }
+
+*/
+
+
+
+
+
+
 
 /*    @Subscribe
     public void onNetworkRespose(ReviewDataContainer reviewDataContainer) {
