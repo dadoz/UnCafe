@@ -95,6 +95,15 @@ public class HttpIntentService extends IntentService {
     }
 */
 
+    public static void addUserRequest(Context context,
+                                         User userToBeRegistered) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(ADD_USER_BY_PARAMS_REQUEST);
+        intent.putExtra(EXTRA_USER, userToBeRegistered);
+        context.startService(intent);
+    }
+
     public static void userListRequest(Context context,
                                          ArrayList<String> userIdList) {
         Intent intent = new Intent(context, HttpIntentService.class);
@@ -311,9 +320,10 @@ public class HttpIntentService extends IntentService {
 
             if (ADD_USER_BY_PARAMS_REQUEST.equals(action)){
                 try {
-//                    User user = params.getParcelable(User.USER_OBJ_KEY);
-                    User user = null;
-                    BusSingleton.getInstance().post(service.addUserByParams(user));
+                    User user = (User) intent.getExtras().get(EXTRA_USER);
+
+                    BusSingleton.getInstance().post(user);
+//                    BusSingleton.getInstance().post(service.addUserByParams(user));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }

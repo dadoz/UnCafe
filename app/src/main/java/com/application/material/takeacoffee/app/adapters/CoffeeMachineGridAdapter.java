@@ -42,10 +42,12 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
 
         holder = new ViewHolder();
         holder.nameTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineNameTextId));
+        holder.addressTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineAddressTextId));
         holder.iconImageView = (ImageView) convertView.findViewById(R.id.coffeeIconId);
         convertView.setTag(holder);
 
         holder.nameTextView.setText(coffeeMachine.getName());
+        holder.addressTextView.setText(coffeeMachine.getAddress());
 //        holder.nameTextView.setTextColor(mainActivityRef
 //                .getResources().getColor(R.color.light_black));
         holder.iconImageView.setImageResource(R.drawable.coffee_cup_icon);
@@ -65,6 +67,7 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
 
     public static class ViewHolder {
         public TextView nameTextView;
+        public TextView addressTextView;
         public ImageView iconImageView;
     }
 }

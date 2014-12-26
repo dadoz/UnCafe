@@ -74,4 +74,9 @@ public class DataApplication extends Application {
     public String getUserId() {
         return user == null ? null : user.getId();
     }
+
+    public String getUsername() {
+        return user == null ? "Guest" : user.getUsername();
+    }
+
 }

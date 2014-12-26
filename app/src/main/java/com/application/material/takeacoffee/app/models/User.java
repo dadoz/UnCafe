@@ -35,6 +35,10 @@ public class User implements Parcelable {
         this.profilePicturePath = profilePicturePath;
 	}
 	
+	public void setId(String id){
+		this.id = id;
+	}
+
 	public String getId(){
 		return this.id;
 	}

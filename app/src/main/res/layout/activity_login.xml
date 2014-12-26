@@ -1,0 +1,21 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.application.material.takeacoffee.app.LoginActivity"
+        android:orientation="vertical">
+
+    <!--<include layout="@layout/action_bar"/>-->
+    <!--LOADING TPL -->
+    <include layout="@layout/on_load_template"/>
+    <!-- FRAGMENT CONTENT -->
+    <LinearLayout
+            tools:ignore="MissingPrefix"
+            android:id="@+id/coffeeAppFragmentContainerId"
+            android:background="@color/light_grey"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
+</LinearLayout>

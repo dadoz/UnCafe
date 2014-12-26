@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.VolleyImageRequestWrapper;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
+import com.application.material.takeacoffee.app.models.EllipsizedComment;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
@@ -27,6 +28,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     private String coffeeMachineId;
     private FragmentActivity mainActivityRef;
     private ArrayList<User> userList;
+    private int MAX_CHAR_COMMENT = 30;
 
     public ReviewListAdapter(FragmentActivity activity, int resource, ArrayList<Review> reviewList,
                                String coffeeMachineId) {
@@ -48,13 +50,20 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.usernameTextView = (TextView) convertView.findViewById(R.id.reviewUsernameTextId);
             holder.reviewDateTextView = ((TextView) convertView.findViewById(R.id.reviewDateTextId));
             holder.reviewCommentTextView = ((TextView) convertView.findViewById(R.id.reviewCommentTextId));
+            holder.expandDescriptionTextView = ((TextView) convertView.findViewById(R.id.expandDescriptionTextId));
             holder.profilePicImageView = ((ImageView) convertView.findViewById(R.id.profilePicReviewTemplateId));
             holder.statusRatingBarView = ((RatingBar) convertView.findViewById(R.id.statusRatingBarId));
 
 //          TODO SET DATA TO VIEW
-            holder.reviewCommentTextView.setText(review.getComment());
+            EllipsizedComment comment = getReviewCommentEllipsized(review.getComment());
+            holder.reviewCommentTextView.setText(comment.isEllipsized() ?
+                    comment.getEllipsizedComment() : review.getComment());
             holder.reviewDateTextView.setText(review.getFormattedTimestamp());
             holder.statusRatingBarView.setRating(ReviewStatus.parseStatusToRating(review.getStatus()));
+
+            holder.expandDescriptionTextView.setVisibility(comment.isEllipsized() ? View.VISIBLE : View.GONE);
+            convertView.setTag(comment);
+
 //            holder.statusRatingBarView.setVisibility(View.GONE);
 //            ((TextView) convertView.findViewById(R.id.statusRatingBarId)).setText(
 //                    String.valueOf(ReviewStatus.parseStatusToRating(review.getStatus())));
@@ -82,9 +91,15 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             Log.e(TAG, " - " + e.getMessage());
             e.printStackTrace();
         }
-
-
         return convertView;
+    }
+
+    private EllipsizedComment getReviewCommentEllipsized(String comment) {
+        if(comment.length() > MAX_CHAR_COMMENT) {
+            //ellipsize comment
+            return new EllipsizedComment(comment, comment.substring(0, MAX_CHAR_COMMENT) + "...", true);
+        }
+        return new EllipsizedComment(comment, null, false);
     }
 
     public boolean setUserList(ArrayList<User> userList) {
@@ -159,6 +174,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
         TextView reviewCommentTextView;
         ImageView profilePicImageView;
         TextView usernameTextView;
+        TextView expandDescriptionTextView;
     }
 
 }

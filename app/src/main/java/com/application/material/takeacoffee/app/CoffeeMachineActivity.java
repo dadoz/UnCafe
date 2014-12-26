@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
+import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -55,6 +56,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private String tempActionBarTitle;
     private View selectedItemView;
     private ListView reviewListview;
+    private DataApplication dataApplication;
 
 
     @Override
@@ -82,6 +84,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         //VOLLEY stuff
         requestQueue = Volley.newRequestQueue(this.getApplicationContext());
         imageLoader = new ImageLoader(requestQueue, this);
+
+        dataApplication = ((DataApplication) this.getApplication());
 
         //INIT VIEW
         if(savedInstanceState != null) {
@@ -370,7 +374,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                         .setVisibility(View.GONE);
 
                 ((TextView) actionBar.getCustomView().findViewById(R.id.usernameId))
-                        .setText("fake david");
+                        .setText(dataApplication.getUsername());
                 ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId))
                         .setVisibility(View.VISIBLE);
 //                ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId))

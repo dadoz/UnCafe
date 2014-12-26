@@ -76,6 +76,9 @@ public class ReviewListFragment extends Fragment
     private boolean isMoreReviewRequest = false;
     private DataApplication dataApplication;
     private boolean isRefreshAction = false;
+    private int REVIEW_MAX_LINES = 5; //max line number of review
+    private int REVIEW_MIN_LINES = 2; //max line number of review
+    private int IS_ELLIPSIZE;
 
     @Override
     public void onAttach(Activity activity) {
@@ -276,7 +279,7 @@ public class ReviewListFragment extends Fragment
             case R.id.headerTemplateId :
                 if(view.findViewById(R.id.moreReviewTemplateId).getVisibility() == View.VISIBLE) {
                     Log.e(TAG, "get previous review");
-                    swipeRefreshLayout.setRefreshing(true); //show dialog spinner (but doesnt refresh I hope)
+                    swipeRefreshLayout.setRefreshing(true);
 
                     //request review
                     long timestamp = 123456; //TODO replace with joda time
@@ -284,16 +287,9 @@ public class ReviewListFragment extends Fragment
                             coffeeMachineId, timestamp);
                     isMoreReviewRequest = true;
 
-/*
-                    if(getLoaderManager().getLoader(MORE_REVIEW_REQUEST.ordinal()) != null) {
-                        getLoaderManager().restartLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
-                                .forceLoad();
-                        return;
-                    }
-                    getLoaderManager().initLoader(MORE_REVIEW_REQUEST.ordinal(), null, this)
-                            .forceLoad();
-
-                    */
+                    //remove item selected
+                    ((SetActionBarInterface) mainActivityRef).updateSelectedItem(this,
+                            listView, null, -1);
                     return;
                 }
 
@@ -302,10 +298,30 @@ public class ReviewListFragment extends Fragment
                     Toast.makeText(mainActivityRef, "load old review", Toast.LENGTH_SHORT).show();
                 }
                 break;
-        }
+            case R.id.reviewLayoutId:
+                EllipsizedComment comment = (EllipsizedComment) view.getTag();
 
+                if(! comment.isEllipsized()) {
+                    (view.findViewById(R.id.expandDescriptionTextId))
+                            .setVisibility(View.GONE);
+                    return;
+                }
 
-        //expand listview
+                int maxLines = comment.isHidden() ? REVIEW_MAX_LINES : REVIEW_MIN_LINES;
+                ((TextView) view.findViewById(R.id.reviewCommentTextId))
+                        .setMaxLines(maxLines);
+                (view.findViewById(R.id.expandDescriptionTextId))
+                        .setVisibility(comment.isHidden() ? View.GONE : View.VISIBLE);
+
+                ((TextView) view.findViewById(R.id.reviewCommentTextId))
+                        .setText(comment.isHidden() ?
+                                comment.getPlainComment() :
+                                comment.getEllipsizedComment());
+                //UPDATE
+                comment.setHidden(! comment.isHidden());
+                view.setTag(comment);
+
+                //expand listview
 //        View reviewDialogView = View.inflate(mainActivityRef,
 //                R.layout.review_dialog_template, null);
 //        Review review = (Review) adapterView.getItemAtPosition(position);
@@ -326,6 +342,11 @@ public class ReviewListFragment extends Fragment
 //        customDialog = builder.create();
 //        customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        customDialog.show();
+
+                break;
+        }
+
+
 
     }
 
