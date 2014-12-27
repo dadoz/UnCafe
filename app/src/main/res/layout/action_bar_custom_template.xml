@@ -100,21 +100,23 @@
     </LinearLayout>
 
     <!--review list template -->
-    <LinearLayout
+    <View
             android:id="@+id/customActionBarMapLayoutId"
             android:visibility="gone"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    </LinearLayout>
+            android:layout_height="match_parent" />
     <!--Settings-->
-    <LinearLayout
+    <View
             android:id="@+id/customActionSettingsLayoutId"
             android:visibility="gone"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    </LinearLayout>
+            android:layout_height="match_parent" />
+    <!--LoggedUser-->
+    <View
+            android:id="@+id/customActionLoggedUserLayoutId"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
 </LinearLayout>

@@ -47,22 +47,6 @@ public class DataApplication extends Application {
         this.userList = userList;
     }
 
-    public void clearData(int[] dataLabels) {
-        for (int i = 0; i< dataLabels.length; i ++) {
-            switch (dataLabels[i]) {
-                case 0:
-                    coffeeMachineStatus = null;
-                    break;
-                case 1:
-                    reviewDataContainer = null;
-                    break;
-                case 2:
-                    userList = null;
-                    break;
-            }
-        }
-    }
-
     public User getUser() {
         return user;
     }
@@ -82,4 +66,21 @@ public class DataApplication extends Application {
     public void setUsername(String username) {
         this.user.setUsername(username);
     }
+
+    public void clearData(int[] dataLabels) {
+        for (int i = 0; i< dataLabels.length; i ++) {
+            switch (dataLabels[i]) {
+                case 0:
+                    coffeeMachineStatus = null;
+                    break;
+                case 1:
+                    reviewDataContainer = null;
+                    break;
+                case 2:
+                    userList = null;
+                    break;
+            }
+        }
+    }
+
 }

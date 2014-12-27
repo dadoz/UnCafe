@@ -3,12 +3,13 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
-        android:id="@+id/dashboardStatusLayoutId"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/coffee_icon_size"
+        android:id="@+id/statusHeaderLayoutId"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/coffee_machine_status_header_size"
         android:background="@color/light_grey">
         <ImageView
                 android:id="@+id/statusCoffeeIconId"
+                android:layout_centerVertical="true"
                 android:layout_width="@dimen/coffee_icon_size"
                 android:layout_height="@dimen/coffee_icon_size"
                 android:src="@drawable/coffee_cup_icon" />
@@ -19,7 +20,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-            <com.neopixl.pixlui.components.textview.TextView
+                <com.neopixl.pixlui.components.textview.TextView
+                        android:id="@+id/periodTextId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/material_text_black"
+                        android:textSize="@dimen/title_text_size"
+                        android:text=" - "
+                        android:layout_marginBottom="@dimen/small_padding"
+                        pixlui:copyandpaste="false"
+                        pixlui:clearclipboardcontent="true"
+                        pixlui:typeface="chimphand-regular.ttf"/>
+
+
+                <com.neopixl.pixlui.components.textview.TextView
                     android:id="@+id/goodReviewPercentageTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -30,7 +44,7 @@
                     pixlui:clearclipboardcontent="true"
                     pixlui:typeface="chimphand-regular.ttf"/>
 
-            <com.neopixl.pixlui.components.textview.TextView
+                <com.neopixl.pixlui.components.textview.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/material_text_black"
@@ -41,18 +55,18 @@
                     pixlui:typeface="chimphand-light.ttf"/>
         </LinearLayout>
 
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
+        <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:orientation="vertical">-->
 
-            <ImageView
-                    android:id="@+id/leftArrowIconId"
-                    android:layout_width="@dimen/medium_icon_size"
-                    android:layout_height="@dimen/medium_icon_size"
-                    android:src="@drawable/left_arrow" />
+            <!--<ImageView-->
+                    <!--android:id="@+id/leftArrowIconId"-->
+                    <!--android:layout_width="@dimen/medium_icon_size"-->
+                    <!--android:layout_height="@dimen/medium_icon_size"-->
+                    <!--android:src="@drawable/left_arrow" />-->
 
             <!--<com.neopixl.pixlui.components.textview.TextView-->
                     <!--android:layout_width="wrap_content"-->
@@ -64,7 +78,7 @@
                     <!--pixlui:clearclipboardcontent="true"-->
                     <!--pixlui:typeface="chimphand-regular.ttf"/>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
 
 </RelativeLayout>

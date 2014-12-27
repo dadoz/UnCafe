@@ -2,21 +2,23 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+              android:id="@+id/moreReviewTemplateId"
               android:visibility="gone"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
               android:paddingTop="@dimen/top_header_height"
-              android:paddingBottom="@dimen/small_padding"
-              android:id="@+id/moreReviewTemplateId">
+              android:layout_height="wrap_content">
 
     <com.neopixl.pixlui.components.textview.TextView
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
+            android:id="@+id/moreReviewButtonId"
+            android:gravity="center_horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/small_padding"
             android:textColor="@color/light_black"
             android:textSize="@dimen/text_big_24"
-            android:text="prev reviews"
+            android:text="load more review ..."
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
             pixlui:typeface="chimphand-regular.ttf"/>

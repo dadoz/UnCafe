@@ -41,10 +41,11 @@
     <dimen name="text_huge_60">60dip</dimen>
     <dimen name="medium_button_width">80dip</dimen>
     <dimen name="coffee_icon_size">100dip</dimen>
+    <dimen name="coffee_machine_status_header_size">120dip</dimen>
+    <dimen name="top_header_height">120dp</dimen>
     <!--<dimen name="coffee_icon_size">130dip</dimen>-->
     <dimen name="timestamp_width">50dip</dimen>
     <dimen name="ultra_huge_icon_size">250dp</dimen>
-    <dimen name="top_header_height">90dip</dimen>
     <dimen name="content_text_size">20dp</dimen>
     <dimen name="small_content_text_size">14sp</dimen>
 

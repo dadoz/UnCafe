@@ -55,30 +55,25 @@ public class ReviewListFragment extends Fragment
     @InjectView(R.id.addReviewFabId) View addReviewFabButton;
     @InjectView(R.id.goodReviewPercentageTextId) TextView goodReviewPercentageView;
     @InjectView(R.id.statusCoffeeIconId) ImageView statusCoffeeIcon;
-    @InjectView(R.id.leftArrowIconId) ImageView leftArrowIcon;
     @InjectView(R.id.swipeRefreshLayoutId) SwipeRefreshLayout swipeRefreshLayout;
-    @InjectView(R.id.dashboardStatusLayoutId) View dashboardStatusLayout;
+    @InjectView(R.id.statusHeaderLayoutId) View statusHeaderLayout;
+    @InjectView(R.id.periodTextId) View statusPeriodView;
 
-//    @InjectView(R.id.moreReviewTemplateId) View moreReviewTemplate;
 
     private View moreReviewLoaderView;
     private View emptyView;
-    private AlertDialog customDialog;
-    private View addReviewDialogTemplate;
     private ArrayList<Review> reviewList;
     private ArrayList<User> userList;
     private CoffeeMachine coffeeMachine;
     private boolean hasMoreReviews;
     private View oldReviewView;
     private boolean isAllowToEdit = false;
-    private ArrayList<Review> prevReviewList;
     private View headerView;
     private boolean isMoreReviewRequest = false;
     private DataApplication dataApplication;
     private boolean isRefreshAction = false;
     private int REVIEW_MAX_LINES = 5; //max line number of review
     private int REVIEW_MIN_LINES = 2; //max line number of review
-    private int IS_ELLIPSIZE;
 
     @Override
     public void onAttach(Activity activity) {
@@ -213,7 +208,7 @@ public class ReviewListFragment extends Fragment
             return;
         }
 
-        leftArrowIcon.setOnClickListener(this);
+//        leftArrowIcon.setOnClickListener(this);
 
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 R.layout.review_template, reviewList, coffeeMachineId);
@@ -226,11 +221,12 @@ public class ReviewListFragment extends Fragment
         listView.setOnItemLongClickListener(this);
         listView.setOnItemClickListener(this);
         listView.setOnScrollListener(this);
-//        listView.setOnTouchListener(new ShowHideOnScroll(addReviewFabButton));
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setProgressViewOffset(true, 100, 200); //TODO replace please with dimen size
         addReviewFabButton.setOnClickListener(this);
 
+        //STATUS header
+        statusHeaderLayout.setOnClickListener(this);
         //retrieve user if are not null
         if(userList != null) {
             getAdapterWrapper().setUserList(userList);
@@ -241,7 +237,7 @@ public class ReviewListFragment extends Fragment
     private void setActionBarData() {
         Bundle actionbarBundle = new Bundle();
         actionbarBundle.putString(CoffeeMachineStatus.COFFEE_MACHINE_STATUS_STRING_KEY,
-                "01.12 - today");
+                coffeeMachine.getAddress());
         actionbarBundle.putString(CoffeeMachine.COFFEE_MACHINE_STRING_KEY,
                 coffeeMachine.getName());
         ((SetActionBarInterface) mainActivityRef)
@@ -462,13 +458,13 @@ public class ReviewListFragment extends Fragment
                         .startActivityWrapper(AddReviewActivity.class,
                                 CoffeeMachineActivity.ACTION_ADD_REVIEW, null);
                 break;
-            case R.id.leftArrowIconId:
-                Toast.makeText(mainActivityRef, "got statistics on machine",
-                        Toast.LENGTH_SHORT).show();
+//            case R.id.leftArrowIconId:
+//                Toast.makeText(mainActivityRef, "got statistics on machine",
+//                        Toast.LENGTH_SHORT).show();
 //                ((OnChangeFragmentWrapperInterface) mainActivityRef)
 //                        .startActivityWrapper(AddReviewActivity.class,
 //                                CoffeeMachineActivity.ACTION_ADD_REVIEW, null);
-                break;
+//                break;
 
         }
     }
@@ -507,10 +503,10 @@ public class ReviewListFragment extends Fragment
 
                 //hide and show element
                 if(Math.abs(view.getChildAt(firstVisibleItem).getY()) > offset) {
-                    dashboardStatusLayout.setVisibility(View.GONE);
+                    statusHeaderLayout.setVisibility(View.GONE);
                     return;
                 }
-                dashboardStatusLayout.setVisibility(View.VISIBLE);
+                statusHeaderLayout.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -527,6 +523,7 @@ public class ReviewListFragment extends Fragment
         coffeeMachineStatus = response;
         dataApplication.saveCoffeeMachineStatus(coffeeMachineStatus);
 
+        ((TextView) statusPeriodView).setText("01.12 - today");
         goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
 
         //request review

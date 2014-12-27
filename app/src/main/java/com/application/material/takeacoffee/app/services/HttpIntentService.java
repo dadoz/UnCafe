@@ -3,6 +3,8 @@ package com.application.material.takeacoffee.app.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
@@ -80,6 +82,7 @@ public class HttpIntentService extends IntentService {
 
         }
     };
+    private static boolean isConnected;
 /*
     public static void startActionCreateTicket(Context context
             , String fascia
@@ -106,6 +109,7 @@ public class HttpIntentService extends IntentService {
 
     public static void userListRequest(Context context,
                                          ArrayList<String> userIdList) {
+        isConnected = isConnected(context);
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(USER_REQUEST);
@@ -115,6 +119,7 @@ public class HttpIntentService extends IntentService {
 
     public static void reviewListRequest(Context context,
                                          String coffeeMachineId, long timestamp) {
+        isConnected = isConnected(context);
         Intent intent = new Intent(context, HttpIntentService.class);
         Review.Params params = new Review.Params("PZrB82ZWVl",
                 Double.parseDouble("1410696082045"));
@@ -125,6 +130,7 @@ public class HttpIntentService extends IntentService {
     }
     public static void moreReviewListRequest(Context context,
                                          String coffeeMachineId, long timestamp) {
+        isConnected = isConnected(context);
         Intent intent = new Intent(context, HttpIntentService.class);
         Review.Params params = new Review.Params("PZrB82ZWVl",
                 Double.parseDouble("1410696082045"));
@@ -135,6 +141,7 @@ public class HttpIntentService extends IntentService {
     }
 
     public static void coffeeMachineRequest(Context context) {
+        isConnected = isConnected(context);
         Intent intent = new Intent(context, HttpIntentService.class);
         intent.setAction(COFFEE_MACHINE_REQUEST);
         context.startService(intent);
@@ -159,7 +166,7 @@ public class HttpIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<List<CoffeeMachine>>(){}.getType();
+        Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<ArrayList<CoffeeMachine>>(){}.getType();
         Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
         Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<List<Review>>(){}.getType();
 
@@ -190,16 +197,18 @@ public class HttpIntentService extends IntentService {
 
             if (REVIEW_REQUEST.equals(action)) {
                 try {
-                    //TODO MOCKUP
-                    ReviewDataContainer reviewDataContainer = JSONParserToObject
-                            .getReviewListParser(JSONParserToObject.
-                                    getMockupData(this.getApplicationContext().getAssets(),
-                                            "reviews.json"));
-                    BusSingleton.getInstance().post(reviewDataContainer);
+                    if(! isConnected) {
+                        //TODO MOCKUP
+                        ReviewDataContainer reviewDataContainer = JSONParserToObject
+                                .getReviewListParser(JSONParserToObject.
+                                        getMockupData(this.getApplicationContext().getAssets(),
+                                                "reviews.json"));
+                        BusSingleton.getInstance().post(reviewDataContainer);
+                        return;
+                    }
 
-//                    Review.Params params = (Review.Params) intent.getExtras().get(EXTRA_REVIEW);
-//                    BusSingleton.getInstance().post(
-//                            service.listReview(params));
+                    Review.Params params = (Review.Params) intent.getExtras().get(EXTRA_REVIEW);
+                    BusSingleton.getInstance().post(service.listReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -242,17 +251,21 @@ public class HttpIntentService extends IntentService {
 
             if (COFFEE_MACHINE_REQUEST.equals(action)) {
                 try{
-//                    BusSingleton.getInstance().post(service.listCoffeeMachine());
-                    ArrayList<CoffeeMachine> coffeeMachineList = JSONParserToObject
-                            .coffeeMachineParser(JSONParserToObject.
-                                    getMockupData(this.getApplicationContext().getAssets(),
-                                            "coffee_machines.json"));
-                    if(coffeeMachineList == null) {
-                        Log.e(TAG, "HTTPIntentService - empty data");
+                    if(! isConnected) {
+                        ArrayList<CoffeeMachine> coffeeMachineList = JSONParserToObject
+                                .coffeeMachineParser(JSONParserToObject.
+                                        getMockupData(this.getApplicationContext().getAssets(),
+                                                "coffee_machines.json"));
+                        if(coffeeMachineList == null) {
+                            Log.e(TAG, "HTTPIntentService - empty data");
+                            return;
+                        }
+                        BusSingleton.getInstance().post(coffeeMachineList);
                         return;
                     }
-                    BusSingleton.getInstance().post(coffeeMachineList);
 
+
+                    BusSingleton.getInstance().post(service.listCoffeeMachine());
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -421,10 +434,10 @@ public class HttpIntentService extends IntentService {
 
 
     }*/
-    public static class CustomDeserializer implements JsonDeserializer<List<CoffeeMachine>> {
+    public static class CustomDeserializer implements JsonDeserializer<ArrayList<CoffeeMachine>> {
 
         @Override
-        public List<CoffeeMachine> deserialize(JsonElement jsonElement, Type type,
+        public ArrayList<CoffeeMachine> deserialize(JsonElement jsonElement, Type type,
                                                JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
     //            Log.e(TAG, jsonElement.toString() + " - " + type.toString());
@@ -497,5 +510,12 @@ public class HttpIntentService extends IntentService {
 //        public static final String REVIEW_COUNTER_TIMESTAMP = "countOnReviewsWithTimestamp";
     }
 
+    public static boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED;
+    }
 
 }

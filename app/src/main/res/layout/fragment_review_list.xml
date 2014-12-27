@@ -6,11 +6,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-    <!--<include layout="@layout/more_review_template"/>-->
-    <!--android:paddingTop="@dimen/top_header_height"-->
-    <!--android:paddingBottom="@dimen/small_padding"-->
-
-
     <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +36,7 @@
                 <!--android:layout_height="wrap_content">-->
             <!--</RelativeLayout>-->
 
-    <include layout="@layout/dashboard_status_template"/>
+    <include layout="@layout/status_header_template"/>
 
 
 </RelativeLayout>

@@ -1,11 +1,13 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -15,7 +17,6 @@ import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.models.User;
 
 /**
  * Created by davide on 27/12/14.
@@ -75,7 +76,7 @@ public class LoggedUserFragment extends Fragment
 
         //action bar
         ((SetActionBarInterface) mainActivityRef)
-                .setActionBarCustomViewById(R.id.customActionSettingsLayoutId, null);
+                .setActionBarCustomViewById(R.id.customActionLoggedUserLayoutId, null);
         ((SetActionBarInterface) mainActivityRef)
                 .setCustomNavigation(LoggedUserFragment.class);
 
@@ -117,6 +118,9 @@ public class LoggedUserFragment extends Fragment
         }
 
         //HTTPIntent service call
+        ((InputMethodManager) mainActivityRef
+                .getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(loginUsernameEdit.getWindowToken(), 0);
         dataApplication.setUsername(username);
         return true;
     }

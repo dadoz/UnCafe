@@ -30,6 +30,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBa
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.squareup.otto.Subscribe;
 
 
@@ -85,6 +86,19 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         currentFragTag = CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG;
         initView(new CoffeeMachineFragment());
     }
+
+    @Override
+    public void onResume(){
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        BusSingleton.getInstance().unregister(this);
+        super.onPause();
+    }
+
 
     private void initView(Fragment fragment) {
         if(fragment == null) {
@@ -395,6 +409,13 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                         .setText("Settings");
                 break;
+            case R.id.customActionLoggedUserLayoutId:
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setVisibility(View.VISIBLE);
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setText("Account settings");
+                break;
+
 
         }
     }
@@ -426,15 +447,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
     }
 
-    @Subscribe
-    public void onHandlingError(Throwable cause) {
-        String message = cause.getMessage();
-        int code = Integer.parseInt(cause.getCause().getMessage());
-
-        Log.e(TAG, "error - " + message + code);
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -444,4 +456,14 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         }
 
     }
+
+    @Subscribe
+    public void onHandlingError(Throwable cause) {
+        String message = cause.getMessage();
+        int code = Integer.parseInt(cause.getCause().getMessage());
+
+        Log.e(TAG, "error - " + message + code);
+    }
+
+
 }
