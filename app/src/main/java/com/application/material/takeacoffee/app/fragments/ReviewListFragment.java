@@ -457,9 +457,6 @@ public class ReviewListFragment extends Fragment
     public void onClick(View v) {
         //dialog button
         switch (v.getId()) {
-            case R.id.doneDialogIconId:
-                customDialog.dismiss();
-                break;
             case R.id.addReviewFabId:
                 ((OnChangeFragmentWrapperInterface) mainActivityRef)
                         .startActivityWrapper(AddReviewActivity.class,

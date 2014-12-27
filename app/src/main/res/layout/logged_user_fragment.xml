@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+              android:layout_alignParentTop="true"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center">
+
+        <ImageView
+                android:layout_width="@dimen/extra_huge_icon_size"
+                android:layout_height="@dimen/extra_huge_icon_size"
+                android:src="@drawable/user_icon"/>
+        <com.neopixl.pixlui.components.textview.TextView
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="chimphand-regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="choice your username"/>
+
+        <com.neopixl.pixlui.components.edittext.EditText
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="chimphand-regular.ttf"
+                android:id="@+id/loginUsernameEditId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="username"/>
+
+        <com.neopixl.pixlui.components.textview.TextView
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="chimphand-regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="or login with facebook >"/>
+</LinearLayout>

@@ -79,4 +79,7 @@ public class DataApplication extends Application {
         return user == null ? "Guest" : user.getUsername();
     }
 
+    public void setUsername(String username) {
+        this.user.setUsername(username);
+    }
 }

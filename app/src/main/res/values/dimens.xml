@@ -40,7 +40,7 @@
     <dimen name="medium_button_size">75dip</dimen>
     <dimen name="text_huge_60">60dip</dimen>
     <dimen name="medium_button_width">80dip</dimen>
-    <dimen name="coffee_icon_size">85dip</dimen>
+    <dimen name="coffee_icon_size">100dip</dimen>
     <!--<dimen name="coffee_icon_size">130dip</dimen>-->
     <dimen name="timestamp_width">50dip</dimen>
     <dimen name="ultra_huge_icon_size">250dp</dimen>

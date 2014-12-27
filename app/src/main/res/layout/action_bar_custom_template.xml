@@ -3,17 +3,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
               android:orientation="vertical"
+              android:gravity="center_vertical"
               android:layout_width="fill_parent"
               android:layout_height="match_parent">
 
 
-    <TextView
+    <com.neopixl.pixlui.components.textview.TextView
             android:id="@+id/cActBarTitleId"
             android:textSize="@dimen/text_big_24"
+            android:visibility="gone"
+
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:textColor="@color/material_text_black"
             android:paddingRight="@dimen/small_padding"
-            android:text="@string/titleTakeACoffee"/>
+            android:gravity="center_vertical"
+            android:text="@string/titleTakeACoffee"
+            pixlui:typeface="chimphand-regular.ttf"/>
+
 
     <!--coffee machine template -->
     <RelativeLayout
@@ -25,54 +32,70 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <com.neopixl.pixlui.components.textview.TextView
                     android:id="@+id/cActBarCoffeeMachineLocationId"
                     android:textSize="@dimen/text_big_26"
                     android:textColor="@color/material_text_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="@dimen/small_padding"
-                    android:text="location"/>
+                    android:text="location"
+                    pixlui:typeface="chimphand-regular.ttf"/>
+
     </RelativeLayout>
 
     <!--user template -->
     <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/customActionBarUserLayoutId"
             android:visibility="gone"
+            android:gravity="center_vertical"
+            android:id="@+id/customActionBarUserLayoutId"
             android:orientation="horizontal">
 
             <ImageView
-                    android:visibility="gone"
                     android:id="@+id/userIconId"
                     android:layout_width="@dimen/medium_small_icon_size"
                     android:layout_height="@dimen/medium_small_icon_size"
-                    android:src="@drawable/user_icon_small_b" />
+                    android:src="@drawable/user_icon" />
 
-            <TextView
+        <com.neopixl.pixlui.components.textview.TextView
                     android:id="@+id/usernameId"
                     android:textSize="@dimen/text_big_24"
+                    android:textColor="@color/material_text_black"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingRight="@dimen/small_padding"
-                    android:text=" - "/>
+                    android:paddingLeft="@dimen/small_padding"
+                    android:text=" - "
+                    pixlui:typeface="chimphand-regular.ttf"/>
     </LinearLayout>
 
     <!--review list template -->
     <LinearLayout
             android:id="@+id/customActionBarReviewListLayoutId"
-            android:visibility="gone"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <TextView
+        <com.neopixl.pixlui.components.textview.TextView
+                android:id="@+id/cActBarCoffeeMachineNameId"
+                android:textSize="@dimen/text_big_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/material_text_black"
+                android:paddingRight="@dimen/small_padding"
+                android:text=" - "
+                pixlui:typeface="chimphand-regular.ttf"/>
+
+        <com.neopixl.pixlui.components.textview.TextView
                 android:id="@+id/cActBarPeriodTextId"
                 android:textSize="@dimen/text_small_14"
+                android:textColor="@color/material_text_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/small_padding"
-                android:text=" - "/>
+                android:text=" - "
+                pixlui:typeface="chimphand-regular.ttf"/>
 
     </LinearLayout>
 

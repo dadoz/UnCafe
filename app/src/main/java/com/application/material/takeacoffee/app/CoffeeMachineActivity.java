@@ -23,20 +23,19 @@ import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
+import com.application.material.takeacoffee.app.fragments.LoggedUserFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.User;
-import com.neopixl.pixlui.components.imageview.*;
 import com.squareup.otto.Subscribe;
 
 
 public class CoffeeMachineActivity extends ActionBarActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
-        ImageLoader.ImageCache, VolleyImageRequestWrapper, SetActionBarInterface {
+        ImageLoader.ImageCache, VolleyImageRequestWrapper, SetActionBarInterface, View.OnClickListener {
     private static final String TAG = "CoffeeMachineActivity";
     public static final int RESULT_FAILED = 111;
     @InjectView(R.id.onLoadLayoutId)
@@ -65,20 +64,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_coffee_machine);
         ButterKnife.inject(this);
 
-        //TODO ALWAYS recreating this stuff - checkit out
-//        //ACTION BAR
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        if (toolbar != null) {
-//            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-//            setSupportActionBar(toolbar);
-//
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-//            getSupportActionBar().setDisplayShowTitleEnabled(false);
-//            getSupportActionBar().setDisplayShowCustomEnabled(true);
-//            getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
-//        }
         //custom actionBar
-        getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
+        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
 
         //VOLLEY stuff
@@ -89,8 +76,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
         //INIT VIEW
         if(savedInstanceState != null) {
-            //already init app - try retrieve frag from manager
-            //String fragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                     currentFragTag);
             initView(fragment);
@@ -163,7 +148,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             Log.e(TAG, "cannot change fragment!");
             return;
         }
-//        getResources().putString(CURRENT_FRAGMENT_TAG, CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
         this.setFragTag(tag);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
@@ -327,14 +311,19 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         try {
             if(isItemSelected()) {
                 tempActionBarTitle = ((TextView) getSupportActionBar()
-                        .getCustomView().findViewById(R.id.cActBarTitleId)).getText().toString();
+                        .getCustomView().findViewById(R.id.cActBarCoffeeMachineNameId)).getText().toString();
                 ((TextView) getSupportActionBar()
-                        .getCustomView().findViewById(R.id.cActBarTitleId)).setText(ReviewListFragment.EDIT_REVIEW_STRING);
+                        .getCustomView().findViewById(R.id.cActBarCoffeeMachineNameId))
+                        .setText(ReviewListFragment.EDIT_REVIEW_STRING);
 
                 return;
             }
-            ((TextView) getSupportActionBar()
-                    .getCustomView().findViewById(R.id.cActBarTitleId)).setText(tempActionBarTitle);
+
+            if(tempActionBarTitle != null) {
+                ((TextView) getSupportActionBar()
+                        .getCustomView().findViewById(R.id.cActBarCoffeeMachineNameId))
+                        .setText(tempActionBarTitle);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -350,9 +339,13 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             return;
         }
         //HIDE all template
-        actionBar.getCustomView().findViewById(R.id.customActionBarUserLayoutId).setVisibility(View.GONE);
+        View userView = actionBar.getCustomView().findViewById(R.id.customActionBarUserLayoutId);
+        userView.setVisibility(View.GONE);
+        userView.setOnClickListener(null);
         actionBar.getCustomView().findViewById(R.id.customActionBarCoffeeMachineLayoutId).setVisibility(View.GONE);
         actionBar.getCustomView().findViewById(R.id.customActionBarReviewListLayoutId).setVisibility(View.GONE);
+        actionBar.getCustomView().findViewById(R.id.customActionBarMapLayoutId).setVisibility(View.GONE);
+        actionBar.getCustomView().findViewById(R.id.customActionSettingsLayoutId).setVisibility(View.GONE);
 
         //current view
         View currentView = actionBar.getCustomView().findViewById(id);
@@ -370,6 +363,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                         .setText(((CoffeeMachine) data).getAddress());
                 break;
             case R.id.customActionBarUserLayoutId:
+                userView.setOnClickListener(this);
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
                         .setVisibility(View.GONE);
 
@@ -382,12 +376,10 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
                 break;
             case R.id.customActionBarReviewListLayoutId:
-                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
-                        .setVisibility(View.VISIBLE);
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarPeriodTextId))
                         .setText(((Bundle) data)
                                 .getString(CoffeeMachineStatus.COFFEE_MACHINE_STATUS_STRING_KEY));
-                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarCoffeeMachineNameId))
                         .setText(((Bundle) data)
                                 .getString(CoffeeMachine.COFFEE_MACHINE_STRING_KEY));
                 break;
@@ -443,4 +435,13 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.customActionBarUserLayoutId:
+                changeFragment(new LoggedUserFragment(), null, LoggedUserFragment.LOGGED_USER_FRAG_TAG);
+                break;
+        }
+
+    }
 }
