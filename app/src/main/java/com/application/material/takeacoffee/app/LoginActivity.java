@@ -29,8 +29,6 @@ public class LoginActivity extends ActionBarActivity implements
     private static final String TAG = "LoginActivity";
     private String currentFragTag;
     private String CURRENT_FRAGMENT_TAG;
-    @InjectView(R.id.onLoadLayoutId)
-    View onLoadLayout;
 
 
     @Override

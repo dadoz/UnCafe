@@ -66,11 +66,20 @@
             android:text="@string/titleTakeACoffee"/>
 
     <LinearLayout
+            android:id="@+id/loginMainLayoutId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/loginTitleLayoutId">
         <include layout="@layout/fragment_logged_user"/>
     </LinearLayout>
+
+    <ProgressBar
+            android:id="@+id/loaderLayoutId"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true">
+    </ProgressBar>
 
     <LinearLayout
             android:id="@+id/loginContinueButtonId"

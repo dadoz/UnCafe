@@ -9,40 +9,6 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
-    <!--<LinearLayout android:layout_width="fill_parent"-->
-                  <!--android:layout_height="wrap_content"-->
-                  <!--android:layout_gravity="left"-->
-                  <!--android:layout_marginTop="@dimen/text_small_16"-->
-                  <!--android:layout_marginLeft="@dimen/text_small_16"-->
-                  <!--android:layout_marginRight="@dimen/text_small_16">-->
-        <!--<include layout="@layout/header_user_template" />-->
-    <!--</LinearLayout>-->
-
-    <com.application.material.takeacoffee.app.views.FilledCircleView
-            android:id="@+id/filledCircleId"
-            android:layout_width="@dimen/ultra_huge_icon_size"
-            android:layout_height="@dimen/ultra_huge_icon_size"
-            filledcircle:fillColor="@color/material_brown"
-            filledcircle:strokeColor="@color/material_blue_grey_900"
-            filledcircle:strokeWidth="20"
-            filledcircle:value="65" />
-
-
-    <SeekBar android:id="@+id/seekBarId"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content" />
-
-    <RatingBar
-            android:id="@+id/statusRatingBarId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/text_big_26"
-            android:layout_marginRight="@dimen/text_big_26"
-            android:layout_gravity="left"
-            android:stepSize="1"
-            android:numStars="3"
-            style="@style/AppTheme.RatingBar"/>
-
     <com.neopixl.pixlui.components.edittext.EditText
             android:id="@+id/commentTextId"
             android:layout_width="fill_parent"
@@ -62,6 +28,32 @@
             pixlui:clearclipboardcontent="true"
             pixlui:typeface="chimphand-light.ttf"/>
 
+
+    <com.application.material.takeacoffee.app.views.FilledCircleView
+            android:id="@+id/filledCircleId"
+            android:layout_width="@dimen/ultra_huge_icon_size"
+            android:layout_height="@dimen/ultra_huge_icon_size"
+            filledcircle:fillColor="@color/material_brown"
+            filledcircle:strokeColor="@color/material_blue_grey_900"
+            filledcircle:strokeWidth="20"
+            filledcircle:value="65" />
+
+    <SeekBar android:id="@+id/seekBarId"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content" />
+
+    <RatingBar
+            android:id="@+id/statusRatingBarId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_big_26"
+            android:layout_marginRight="@dimen/text_big_26"
+            android:layout_gravity="left"
+            android:stepSize="1"
+            android:numStars="3"
+            style="@style/AppTheme.RatingBar"/>
+
+
     <!--bottom bar-->
     <LinearLayout
             android:id="@+id/addReviewButtonId"
@@ -76,7 +68,7 @@
         <com.neopixl.pixlui.components.textview.TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/light_grey"
+                android:textColor="@color/material_red_200"
                 android:textSize="@dimen/text_big_30"
                 android:text="Add Review!"
                 pixlui:copyandpaste="false"

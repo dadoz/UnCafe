@@ -102,6 +102,7 @@ public class LoggedUserFragment extends Fragment
                 .setCustomNavigation(LoggedUserFragment.class);
 
         loginUsernameEdit.setText(dataApplication.getUsername());
+        deleteUserButton.setVisibility(View.VISIBLE);
         deleteUserButton.setOnClickListener(this);
     }
 

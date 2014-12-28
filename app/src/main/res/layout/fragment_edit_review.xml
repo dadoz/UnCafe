@@ -20,7 +20,7 @@
         <com.neopixl.pixlui.components.textview.TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/light_grey"
+                android:textColor="@color/material_red_200"
                 android:textSize="@dimen/text_big_30"
                 android:text="Save your changes"
                 pixlui:copyandpaste="false"
@@ -46,24 +46,6 @@
                       android:orientation="vertical"
                       android:gravity="center_horizontal">
 
-                <!--<ImageView-->
-                        <!--android:layout_height="@dimen/small_icon_size"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:layout_width="@dimen/small_icon_size"-->
-                        <!--android:id="@+id/editDeleteIconId"-->
-                        <!--android:src="@drawable/delete_icon" />-->
-
-            <RatingBar
-                    android:id="@+id/editStatusRatingBarViewId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/text_big_26"
-                    android:layout_marginRight="@dimen/text_big_26"
-                    android:layout_gravity="left"
-                    android:stepSize="1"
-                    android:numStars="3"
-                    style="@style/AppTheme.RatingBar"/>
-
             <com.neopixl.pixlui.components.edittext.EditText
                     android:id="@+id/editReviewCommentTextId"
                     android:layout_width="fill_parent"
@@ -82,6 +64,19 @@
                     pixlui:copyandpaste="true"
                     pixlui:clearclipboardcontent="true"
                     pixlui:typeface="chimphand-light.ttf"/>
+
+
+            <RatingBar
+                    android:id="@+id/editStatusRatingBarViewId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/text_big_26"
+                    android:layout_marginRight="@dimen/text_big_26"
+                    android:layout_gravity="left"
+                    android:stepSize="1"
+                    android:numStars="3"
+                    style="@style/AppTheme.RatingBar"/>
+
 
         </LinearLayout>
 

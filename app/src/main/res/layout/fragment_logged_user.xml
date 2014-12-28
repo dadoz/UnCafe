@@ -46,6 +46,7 @@
 
         <LinearLayout
                 android:id="@+id/deleteUserButtonId"
+                android:visibility="gone"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/small_padding"

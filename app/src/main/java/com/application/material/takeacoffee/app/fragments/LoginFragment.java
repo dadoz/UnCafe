@@ -39,6 +39,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private Bundle bundle;
     @InjectView(R.id.loginContinueButtonId) View loginContinueButton;
     @InjectView(R.id.loginUsernameEditId) View loginUsernameEditText;
+    @InjectView(R.id.loginMainLayoutId) View loginMainView;
+    @InjectView(R.id.loaderLayoutId) View loaderView;
     private DataApplication dataApplication;
 
     @Override
@@ -74,22 +76,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initOnLoadView() {
-        ((OnLoadViewHandlerInterface) loginActivityRef).initOnLoadView(null);
-
         //CHECK if user already logged in
         String loggedUserId;
         if((loggedUserId = SharedPreferencesWrapper.getValue(loginActivityRef,
                 LOGGED_USER_ID)) != null) {
+            loginMainView.setVisibility(View.GONE);
+            ((OnLoadViewHandlerInterface) loginActivityRef).initOnLoadView(loaderView);
+
             //check if valid user
             HttpIntentService.checkUserRequest(loginActivityRef, loggedUserId);
             return;
         }
 
+        //new
         initView();
     }
 
     public void initView() {
-        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(null);
+        loginMainView.setVisibility(View.VISIBLE);
+        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(loaderView);
         loginContinueButton.setOnClickListener(this);
     }
 
@@ -137,7 +142,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Subscribe
     public void onNetworkRespose(User user) {
         Log.d(TAG, "ADD_USER_RESPONSE");
-        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(null);
+        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(loaderView);
 
         if(user == null) {
             //TODO handle adapter with empty data
