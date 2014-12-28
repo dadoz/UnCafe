@@ -100,7 +100,7 @@ public class AddReviewFragment extends Fragment implements
 
     private void initOnLoadView() {
         //initOnLoadView
-        addActivityRef.initOnLoadView();
+        addActivityRef.initOnLoadView(null);
         initView();
     }
 
@@ -127,7 +127,7 @@ public class AddReviewFragment extends Fragment implements
             e.printStackTrace();
         }
 
-        addActivityRef.hideOnLoadView();
+        addActivityRef.hideOnLoadView(null);
         addReviewButton.setOnClickListener(this);
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
@@ -159,14 +159,14 @@ public class AddReviewFragment extends Fragment implements
     }
 
     private void addReview() {
-        addActivityRef.initOnLoadView(); //get spinner
+        addActivityRef.initOnLoadView(null); //get spinner
 
         //on callback
         String comment = ((EditText) commentTextView).getText().toString();
         if(comment.compareTo("") == 0) {
             Toast.makeText(addActivityRef.getApplicationContext(),
                     "Failed - write some comment!", Toast.LENGTH_LONG).show();
-            addActivityRef.hideOnLoadView(); //get spinner
+            addActivityRef.hideOnLoadView(null); //get spinner
             return;
         }
         ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
@@ -204,7 +204,7 @@ public class AddReviewFragment extends Fragment implements
     @Subscribe
     public void onNetworkResponse(Review review) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) addActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) addActivityRef).hideOnLoadView(null);
 
         if(review == null) {
             addReviewErrorCallback();

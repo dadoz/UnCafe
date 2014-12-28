@@ -84,7 +84,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 
     public void initOnLoadView() {
         //initOnLoadView
-        ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView(null);
 
 //        getLoaderManager().initLoader(COFFEE_MACHINE_REQUEST.ordinal(), null, this)
 //                .forceLoad();
@@ -95,7 +95,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 
     public void initView(ArrayList<CoffeeMachine> coffeeMachineList) {
         //initOnLoadView
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         //set action bar view
         ((SetActionBarInterface) mainActivityRef)
@@ -155,7 +155,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     @Subscribe
     public void onNetworkRespose(ArrayList<CoffeeMachine> coffeeMachinesList){
         Log.d(TAG, "get response from bus");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         if(coffeeMachinesList == null) {
             //TODO handle adapter with empty data

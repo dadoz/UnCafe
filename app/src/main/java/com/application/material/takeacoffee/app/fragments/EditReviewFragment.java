@@ -97,12 +97,12 @@ public class EditReviewFragment extends Fragment implements
 
     private void initOnLoadView() {
         //initOnLoadView
-        editActivityRef.initOnLoadView();
+        editActivityRef.initOnLoadView(null);
         initView();
     }
 
     private void initView() {
-        editActivityRef.hideOnLoadView();
+        editActivityRef.hideOnLoadView(null);
         ((RatingBar) editStatusRatingBarView).setRating(ReviewStatus.parseStatusToRating(review.getStatus()));
         ((EditText) editReviewCommentText).setText(review.getComment());
         saveReviewButton.setOnClickListener(this);
@@ -177,7 +177,7 @@ public class EditReviewFragment extends Fragment implements
     @Subscribe
     public void onNetworkResponse(Object updateReviewResponse) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) editActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) editActivityRef).hideOnLoadView(null);
 
         if(updateReviewResponse == null) {
             //TODO handle adapter with empty data

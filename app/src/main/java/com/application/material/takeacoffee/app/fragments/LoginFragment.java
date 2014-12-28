@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,20 +18,19 @@ import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
+import com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
+import static com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper.LOGGED_USER_ID;
 
 /**
  * Created by davide on 25/12/14.
  */
 public class LoginFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = "ReviewListFragment";
+    private static final String TAG = "LoginFragment";
     private static FragmentActivity loginActivityRef = null;
     public static final String LOGIN_FRAG_TAG = "LOGIN_FRAG_TAG";
 
@@ -74,12 +74,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initOnLoadView() {
+        ((OnLoadViewHandlerInterface) loginActivityRef).initOnLoadView(null);
+
+        //CHECK if user already logged in
+        String loggedUserId;
+        if((loggedUserId = SharedPreferencesWrapper.getValue(loginActivityRef,
+                LOGGED_USER_ID)) != null) {
+            //check if valid user
+            HttpIntentService.checkUserRequest(loginActivityRef, loggedUserId);
+            return;
+        }
+
         initView();
     }
 
     public void initView() {
-        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView();
-
+        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(null);
         loginContinueButton.setOnClickListener(this);
     }
 
@@ -126,8 +136,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void onNetworkRespose(User user) {
-        Log.d(TAG, "get response from bus");
-        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView();
+        Log.d(TAG, "ADD_USER_RESPONSE");
+        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(null);
 
         if(user == null) {
             //TODO handle adapter with empty data
@@ -136,12 +146,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         dataApplication.setUser(user);
 
+        if(SharedPreferencesWrapper.getValue(loginActivityRef, LOGGED_USER_ID) == null) {
+            SharedPreferencesWrapper.putString(loginActivityRef,
+                    LOGGED_USER_ID, user.getId());
+        }
+
         Intent intent = new Intent(this.getActivity(), CoffeeMachineActivity.class);
         startActivity(intent);
 
         loginActivityRef.finish();
 
     }
-
 
 }

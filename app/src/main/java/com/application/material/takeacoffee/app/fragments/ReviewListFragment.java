@@ -136,7 +136,7 @@ public class ReviewListFragment extends Fragment
     }
 
     private void initOnLoadView() {
-        ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView(null);
         Log.w(TAG, "call initLoader getCoffeeMachineStatus");
 
         if(reviewList != null) {
@@ -170,7 +170,7 @@ public class ReviewListFragment extends Fragment
     }
 
     private void refreshView() {
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         if(coffeeMachineStatus != null) {
             goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
@@ -193,7 +193,7 @@ public class ReviewListFragment extends Fragment
     }
 
     public void initView() {
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         if(coffeeMachineStatus != null) {
             goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
@@ -517,7 +517,7 @@ public class ReviewListFragment extends Fragment
     @Subscribe
     public void onNetworkRespose(CoffeeMachineStatus response){
         Log.d(TAG, "Response  getMessages");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
         if(response == null) {
             return;
         }
@@ -536,9 +536,11 @@ public class ReviewListFragment extends Fragment
     @Subscribe
     public void onNetworkRespose(ReviewDataContainer reviewDataContainer){
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
-        if(reviewDataContainer == null) {
+        if(reviewDataContainer == null ||
+                reviewDataContainer.getReviewList() == null) {
+            Log.e(TAG, "empty review list data");
             //TODO handle adapter with empty data
             return;
         }
@@ -577,7 +579,7 @@ public class ReviewListFragment extends Fragment
     @Subscribe
     public void onNetworkRespose(ArrayList<User> userList) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         if(userList == null) {
             //TODO handle adapter with empty data
@@ -593,7 +595,7 @@ public class ReviewListFragment extends Fragment
     @Subscribe
     public void onNetworkRespose(Object deleteReviewResponse) {
         Log.d(TAG, "get response from bus - DELETE_REVIEW_REQ");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         if(deleteReviewResponse == null) {
             //TODO handle adapter with empty data

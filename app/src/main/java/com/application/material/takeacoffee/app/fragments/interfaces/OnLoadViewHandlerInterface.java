@@ -1,9 +1,11 @@
 package com.application.material.takeacoffee.app.fragments.interfaces;
 
+import android.view.View;
+
 /**
  * Created by davide on 07/11/14.
  */
 public interface OnLoadViewHandlerInterface {
-    public void initOnLoadView();
-    public void hideOnLoadView();
+    void initOnLoadView(View view);
+    void hideOnLoadView(View view);
 }

@@ -148,11 +148,12 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void initOnLoadView() {
+    public void initOnLoadView(View view) {
         onLoadLayout.setVisibility(View.VISIBLE);
     }
 
-    public void hideOnLoadView() {
+    @Override
+    public void hideOnLoadView(View view) {
         onLoadLayout.setVisibility(View.GONE);
     }
 

@@ -79,7 +79,7 @@ public class SettingListFragment extends Fragment
     }
 
     public void initView(ArrayList<Setting> reviewList) {
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         //action bar
         ((SetActionBarInterface) mainActivityRef)

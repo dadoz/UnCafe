@@ -69,6 +69,9 @@ public class HttpIntentService extends IntentService {
     private static String EXTRA_REVIEW_ID = "EXTRA_REVIEW_ID";
     private static String EXTRA_USER_ID = "EXTRA_USER_ID";
     private static String EXTRA_USER_PARAMS = "EXTRA_USER_PARAMS";
+    private static String EXTRA_TIMESTAMP = "EXTRA_TIMESTAMP";
+    private static String EXTRA_COFFEE_MACHINE_ID = "EXTRA_COFFEE_MACHINE_ID";;
+    private static String CHECK_USER_REQUEST = "CHECK_USER_REQUEST";
 
 //    private static final String EXTRA_NUMBER = "it.ennova.myhd.networking.extra.NUMBER";
 //    private static final String EXTRA_TICKET_ID = "it.ennova.myhd.networking.extra.TICKETID";
@@ -106,11 +109,10 @@ public class HttpIntentService extends IntentService {
                                          String coffeeMachineId, long timestamp) {
         isConnected = isConnected(context);
         Intent intent = new Intent(context, HttpIntentService.class);
-        Review.Params params = new Review.Params("PZrB82ZWVl",
-                Double.parseDouble("1410696082045"));
 
         intent.setAction(REVIEW_REQUEST);
-        intent.putExtra(EXTRA_REVIEW, params);
+        intent.putExtra(EXTRA_COFFEE_MACHINE_ID, "PZrB82ZWVl");
+        intent.putExtra(EXTRA_TIMESTAMP, Double.parseDouble("1410696082045"));
         context.startService(intent);
     }
 
@@ -205,6 +207,14 @@ public class HttpIntentService extends IntentService {
         context.startService(intent);
     }
 
+    public static void checkUserRequest(Context context,
+                                        String userId) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(CHECK_USER_REQUEST);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        context.startService(intent);
+    }
 
 
 
@@ -219,7 +229,7 @@ public class HttpIntentService extends IntentService {
         super.onCreate();
         Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<ArrayList<CoffeeMachine>>(){}.getType();
         Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
-        Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<List<Review>>(){}.getType();
+        Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<ReviewDataContainer>(){}.getType();
 
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -258,7 +268,10 @@ public class HttpIntentService extends IntentService {
                         return;
                     }
 
-                    Review.Params params = (Review.Params) intent.getExtras().get(EXTRA_REVIEW);
+                    String coffeeMachineId = (String) intent.getExtras().get(EXTRA_COFFEE_MACHINE_ID);
+                    Double timestamp = (Double) intent.getExtras().get(EXTRA_TIMESTAMP);
+                    Review.Params params = new Review.Params(coffeeMachineId, timestamp);
+
                     BusSingleton.getInstance().post(service.listReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -385,9 +398,12 @@ public class HttpIntentService extends IntentService {
             if (ADD_USER_BY_PARAMS_REQUEST.equals(action)){
                 try {
                     User user = (User) intent.getExtras().get(EXTRA_USER);
+                    if(! isConnected) {
+                        BusSingleton.getInstance().post(user);
+                        return;
+                    }
 
-                    BusSingleton.getInstance().post(user);
-//                    BusSingleton.getInstance().post(service.addUserByParams(user));
+                    BusSingleton.getInstance().post(service.addUserByParams(user));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -396,8 +412,22 @@ public class HttpIntentService extends IntentService {
 
             if (DELETE_USER_REQUEST.equals(action)) {
                 try{
+//                    String userId = intent.getExtras().getString(EXTRA_USER_ID);
                     String userId = "LerbzRfN95";
                     BusSingleton.getInstance().post(service.deleteUser(userId));
+                } catch (Exception e) {
+                    Log.d(TAG,e.toString());
+                }
+            }
+
+            if (CHECK_USER_REQUEST.equals(action)) {
+                try{
+                    String userId = intent.getExtras().getString(EXTRA_USER_ID);
+                    if(! isConnected) {
+                        BusSingleton.getInstance().post(new User(userId, null, "Restored user"));
+                        return;
+                    }
+                    BusSingleton.getInstance().post(service.checkUser(userId));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -444,6 +474,10 @@ public class HttpIntentService extends IntentService {
 
         @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS)
         CoffeeMachineStatus getCoffeeMachineStatus(@Body CoffeeMachineStatus.Params coffeeMachineId);
+
+        @GET("/" + CLASSES + USER + "/" + "{userId}")
+        User checkUser(@Path("userId") String userId);
+
     }
 
 

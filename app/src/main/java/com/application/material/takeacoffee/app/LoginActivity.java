@@ -10,15 +10,22 @@ import android.view.MenuItem;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
 import com.application.material.takeacoffee.app.fragments.LoginFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.services.HttpIntentService;
+import com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.squareup.otto.Subscribe;
+
+import static com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper.LOGGED_USER_ID;
 
 
 public class LoginActivity extends ActionBarActivity implements
-        OnChangeFragmentWrapperInterface, OnLoadViewHandlerInterface{
+        OnChangeFragmentWrapperInterface, OnLoadViewHandlerInterface {
     private static final String TAG = "LoginActivity";
     private String currentFragTag;
     private String CURRENT_FRAGMENT_TAG;
@@ -46,6 +53,18 @@ public class LoginActivity extends ActionBarActivity implements
 
         currentFragTag = LoginFragment.LOGIN_FRAG_TAG;
         initView(new LoginFragment());
+    }
+
+    @Override
+    public void onResume() {
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        BusSingleton.getInstance().unregister(this);
+        super.onStop();
     }
 
     private void initView(Fragment fragment) {
@@ -83,12 +102,13 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void initOnLoadView() {
-        onLoadLayout.setVisibility(View.VISIBLE);
+    public void initOnLoadView(View view) {
+        view.setVisibility(View.VISIBLE);
     }
 
-    public void hideOnLoadView() {
-        onLoadLayout.setVisibility(View.GONE);
+    @Override
+    public void hideOnLoadView(View view) {
+        view.setVisibility(View.GONE);
     }
 
     @Override
@@ -171,6 +191,7 @@ public class LoginActivity extends ActionBarActivity implements
 
         Log.e(TAG, "error - " + message + code);
     }
+
 
 
 }
