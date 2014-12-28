@@ -14,10 +14,14 @@ import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.services.HttpIntentService;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.squareup.otto.Subscribe;
 
 /**
  * Created by davide on 14/11/14.
@@ -33,6 +37,8 @@ public class EditReviewFragment extends Fragment implements
     @InjectView(R.id.editReviewCommentTextId) View editReviewCommentText;
     @InjectView(R.id.editStatusRatingBarViewId) View editStatusRatingBarView;
     @InjectView(R.id.saveReviewButtonId) View saveReviewButton;
+    private DataApplication dataApplication;
+    private String meUserId;
 //    @InjectView(R.id.usernameTextId) View usernameText;
 //    @InjectView(R.id.userIconId) View userIconView;
 //    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
@@ -48,9 +54,13 @@ public class EditReviewFragment extends Fragment implements
         editActivityRef =  (EditReviewActivity) activity;
 
         //getArgs
+        dataApplication = (DataApplication) editActivityRef.getApplication();
+
+        //getArgs
         bundle = getArguments();
+        meUserId = dataApplication.getUserId();
         try {
-            user = bundle.getParcelable(User.USER_OBJ_KEY);
+//            user = bundle.getParcelable(User.USER_OBJ_KEY);
             review = bundle.getParcelable(Review.REVIEW_OBJ_KEY);
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +79,20 @@ public class EditReviewFragment extends Fragment implements
         addReviewView = inflater.inflate(R.layout.fragment_edit_review, container, false);
         ButterKnife.inject(this, addReviewView);
         initOnLoadView();
+        setHasOptionsMenu(true);
         return addReviewView;
+    }
+
+    @Override
+    public void onResume(){
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        BusSingleton.getInstance().unregister(this);
+        super.onPause();
     }
 
     private void initOnLoadView() {
@@ -101,76 +124,67 @@ public class EditReviewFragment extends Fragment implements
         review.setStatus(editStatus);
         return true;
     }
-/*
-    @Override
-    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
-        try {
-            String action = RetrofitLoader.getActionByActionRequestEnum(id);
-            return new RetrofitLoader(this.getActivity(), action, params);
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
-        return null;
-    }
 
-    @Override
-    public void onLoadFinished(Loader<RestResponse> loader,
-                               RestResponse restResponse) {
-    }
-
-
-    @Override
-    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
-
-    }
-*/
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.saveReviewButtonId:
-                Log.e(TAG, "Save");
-                if(! updateReview()) {
-                    Toast.makeText(editActivityRef, "No changes", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
-                //crete loader to save
-//                getLoaderManager().initLoader(SAVE_EDIT_REVIEW.ordinal(), null, this)
-//                        .forceLoad();
-
-                //on callback
-                intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
-                intent.putExtra(Review.REVIEW_OBJ_KEY, review);
-                editActivityRef.setResult(Activity.RESULT_OK, intent);
-                editActivityRef.finish();
+                saveReview();
                 break;
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.save_edit_review, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        Intent intent = new Intent();
-//        Log.e(TAG, "Delete");
-//        switch (item.getItemId()) {
-//            case R.id.action_delete:
-////                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
-////                        .forceLoad();
-//
-//                //on callback
-//                intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "DELETE");
-//                intent.putExtra(Review.REVIEW_OBJ_KEY, review);
-//                editActivityRef.setResult(Activity.RESULT_OK, intent);
-//                editActivityRef.finish();
-//                break;
-//        }
+        Log.e(TAG, "save review");
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                saveReview();
+                break;
+        }
         return true;
     }
+
+    private void saveReview() {
+        Log.e(TAG, "Save");
+        if(! updateReview()) {
+            Toast.makeText(editActivityRef, "No changes", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        HttpIntentService.updateReviewRequest(editActivityRef, review);
+
+        //TODO move on callback
+        saveReviewSuccessCallback();
+    }
+
+    private void saveReviewSuccessCallback() {
+        Intent intent = new Intent();
+
+        //on callback
+        intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
+        intent.putExtra(Review.REVIEW_OBJ_KEY, review);
+        editActivityRef.setResult(Activity.RESULT_OK, intent);
+        editActivityRef.finish();
+    }
+
+    @Subscribe
+    public void onNetworkResponse(Object updateReviewResponse) {
+        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
+        ((OnLoadViewHandlerInterface) editActivityRef).hideOnLoadView();
+
+        if(updateReviewResponse == null) {
+            //TODO handle adapter with empty data
+            return;
+        }
+        //TODO handle adapter with empty data
+    }
+
 
 }

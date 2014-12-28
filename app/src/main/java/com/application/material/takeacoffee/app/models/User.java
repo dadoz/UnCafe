@@ -102,11 +102,20 @@ public class User implements Parcelable {
     };
 
 
-    public static class Params {
+    public static class Params implements Parcelable {
         ArrayList<String> userIdList;
         public Params(ArrayList<String> list) {
             userIdList = list;
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+
+        }
     }
 }

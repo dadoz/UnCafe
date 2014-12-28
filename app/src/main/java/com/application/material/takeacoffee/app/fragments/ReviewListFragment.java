@@ -416,9 +416,10 @@ public class ReviewListFragment extends Fragment
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-//                                getLoaderManager().initLoader(DELETE_REVIEW.ordinal(), null, this)
-//                                        .forceLoad();
                                 Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
+                                HttpIntentService.deleteReviewRequest(mainActivityRef, review.getId());
+
+                                //TODO move out in callback
                                 getAdapterWrapper().deleteReview(review.getId());
                                 getAdapterWrapper().notifyDataSetChanged();
                                 dialog.dismiss();
@@ -574,7 +575,7 @@ public class ReviewListFragment extends Fragment
     }
 
     @Subscribe
-    public void onNetworkRespose(ArrayList<User> userList){
+    public void onNetworkRespose(ArrayList<User> userList) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
@@ -588,6 +589,29 @@ public class ReviewListFragment extends Fragment
         getAdapterWrapper().notifyDataSetChanged();
 //                    swipeRefreshLayout.setRefreshing(false);
     }
+
+    @Subscribe
+    public void onNetworkRespose(Object deleteReviewResponse) {
+        Log.d(TAG, "get response from bus - DELETE_REVIEW_REQ");
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+
+        if(deleteReviewResponse == null) {
+            //TODO handle adapter with empty data
+            return;
+        }
+        //TODO handle this;
+
+    }
+
+
+    @Subscribe
+    public void onHandlingError(Throwable cause) {
+        String message = cause.getMessage();
+        int code = Integer.parseInt(cause.getCause().getMessage());
+
+        Log.e(TAG, "error - " + message + code);
+    }
+
 
 /*    @Override
     public Loader<RestResponse> onCreateLoader(int id, Bundle params) {

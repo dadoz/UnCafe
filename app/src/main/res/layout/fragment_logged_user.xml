@@ -43,4 +43,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="or login with facebook >"/>
+
+        <LinearLayout
+                android:id="@+id/deleteUserButtonId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_padding"
+                android:gravity="center_vertical">
+                <ImageView
+                        android:layout_width="@dimen/medium_icon_size"
+                        android:layout_height="@dimen/medium_icon_size"
+                        android:src="@drawable/delete_icon"/>
+                <com.neopixl.pixlui.components.textview.TextView
+                        pixlui:copyandpaste="false"
+                        pixlui:clearclipboardcontent="true"
+                        pixlui:typeface="chimphand-regular.ttf"
+                        android:textColor="@color/material_text_black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="delete user"/>
+        </LinearLayout>
 </LinearLayout>

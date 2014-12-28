@@ -65,6 +65,10 @@ public class HttpIntentService extends IntentService {
 
     private static String EXTRA_REVIEW = "EXTRA_REVIEW";
     private static String EXTRA_USER = "EXTRA_REVIEW";
+    private static String EXTRA_REVIEW_PARAMS = "EXTRA_REVIEW_PARAMS";
+    private static String EXTRA_REVIEW_ID = "EXTRA_REVIEW_ID";
+    private static String EXTRA_USER_ID = "EXTRA_USER_ID";
+    private static String EXTRA_USER_PARAMS = "EXTRA_USER_PARAMS";
 
 //    private static final String EXTRA_NUMBER = "it.ennova.myhd.networking.extra.NUMBER";
 //    private static final String EXTRA_TICKET_ID = "it.ennova.myhd.networking.extra.TICKETID";
@@ -98,25 +102,6 @@ public class HttpIntentService extends IntentService {
     }
 */
 
-    public static void addUserRequest(Context context,
-                                         User userToBeRegistered) {
-        Intent intent = new Intent(context, HttpIntentService.class);
-
-        intent.setAction(ADD_USER_BY_PARAMS_REQUEST);
-        intent.putExtra(EXTRA_USER, userToBeRegistered);
-        context.startService(intent);
-    }
-
-    public static void userListRequest(Context context,
-                                         ArrayList<String> userIdList) {
-        isConnected = isConnected(context);
-        Intent intent = new Intent(context, HttpIntentService.class);
-
-        intent.setAction(USER_REQUEST);
-//        intent.putExtra(EXTRA_USER, params);
-        context.startService(intent);
-    }
-
     public static void reviewListRequest(Context context,
                                          String coffeeMachineId, long timestamp) {
         isConnected = isConnected(context);
@@ -128,6 +113,7 @@ public class HttpIntentService extends IntentService {
         intent.putExtra(EXTRA_REVIEW, params);
         context.startService(intent);
     }
+
     public static void moreReviewListRequest(Context context,
                                          String coffeeMachineId, long timestamp) {
         isConnected = isConnected(context);
@@ -140,10 +126,47 @@ public class HttpIntentService extends IntentService {
         context.startService(intent);
     }
 
+    public static void userListRequest(Context context,
+                                       ArrayList<String> userIdList) {
+        isConnected = isConnected(context);
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(USER_REQUEST);
+//        intent.putExtra(EXTRA_USER, params);
+        context.startService(intent);
+    }
+
     public static void coffeeMachineRequest(Context context) {
         isConnected = isConnected(context);
         Intent intent = new Intent(context, HttpIntentService.class);
         intent.setAction(COFFEE_MACHINE_REQUEST);
+        context.startService(intent);
+    }
+
+    public static void updateReviewRequest(Context context,
+                                      Review review) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(UPDATE_REVIEW_REQUEST);
+        intent.putExtra(EXTRA_REVIEW, review);
+        context.startService(intent);
+    }
+
+    public static void addReviewRequest(Context context,
+                                      Review.AddReviewParams addReviewParams) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(ADD_REVIEW_BY_PARAMS_REQUEST);
+        intent.putExtra(EXTRA_REVIEW_PARAMS, addReviewParams);
+        context.startService(intent);
+    }
+
+    public static void deleteReviewRequest(Context context,
+                                      String reviewId) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(DELETE_REVIEW_REQUEST);
+        intent.putExtra(EXTRA_REVIEW_ID, reviewId);
         context.startService(intent);
     }
 
@@ -152,9 +175,37 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(COFFEE_MACHINE_STATUS_REQUEST);
-//        intent.putExtra(EXTRA_USER, params);
         context.startService(intent);
     }
+
+    public static void updateUserRequest(Context context,
+                                           User user) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(UPDATE_USER_REQUEST);
+        intent.putExtra(EXTRA_USER_PARAMS, user);
+        context.startService(intent);
+    }
+
+    public static void addUserRequest(Context context,
+                                                   User userToBeRegistered) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(ADD_USER_BY_PARAMS_REQUEST);
+        intent.putExtra(EXTRA_USER, userToBeRegistered);
+        context.startService(intent);
+    }
+
+    public static void deleteUserRequest(Context context,
+                                           String userId) {
+        Intent intent = new Intent(context, HttpIntentService.class);
+
+        intent.setAction(DELETE_USER_REQUEST);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        context.startService(intent);
+    }
+
+
 
 
     private RetrofitServiceInterface service;
@@ -376,7 +427,7 @@ public class HttpIntentService extends IntentService {
         Object updateReview(@Path("reviewId") String reviewId, @Body Review review);
 
         @POST("/" + CLASSES + REVIEW)
-        Object addReviewByParams(@Body Review review);
+        Review addReviewByParams(@Body Review review);
 
         @DELETE("/" + CLASSES + REVIEW + "/" + "{reviewId}")
         Object deleteReview(@Path("reviewId") String reviewId);

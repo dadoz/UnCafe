@@ -12,7 +12,9 @@ import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -21,12 +23,12 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.User;
 
 
 public class EditReviewActivity extends ActionBarActivity implements
-        OnLoadViewHandlerInterface, ImageLoader.ImageCache,
-        VolleyImageRequestWrapper {
+        OnLoadViewHandlerInterface, SetActionBarInterface {
     private static final String TAG = "CoffeeMachineActivity";
     private static String EDIT_REVIEW_FRAG_TAG = "EDIT_REVIEW_FRAG_TAG";
     @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
@@ -46,25 +48,13 @@ public class EditReviewActivity extends ActionBarActivity implements
         ButterKnife.inject(this);
 
         bundle = getIntent().getExtras();
-//        User user = bundle.getParcelable(User.USER_OBJ_KEY);
-        //TODO ALWAYS recreating this stuff - check it out
-//        //ACTION BAR
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        if (toolbar != null) {
-//            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-//            setSupportActionBar(toolbar);
-//
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            getSupportActionBar().setDisplayShowTitleEnabled(false);
-//            getSupportActionBar().setDisplayShowCustomEnabled(true);
-//            getSupportActionBar().setCustomView(R.layout.custom_action_bar_template);
-//        }
-//        this.setActionBarCustomViewById(R.id.customActionBarUserLayoutId);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
 
-        //VOLLEY stuff
-        requestQueue = Volley.newRequestQueue(this.getApplicationContext());
-        imageLoader = new ImageLoader(requestQueue, this);
+        //custom actionBar
+        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setActionBarCustomViewById(-1, "Edit review");
+
 
         //INIT VIEW
         if(savedInstanceState != null) {
@@ -147,22 +137,6 @@ public class EditReviewActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void volleyImageRequest(String profilePicturePath, ImageView profilePicImageView, int defaultIconId) {
-        this.imageLoader.get(profilePicturePath, ImageLoader
-                .getImageListener(profilePicImageView, defaultIconId, defaultIconId));
-    }
-
-    @Override
-    public Bitmap getBitmap(String s) {
-        return cache.get(s);
-    }
-
-    @Override
-    public void putBitmap(String s, Bitmap bitmap) {
-        cache.put(s, bitmap);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString(CURRENT_FRAGMENT_TAG, currentFragTag);
@@ -175,4 +149,43 @@ public class EditReviewActivity extends ActionBarActivity implements
     }
 
 
+    @Override
+    public void setActionBarCustomViewById(int id, Object data) {
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+
+        View currentView = actionBar.getCustomView();
+
+        currentView.findViewById(R.id.customActionBarReviewListLayoutId).setVisibility(View.GONE);
+        currentView.findViewById(R.id.cActBarTitleId).setVisibility(View.VISIBLE);
+        ((TextView) currentView.findViewById(R.id.cActBarTitleId)).setText((String) data);
+
+    }
+
+    @Override
+    public void setCustomNavigation(Class<?> id) {
+
+    }
+
+    @Override
+    public boolean isItemSelected() {
+        return false;
+    }
+
+    @Override
+    public int getSelectedItemPosition() {
+        return 0;
+    }
+
+    @Override
+    public void setSelectedItemView(View selectedItemView) {
+
+    }
+
+    @Override
+    public void updateSelectedItem(AdapterView.OnItemLongClickListener listener, ListView listView, View view, int itemPos) {
+
+    }
 }

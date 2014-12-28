@@ -17,10 +17,14 @@ import butterknife.InjectView;
 import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
+import com.application.material.takeacoffee.app.services.HttpIntentService;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.views.FilledCircleView;
+import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
@@ -34,7 +38,8 @@ public class AddReviewFragment extends Fragment implements
     private AddReviewActivity addActivityRef;
     private Bundle bundle;
     private View addReviewView;
-    private String meUserId = "4nmvMJNk1R";
+//    private String meUserId = "4nmvMJNk1R";
+    private String meUserId;
     @InjectView(R.id.commentTextId) View commentTextView;
     @InjectView(R.id.statusRatingBarId) View statusRatingBarView;
     @InjectView(R.id.addReviewButtonId) View addReviewButton;
@@ -43,6 +48,7 @@ public class AddReviewFragment extends Fragment implements
 
     private String coffeeMachineId;
     private Review.AddReviewParams reviewParams;
+    private DataApplication dataApplication;
 //    @InjectView(R.id.usernameTextId) View usernameText;
 //    @InjectView(R.id.userIconId) View userIconView;
 //    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
@@ -56,14 +62,11 @@ public class AddReviewFragment extends Fragment implements
                     + " must implement OnLoadViewHandlerInterface");
         }
         addActivityRef =  (AddReviewActivity) activity;
+        dataApplication = (DataApplication) addActivityRef.getApplication();
 
         //getArgs
         bundle = getArguments();
-//        try {
-//            meUserId = bundle.getString(User.USER_ID_KEY);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        meUserId = dataApplication.getUserId();
     }
 
     @Override
@@ -79,7 +82,20 @@ public class AddReviewFragment extends Fragment implements
         ButterKnife.inject(this, addReviewView);
         //initOnLoadView();
         initView();
+        setHasOptionsMenu(true);
         return addReviewView;
+    }
+
+    @Override
+    public void onResume(){
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        BusSingleton.getInstance().unregister(this);
+        super.onPause();
     }
 
     private void initOnLoadView() {
@@ -115,80 +131,55 @@ public class AddReviewFragment extends Fragment implements
         addReviewButton.setOnClickListener(this);
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
-/*
-    @Override
-    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
-        try {
-            String action = RetrofitLoader.getActionByActionRequestEnum(id);
-            return new RetrofitLoader(this.getActivity(), action, params);
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
-        return null;
-    }
 
-    @Override
-    public void onLoadFinished(Loader<RestResponse> loader,
-                                   RestResponse restResponse) {
-        String reviewId;
-        try {
-            Object data = restResponse.getParsedData(); // in this obj reviewId is stored
-            reviewId = data.toString(); //get reviewId from server
-        } catch (Exception e) {
-            Log.e(TAG, "failed to save data" + e.getMessage());
-            addReviewErrorCallback();
-            return;
-        }
-
-        addReviewSuccessCallback(reviewId);
-    }
-
-
-    @Override
-    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
-
-    }
-*/
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addReviewButtonId:
-                addActivityRef.initOnLoadView(); //get spinner
-
-                //on callback
-                String comment = ((EditText) commentTextView).getText().toString();
-                if(comment.compareTo("") == 0) {
-                    Toast.makeText(addActivityRef.getApplicationContext(),
-                            "Failed - write some comment!", Toast.LENGTH_LONG).show();
-                    addActivityRef.hideOnLoadView(); //get spinner
-                    return;
-                }
-                ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
-                        ((RatingBar) statusRatingBarView).getRating());
-
-                long timestamp = new Date().getTime();
-
-                Bundle params = new Bundle();
-                reviewParams = new Review.AddReviewParams(comment, ReviewStatus.toString(status),
-                        timestamp, meUserId, coffeeMachineId);
-
-                params.putParcelable(Review.REVIEW_PARAMS_KEY, reviewParams);
-//                getLoaderManager().initLoader(ADD_USER_BY_PARAMS_REQUEST.ordinal(), params, this)
-//                        .forceLoad();
+                addReview();
                 break;
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.save_edit_review, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.e(TAG, "save review");
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                addReview();
+                break;
+        }
         return true;
     }
+
+    private void addReview() {
+        addActivityRef.initOnLoadView(); //get spinner
+
+        //on callback
+        String comment = ((EditText) commentTextView).getText().toString();
+        if(comment.compareTo("") == 0) {
+            Toast.makeText(addActivityRef.getApplicationContext(),
+                    "Failed - write some comment!", Toast.LENGTH_LONG).show();
+            addActivityRef.hideOnLoadView(); //get spinner
+            return;
+        }
+        ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
+                ((RatingBar) statusRatingBarView).getRating());
+
+        long timestamp = new Date().getTime();
+
+        reviewParams = new Review.AddReviewParams(comment, ReviewStatus.toString(status),
+                timestamp, meUserId, coffeeMachineId);
+
+        HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
+    }
+
 
     public void addReviewSuccessCallback(String reviewId) {
         Review review = new Review(reviewId, reviewParams.getComment(),
@@ -209,4 +200,19 @@ public class AddReviewFragment extends Fragment implements
         addActivityRef.finish();
 
     }
+
+    @Subscribe
+    public void onNetworkResponse(Review review) {
+        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
+        ((OnLoadViewHandlerInterface) addActivityRef).hideOnLoadView();
+
+        if(review == null) {
+            addReviewErrorCallback();
+            //TODO handle adapter with empty data
+            return;
+        }
+
+        addReviewSuccessCallback(review.getId());
+    }
+
 }

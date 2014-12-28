@@ -12,9 +12,8 @@ import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.view.ViewParent;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.RequestQueue;
@@ -22,11 +21,13 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
+import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 
 
 public class AddReviewActivity extends ActionBarActivity implements
-        OnLoadViewHandlerInterface, ImageLoader.ImageCache,
-        VolleyImageRequestWrapper {
+        OnLoadViewHandlerInterface, SetActionBarInterface {
     private static final String TAG = "CoffeeMachineActivity";
     private static String ADD_REVIEW_FRAG_TAG = "ADD_REVIEW_FRAG_TAG";
     @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
@@ -47,13 +48,12 @@ public class AddReviewActivity extends ActionBarActivity implements
 
         bundle = getIntent().getExtras();
 //        User user = bundle.getParcelable(User.USER_OBJ_KEY);
-        //TODO ALWAYS recreating this stuff - check it out
+
+        //custom actionBar
+        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-
-        //VOLLEY stuff
-        requestQueue = Volley.newRequestQueue(this.getApplicationContext());
-        imageLoader = new ImageLoader(requestQueue, this);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setActionBarCustomViewById(-1, "Add new review");
         //INIT VIEW
         if(savedInstanceState != null) {
             //already init app - try retrieve frag from manager
@@ -135,22 +135,6 @@ public class AddReviewActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void volleyImageRequest(String profilePicturePath, ImageView profilePicImageView, int defaultIconId) {
-        this.imageLoader.get(profilePicturePath, ImageLoader
-                .getImageListener(profilePicImageView, defaultIconId, defaultIconId));
-    }
-
-    @Override
-    public Bitmap getBitmap(String s) {
-        return cache.get(s);
-    }
-
-    @Override
-    public void putBitmap(String s, Bitmap bitmap) {
-        cache.put(s, bitmap);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString(CURRENT_FRAGMENT_TAG, currentFragTag);
@@ -160,6 +144,47 @@ public class AddReviewActivity extends ActionBarActivity implements
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void setActionBarCustomViewById(int id, Object data) {
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+
+        View currentView = actionBar.getCustomView();
+
+        currentView.findViewById(R.id.customActionBarReviewListLayoutId).setVisibility(View.GONE);
+        currentView.findViewById(R.id.cActBarTitleId).setVisibility(View.VISIBLE);
+        ((TextView) currentView.findViewById(R.id.cActBarTitleId)).setText((String) data);
+    }
+
+    @Override
+    public void setCustomNavigation(Class<?> id) {
+        //TODO not implemented
+    }
+
+    @Override
+    public boolean isItemSelected() {
+        //TODO not implemented
+        return false;
+    }
+
+    @Override
+    public int getSelectedItemPosition() {
+        //TODO not implemented
+        return 0;
+    }
+
+    @Override
+    public void setSelectedItemView(View selectedItemView) {
+        //TODO not implemented
+    }
+
+    @Override
+    public void updateSelectedItem(AdapterView.OnItemLongClickListener listener, ListView listView, View view, int itemPos) {
+
     }
 
 
