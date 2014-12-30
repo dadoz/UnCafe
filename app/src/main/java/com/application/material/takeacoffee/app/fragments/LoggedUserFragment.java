@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.Utils;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
@@ -118,7 +119,6 @@ public class LoggedUserFragment extends Fragment
         switch (item.getItemId()) {
             case R.id.save_logged_user:
 //                save user
-                hideKeyboard();
                 boolean isUserUpdated = updateUser();
                 if(! isUserUpdated) {
                     Log.e(TAG, "error on save user");
@@ -133,20 +133,14 @@ public class LoggedUserFragment extends Fragment
         return true;
     }
 
-    private void hideKeyboard() {
-
-    }
-
     private boolean updateUser() {
         String username = loginUsernameEdit.getText().toString();
         if(username.compareTo("") == 0) {
             return false;
         }
 
-        //HTTPIntent service call
-        ((InputMethodManager) mainActivityRef
-                .getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(loginUsernameEdit.getWindowToken(), 0);
+        Utils.hideKeyboard(mainActivityRef, loginUsernameEdit);
+
         dataApplication.setUsername(username);
         return true;
     }
@@ -155,13 +149,13 @@ public class LoggedUserFragment extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.deleteUserButtonId:
-                HttpIntentService.deleteUserRequest(mainActivityRef, meUserId);
+//                HttpIntentService.deleteUserRequest(mainActivityRef, meUserId);
                 break;
         }
     }
 
     @Subscribe
-    public void onNetworkRespose(Object deleteUserResponse) {
+    public void onNetworkRespose(User.DeletedResponse deleteUserResponse) {
         Log.d(TAG, "get response from bus - DELETE_REVIEW_REQ");
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 

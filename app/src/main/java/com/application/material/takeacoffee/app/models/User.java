@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,8 +12,11 @@ public class User implements Parcelable {
     private static final String EMPTY_PIC_PATH = "EMPTY_PIC_PATH";
     public static String USER_OBJ_KEY = "USER_OBJ_KEY";
     public static String USER_ID_KEY = "USER_ID_KEY";
+
+    @SerializedName("objectId")
     private String id;
-	private String username;
+//    private String objectid;
+    private String username;
 //	private String reviewsListId;
     private String profilePicturePath;
 
@@ -103,7 +107,7 @@ public class User implements Parcelable {
 
 
     public static class Params implements Parcelable {
-        ArrayList<String> userIdList;
+        private final ArrayList<String> userIdList;
         public Params(ArrayList<String> list) {
             userIdList = list;
         }
@@ -116,6 +120,14 @@ public class User implements Parcelable {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
 
+        }
+    }
+
+    public static class DeletedResponse {
+        private final Object response;
+
+        public DeletedResponse(Object response) {
+            this.response = response;
         }
     }
 }

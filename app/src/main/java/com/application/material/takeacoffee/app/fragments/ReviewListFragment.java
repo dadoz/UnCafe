@@ -28,8 +28,11 @@ import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.neopixl.pixlui.components.textview.TextView;
 import com.squareup.otto.Subscribe;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -144,8 +147,12 @@ public class ReviewListFragment extends Fragment
             return;
         }
 
-        long timestamp = 2;
+        //get timestamp
+        long timestamp = new DateTime().getMillis();
         HttpIntentService.coffeeMachineStatusRequest(mainActivityRef.getApplicationContext(),
+                coffeeMachineId, timestamp);
+
+        HttpIntentService.reviewListRequest(this.getActivity(),
                 coffeeMachineId, timestamp);
 
         //TODO REFACTORING
@@ -184,6 +191,7 @@ public class ReviewListFragment extends Fragment
         }
 
         setHasMoreReviewView();
+        Collections.reverse(reviewList);
         getAdapterWrapper().setReviewList(reviewList);
         //retrieve user if are not null
         if(userList != null) {
@@ -209,7 +217,7 @@ public class ReviewListFragment extends Fragment
         }
 
 //        leftArrowIcon.setOnClickListener(this);
-
+        Collections.reverse(reviewList);
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 R.layout.review_template, reviewList, coffeeMachineId);
 
@@ -278,9 +286,9 @@ public class ReviewListFragment extends Fragment
                     swipeRefreshLayout.setRefreshing(true);
 
                     //request review
-                    long timestamp = 123456; //TODO replace with joda time
+                    String fromReviewId = null;
                     HttpIntentService.moreReviewListRequest(this.getActivity(),
-                            coffeeMachineId, timestamp);
+                            coffeeMachineId, fromReviewId);
                     isMoreReviewRequest = true;
 
                     //remove item selected
@@ -316,28 +324,6 @@ public class ReviewListFragment extends Fragment
                 //UPDATE
                 comment.setHidden(! comment.isHidden());
                 view.setTag(comment);
-
-                //expand listview
-//        View reviewDialogView = View.inflate(mainActivityRef,
-//                R.layout.review_dialog_template, null);
-//        Review review = (Review) adapterView.getItemAtPosition(position);
-//        User user = getAdapterWrapper().getUserByUserId(review.getUserId());
-//
-//        ((TextView) reviewDialogView
-//                .findViewById(R.id.reviewUsernameDialogId)).setText(user.getUsername());
-//        ((TextView) reviewDialogView
-//                .findViewById(R.id.reviewDialogCommentTextId)).setText(review.getComment());
-//
-//        View doneDialogButton = reviewDialogView
-//                .findViewById(R.id.doneDialogIconId);
-//
-//        doneDialogButton.setOnClickListener(this);
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-//                .setView(reviewDialogView);
-//        customDialog = builder.create();
-//        customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        customDialog.show();
 
                 break;
         }
@@ -418,10 +404,6 @@ public class ReviewListFragment extends Fragment
                             public void onClick(DialogInterface dialog, int id) {
                                 Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
                                 HttpIntentService.deleteReviewRequest(mainActivityRef, review.getId());
-
-                                //TODO move out in callback
-                                getAdapterWrapper().deleteReview(review.getId());
-                                getAdapterWrapper().notifyDataSetChanged();
                                 dialog.dismiss();
                             }
                         })
@@ -457,7 +439,7 @@ public class ReviewListFragment extends Fragment
             case R.id.addReviewFabId:
                 ((OnChangeFragmentWrapperInterface) mainActivityRef)
                         .startActivityWrapper(AddReviewActivity.class,
-                                CoffeeMachineActivity.ACTION_ADD_REVIEW, null);
+                                CoffeeMachineActivity.ACTION_ADD_REVIEW, bundle);
                 break;
 //            case R.id.leftArrowIconId:
 //                Toast.makeText(mainActivityRef, "got statistics on machine",
@@ -479,9 +461,14 @@ public class ReviewListFragment extends Fragment
         int [] dataLabels = {0, 1, 2};
         dataApplication.clearData(dataLabels);
 
-        long timestamp = 1;
+        long timestamp = -1;
         HttpIntentService.coffeeMachineStatusRequest(this.getActivity(),
                 coffeeMachineId, timestamp);
+        //request review
+//        long timestamp = 123456; //TODO replace with joda time
+        HttpIntentService.reviewListRequest(this.getActivity(),
+                coffeeMachineId, timestamp);
+
         isMoreReviewRequest = false;
     }
 
@@ -514,9 +501,23 @@ public class ReviewListFragment extends Fragment
         }
     }
 
+
+    private ArrayList<String> getUserIdListFromReviewList(ArrayList<Review> reviewList) {
+        if(reviewList == null ||
+                reviewList.size() == 0) {
+            return null;
+        }
+        ArrayList<String> userIdList = new ArrayList<String>();
+        for(Review review : reviewList) {
+            userIdList.add(review.getUserId());
+        }
+
+        return userIdList;
+    }
+
     @Subscribe
     public void onNetworkRespose(CoffeeMachineStatus response){
-        Log.d(TAG, "Response  getMessages");
+        Log.d(TAG, "Response  COFFEE_MACHINE_STATUS");
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
         if(response == null) {
             return;
@@ -526,11 +527,6 @@ public class ReviewListFragment extends Fragment
 
         ((TextView) statusPeriodView).setText("01.12 - today");
         goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
-
-        //request review
-        long timestamp = 123456; //TODO replace with joda time
-        HttpIntentService.reviewListRequest(this.getActivity(),
-                coffeeMachineId, timestamp);
     }
 
     @Subscribe
@@ -549,7 +545,8 @@ public class ReviewListFragment extends Fragment
         reviewList = reviewDataContainer.getReviewList();
         hasMoreReviews = reviewDataContainer.getHasMoreReviews();
 
-        HttpIntentService.userListRequest(mainActivityRef, null);
+        ArrayList<String> userIdList = getUserIdListFromReviewList(reviewList);
+        HttpIntentService.userListRequest(mainActivityRef, userIdList);
 
         //notify changes
 //        setHasMoreReviewView();
@@ -562,6 +559,7 @@ public class ReviewListFragment extends Fragment
             swipeRefreshLayout.setRefreshing(false);
 
             setHasMoreReviewView();
+            Collections.reverse(reviewList);
             getAdapterWrapper().setPrevReview(reviewList);
             return;
         }
@@ -578,7 +576,7 @@ public class ReviewListFragment extends Fragment
 
     @Subscribe
     public void onNetworkRespose(ArrayList<User> userList) {
-        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
+        Log.d(TAG, "get response from bus - USER_REQUEST");
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         if(userList == null) {
@@ -593,16 +591,20 @@ public class ReviewListFragment extends Fragment
     }
 
     @Subscribe
-    public void onNetworkRespose(Object deleteReviewResponse) {
+    public void onNetworkRespose(Review.DeletedResponse deleteReviewResponse) {
         Log.d(TAG, "get response from bus - DELETE_REVIEW_REQ");
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
 
         if(deleteReviewResponse == null) {
             //TODO handle adapter with empty data
+            Log.e(TAG, "error - not able to delete review");
             return;
         }
-        //TODO handle this;
 
+        Review review = (Review) bundle2.get(Review.REVIEW_OBJ_KEY);
+        getAdapterWrapper().deleteReview(review.getId());
+        getAdapterWrapper().notifyDataSetChanged();
+        return;
     }
 
 

@@ -11,6 +11,7 @@ import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.restServices.CustomErrorHandler;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.google.gson.*;
+import com.google.gson.annotations.SerializedName;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -19,6 +20,7 @@ import retrofit.http.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.application.material.takeacoffee.app.services.HttpIntentService.ParseAction.*;
@@ -41,15 +43,6 @@ import static com.application.material.takeacoffee.app.services.HttpIntentServic
  */
 public class HttpIntentService extends IntentService {
     private static final String TAG = "HttpIntentService" ;
-//    private static final String ACTION_CREATE_TICKET = "it.ennova.myhd.networking.action.CREATE_TICKET";
-//    private static final String ACTION_GET_FIRST_SLOT = "it.ennova.myhd.networking.action.GET_FIRST_SLOT";
-//    private static final String ACTION_GET_AVAILABLE_SLOTS = "it.ennova.myhd.networking.action.GET_AVAILABLE_SLOTS";
-//    private static final String ACTION_REVOKE_TICKET = "it.ennova.myhd.networking.action.REVOKE_TICKET";
-//    private static final String ACTION_RESCHEDULE_TICKET = "it.ennova.myhd.networking.action.RESCHEDULE_TICKET";
-//    private static final String ACTION_CREATE_IN_APP = "it.ennova.myhd.networking.action.CREATE_IN_APP";
-//    private static final String ACTION_GET_LIST_TICKET = "it.ennova.myhd.netowrking.action.GET_LIST_TICKET";
-//    private static final String ACTION_GET_MESSAGES = "it.ennova.myhd.networking.action.GET_MESSAGES";
-
 
     private static final String REVIEW_REQUEST = "REVIEW_REQUEST";
     private static final String MORE_REVIEW_REQUEST = "MORE_REVIEW_REQUEST";
@@ -72,13 +65,7 @@ public class HttpIntentService extends IntentService {
     private static String EXTRA_TIMESTAMP = "EXTRA_TIMESTAMP";
     private static String EXTRA_COFFEE_MACHINE_ID = "EXTRA_COFFEE_MACHINE_ID";;
     private static String CHECK_USER_REQUEST = "CHECK_USER_REQUEST";
-
-//    private static final String EXTRA_NUMBER = "it.ennova.myhd.networking.extra.NUMBER";
-//    private static final String EXTRA_TICKET_ID = "it.ennova.myhd.networking.extra.TICKETID";
-//    private static final String EXTRA_TIMESTAMP = "it.ennova.myhd.networking.extra.TIMESTAMP";
-//    private static final String EXTRA_GIORNO = "it.ennova.myhd.networking.extra.GIORNO";
-//    private static final String EXTRA_SUBJECT = "it.ennova.myhd.networking.extra.SUBJCT";
-//    private static final String EXTRA_FASCIA = "it.ennova.myhd.networking.extra.FASCIA";
+    private static String EXTRA_USER_LIST = "EXTRA_USER_LIST";
 
     RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
@@ -90,20 +77,6 @@ public class HttpIntentService extends IntentService {
         }
     };
     private static boolean isConnected;
-/*
-    public static void startActionCreateTicket(Context context
-            , String fascia
-            , String timeStamp
-            , String giorno, String subject){
-        Intent intent = new Intent(context, HttpIntentService.class);
-        intent.setAction(ACTION_CREATE_TICKET);
-        intent.putExtra(EXTRA_FASCIA, fascia);
-        intent.putExtra(EXTRA_TIMESTAMP,timeStamp);
-        intent.putExtra(EXTRA_GIORNO,giorno);
-        intent.putExtra(EXTRA_SUBJECT,subject);
-        context.startService(intent);
-    }
-*/
 
     public static void reviewListRequest(Context context,
                                          String coffeeMachineId, long timestamp) {
@@ -111,20 +84,21 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(REVIEW_REQUEST);
-        intent.putExtra(EXTRA_COFFEE_MACHINE_ID, "PZrB82ZWVl");
-        intent.putExtra(EXTRA_TIMESTAMP, Double.parseDouble("1410696082045"));
+        intent.putExtra(EXTRA_COFFEE_MACHINE_ID, coffeeMachineId);
+        intent.putExtra(EXTRA_TIMESTAMP, Double.parseDouble(Long.toString(timestamp)));
+//        intent.putExtra(EXTRA_COFFEE_MACHINE_ID, "PZrB82ZWVl");
+//        intent.putExtra(EXTRA_TIMESTAMP, Double.parseDouble("1410696082045"));
         context.startService(intent);
     }
 
     public static void moreReviewListRequest(Context context,
-                                         String coffeeMachineId, long timestamp) {
+                                         String coffeeMachineId, String fromReviewId) {
         isConnected = isConnected(context);
         Intent intent = new Intent(context, HttpIntentService.class);
-        Review.Params params = new Review.Params("PZrB82ZWVl",
-                Double.parseDouble("1410696082045"));
 
         intent.setAction(MORE_REVIEW_REQUEST);
-        intent.putExtra(EXTRA_REVIEW, params);
+        intent.putExtra(EXTRA_COFFEE_MACHINE_ID, coffeeMachineId);
+        intent.putExtra(EXTRA_REVIEW_ID, fromReviewId);
         context.startService(intent);
     }
 
@@ -134,7 +108,7 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(USER_REQUEST);
-//        intent.putExtra(EXTRA_USER, params);
+        intent.putExtra(EXTRA_USER_LIST, userIdList);
         context.startService(intent);
     }
 
@@ -155,11 +129,11 @@ public class HttpIntentService extends IntentService {
     }
 
     public static void addReviewRequest(Context context,
-                                      Review.AddReviewParams addReviewParams) {
+                                      Review review) {
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(ADD_REVIEW_BY_PARAMS_REQUEST);
-        intent.putExtra(EXTRA_REVIEW_PARAMS, addReviewParams);
+        intent.putExtra(EXTRA_REVIEW, review);
         context.startService(intent);
     }
 
@@ -173,10 +147,12 @@ public class HttpIntentService extends IntentService {
     }
 
     public static void coffeeMachineStatusRequest(Context context,
-                                                  String coffeeMachineId, long timestamp) {
+                                                  String coffeeMachineId,
+                                                  long timestamp) {
         Intent intent = new Intent(context, HttpIntentService.class);
-
         intent.setAction(COFFEE_MACHINE_STATUS_REQUEST);
+        intent.putExtra(EXTRA_COFFEE_MACHINE_ID, coffeeMachineId);
+        intent.putExtra(EXTRA_TIMESTAMP, Long.parseLong("1409331556894"));
         context.startService(intent);
     }
 
@@ -185,7 +161,7 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(UPDATE_USER_REQUEST);
-        intent.putExtra(EXTRA_USER_PARAMS, user);
+        intent.putExtra(EXTRA_USER, user);
         context.startService(intent);
     }
 
@@ -228,7 +204,7 @@ public class HttpIntentService extends IntentService {
     public void onCreate() {
         super.onCreate();
         Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<ArrayList<CoffeeMachine>>(){}.getType();
-        Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
+        Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<ArrayList<User>>(){}.getType();
         Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<ReviewDataContainer>(){}.getType();
 
         Gson gson = new GsonBuilder()
@@ -271,7 +247,6 @@ public class HttpIntentService extends IntentService {
                     String coffeeMachineId = (String) intent.getExtras().get(EXTRA_COFFEE_MACHINE_ID);
                     Double timestamp = (Double) intent.getExtras().get(EXTRA_TIMESTAMP);
                     Review.Params params = new Review.Params(coffeeMachineId, timestamp);
-
                     BusSingleton.getInstance().post(service.listReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -281,15 +256,20 @@ public class HttpIntentService extends IntentService {
 
             if (MORE_REVIEW_REQUEST.equals(action)) {
                 try{
-//                    Review.MoreReviewsParams params = new Review.MoreReviewsParams("PZrB82ZWVl", "qaeWjprTDF");
-//                    BusSingleton.getInstance().post(service.listMoreReview(params));
-                    //TODO MOCKUP
-                    ReviewDataContainer reviewDataContainer = JSONParserToObject
-                            .getReviewListParser(JSONParserToObject.
-                                    getMockupData(this.getApplicationContext().getAssets(),
-                                            "prev_reviews.json"));
-                    BusSingleton.getInstance().post(reviewDataContainer);
+                    if(! isConnected) {
+                        //TODO MOCKUP
+                        ReviewDataContainer reviewDataContainer = JSONParserToObject
+                                .getReviewListParser(JSONParserToObject.
+                                        getMockupData(this.getApplicationContext().getAssets(),
+                                                "prev_reviews.json"));
+                        BusSingleton.getInstance().post(reviewDataContainer);
+                        return;
+                    }
 
+                    String coffeeMachineId = intent.getExtras().getString(EXTRA_COFFEE_MACHINE_ID);
+                    String fromReviewId = intent.getExtras().getString(EXTRA_REVIEW_ID);
+                    Review.MoreReviewsParams params = new Review.MoreReviewsParams(coffeeMachineId, fromReviewId);
+                    BusSingleton.getInstance().post(service.listMoreReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -298,15 +278,20 @@ public class HttpIntentService extends IntentService {
 
             if (USER_REQUEST.equals(action)) {
                 try {
+                    if(! isConnected) {
+                        ArrayList<User> userList = JSONParserToObject
+                                .getUserListParser(JSONParserToObject.
+                                        getMockupData(this.getApplicationContext().getAssets(),
+                                                "user.json"));
+                        BusSingleton.getInstance().post(userList);
+                        return;
+                    }
+
 //                    String [] array = {"4nmvMJNk1R", "K8bwZOSmNo", "8e2XwXZUKL"};
 //                    User.Params params = new User.Params(new ArrayList(Arrays.asList(array)));
-//                    BusSingleton.getInstance().post(service.listUserByIdList(params));
-                    ArrayList<User> userList = JSONParserToObject
-                            .getUserListParser(JSONParserToObject.
-                                    getMockupData(this.getApplicationContext().getAssets(),
-                                            "user.json"));
-                    BusSingleton.getInstance().post(userList);
-
+                    ArrayList<String> userList = (ArrayList<String>) intent.getExtras().get(EXTRA_USER_LIST);
+                    User.Params params = new User.Params(userList);
+                    BusSingleton.getInstance().post(service.listUserByIdList(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -320,14 +305,9 @@ public class HttpIntentService extends IntentService {
                                 .coffeeMachineParser(JSONParserToObject.
                                         getMockupData(this.getApplicationContext().getAssets(),
                                                 "coffee_machines.json"));
-                        if(coffeeMachineList == null) {
-                            Log.e(TAG, "HTTPIntentService - empty data");
-                            return;
-                        }
                         BusSingleton.getInstance().post(coffeeMachineList);
                         return;
                     }
-
 
                     BusSingleton.getInstance().post(service.listCoffeeMachine());
                 } catch (Exception e) {
@@ -337,9 +317,16 @@ public class HttpIntentService extends IntentService {
             }
 
             if (UPDATE_REVIEW_REQUEST.equals(action)) {
-                try{
-                    Review review = null;
-                    BusSingleton.getInstance().post(service.updateReview("LerbzRfN95", review));
+                try {
+                    if(! isConnected) {
+                        Review review = null;
+                        BusSingleton.getInstance().post(service.updateReview("LerbzRfN95", review));
+                        return;
+                    }
+
+                    Review review = (Review) intent.getExtras().get(EXTRA_REVIEW);
+                    BusSingleton.getInstance().post(service.updateReview(review.getId(), review));
+                    //{"updatedAt":"2014-12-30T12:43:00.235Z"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -348,10 +335,15 @@ public class HttpIntentService extends IntentService {
 
             if (ADD_REVIEW_BY_PARAMS_REQUEST.equals(action)){
                 try {
-//                    final String number = intent.getStringExtra(EXTRA_NUMBER);
-//                    Review review = params.getParcelable(Review.REVIEW_PARAMS_KEY);
-                    Review review = null;
+                    if(! isConnected) {
+                        Review review = (Review) intent.getExtras().get(EXTRA_REVIEW);
+                        BusSingleton.getInstance().post(review);
+                        return;
+                    }
+
+                    Review review = (Review) intent.getExtras().get(EXTRA_REVIEW);
                     BusSingleton.getInstance().post(service.addReviewByParams(review));
+//                    {"createdAt":"2014-12-30T00:27:21.653Z","objectId":"eDJaDagkSv"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -360,8 +352,15 @@ public class HttpIntentService extends IntentService {
 
             if (DELETE_REVIEW_REQUEST.equals(action)) {
                 try{
-                    String reviewId = "LerbzRfN95";
-                    BusSingleton.getInstance().post(service.deleteReview(reviewId));
+                    if(! isConnected) {
+                        String reviewId = "LerbzRfN95";
+                        BusSingleton.getInstance().post(service.deleteReview(reviewId));
+                        return;
+                    }
+
+                    String reviewId = intent.getExtras().getString(EXTRA_REVIEW_ID);
+                    BusSingleton.getInstance().post(new Review.DeletedResponse(service.deleteReview(reviewId)));
+                    //{}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -370,15 +369,19 @@ public class HttpIntentService extends IntentService {
 
             if (COFFEE_MACHINE_STATUS_REQUEST.equals(action)) {
                 try{
-//                    String coffeeMachineId = "PZrB82ZWVl";
-//                    CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId);
-//                    BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
-                    CoffeeMachineStatus coffeeMachineStatus = JSONParserToObject
-                            .coffeeMachineStatusParser(JSONParserToObject.
-                                    getMockupData(this.getApplicationContext().getAssets(),
-                                            "review_status.json"));
-                    BusSingleton.getInstance().post(coffeeMachineStatus);
+                    if(! isConnected) {
+                        CoffeeMachineStatus coffeeMachineStatus = JSONParserToObject
+                                .coffeeMachineStatusParser(JSONParserToObject.
+                                        getMockupData(this.getApplicationContext().getAssets(),
+                                                "review_status.json"));
+                        BusSingleton.getInstance().post(coffeeMachineStatus);
+                        return;
+                    }
 
+                    String coffeeMachineId = intent.getExtras().getString(EXTRA_COFFEE_MACHINE_ID);
+                    long timestamp = (Long) intent.getExtras().get(EXTRA_TIMESTAMP);
+                    CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId, timestamp);
+                    BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -387,8 +390,15 @@ public class HttpIntentService extends IntentService {
 
             if (UPDATE_USER_REQUEST.equals(action)) {
                 try{
-                    User user = null;
-                    BusSingleton.getInstance().post(service.updateUser("LerbzRfN95", user));
+                    if(! isConnected) {
+                        User user = (User) intent.getExtras().get(EXTRA_USER);
+                        BusSingleton.getInstance().post(service.updateUser("LerbzRfN95", null));
+                        return;
+                    }
+
+                    User user = (User) intent.getExtras().get(EXTRA_USER);
+                    BusSingleton.getInstance().post(service.updateUser(user.getId(), user));
+//                  {"updatedAt":"2014-12-30T12:50:55.468Z"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -397,13 +407,15 @@ public class HttpIntentService extends IntentService {
 
             if (ADD_USER_BY_PARAMS_REQUEST.equals(action)){
                 try {
-                    User user = (User) intent.getExtras().get(EXTRA_USER);
                     if(! isConnected) {
+                        User user = (User) intent.getExtras().get(EXTRA_USER);
                         BusSingleton.getInstance().post(user);
                         return;
                     }
 
+                    User user = (User) intent.getExtras().get(EXTRA_USER);
                     BusSingleton.getInstance().post(service.addUserByParams(user));
+//                    {"createdAt":"2014-12-30T12:49:26.916Z","objectId":"f140rB6aRo"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -412,9 +424,15 @@ public class HttpIntentService extends IntentService {
 
             if (DELETE_USER_REQUEST.equals(action)) {
                 try{
-//                    String userId = intent.getExtras().getString(EXTRA_USER_ID);
-                    String userId = "LerbzRfN95";
-                    BusSingleton.getInstance().post(service.deleteUser(userId));
+                    if(! isConnected) {
+                        String userId = "LerbzRfN95";
+                        BusSingleton.getInstance().post(service.deleteUser(userId));
+                        return;
+                    }
+
+                    String userId = intent.getExtras().getString(EXTRA_USER_ID);
+                    BusSingleton.getInstance().post(new User.DeletedResponse(service.deleteUser(userId)));
+                    //{}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -422,11 +440,13 @@ public class HttpIntentService extends IntentService {
 
             if (CHECK_USER_REQUEST.equals(action)) {
                 try{
-                    String userId = intent.getExtras().getString(EXTRA_USER_ID);
                     if(! isConnected) {
-                        BusSingleton.getInstance().post(new User(userId, null, "Restored user"));
+                        String userId = intent.getExtras().getString(EXTRA_USER_ID);
+                        BusSingleton.getInstance().post(new User(userId, null, "Not connected User"));
                         return;
                     }
+
+                    String userId = intent.getExtras().getString(EXTRA_USER_ID);
                     BusSingleton.getInstance().post(service.checkUser(userId));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -450,11 +470,11 @@ public class HttpIntentService extends IntentService {
         ReviewDataContainer listReview(@Body Review.Params reviewParams);
 
         @POST("/" + FUNCTIONS + USER_BY_ID_LIST)
-        List<User> listUserByIdList(@Body User.Params userParams);
+        ArrayList<User> listUserByIdList(@Body User.Params userParams);
 
         /**** REVIEW ACTIONS ****/
         @PUT("/" + CLASSES + REVIEW + "/" + "{reviewId}")
-        Object updateReview(@Path("reviewId") String reviewId, @Body Review review);
+        Review updateReview(@Path("reviewId") String reviewId, @Body Review review);
 
         @POST("/" + CLASSES + REVIEW)
         Review addReviewByParams(@Body Review review);
@@ -473,7 +493,7 @@ public class HttpIntentService extends IntentService {
         Object deleteUser(@Path("userId") String userId);
 
         @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS)
-        CoffeeMachineStatus getCoffeeMachineStatus(@Body CoffeeMachineStatus.Params coffeeMachineId);
+        CoffeeMachineStatus getCoffeeMachineStatus(@Body CoffeeMachineStatus.Params params);
 
         @GET("/" + CLASSES + USER + "/" + "{userId}")
         User checkUser(@Path("userId") String userId);
@@ -525,9 +545,7 @@ public class HttpIntentService extends IntentService {
         public ArrayList<CoffeeMachine> deserialize(JsonElement jsonElement, Type type,
                                                JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
-    //            Log.e(TAG, jsonElement.toString() + " - " + type.toString());
             Log.e(TAG, type.toString());
-    //            Class<? extends Type> classType = type.getClass();
             ArrayList<CoffeeMachine> coffeeMachineList = new ArrayList<CoffeeMachine>();
             JsonArray jsonArray = jsonElement.getAsJsonObject().get("results").getAsJsonArray();
             for(int i = 0; i < jsonArray.size(); i++) {
@@ -550,7 +568,9 @@ public class HttpIntentService extends IntentService {
             ArrayList<Review> reviewList = new ArrayList<Review>();
             JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("data").getAsJsonArray();
             for(int i = 0; i < jsonArray.size(); i++) {
-                reviewList.add(jsonDeserializationContext.<Review>deserialize(jsonArray.get(i), Review.class));
+                Review review = jsonDeserializationContext.<Review>deserialize(jsonArray.get(i), Review.class);
+                review.setId(((JsonObject) jsonArray.get(i)).get("objectId").getAsString());
+                reviewList.add(review);
             }
             boolean hasMoreReviews = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("hasMoreReviews").getAsBoolean();
 
@@ -561,19 +581,19 @@ public class HttpIntentService extends IntentService {
         }
     }
 
-    public static class CustomDeserializerUser implements JsonDeserializer<List<User>> {
+    public static class CustomDeserializerUser implements JsonDeserializer<ArrayList<User>> {
 
         @Override
-        public List<User> deserialize(JsonElement jsonElement, Type type,
+        public ArrayList<User> deserialize(JsonElement jsonElement, Type type,
                                       JsonDeserializationContext jsonDeserializationContext)
                 throws JsonParseException {
-//            Log.e(TAG, jsonElement.toString() + " - " + type.toString());
             Log.e(TAG, type.toString());
-//            Class<? extends Type> classType = type.getClass();
             ArrayList<User> userList = new ArrayList<User>();
             JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonArray();
             for(int i = 0; i < jsonArray.size(); i++) {
-                userList.add(jsonDeserializationContext.<User>deserialize(jsonArray.get(i), User.class));
+                User user = jsonDeserializationContext.<User>deserialize(jsonArray.get(i), User.class);
+                user.setId(((JsonObject) jsonArray.get(i)).get("objectId").getAsString());
+                userList.add(user);
             }
             return userList;
 

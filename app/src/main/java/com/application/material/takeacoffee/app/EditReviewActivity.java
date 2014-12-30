@@ -47,7 +47,7 @@ public class EditReviewActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_edit_review);
         ButterKnife.inject(this);
 
-        bundle = getIntent().getExtras();
+        bundle = getIntent().getBundleExtra(CoffeeMachineActivity.EXTRA_DATA);
 
         //custom actionBar
         getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);

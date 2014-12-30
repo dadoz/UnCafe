@@ -32,8 +32,6 @@ public class AddReviewActivity extends ActionBarActivity implements
     private static String ADD_REVIEW_FRAG_TAG = "ADD_REVIEW_FRAG_TAG";
     @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
     //Volley lib
-    private RequestQueue requestQueue;
-    private ImageLoader imageLoader;
     private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
@@ -46,7 +44,9 @@ public class AddReviewActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_add_review);
         ButterKnife.inject(this);
 
-        bundle = getIntent().getExtras();
+        String coffeeMachineId = getIntent().getStringExtra(CoffeeMachineActivity.EXTRA_DATA);
+        bundle = new Bundle();
+        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachineId);
 //        User user = bundle.getParcelable(User.USER_OBJ_KEY);
 
         //custom actionBar

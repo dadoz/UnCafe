@@ -114,7 +114,7 @@ public class JSONParserToObject {
                     .getString("status");
 
             return new Review(reviewId, reviewComment,
-                    ReviewStatus.parseStatus(reviewStatus), timestamp,
+                    reviewStatus, timestamp,
                     reviewUserId, reviewCoffeeMachineId);
         } catch (JSONException e) {
             e.printStackTrace();

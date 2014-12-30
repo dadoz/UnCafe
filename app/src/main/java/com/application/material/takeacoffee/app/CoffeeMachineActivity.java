@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -39,6 +40,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         ImageLoader.ImageCache, VolleyImageRequestWrapper, SetActionBarInterface, View.OnClickListener {
     private static final String TAG = "CoffeeMachineActivity";
     public static final int RESULT_FAILED = 111;
+    public static String EXTRA_DATA = "EXTRA_DATA";
     @InjectView(R.id.onLoadLayoutId)
     View onLoadLayout;
     //Volley lib
@@ -177,7 +179,16 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         //EditReviewActivity
         if(activityClassName.equals(EditReviewActivity.class)) {
             try {
-                intent.putExtras(bundle);
+                intent.putExtra(CoffeeMachineActivity.EXTRA_DATA, bundle);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        if(activityClassName.equals(AddReviewActivity.class)) {
+            try {
+                CoffeeMachine coffeeMachine = (CoffeeMachine) bundle.get(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
+                intent.putExtra(CoffeeMachineActivity.EXTRA_DATA, coffeeMachine.getId());
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -3,6 +3,8 @@ package com.application.material.takeacoffee.app.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import com.google.gson.annotations.SerializedName;
+import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,42 +19,46 @@ public class Review implements Parcelable {
     public static final String ERROR_MESSAGE = "Sorry! there's a problem to save or retrieve review data! Try again later";
     public static String REVIEW_OBJ_KEY = "REVIEW_OBJ_KEY";
     public static String REVIEW_PARAMS_KEY = "REVIEW_PARAMS_KEY";
-    private String objectId;
-	private ReviewStatusEnum status;
+//    private String objectId;
+
+    @SerializedName("objectId")
+    private String id;
+//	private ReviewStatusEnum status;
+	private String status;
     private String comment;
-    private long timestamp;
-    private String userId;
-    private String coffeeMachineId;
+    private String timestamp;
+    private String userIdString;
+    private String coffeeMachineIdString;
 
     public Review(Parcel in) {
-        this.objectId = in.readString();
-        this.userId = in.readString();
-        this.status = ReviewStatus.parseStatus(in.readString());
+        this.id = in.readString();
+        this.userIdString = in.readString();
+        this.status = in.readString();
         this.comment = in.readString();
-        this.timestamp = in.readLong();
-        this.coffeeMachineId = in.readString();
+        this.timestamp = in.readString();
+        this.coffeeMachineIdString = in.readString();
     }
 
-	public Review(String objectId, String comment, ReviewStatusEnum status,
+	public Review(String id, String comment, String status,
                   long timestamp, String userId, String coffeeMachineId) {
-        this.objectId = objectId;
-        this.userId = userId;
+        this.id = id;
+        this.userIdString = userId;
         this.status = status;
         this.comment = comment;
-        this.timestamp = timestamp;
-        this.coffeeMachineId = coffeeMachineId;
+        this.timestamp = Long.toString(timestamp);
+        this.coffeeMachineIdString = coffeeMachineId;
     }
 
 	public String getCoffeeMachineId() {
-		return coffeeMachineId;
+		return coffeeMachineIdString;
 	}
 
     public void setCoffeeMachineId(String coffeeMachineId) {
-        this.coffeeMachineId = coffeeMachineId;
+        this.coffeeMachineIdString = coffeeMachineId;
     }
 
     public String getId(){
-        return this.objectId;
+        return this.id;
     }
 
     public String getComment() {
@@ -60,40 +66,39 @@ public class Review implements Parcelable {
     }
 
     public String getUserId(){
-        return this.userId;
+        return this.userIdString;
     }
 
     public void setComment(String value) {
         this.comment = value;
     }
 
-    public void setStatus(ReviewStatusEnum status) {
+    public void setStatus(String status) {
         this.status = status;
     }
-    public ReviewStatusEnum getStatus() {
+    public String getStatus() {
         return this.status;
     }
 
     public long getTimestamp() {
-        return this.timestamp;
-    }
-
-    public static Date parseDate(long timestamp) {
-        return new Date();
+        return Long.parseLong(this.timestamp);
     }
 
     public String getFormattedTimestamp() {
-        return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(timestamp));
+        //TODO replace with it
+//        long timestamp = new DateTime().getMillis();
+
+        return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(Long.parseLong(timestamp)));
     }
 
     @Override
     public String toString() {
-        return "id: " + this.objectId +
-            "userId: " + this.userId +
+        return "id: " + this.id +
+            "userIdString: " + this.userIdString +
             "status: " + this.status +
             "comment: " + this.comment +
             "timestamp: " + this.timestamp +
-            "coffeeMachineId: " + this.coffeeMachineId;
+            "coffeeMachineIdString: " + this.coffeeMachineIdString;
     }
 
 
@@ -105,12 +110,13 @@ public class Review implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.objectId);
-        dest.writeString(this.userId);
-        dest.writeString(this.status.name());
+        dest.writeString(this.id);
+        dest.writeString(this.userIdString);
+//        dest.writeString(this.status.name());
+        dest.writeString(this.status);
         dest.writeString(comment);
-        dest.writeLong(this.timestamp);
-        dest.writeString(this.coffeeMachineId);
+        dest.writeString(this.timestamp);
+        dest.writeString(this.coffeeMachineIdString);
     }
 
     public static Creator CREATOR = new Creator() {
@@ -125,6 +131,13 @@ public class Review implements Parcelable {
         }
     };
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTimestamp() {
+
+    }
 
 
     public static class ReviewStatus {
@@ -267,6 +280,14 @@ public class Review implements Parcelable {
         public MoreReviewsParams(String coffeeMachineId, String fromReviewId) {
             this.coffeeMachineId = coffeeMachineId;
             this.fromReviewId = fromReviewId;
+        }
+    }
+
+    public static class DeletedResponse {
+        Object response;
+
+        public DeletedResponse(Object response) {
+            this.response = response;
         }
     }
 }

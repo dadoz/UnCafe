@@ -59,7 +59,9 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.reviewCommentTextView.setText(comment.isEllipsized() ?
                     comment.getEllipsizedComment() : review.getComment());
             holder.reviewDateTextView.setText(review.getFormattedTimestamp());
-            holder.statusRatingBarView.setRating(ReviewStatus.parseStatusToRating(review.getStatus()));
+            holder.statusRatingBarView.setRating(
+                    ReviewStatus.parseStatusToRating(
+                        Review.ReviewStatus.parseStatus(review.getStatus())));
 
             holder.expandDescriptionTextView.setVisibility(comment.isEllipsized() ? View.VISIBLE : View.GONE);
             convertView.setTag(comment);
@@ -129,13 +131,22 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     }
 
     public boolean updateReview(Review data) {
-        for(Review review : reviewList) {
-            if(review.getId().equals(data.getId())) {
-                review.setComment(data.getComment());
-                review.setStatus(data.getStatus());
-                notifyDataSetChanged();
-                return true;
+        if(data.getId() == null) {
+            return false;
+        }
+
+        try {
+            for(Review review : reviewList) {
+                if(review.getId().equals(data.getId())) {
+                    review.setComment(data.getComment());
+                    review.setStatus(data.getStatus());
+                    notifyDataSetChanged();
+                    return true;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
         return false;
     }

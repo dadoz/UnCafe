@@ -11,11 +11,10 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
-import com.application.material.takeacoffee.app.EditReviewActivity;
-import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
@@ -65,6 +64,7 @@ public class EditReviewFragment extends Fragment implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -103,7 +103,9 @@ public class EditReviewFragment extends Fragment implements
 
     private void initView() {
         editActivityRef.hideOnLoadView(null);
-        ((RatingBar) editStatusRatingBarView).setRating(ReviewStatus.parseStatusToRating(review.getStatus()));
+        ((RatingBar) editStatusRatingBarView).setRating(
+                ReviewStatus.parseStatusToRating(
+                        Review.ReviewStatus.parseStatus(review.getStatus())));
         ((EditText) editReviewCommentText).setText(review.getComment());
         saveReviewButton.setOnClickListener(this);
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
@@ -112,11 +114,11 @@ public class EditReviewFragment extends Fragment implements
     public boolean updateReview() {
         String editComment = ((EditText) editReviewCommentText)
                 .getText().toString();
-        ReviewStatus.ReviewStatusEnum editStatus = ReviewStatus.parseStatus(
-                ((RatingBar) editStatusRatingBarView).getRating());
+        String editStatus = ReviewStatus.parseStatus(
+                ((RatingBar) editStatusRatingBarView).getRating()).name();
 
         if(review.getComment().equals(editComment) &&
-               review.getStatus().name().equals(editStatus.name())) {
+               review.getStatus().equals(editStatus)) {
             return false;
         }
 
@@ -158,10 +160,14 @@ public class EditReviewFragment extends Fragment implements
             return;
         }
 
+        ((OnLoadViewHandlerInterface) editActivityRef).initOnLoadView(null);
+        Utils.hideKeyboard(editActivityRef, (EditText) editReviewCommentText);
+
+        //reqeust service
         HttpIntentService.updateReviewRequest(editActivityRef, review);
 
         //TODO move on callback
-        saveReviewSuccessCallback();
+//        saveReviewSuccessCallback();
     }
 
     private void saveReviewSuccessCallback() {
@@ -175,7 +181,7 @@ public class EditReviewFragment extends Fragment implements
     }
 
     @Subscribe
-    public void onNetworkResponse(Object updateReviewResponse) {
+    public void onNetworkResponse(Review updateReviewResponse) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
         ((OnLoadViewHandlerInterface) editActivityRef).hideOnLoadView(null);
 
@@ -184,6 +190,7 @@ public class EditReviewFragment extends Fragment implements
             return;
         }
         //TODO handle adapter with empty data
+        saveReviewSuccessCallback();
     }
 
 

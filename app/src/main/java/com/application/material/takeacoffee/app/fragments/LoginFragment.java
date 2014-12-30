@@ -141,7 +141,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void onNetworkRespose(User user) {
-        Log.d(TAG, "ADD_USER_RESPONSE");
+        Log.d(TAG, "ADD_USER_RESPONSE - CHECK_USER_RESPONSE");
         ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(loaderView);
 
         if(user == null) {

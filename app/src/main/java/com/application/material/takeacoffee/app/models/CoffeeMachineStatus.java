@@ -52,10 +52,12 @@ public class CoffeeMachineStatus implements Parcelable {
     }
 
     public static class Params {
+        private final long timestamp;
         private String coffeeMachineId;
 
-        public Params(String coffeeMachineId) {
+        public Params(String coffeeMachineId, long timestamp) {
             this.coffeeMachineId = coffeeMachineId;
+            this.timestamp = timestamp;
         }
     }
 
