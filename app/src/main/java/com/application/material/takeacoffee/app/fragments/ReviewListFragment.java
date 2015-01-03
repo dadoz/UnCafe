@@ -198,6 +198,8 @@ public class ReviewListFragment extends Fragment
             getAdapterWrapper().setUserList(userList);
             getAdapterWrapper().notifyDataSetChanged();
         }
+
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     public void initView() {
@@ -455,6 +457,8 @@ public class ReviewListFragment extends Fragment
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setOnRefreshListener(null);
+
         Toast.makeText(mainActivityRef, "refresh", Toast.LENGTH_SHORT).show();
         isRefreshAction = true;
         //clear data on application

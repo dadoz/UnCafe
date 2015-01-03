@@ -46,8 +46,8 @@ public class AddReviewFragment extends Fragment implements
     @InjectView(R.id.commentTextId) View commentTextView;
     @InjectView(R.id.statusRatingBarId) View statusRatingBarView;
     @InjectView(R.id.addReviewButtonId) View addReviewButton;
-    @InjectView(R.id.filledCircleId) View filledCircleView;
-    @InjectView(R.id.seekBarId) View seekBarView;
+//    @InjectView(R.id.filledCircleId) View filledCircleView;
+//    @InjectView(R.id.seekBarId) View seekBarView;
 
     private String coffeeMachineId;
     private Review reviewParams;
@@ -112,27 +112,27 @@ public class AddReviewFragment extends Fragment implements
     }
 
     private void initView() {
-        try {
-            ((SeekBar) seekBarView).setProgress((int) ((FilledCircleView) filledCircleView).getValue());
-            ((SeekBar) seekBarView).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser)
-                        ((FilledCircleView) filledCircleView).setValue(progress);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            ((SeekBar) seekBarView).setProgress((int) ((FilledCircleView) filledCircleView).getValue());
+//            ((SeekBar) seekBarView).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//                @Override
+//                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                    if (fromUser)
+//                        ((FilledCircleView) filledCircleView).setValue(progress);
+//                }
+//
+//                @Override
+//                public void onStartTrackingTouch(SeekBar seekBar) {
+//                }
+//
+//                @Override
+//                public void onStopTrackingTouch(SeekBar seekBar) {
+//                }
+//            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         addActivityRef.hideOnLoadView(null);
         addReviewButton.setOnClickListener(this);
@@ -190,8 +190,6 @@ public class AddReviewFragment extends Fragment implements
                 ((RatingBar) statusRatingBarView).getRating());
 
         long timestamp = new DateTime().getMillis();
-
-
         reviewParams = new Review(null, comment, ReviewStatus.toString(status),
                 timestamp, meUserId, coffeeMachineId);
         return true;

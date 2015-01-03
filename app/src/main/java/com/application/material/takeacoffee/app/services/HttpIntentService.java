@@ -152,7 +152,7 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
         intent.setAction(COFFEE_MACHINE_STATUS_REQUEST);
         intent.putExtra(EXTRA_COFFEE_MACHINE_ID, coffeeMachineId);
-        intent.putExtra(EXTRA_TIMESTAMP, Long.parseLong("1409331556894"));
+        intent.putExtra(EXTRA_TIMESTAMP, Long.toString(timestamp));
         context.startService(intent);
     }
 

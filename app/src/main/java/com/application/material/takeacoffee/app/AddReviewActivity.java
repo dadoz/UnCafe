@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
@@ -27,7 +28,7 @@ import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 
 
 public class AddReviewActivity extends ActionBarActivity implements
-        OnLoadViewHandlerInterface, SetActionBarInterface {
+        OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
     private static final String TAG = "CoffeeMachineActivity";
     private static String ADD_REVIEW_FRAG_TAG = "ADD_REVIEW_FRAG_TAG";
     @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
@@ -58,12 +59,12 @@ public class AddReviewActivity extends ActionBarActivity implements
         if(savedInstanceState != null) {
             //already init app - try retrieve frag from manager
             Fragment fragment = getSupportFragmentManager()
-                    .findFragmentByTag(currentFragTag);
+                    .findFragmentByTag(getCurrentFragTag());
             initView(fragment, savedInstanceState);
             return;
         }
 
-        currentFragTag = AddReviewActivity.ADD_REVIEW_FRAG_TAG;
+        setCurrentFragTag(AddReviewActivity.ADD_REVIEW_FRAG_TAG);
         initView(new AddReviewFragment(), null);
     }
 
@@ -73,7 +74,7 @@ public class AddReviewActivity extends ActionBarActivity implements
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.addReviewFragmentContainerId,
-                        fragment, currentFragTag)
+                        fragment, getCurrentFragTag())
                 .commit();
     }
 
@@ -118,6 +119,35 @@ public class AddReviewActivity extends ActionBarActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void setCurrentFragTag(String tag) {
+        currentFragTag = tag;
+    }
+    @Override
+    public String getCurrentFragTag() {
+        return currentFragTag;
+    }
+
+    @Override
+    public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle) {
+
+    }
+
+    @Override
+    public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
+
+    }
+
+    @Override
+    public void pushCurrentFragTag(String tag) {
+    }
+
+    @Override
+    public String popCurrentFragTag() {
+        return null;
+    }
+
+
 
     @Override
     public void initOnLoadView(View view) {
@@ -137,13 +167,13 @@ public class AddReviewActivity extends ActionBarActivity implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, currentFragTag);
+        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, getCurrentFragTag());
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+        setCurrentFragTag(savedInstanceState.getString(CURRENT_FRAGMENT_TAG));
     }
 
     @Override

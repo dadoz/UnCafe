@@ -74,7 +74,7 @@ public class MapFragment extends Fragment {
         ((SetActionBarInterface) mainActivityRef)
                 .setActionBarCustomViewById(R.id.customActionBarMapLayoutId, null);
         ((SetActionBarInterface) mainActivityRef)
-                .setCustomNavigation(SettingListFragment.class);
+                .setCustomNavigation(MapFragment.class);
 
 //        try {
 //            SupportMapFragment supportMapFragment = new SupportMapFragment() {

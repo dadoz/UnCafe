@@ -2,18 +2,21 @@ package com.application.material.takeacoffee.app.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
 public class CoffeeMachine implements Parcelable{
     public static String COFFEE_MACHINE_ID_KEY = "COFFEE_MACHINE_ID";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
     public static String COFFEE_MACHINE_STRING_KEY = "COFFEE_MACHINE_STRING_KEY";
-    private final String objectId;
+
+    @SerializedName("objectId")
+    private final String id;
     private String iconPath;
 	private String name;
 	private String address;
 
-	public CoffeeMachine(String objectId, final String name, String address , String iconPath) {
-        this.objectId = objectId;
+	public CoffeeMachine(String id, final String name, String address , String iconPath) {
+        this.id = id;
         this.iconPath = iconPath;
 		this.name = name;
 		this.address = address;
@@ -32,7 +35,7 @@ public class CoffeeMachine implements Parcelable{
 	}
 
     public String getId(){
-        return this.objectId;
+        return this.id;
     }
 
     @Override

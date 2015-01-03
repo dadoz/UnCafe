@@ -34,10 +34,13 @@ import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+
 
 public class CoffeeMachineActivity extends ActionBarActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
-        ImageLoader.ImageCache, VolleyImageRequestWrapper, SetActionBarInterface, View.OnClickListener {
+        ImageLoader.ImageCache, VolleyImageRequestWrapper,
+        SetActionBarInterface, View.OnClickListener {
     private static final String TAG = "CoffeeMachineActivity";
     public static final int RESULT_FAILED = 111;
     public static String EXTRA_DATA = "EXTRA_DATA";
@@ -48,7 +51,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private ImageLoader imageLoader;
     private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
-    private static String currentFragTag = null;
+    private static ArrayList<String> currentFragTagList = new ArrayList<String>();
     public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
     public static String ACTION_ADD_REVIEW_RESULT = "ADD_RESULT";
     public static final String ERROR_MESSAGE_KEY = "EMK";
@@ -79,13 +82,20 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
         //INIT VIEW
         if(savedInstanceState != null) {
+            String currentFragTag = getCurrentFragTag();
+
+            if(currentFragTag == null) {
+                Log.e(TAG, "BUG - this shouldnt happen!");
+                return;
+            }
+
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                     currentFragTag);
             initView(fragment);
             return;
         }
 
-        currentFragTag = CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG;
+        pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
         initView(new CoffeeMachineFragment());
     }
 
@@ -103,8 +113,11 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
 
     private void initView(Fragment fragment) {
-        if(fragment == null) {
+        String currentFragTag = getCurrentFragTag();
+        if(fragment == null ||
+                currentFragTag == null) {
             //if sm error init again app
+            pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
             fragment = new CoffeeMachineFragment();
         }
 
@@ -133,7 +146,9 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "hey home button");
+        Log.d(TAG, "OnBackPressed - ");
+
+        String currentFragTag = getCurrentFragTag();
         if(currentFragTag.compareTo(ReviewListFragment.REVIEW_LIST_FRAG_TAG) == 0 &&
                 isItemSelected()) {
             selectedItemPosition = -1; //false
@@ -143,7 +158,12 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             updateSelectedItem((AdapterView.OnItemLongClickListener) fragment,
                     ((ReviewListFragment) fragment).getListView(), null, -1);
             return;
+        }
 
+        //popCurrentFragment :)
+        if(popCurrentFragTag() == null) {
+            Log.e(TAG, "BUG - this shouldnt happen!");//TODO HANDLE THIS
+            return;
         }
 
         super.onBackPressed();
@@ -165,7 +185,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             Log.e(TAG, "cannot change fragment!");
             return;
         }
-        this.setFragTag(tag);
+
+        pushCurrentFragTag(tag);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.coffeeAppFragmentContainerId, fragment, tag)
@@ -204,6 +225,12 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                 Bundle bundle;
                 ReviewListAdapter adapter;
                 try {
+                    String currentFragTag = getCurrentFragTag();
+                    if(currentFragTag == null) {
+                        Log.e(TAG, "BUG - this shouldnt happen");
+                        return;
+                    }
+
                     Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                             currentFragTag);
                     adapter = getAdapterByFragment(fragment);
@@ -271,8 +298,32 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void setFragTag(String tag) {
-        currentFragTag = tag;
+    public void pushCurrentFragTag(String tag) {
+        currentFragTagList.add(tag);
+    }
+
+    @Override
+    public void setCurrentFragTag(String tag) {
+    }
+
+    @Override
+    public String getCurrentFragTag() {
+        return currentFragTagList.size() == 0 ?
+                null : currentFragTagList.get(currentFragTagList.size() -1);
+    }
+
+    @Override
+    public String popCurrentFragTag() {
+        if(currentFragTagList.size() == 0) {
+            return null;
+        }
+
+        if(currentFragTagList.size() == 1) {
+            return currentFragTagList.get(0);
+        }
+
+        currentFragTagList.remove(currentFragTagList.size() - 1);
+        return currentFragTagList.get(currentFragTagList.size() -1);
     }
 
     @Override
@@ -402,6 +453,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
                 break;
             case R.id.customActionBarReviewListLayoutId:
+                ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
+                        .setVisibility(View.GONE);
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarPeriodTextId))
                         .setText(((Bundle) data)
                                 .getString(CoffeeMachineStatus.COFFEE_MACHINE_STATUS_STRING_KEY));
@@ -450,13 +503,14 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, currentFragTag);
+        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, getCurrentFragTag());
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+//        currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+        pushCurrentFragTag(savedInstanceState.getString(CURRENT_FRAGMENT_TAG));
     }
 
     @Override

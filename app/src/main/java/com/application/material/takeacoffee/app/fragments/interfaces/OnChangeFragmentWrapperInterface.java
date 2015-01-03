@@ -8,7 +8,10 @@ import android.support.v4.app.Fragment;
  */
 public interface OnChangeFragmentWrapperInterface {
     public void changeFragment(Fragment fragment, Bundle bundle, String tag);
-    public void setFragTag(String tag);
+    public void pushCurrentFragTag(String tag);
+    public void setCurrentFragTag(String tag);
+    public String popCurrentFragTag();
+    public String getCurrentFragTag();
     public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle);
 
 }

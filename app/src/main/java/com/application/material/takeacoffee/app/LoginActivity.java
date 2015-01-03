@@ -9,19 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import com.application.material.takeacoffee.app.application.DataApplication;
-import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
 import com.application.material.takeacoffee.app.fragments.LoginFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.models.User;
-import com.application.material.takeacoffee.app.services.HttpIntentService;
-import com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.squareup.otto.Subscribe;
 
-import static com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper.LOGGED_USER_ID;
 
 
 public class LoginActivity extends ActionBarActivity implements
@@ -115,14 +108,14 @@ public class LoginActivity extends ActionBarActivity implements
             Log.e(TAG, "cannot change fragment!");
             return;
         }
-//        getResources().putString(CURRENT_FRAGMENT_TAG, CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
-        this.setFragTag(tag);
+        setCurrentFragTag(tag);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.coffeeAppFragmentContainerId, fragment, tag)
                 .addToBackStack("TAG")
                 .commit();
     }
+
 
     @Override
     public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle) {
@@ -165,21 +158,34 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void setFragTag(String tag) {
+    public void setCurrentFragTag(String tag) {
         currentFragTag = tag;
+    }
+    @Override
+    public String getCurrentFragTag() {
+        return currentFragTag;
+    }
+
+    @Override
+    public void pushCurrentFragTag(String tag) {
+    }
+
+    @Override
+    public String popCurrentFragTag() {
+        return null;
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, currentFragTag);
+        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, getCurrentFragTag());
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+        setCurrentFragTag(savedInstanceState.getString(CURRENT_FRAGMENT_TAG));
     }
 
     @Subscribe

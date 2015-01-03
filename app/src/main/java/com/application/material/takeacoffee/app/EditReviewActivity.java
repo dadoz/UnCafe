@@ -22,13 +22,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
+import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.User;
 
 
 public class EditReviewActivity extends ActionBarActivity implements
-        OnLoadViewHandlerInterface, SetActionBarInterface {
+        OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
     private static final String TAG = "CoffeeMachineActivity";
     private static String EDIT_REVIEW_FRAG_TAG = "EDIT_REVIEW_FRAG_TAG";
     @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
@@ -60,12 +61,12 @@ public class EditReviewActivity extends ActionBarActivity implements
         if(savedInstanceState != null) {
             //already init app - try retrieve frag from manager
             Fragment fragment = getSupportFragmentManager()
-                    .findFragmentByTag(currentFragTag);
+                    .findFragmentByTag(getCurrentFragTag());
             initView(fragment, savedInstanceState);
             return;
         }
 
-        currentFragTag = EditReviewActivity.EDIT_REVIEW_FRAG_TAG;
+        setCurrentFragTag(EditReviewActivity.EDIT_REVIEW_FRAG_TAG);
         initView(new EditReviewFragment(), null);
     }
 
@@ -75,7 +76,7 @@ public class EditReviewActivity extends ActionBarActivity implements
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.editReviewFragmentContainerId, fragment, currentFragTag)
+                .replace(R.id.editReviewFragmentContainerId, fragment, getCurrentFragTag())
                 .commit();
     }
 
@@ -122,6 +123,35 @@ public class EditReviewActivity extends ActionBarActivity implements
     }
 
     @Override
+    public void setCurrentFragTag(String tag) {
+        currentFragTag = tag;
+    }
+    @Override
+    public String getCurrentFragTag() {
+        return currentFragTag;
+    }
+
+    @Override
+    public void startActivityWrapper(Class activityClassName, int requestCode, Bundle bundle) {
+
+    }
+
+    @Override
+    public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
+
+    }
+
+    @Override
+    public void pushCurrentFragTag(String tag) {
+    }
+
+    @Override
+    public String popCurrentFragTag() {
+        return null;
+    }
+
+
+    @Override
     public void initOnLoadView(View view) {
         onLoadLayout.setVisibility(View.VISIBLE);
     }
@@ -140,13 +170,13 @@ public class EditReviewActivity extends ActionBarActivity implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, currentFragTag);
+        savedInstanceState.putString(CURRENT_FRAGMENT_TAG, getCurrentFragTag());
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentFragTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+        setCurrentFragTag(savedInstanceState.getString(CURRENT_FRAGMENT_TAG));
     }
 
 
