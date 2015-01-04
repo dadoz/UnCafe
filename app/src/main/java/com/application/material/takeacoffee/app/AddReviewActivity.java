@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -14,17 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.*;
+import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
+import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
+import com.neopixl.pixlui.components.imageview.*;
+
+import java.io.IOException;
 
 
 public class AddReviewActivity extends ActionBarActivity implements
@@ -37,6 +44,7 @@ public class AddReviewActivity extends ActionBarActivity implements
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
     private Bundle bundle;
+    private DataApplication dataApplication;
 
 
     @Override
@@ -56,6 +64,8 @@ public class AddReviewActivity extends ActionBarActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setActionBarCustomViewById(-1, "Add new review");
         //INIT VIEW
+        dataApplication = (DataApplication) this.getApplication();
+
         if(savedInstanceState != null) {
             //already init app - try retrieve frag from manager
             Fragment fragment = getSupportFragmentManager()
@@ -162,6 +172,20 @@ public class AddReviewActivity extends ActionBarActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        try {
+            Bitmap picture = ImagePickerSingleton.getInstance(this.getApplicationContext())
+                    .onActivityResultWrapped(requestCode, resultCode, data);
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(getCurrentFragTag());
+            ((ImageView) fragment.getView().findViewById(R.id.imagePreviewViewId))
+                    .setImageBitmap(picture);
+            dataApplication.setReviewPictureTemp(picture);
+            picture = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -216,6 +240,5 @@ public class AddReviewActivity extends ActionBarActivity implements
     public void updateSelectedItem(AdapterView.OnItemLongClickListener listener, ListView listView, View view, int itemPos) {
 
     }
-
 
 }

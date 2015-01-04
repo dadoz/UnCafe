@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -20,6 +21,7 @@ import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -35,9 +37,14 @@ public class EditReviewFragment extends Fragment implements
     private Review review;
     @InjectView(R.id.editReviewCommentTextId) View editReviewCommentText;
     @InjectView(R.id.editStatusRatingBarViewId) View editStatusRatingBarView;
-    @InjectView(R.id.saveReviewButtonId) View saveReviewButton;
+//    @InjectView(R.id.saveReviewButtonId) View saveReviewButton;
+    @InjectView(R.id.deletePictureIconId) View deletePictureButton;
+    @InjectView(R.id.pickPictureFromCameraIconId) View pickPictureFromCameraButton;
+    @InjectView(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
+    @InjectView(R.id.imagePreviewViewId) View imagePreviewView;
     private DataApplication dataApplication;
     private String meUserId;
+    private boolean isReviewPictureSet = false;
 //    @InjectView(R.id.usernameTextId) View usernameText;
 //    @InjectView(R.id.userIconId) View userIconView;
 //    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
@@ -78,6 +85,9 @@ public class EditReviewFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         addReviewView = inflater.inflate(R.layout.fragment_edit_review, container, false);
         ButterKnife.inject(this, addReviewView);
+        if(savedInstance != null) {
+            isReviewPictureSet = dataApplication.isReviewPictureSet();
+        }
         initOnLoadView();
         setHasOptionsMenu(true);
         return addReviewView;
@@ -107,7 +117,15 @@ public class EditReviewFragment extends Fragment implements
                 ReviewStatus.parseStatusToRating(
                         Review.ReviewStatus.parseStatus(review.getStatus())));
         ((EditText) editReviewCommentText).setText(review.getComment());
-        saveReviewButton.setOnClickListener(this);
+
+//        saveReviewButton.setOnClickListener(this);
+        deletePictureButton.setOnClickListener(this);
+        pickPictureFromCameraButton.setOnClickListener(this);
+        pickPictureFromGalleryButton.setOnClickListener(this);
+        if(isReviewPictureSet) {
+            ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
+        }
+
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
 
@@ -130,8 +148,25 @@ public class EditReviewFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.saveReviewButtonId:
-                saveReview();
+//            case R.id.saveReviewButtonId:
+//                saveReview();
+//                break;
+            case R.id.deletePictureIconId:
+                dataApplication.deleteReviewPictureTemp();
+                ((ImageView) imagePreviewView).setImageBitmap(null);
+                Log.e(TAG, "hey");
+                break;
+            case R.id.pickPictureFromCameraIconId:
+                ImagePickerSingleton imagePicker = ImagePickerSingleton
+                        .getInstance(editActivityRef);
+                imagePicker.onLaunchCamera();
+                Log.e(TAG, "hey");
+                break;
+            case R.id.pickPictureFromGalleryIconId:
+                imagePicker = ImagePickerSingleton
+                        .getInstance(editActivityRef);
+                imagePicker.onPickPhoto();
+                Log.e(TAG, "hey");
                 break;
         }
     }

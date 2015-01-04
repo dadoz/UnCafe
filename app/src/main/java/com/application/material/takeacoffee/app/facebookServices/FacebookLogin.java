@@ -1,37 +1,166 @@
 package com.application.material.takeacoffee.app.facebookServices;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.ImageView;
+import com.facebook.FacebookRequestError;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.ProfilePictureView;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by davide on 27/12/14.
  */
 public class FacebookLogin {
     private final Fragment currentFragment;
+    public String TAG = "FacebookLogin";
+    private ProfilePictureView userProfilePictureView;
+    private ProgressDialog progressDialog;
     //FACEBOOK uiLifecycle
 //    private UiLifecycleHelper uiHelper;
 
     /***** FACEBOOK LOGIN
      * @param currentFragment*****/
-
     public FacebookLogin(Fragment currentFragment) {
         this.currentFragment = currentFragment;
     }
 
+
+    public void setUserProfilePictureView(ProfilePictureView view) {
+        userProfilePictureView = view;
+    }
+
+    private void onLoginButtonClicked() {
+        progressDialog = ProgressDialog.show(
+                currentFragment.getActivity(), "", "Logging in...", true);
+        List<String> permissions = Arrays.asList("public_profile", "user_friends", "user_about_me",
+                "user_relationships", "user_birthday", "user_location");
+        ParseFacebookUtils.logIn(permissions, currentFragment.getActivity(), new LogInCallback() {
+
+            @Override
+            public void done(ParseUser user, ParseException err) {
+                progressDialog.dismiss();
+                if (user == null) {
+                    Log.d(TAG,
+                            "Uh oh. The user cancelled the Facebook login.");
+                } else if (user.isNew()) {
+                    Log.d(TAG,
+                            "User signed up and logged in through Facebook!");
+                    showUserDetailsActivity();
+                } else {
+                    Log.d(TAG,
+                            "User logged in through Facebook!");
+                    showUserDetailsActivity();
+                }
+            }
+        });
+    }
+
+    private void onLogoutButtonClicked() {
+        // Log the user out
+        ParseUser.logOut();
+
+        // Go to the login view
+//        startLoginActivity();
+    }
+
+    private void showUserDetailsActivity() {
+
+    }
+
+    private void makeMeRequest() {
+        Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
+                new Request.GraphUserCallback() {
+                    @Override
+                    public void onCompleted(GraphUser user, Response response) {
+                        if (user != null) {
+                            //TODO success - move out
+                            // Create a JSON object to hold the profile info
+                            JSONObject userProfile = new JSONObject();
+                            try {
+                                // Populate the JSON object
+                                userProfile.put("facebookId", user.getId());
+                                userProfile.put("name", user.getName());
+                                if (user.getLocation().getProperty("name") != null) {
+                                    userProfile.put("location", (String) user
+                                            .getLocation().getProperty("name"));
+                                }
+                                if (user.getProperty("gender") != null) {
+                                    userProfile.put("gender",
+                                            (String) user.getProperty("gender"));
+                                }
+                                if (user.getBirthday() != null) {
+                                    userProfile.put("birthday",
+                                            user.getBirthday());
+                                }
+                                if (user.getProperty("relationship_status") != null) {
+                                    userProfile
+                                            .put("relationship_status",
+                                                    (String) user
+                                                            .getProperty("relationship_status"));
+                                }
+                                // Now add the data to the UI elements
+                                // ...
+
+                            } catch (JSONException e) {
+                                Log.d(TAG,
+                                        "Error parsing returned user data.");
+                            }
+
+                        } else if (response.getError() != null) {
+                            //TODO error handling - move out
+                            if ((response.getError().getCategory() ==
+                                    FacebookRequestError.Category.AUTHENTICATION_RETRY) ||
+                                    (response.getError().getCategory() ==
+                                            FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
+                                Log.d(TAG,
+                                        "The facebook session was invalidated.");
+                                onLogoutButtonClicked();
+                            } else {
+                                Log.d(TAG,
+                                        "Some other error: "
+                                                + response.getError()
+                                                .getErrorMessage());
+                            }
+
+                        }
+                    }
+
+                });
+        request.executeAsync();
+    }
+
+    private void updateViewsWithProfileInfo() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser.get("profile") != null) {
+            JSONObject userProfile = currentUser.getJSONObject("profile");
+            try {
+                if (userProfile.getString("facebookId") != null) {
+                    String facebookId = userProfile.get("facebookId")
+                            .toString();
+                    userProfilePictureView.setProfileId(facebookId);
+                } else {
+                    // Show the default, blank user profile picture
+                    userProfilePictureView.setProfileId(null);
+                }
+                // Set additional UI elements
+                // ...
+            } catch (JSONException e) {
+                // handle error
+            }
+
+        }
+    }
 
 /*    public void initFacebookInstance() {
         uiHelper.onCreate(savedInstance);

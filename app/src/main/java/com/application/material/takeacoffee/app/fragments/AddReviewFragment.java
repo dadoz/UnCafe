@@ -1,17 +1,17 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
-import android.widget.EditText;
-import android.widget.RatingBar;
-import android.widget.SeekBar;
-import android.widget.Toast;
+import android.widget.*;
+import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.AddReviewActivity;
@@ -25,10 +25,13 @@ import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import com.application.material.takeacoffee.app.views.FilledCircleView;
+import com.neopixl.pixlui.components.imageview.*;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
+import java.io.IOException;
 import java.util.Date;
 
 
@@ -45,13 +48,18 @@ public class AddReviewFragment extends Fragment implements
     private String meUserId;
     @InjectView(R.id.commentTextId) View commentTextView;
     @InjectView(R.id.statusRatingBarId) View statusRatingBarView;
-    @InjectView(R.id.addReviewButtonId) View addReviewButton;
+//    @InjectView(R.id.addReviewButtonId) View addReviewButton;
+    @InjectView(R.id.pickPictureIconId) View pickPictureButton;
+    @InjectView(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
+    @InjectView(R.id.imagePreviewViewId) View imagePreviewView;
+
 //    @InjectView(R.id.filledCircleId) View filledCircleView;
 //    @InjectView(R.id.seekBarId) View seekBarView;
 
     private String coffeeMachineId;
     private Review reviewParams;
     private DataApplication dataApplication;
+    private boolean isReviewPictureSet = false;
 //    @InjectView(R.id.usernameTextId) View usernameText;
 //    @InjectView(R.id.userIconId) View userIconView;
 //    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
@@ -84,12 +92,15 @@ public class AddReviewFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-
         addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
         ButterKnife.inject(this, addReviewView);
         //initOnLoadView();
-        initView();
+        if(savedInstance != null) {
+            isReviewPictureSet = dataApplication.isReviewPictureSet();
+        }
+
         setHasOptionsMenu(true);
+        initView();
         return addReviewView;
     }
 
@@ -135,21 +146,38 @@ public class AddReviewFragment extends Fragment implements
 //        }
 
         addActivityRef.hideOnLoadView(null);
-        addReviewButton.setOnClickListener(this);
+//        addReviewButton.setOnClickListener(this);
+        pickPictureButton.setOnClickListener(this);
+        pickPictureFromGalleryButton.setOnClickListener(this);
+        if(isReviewPictureSet) {
+            ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
+        }
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addReviewButtonId:
-                if(! addReview()) {
-                    return;
-                }
-
-                Utils.hideKeyboard(addActivityRef, (EditText) commentTextView);
-                addActivityRef.initOnLoadView(null); //get spinner
-                HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
+//            case R.id.addReviewButtonId:
+//                if(! addReview()) {
+//                    return;
+//                }
+//
+//                Utils.hideKeyboard(addActivityRef, (EditText) commentTextView);
+//                addActivityRef.initOnLoadView(null); //get spinner
+//                HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
+//                break;
+            case R.id.pickPictureIconId:
+                ImagePickerSingleton imagePicker = ImagePickerSingleton
+                        .getInstance(addActivityRef);
+                imagePicker.onLaunchCamera();
+                Log.e(TAG, "hey");
+                break;
+            case R.id.pickPictureFromGalleryIconId:
+                imagePicker = ImagePickerSingleton
+                        .getInstance(addActivityRef);
+                imagePicker.onPickPhoto();
+                Log.e(TAG, "hey");
                 break;
         }
     }
@@ -215,6 +243,7 @@ public class AddReviewFragment extends Fragment implements
         addActivityRef.finish();
 
     }
+
 
     @Subscribe
     public void onNetworkResponse(Review review) {

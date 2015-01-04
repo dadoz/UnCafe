@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ public class LoginActivity extends ActionBarActivity implements
     private static final String TAG = "LoginActivity";
     private String currentFragTag;
     private String CURRENT_FRAGMENT_TAG;
+    public ProgressDialog progressDialog;
 
 
     @Override

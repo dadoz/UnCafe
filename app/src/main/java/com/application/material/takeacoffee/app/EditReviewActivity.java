@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -21,11 +22,15 @@ import butterknife.InjectView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
+
+import java.io.IOException;
 
 
 public class EditReviewActivity extends ActionBarActivity implements
@@ -40,6 +45,7 @@ public class EditReviewActivity extends ActionBarActivity implements
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
     private Bundle bundle;
+    private DataApplication dataApplication;
 
 
     @Override
@@ -56,7 +62,7 @@ public class EditReviewActivity extends ActionBarActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setActionBarCustomViewById(-1, "Edit review");
 
-
+        dataApplication = ((DataApplication) this.getApplication());
         //INIT VIEW
         if(savedInstanceState != null) {
             //already init app - try retrieve frag from manager
@@ -165,6 +171,20 @@ public class EditReviewActivity extends ActionBarActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        try {
+            Bitmap picture = ImagePickerSingleton.getInstance(this.getApplicationContext())
+                    .onActivityResultWrapped(requestCode, resultCode, data);
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(getCurrentFragTag());
+            ((ImageView) fragment.getView().findViewById(R.id.imagePreviewViewId))
+                    .setImageBitmap(picture);
+            dataApplication.setReviewPictureTemp(picture);
+            picture = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

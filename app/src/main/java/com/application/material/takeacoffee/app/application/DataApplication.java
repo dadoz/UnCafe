@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.application;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
@@ -18,6 +19,7 @@ public class DataApplication extends Application {
     private ReviewDataContainer reviewDataContainer;
     private CoffeeMachineStatus coffeeMachineStatus;
     private User user;
+    private Bitmap reviewPictureTemp;
 
     public DataApplication() {
         user = new User("4nmvMJNk1R", null, "John Bla");
@@ -65,6 +67,22 @@ public class DataApplication extends Application {
 
     public void setUsername(String username) {
         this.user.setUsername(username);
+    }
+
+    /**PICTURES**/
+    public boolean isReviewPictureSet() {
+        return reviewPictureTemp != null;
+    }
+
+    public void setReviewPictureTemp(Bitmap bitmap) {
+        reviewPictureTemp = bitmap;
+    }
+
+    public Bitmap getReviewPictureTemp() {
+        return reviewPictureTemp;
+    }
+    public void deleteReviewPictureTemp() {
+        reviewPictureTemp = null;
     }
 
     public void clearData(int[] dataLabels) {

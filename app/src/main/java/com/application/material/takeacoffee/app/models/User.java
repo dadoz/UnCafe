@@ -4,11 +4,12 @@ package com.application.material.takeacoffee.app.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class User implements Parcelable {
+public class User extends ParseUser implements Parcelable {
     private static final String EMPTY_PIC_PATH = "EMPTY_PIC_PATH";
     public static String USER_OBJ_KEY = "USER_OBJ_KEY";
     public static String USER_ID_KEY = "USER_ID_KEY";
