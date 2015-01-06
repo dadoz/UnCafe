@@ -427,6 +427,8 @@ public class HttpIntentService extends IntentService {
                 try {
                     if(! isConnected) {
                         User user = (User) intent.getExtras().get(EXTRA_USER);
+//                        new User("4nmvMJNk1R", null, username);
+                        user.setId("4nmvMJNk1R");
                         BusSingleton.getInstance().post(user);
                         return;
                     }

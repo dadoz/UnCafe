@@ -118,7 +118,7 @@ public class AddReviewFragment extends Fragment implements
 
     private void initOnLoadView() {
         //initOnLoadView
-        addActivityRef.initOnLoadView(null);
+        addActivityRef.initOnLoadView();
         initView();
     }
 
@@ -145,7 +145,7 @@ public class AddReviewFragment extends Fragment implements
 //            e.printStackTrace();
 //        }
 
-        addActivityRef.hideOnLoadView(null);
+        addActivityRef.hideOnLoadView();
 //        addReviewButton.setOnClickListener(this);
         pickPictureButton.setOnClickListener(this);
         pickPictureFromGalleryButton.setOnClickListener(this);
@@ -196,7 +196,7 @@ public class AddReviewFragment extends Fragment implements
                 addReview();
 
                 Utils.hideKeyboard(addActivityRef, (EditText) commentTextView);
-                addActivityRef.initOnLoadView(null); //get spinner
+                addActivityRef.initOnLoadView(); //get spinner
                 HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
                 break;
         }
@@ -204,14 +204,14 @@ public class AddReviewFragment extends Fragment implements
     }
 
     private boolean addReview() {
-        addActivityRef.initOnLoadView(null); //get spinner
+        addActivityRef.initOnLoadView(); //get spinner
 
         //on callback
         String comment = ((EditText) commentTextView).getText().toString();
         if(comment.compareTo("") == 0) {
             Toast.makeText(addActivityRef.getApplicationContext(),
                     "Failed - write some comment!", Toast.LENGTH_LONG).show();
-            addActivityRef.hideOnLoadView(null); //get spinner
+            addActivityRef.hideOnLoadView(); //get spinner
             return false;
         }
         ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
@@ -248,7 +248,7 @@ public class AddReviewFragment extends Fragment implements
     @Subscribe
     public void onNetworkResponse(Review review) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) addActivityRef).hideOnLoadView(null);
+        ((OnLoadViewHandlerInterface) addActivityRef).hideOnLoadView();
 
         if(review == null) {
             addReviewErrorCallback();

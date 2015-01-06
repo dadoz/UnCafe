@@ -107,12 +107,12 @@ public class EditReviewFragment extends Fragment implements
 
     private void initOnLoadView() {
         //initOnLoadView
-        editActivityRef.initOnLoadView(null);
+        editActivityRef.initOnLoadView();
         initView();
     }
 
     private void initView() {
-        editActivityRef.hideOnLoadView(null);
+        editActivityRef.hideOnLoadView();
         ((RatingBar) editStatusRatingBarView).setRating(
                 ReviewStatus.parseStatusToRating(
                         Review.ReviewStatus.parseStatus(review.getStatus())));
@@ -195,7 +195,7 @@ public class EditReviewFragment extends Fragment implements
             return;
         }
 
-        ((OnLoadViewHandlerInterface) editActivityRef).initOnLoadView(null);
+        ((OnLoadViewHandlerInterface) editActivityRef).initOnLoadView();
         Utils.hideKeyboard(editActivityRef, (EditText) editReviewCommentText);
 
         //reqeust service
@@ -218,7 +218,7 @@ public class EditReviewFragment extends Fragment implements
     @Subscribe
     public void onNetworkResponse(Review updateReviewResponse) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) editActivityRef).hideOnLoadView(null);
+        ((OnLoadViewHandlerInterface) editActivityRef).hideOnLoadView();
 
         if(updateReviewResponse == null) {
             //TODO handle adapter with empty data
@@ -227,6 +227,5 @@ public class EditReviewFragment extends Fragment implements
         //TODO handle adapter with empty data
         saveReviewSuccessCallback();
     }
-
 
 }

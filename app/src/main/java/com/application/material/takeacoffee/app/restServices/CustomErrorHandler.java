@@ -1,6 +1,8 @@
 package com.application.material.takeacoffee.app.restServices;
 
 import android.util.Log;
+import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import retrofit.ErrorHandler;
 import retrofit.RetrofitError;
 
@@ -15,11 +17,16 @@ public class CustomErrorHandler implements ErrorHandler {
         //get code from cause and return what you need
         Log.e(TAG, "retrofit request error" + cause.toString());
         if(cause.getResponse() == null) {
-            return new Throwable("generic error - handleError",
-                new Throwable("500"));
+            Throwable error = new Throwable("generic error - handleError",
+                    new Throwable("500"));
+
+            BusSingleton.getInstance().post(error);
+            return error;
         }
 
-        return new Throwable(cause.getResponse().getReason(),
+        Throwable error = new Throwable(cause.getResponse().getReason(),
                 new Throwable("" + cause.getResponse().getStatus()));
+        BusSingleton.getInstance().post(error);
+        return error;
     }
 }

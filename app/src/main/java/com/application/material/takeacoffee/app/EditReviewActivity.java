@@ -28,7 +28,9 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFra
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 
@@ -159,11 +161,19 @@ public class EditReviewActivity extends ActionBarActivity implements
 
     @Override
     public void initOnLoadView(View view) {
+    }
+
+    @Override
+    public void initOnLoadView() {
         onLoadLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideOnLoadView(View view) {
+    }
+
+    @Override
+    public void hideOnLoadView() {
         onLoadLayout.setVisibility(View.GONE);
     }
 
@@ -239,4 +249,16 @@ public class EditReviewActivity extends ActionBarActivity implements
     public void updateSelectedItem(AdapterView.OnItemLongClickListener listener, ListView listView, View view, int itemPos) {
 
     }
+
+    @Subscribe
+    public void onHandlingError(Throwable cause) {
+        String message = cause.getMessage();
+        int code = Integer.parseInt(cause.getCause().getMessage());
+
+        Log.e(TAG, "error - " + message + code);
+
+        hideOnLoadView();
+
+    }
+
 }

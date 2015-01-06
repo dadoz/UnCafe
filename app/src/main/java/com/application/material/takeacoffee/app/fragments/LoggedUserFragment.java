@@ -99,7 +99,7 @@ public class LoggedUserFragment extends Fragment
     }
 
     public void initView() {
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
         //action bar
         ((SetActionBarInterface) mainActivityRef)
@@ -172,7 +172,7 @@ public class LoggedUserFragment extends Fragment
     @Subscribe
     public void onNetworkRespose(User.DeletedResponse deleteUserResponse) {
         Log.d(TAG, "get response from bus - DELETE_REVIEW_REQ");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(null);
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
         if(deleteUserResponse == null) {
             //TODO handle adapter with empty data

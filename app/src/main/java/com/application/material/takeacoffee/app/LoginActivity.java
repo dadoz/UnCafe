@@ -104,8 +104,16 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     @Override
+    public void initOnLoadView() {
+    }
+
+    @Override
     public void hideOnLoadView(View view) {
         view.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideOnLoadView() {
     }
 
     @Override

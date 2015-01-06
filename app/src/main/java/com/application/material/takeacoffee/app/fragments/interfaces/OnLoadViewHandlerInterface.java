@@ -7,5 +7,7 @@ import android.view.View;
  */
 public interface OnLoadViewHandlerInterface {
     void initOnLoadView(View view);
+    void initOnLoadView();
     void hideOnLoadView(View view);
+    void hideOnLoadView();
 }

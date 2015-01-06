@@ -28,8 +28,10 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewH
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
+import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import com.neopixl.pixlui.components.imageview.*;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 
@@ -77,6 +79,18 @@ public class AddReviewActivity extends ActionBarActivity implements
         setCurrentFragTag(AddReviewActivity.ADD_REVIEW_FRAG_TAG);
         initView(new AddReviewFragment(), null);
     }
+
+/*    @Override
+    public void onResume(){
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        BusSingleton.getInstance().unregister(this);
+        super.onPause();
+    }*/
 
     private void initView(Fragment fragment, Bundle savedInstanceState) {
         if(savedInstanceState == null) {
@@ -161,11 +175,19 @@ public class AddReviewActivity extends ActionBarActivity implements
 
     @Override
     public void initOnLoadView(View view) {
+    }
+
+    @Override
+    public void initOnLoadView() {
         onLoadLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideOnLoadView(View view) {
+    }
+
+    @Override
+    public void hideOnLoadView() {
         onLoadLayout.setVisibility(View.GONE);
     }
 
@@ -239,6 +261,14 @@ public class AddReviewActivity extends ActionBarActivity implements
     @Override
     public void updateSelectedItem(AdapterView.OnItemLongClickListener listener, ListView listView, View view, int itemPos) {
 
+    }
+
+    @Subscribe
+    public void onHandlingError(Throwable cause) {
+        String message = cause.getMessage();
+        int code = Integer.parseInt(cause.getCause().getMessage());
+
+        Log.e(TAG, "error - " + message + code);
     }
 
 }
