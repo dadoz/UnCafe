@@ -87,7 +87,7 @@ public class HttpIntentService extends IntentService {
 
         intent.setAction(REVIEW_REQUEST);
         intent.putExtra(EXTRA_COFFEE_MACHINE_ID, coffeeMachineId);
-        intent.putExtra(EXTRA_TIMESTAMP, Double.parseDouble(Long.toString(timestamp)));
+        intent.putExtra(EXTRA_TIMESTAMP, timestamp);
 //        intent.putExtra(EXTRA_COFFEE_MACHINE_ID, "PZrB82ZWVl");
 //        intent.putExtra(EXTRA_TIMESTAMP, Double.parseDouble("1410696082045"));
         context.startService(intent);
@@ -263,7 +263,7 @@ public class HttpIntentService extends IntentService {
                     }
 
                     String coffeeMachineId = (String) intent.getExtras().get(EXTRA_COFFEE_MACHINE_ID);
-                    Double timestamp = (Double) intent.getExtras().get(EXTRA_TIMESTAMP);
+                    Long timestamp = (Long) intent.getExtras().get(EXTRA_TIMESTAMP);
                     Review.Params params = new Review.Params(coffeeMachineId, timestamp);
                     BusSingleton.getInstance().post(service.listReview(params));
                 } catch (Exception e) {

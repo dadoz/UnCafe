@@ -186,7 +186,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     e.printStackTrace();
                 }
 
-
 //                HttpIntentService.addUserRequest(loginActivityRef, new User("4nmvMJNk1R", null, username));
                 User user = new User(
                         null,

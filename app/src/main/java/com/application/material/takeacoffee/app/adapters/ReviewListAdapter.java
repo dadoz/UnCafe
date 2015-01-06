@@ -12,12 +12,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.VolleyImageRequestWrapper;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.EllipsizedComment;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 
 import java.util.ArrayList;
 
@@ -79,8 +79,12 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
                 holder.usernameTextView.setText(user.getUsername());
 
                 int defaultIconId = R.drawable.user_icon;
-                ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
-                        user.getProfilePicturePath(), holder.profilePicImageView, defaultIconId);
+                VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
+                volleySingleton.imageRequest( user.getProfilePicturePath(), holder.profilePicImageView,
+                        defaultIconId);
+
+//                ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
+//                        user.getProfilePicturePath(), holder.profilePicImageView, defaultIconId);
             }
 
             //TODO check if selectedItem then background color middle grey

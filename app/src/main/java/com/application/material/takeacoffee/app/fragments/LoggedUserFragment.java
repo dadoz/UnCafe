@@ -1,13 +1,11 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.*;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,8 +13,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.Utils;
-import com.application.material.takeacoffee.app.VolleyImageRequestWrapper;
+import com.application.material.takeacoffee.app.singletons.VolleySingleton;
+import com.application.material.takeacoffee.app.utils.Utils;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
@@ -108,9 +106,9 @@ public class LoggedUserFragment extends Fragment
                 .setCustomNavigation(LoggedUserFragment.class);
 
         try {
-            int defaultIconId = R.id.userIconId;
-            ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
-                    dataApplication.getProfilePicturePath(), profilePictureView,
+            int defaultIconId = R.drawable.user_icon;
+            VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
+            volleySingleton.imageRequest(dataApplication.getProfilePicturePath(), profilePictureView,
                     defaultIconId);
 
         } catch (Exception e) {

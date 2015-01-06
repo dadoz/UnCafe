@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.*;
+import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 
 import java.util.ArrayList;
 
@@ -59,9 +60,12 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         holder.iconImageView.setImageDrawable(mainActivityRef.
                 getResources().getDrawable(defaultIconId));
 //        try {
-//            ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
-//                    coffeeMachine.getIconPath(), holder.iconImageView, defaultIconId);
-//
+//            VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
+//            volleySingleton.imageRequest(coffeeMachine.getIconPath(),
+//                    holder.iconImageView, defaultIconId);
+////            ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
+////                    coffeeMachine.getIconPath(), holder.iconImageView, defaultIconId);
+////
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }

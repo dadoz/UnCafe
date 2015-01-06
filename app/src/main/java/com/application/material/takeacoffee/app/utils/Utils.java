@@ -1,4 +1,4 @@
-package com.application.material.takeacoffee.app;
+package com.application.material.takeacoffee.app.utils;
 
 import android.app.Activity;
 import android.content.Context;

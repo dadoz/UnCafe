@@ -1,13 +1,9 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -17,7 +13,7 @@ import butterknife.InjectView;
 import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.Utils;
+import com.application.material.takeacoffee.app.utils.Utils;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
@@ -26,13 +22,8 @@ import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.application.material.takeacoffee.app.views.FilledCircleView;
-import com.neopixl.pixlui.components.imageview.*;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
-
-import java.io.IOException;
-import java.util.Date;
 
 
 /**

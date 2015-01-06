@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:background="@color/blue_cobalt"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+                android:orientation="vertical"
+                android:gravity="center"
+              android:id="@android:id/empty"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+    <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/emptyDataOldReviewIconId"
+            android:layout_width="@dimen/large_icon_size"
+            android:layout_height="@dimen/large_icon_size"
+            android:src="@drawable/barometer_icon"/>
+
+    <com.neopixl.pixlui.components.textview.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small_padding"
+            android:layout_below="@id/emptyDataOldReviewIconId"
+            android:gravity="center_horizontal"
+            android:textColor="@color/material_text_black"
+            android:textSize="@dimen/title_text_size"
+            android:text="No reviews :("
+            pixlui:copyandpaste="false"
+            pixlui:clearclipboardcontent="true"
+            pixlui:typeface="chimphand-regular.ttf"/>
+
+    <com.neopixl.pixlui.components.textview.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small_padding"
+            android:layout_below="@id/emptyDataOldReviewIconId"
+            android:gravity="center_horizontal"
+            android:textColor="@color/material_grey"
+            android:textSize="@dimen/text_medium_20"
+            android:text="get oldest ones or add a new one"
+            pixlui:copyandpaste="false"
+            pixlui:clearclipboardcontent="true"
+            pixlui:typeface="chimphand-regular.ttf"/>
+
 
 </LinearLayout>

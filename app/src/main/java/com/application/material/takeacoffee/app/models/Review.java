@@ -217,9 +217,9 @@ public class Review implements Parcelable {
 
     public static class Params implements Parcelable {
         private String coffeeMachineId;
-        private double timestamp;
+        private long timestamp;
 
-        public Params(String coffeeMachineId, double timestamp) {
+        public Params(String coffeeMachineId, long timestamp) {
             this.coffeeMachineId = coffeeMachineId;
             this.timestamp = timestamp;
         }

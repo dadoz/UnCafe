@@ -17,9 +17,11 @@
                 android:listSelector="@color/listview_selector"
                 android:divider="@color/middle_grey"
                 android:dividerHeight="0.5dp"
-                android:orientation="vertical" />
+                android:orientation="vertical"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include layout="@layout/empty_data_status_layout"/>
 
     <com.shamanland.fab.FloatingActionButton
             android:id="@+id/addReviewFabId"
@@ -31,10 +33,10 @@
             android:layout_marginRight="@dimen/floating_action_button_margin_normal"
             app:floatingActionButtonColor="@color/material_red_200"
             android:src="@drawable/edit_icon_ultra_small_b"/>
-                <!--<RelativeLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content">-->
-            <!--</RelativeLayout>-->
+    <!--<RelativeLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content">-->
+    <!--</RelativeLayout>-->
 
     <include layout="@layout/status_header_template"/>
 

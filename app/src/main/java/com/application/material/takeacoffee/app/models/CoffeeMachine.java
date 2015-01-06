@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-public class CoffeeMachine implements Parcelable{
+public class CoffeeMachine implements Parcelable {
     public static String COFFEE_MACHINE_ID_KEY = "COFFEE_MACHINE_ID";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
     public static String COFFEE_MACHINE_STRING_KEY = "COFFEE_MACHINE_STRING_KEY";
@@ -15,7 +15,14 @@ public class CoffeeMachine implements Parcelable{
 	private String name;
 	private String address;
 
-	public CoffeeMachine(String id, final String name, String address , String iconPath) {
+    public CoffeeMachine(Parcel in) {
+        this.id = in.readString();
+        this.iconPath = in.readString();
+        this.name = in.readString();
+        this.address = in.readString();
+    }
+
+    public CoffeeMachine(String id, final String name, String address , String iconPath) {
         this.id = id;
         this.iconPath = iconPath;
 		this.name = name;
@@ -45,5 +52,21 @@ public class CoffeeMachine implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.iconPath);
+        dest.writeString(this.name);
+        dest.writeString(this.address);
     }
+
+    public static Creator CREATOR = new Creator() {
+        @Override
+        public CoffeeMachine createFromParcel(Parcel source) {
+            return new CoffeeMachine(source);
+        }
+
+        @Override
+        public CoffeeMachine[] newArray(int size) {
+            return new CoffeeMachine[size];
+        }
+    };
 }

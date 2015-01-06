@@ -32,6 +32,7 @@ import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ import java.util.ArrayList;
 
 public class CoffeeMachineActivity extends ActionBarActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
-        ImageLoader.ImageCache, VolleyImageRequestWrapper,
         SetActionBarInterface, View.OnClickListener {
     private static final String TAG = "CoffeeMachineActivity";
     public static final int RESULT_FAILED = 111;
@@ -47,9 +47,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     @InjectView(R.id.onLoadLayoutId)
     View onLoadLayout;
     //Volley lib
-    private RequestQueue requestQueue;
-    private ImageLoader imageLoader;
-    private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static ArrayList<String> currentFragTagList = new ArrayList<String>();
     public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
@@ -74,9 +71,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
 
-        //VOLLEY stuff
-        requestQueue = Volley.newRequestQueue(this.getApplicationContext());
-        imageLoader = new ImageLoader(requestQueue, this);
 
         dataApplication = ((DataApplication) this.getApplication());
 
@@ -334,21 +328,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         return currentFragTagList.get(currentFragTagList.size() -1);
     }
 
-    @Override
-    public void volleyImageRequest(String profilePicturePath, ImageView profilePicImageView, int defaultIconId) {
-        this.imageLoader.get(profilePicturePath, ImageLoader
-                .getImageListener(profilePicImageView, defaultIconId, defaultIconId));
-    }
-
-    @Override
-    public Bitmap getBitmap(String s) {
-        return cache.get(s);
-    }
-
-    @Override
-    public void putBitmap(String s, Bitmap bitmap) {
-        cache.put(s, bitmap);
-    }
 
     @Override
     public boolean isItemSelected() {
@@ -458,9 +437,16 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                         .setText(dataApplication.getUsername());
                 ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId))
                         .setVisibility(View.VISIBLE);
-//                ((ImageView) actionBar.getCustomView().findViewById(R.id.userIconId))
-//                        .setImageDrawable();
 
+                try {
+                    int defaultIconId = R.drawable.user_icon;
+                    VolleySingleton volleySingleton = VolleySingleton.getInstance(this);
+                    volleySingleton.imageRequest(dataApplication.getProfilePicturePath(),
+                            (ImageView) actionBar.getCustomView().findViewById(R.id.userIconId),
+                            defaultIconId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.customActionBarReviewListLayoutId:
                 ((TextView) actionBar.getCustomView().findViewById(R.id.cActBarTitleId))
@@ -552,7 +538,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
                 break;
         }
         hideOnLoadView();
-        finish();
     }
 
 
