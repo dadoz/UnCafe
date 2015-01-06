@@ -80,7 +80,7 @@ public class AddReviewActivity extends ActionBarActivity implements
         initView(new AddReviewFragment(), null);
     }
 
-/*    @Override
+    @Override
     public void onResume(){
         BusSingleton.getInstance().register(this);
         super.onResume();
@@ -90,7 +90,7 @@ public class AddReviewActivity extends ActionBarActivity implements
     public void onPause(){
         BusSingleton.getInstance().unregister(this);
         super.onPause();
-    }*/
+    }
 
     private void initView(Fragment fragment, Bundle savedInstanceState) {
         if(savedInstanceState == null) {
@@ -269,6 +269,20 @@ public class AddReviewActivity extends ActionBarActivity implements
         int code = Integer.parseInt(cause.getCause().getMessage());
 
         Log.e(TAG, "error - " + message + code);
+        switch (code) {
+            case 500:
+                Toast.makeText(this.getApplicationContext(),
+                        getResources().getString(R.string.HTTP_generic_error),
+                        Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(this.getApplicationContext(),
+                        getResources().getString(R.string.generic_error),
+                        Toast.LENGTH_LONG).show();
+                break;
+        }
+        hideOnLoadView();
+        finish();
     }
 
 }

@@ -7,6 +7,10 @@
     <string name="titleTakeACoffee">Take a coffee!</string>
 
 
+    <string name="HTTP_generic_error">Hey! Smthing has gone wrong! Check your connection and try again!</string>
+    <string name="generic_error">Hey! Smthing has gone wrong! Restart your application.</string>
+
+
     <string name="parseApplicationId">61rFqlbDy0UWBfY56RcLdiJVB1EPe8ce1yUxdAEY</string>
     <string name="parseClientKey">jHD6l2E72OG9Kul7ijtawZTkF9Zml0AwbeL0J7Ex</string>
 

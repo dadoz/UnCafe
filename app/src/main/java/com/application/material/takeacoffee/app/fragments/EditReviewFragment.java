@@ -227,5 +227,4 @@ public class EditReviewFragment extends Fragment implements
         //TODO handle adapter with empty data
         saveReviewSuccessCallback();
     }
-
 }

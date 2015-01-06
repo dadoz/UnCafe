@@ -13,10 +13,7 @@ import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.RequestQueue;
@@ -76,6 +73,18 @@ public class EditReviewActivity extends ActionBarActivity implements
 
         setCurrentFragTag(EditReviewActivity.EDIT_REVIEW_FRAG_TAG);
         initView(new EditReviewFragment(), null);
+    }
+
+    @Override
+    public void onResume(){
+        BusSingleton.getInstance().register(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        BusSingleton.getInstance().unregister(this);
+        super.onPause();
     }
 
     private void initView(Fragment fragment, Bundle savedInstanceState) {
@@ -256,9 +265,20 @@ public class EditReviewActivity extends ActionBarActivity implements
         int code = Integer.parseInt(cause.getCause().getMessage());
 
         Log.e(TAG, "error - " + message + code);
-
+        switch (code) {
+            case 500:
+                Toast.makeText(this.getApplicationContext(),
+                        getResources().getString(R.string.HTTP_generic_error),
+                        Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(this.getApplicationContext(),
+                        getResources().getString(R.string.generic_error),
+                        Toast.LENGTH_LONG).show();
+                break;
+        }
         hideOnLoadView();
-
+        finish();
     }
 
 }

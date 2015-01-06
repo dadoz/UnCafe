@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.facebookServices.FacebookLogin;
 import com.application.material.takeacoffee.app.fragments.LoginFragment;
@@ -238,6 +239,20 @@ public class LoginActivity extends ActionBarActivity implements
         int code = Integer.parseInt(cause.getCause().getMessage());
 
         Log.e(TAG, "error - " + message + code);
+        switch (code) {
+            case 500:
+                Toast.makeText(this.getApplicationContext(),
+                        getResources().getString(R.string.HTTP_generic_error),
+                        Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(this.getApplicationContext(),
+                        getResources().getString(R.string.generic_error),
+                        Toast.LENGTH_LONG).show();
+                break;
+        }
+        hideOnLoadView();
+        finish();
     }
 
 
