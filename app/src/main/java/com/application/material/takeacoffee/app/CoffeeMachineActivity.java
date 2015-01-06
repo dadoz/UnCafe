@@ -423,7 +423,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         if (actionBar == null) {
             return;
         }
-        //HIDE all template
+
+        //HIDE all template - TODO refactorize it
         View userView = actionBar.getCustomView().findViewById(R.id.customActionBarUserLayoutId);
         userView.setVisibility(View.GONE);
         userView.setOnClickListener(null);
@@ -431,6 +432,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         actionBar.getCustomView().findViewById(R.id.customActionBarReviewListLayoutId).setVisibility(View.GONE);
         actionBar.getCustomView().findViewById(R.id.customActionBarMapLayoutId).setVisibility(View.GONE);
         actionBar.getCustomView().findViewById(R.id.customActionSettingsLayoutId).setVisibility(View.GONE);
+        actionBar.getCustomView().findViewById(R.id.customActionLoggedUserLayoutId).setVisibility(View.GONE);
 
         //current view
         View currentView = actionBar.getCustomView().findViewById(id);

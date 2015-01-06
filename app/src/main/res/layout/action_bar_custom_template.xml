@@ -114,6 +114,7 @@
     <!--LoggedUser-->
     <View
             android:id="@+id/customActionLoggedUserLayoutId"
+            android:background="@color/blue_cobalt"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
