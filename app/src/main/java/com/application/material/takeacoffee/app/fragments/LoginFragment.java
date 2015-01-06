@@ -3,6 +3,8 @@ package com.application.material.takeacoffee.app.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,13 +18,23 @@ import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.LoginActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.DataApplication;
+import com.application.material.takeacoffee.app.facebookServices.FacebookLogin;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
+import com.facebook.Session;
+import com.facebook.widget.ProfilePictureView;
+import android.widget.ImageView;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.squareup.otto.Subscribe;
+
+import java.io.ByteArrayOutputStream;
 
 import static com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper.LOGGED_USER_ID;
 
@@ -41,7 +53,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @InjectView(R.id.loginUsernameEditId) View loginUsernameEditText;
     @InjectView(R.id.loginMainLayoutId) View loginMainView;
     @InjectView(R.id.loaderLayoutId) View loaderView;
+    @InjectView(R.id.profilePictureViewId)
+    ImageView profilePictureView;
+    @InjectView(R.id.facebookLoginButtonId) View facebookLoginButton;
     private DataApplication dataApplication;
+    private FacebookLogin facebookLogin;
+    private ImagePickerSingleton imagePicker;
 
     @Override
     public void onAttach(Activity activity) {
@@ -56,12 +73,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
         loginActivityRef =  (LoginActivity) activity;
         dataApplication = ((DataApplication) loginActivityRef.getApplication());
-
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         settingListView = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.inject(this, settingListView);
+
+        // Fetch Facebook user info if the session is active
+        facebookLogin = FacebookLogin.getInstance(loginActivityRef);
+//        uiHelper = new UiLifecycleHelper(this, callback);
+        Session session = ParseFacebookUtils.getSession();
+        if (session != null &&
+                session.isOpened()) {
+            session.close();
+//            facebookLogin.setUsernameTextView((EditText) loginUsernameEditText);
+//            facebookLogin.setUserProfilePictureView(profilePictureView);
+//            facebookLogin.makeMeRequest();
+        }
+
 
         initOnLoadView();
         return settingListView;
@@ -96,6 +125,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginMainView.setVisibility(View.VISIBLE);
         ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(loaderView);
         loginContinueButton.setOnClickListener(this);
+        facebookLoginButton.setOnClickListener(this);
+        profilePictureView.setOnClickListener(this);
     }
 
     @Override
@@ -127,6 +158,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.profilePictureViewId:
+                imagePicker = ImagePickerSingleton.getInstance(loginActivityRef);
+                imagePicker.onPickPhoto();
+                break;
             case R.id.loginContinueButtonId:
                 String username = ((EditText) loginUsernameEditText).getText().toString();
                 if(username.compareTo("") == 0) {
@@ -134,14 +169,46 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
 
-                HttpIntentService.addUserRequest(loginActivityRef, new User("4nmvMJNk1R", null, username));
+                String profilePictureUrlLocal = (String) profilePictureView.getTag();
+
+                ParseFile file = null;
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeFile(profilePictureUrlLocal);
+
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] image = stream.toByteArray();
+
+                    file = new ParseFile("profilePicture.png", image);
+
+                    file.save();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+//                HttpIntentService.addUserRequest(loginActivityRef, new User("4nmvMJNk1R", null, username));
+                User user = new User(
+                        null,
+                        file != null ? file.getUrl() : null,
+                        file != null ? file.getName() : null,
+                        username);
+                dataApplication.setUser(user);
+                HttpIntentService.addUserRequest(loginActivityRef, user);
+                break;
+            case R.id.facebookLoginButtonId:
+                FacebookLogin facebookLogin = FacebookLogin.getInstance(loginActivityRef);
+                facebookLogin.setUserProfilePictureView(profilePictureView);
+                facebookLogin.setUsernameTextView((EditText) loginUsernameEditText);
+                facebookLogin.onLoginButtonClicked();
                 break;
         }
     }
 
+
     @Subscribe
     public void onNetworkRespose(User user) {
-        Log.d(TAG, "ADD_USER_RESPONSE - CHECK_USER_RESPONSE");
+        Log.d(TAG, "CHECK_USER_RESPONSE");
         ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(loaderView);
 
         if(user == null) {
@@ -149,18 +216,37 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
+        //check
         dataApplication.setUser(user);
-
-        if(SharedPreferencesWrapper.getValue(loginActivityRef, LOGGED_USER_ID) == null) {
-            SharedPreferencesWrapper.putString(loginActivityRef,
-                    LOGGED_USER_ID, user.getId());
-        }
 
         Intent intent = new Intent(this.getActivity(), CoffeeMachineActivity.class);
         startActivity(intent);
 
         loginActivityRef.finish();
 
+    }
+
+    @Subscribe
+    public void onNetworkRespose(String userId) {
+        Log.d(TAG, "ADD_USER_RESPONSE");
+        ((OnLoadViewHandlerInterface) loginActivityRef).hideOnLoadView(loaderView);
+
+        if(userId.equals(User.EMPTY_ID)) {
+            //TODO handle adapter with empty data
+            return;
+        }
+
+        dataApplication.setUserId(userId); //update user :)
+
+        if(SharedPreferencesWrapper.getValue(loginActivityRef, LOGGED_USER_ID) == null) {
+            SharedPreferencesWrapper.putString(loginActivityRef,
+                    LOGGED_USER_ID, userId);
+        }
+
+        Intent intent = new Intent(this.getActivity(), CoffeeMachineActivity.class);
+        startActivity(intent);
+
+        loginActivityRef.finish();
     }
 
 }

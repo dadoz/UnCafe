@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.restServices.CustomErrorHandler;
@@ -70,7 +71,8 @@ public class HttpIntentService extends IntentService {
     RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
-            request.addHeader("X-Parse-Application-Id", "61rFqlbDy0UWBfY56RcLdiJVB1EPe8ce1yUxdAEY");
+//            request.addHeader("X-Parse-Application-Id", "61rFqlbDy0UWBfY56RcLdiJVB1EPe8ce1yUxdAEY");
+            request.addHeader("X-Parse-Application-Id", getResources().getString(R.string.parseApplicationId));
             request.addHeader("X-Parse-REST-API-Key", "J37VkDdADU7jPfZSwLluAEixwJ3BmjPQJeuR1EzJ");
             request.addHeader("Content-Type", "application/json");
 
@@ -121,6 +123,8 @@ public class HttpIntentService extends IntentService {
 
     public static void updateReviewRequest(Context context,
                                       Review review) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(UPDATE_REVIEW_REQUEST);
@@ -130,6 +134,8 @@ public class HttpIntentService extends IntentService {
 
     public static void addReviewRequest(Context context,
                                       Review review) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(ADD_REVIEW_BY_PARAMS_REQUEST);
@@ -139,6 +145,8 @@ public class HttpIntentService extends IntentService {
 
     public static void deleteReviewRequest(Context context,
                                       String reviewId) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(DELETE_REVIEW_REQUEST);
@@ -149,6 +157,8 @@ public class HttpIntentService extends IntentService {
     public static void coffeeMachineStatusRequest(Context context,
                                                   String coffeeMachineId,
                                                   long timestamp) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
         intent.setAction(COFFEE_MACHINE_STATUS_REQUEST);
         intent.putExtra(EXTRA_COFFEE_MACHINE_ID, coffeeMachineId);
@@ -158,6 +168,8 @@ public class HttpIntentService extends IntentService {
 
     public static void updateUserRequest(Context context,
                                            User user) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(UPDATE_USER_REQUEST);
@@ -167,6 +179,8 @@ public class HttpIntentService extends IntentService {
 
     public static void addUserRequest(Context context,
                                                    User userToBeRegistered) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(ADD_USER_BY_PARAMS_REQUEST);
@@ -176,6 +190,8 @@ public class HttpIntentService extends IntentService {
 
     public static void deleteUserRequest(Context context,
                                            String userId) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(DELETE_USER_REQUEST);
@@ -185,6 +201,8 @@ public class HttpIntentService extends IntentService {
 
     public static void checkUserRequest(Context context,
                                         String userId) {
+        isConnected = isConnected(context);
+
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(CHECK_USER_REQUEST);
@@ -413,8 +431,9 @@ public class HttpIntentService extends IntentService {
                         return;
                     }
 
-                    User user = (User) intent.getExtras().get(EXTRA_USER);
-                    BusSingleton.getInstance().post(service.addUserByParams(user));
+                    User userLocal = (User) intent.getExtras().get(EXTRA_USER);
+                    User user = service.addUserByParams(userLocal);
+                    BusSingleton.getInstance().post(user != null ? user.getId() : User.EMPTY_ID);
 //                    {"createdAt":"2014-12-30T12:49:26.916Z","objectId":"f140rB6aRo"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -442,7 +461,7 @@ public class HttpIntentService extends IntentService {
                 try{
                     if(! isConnected) {
                         String userId = intent.getExtras().getString(EXTRA_USER_ID);
-                        BusSingleton.getInstance().post(new User(userId, null, "Not connected User"));
+                        BusSingleton.getInstance().post(new User(userId, null, null, "Not connected User"));
                         return;
                     }
 
@@ -487,7 +506,7 @@ public class HttpIntentService extends IntentService {
         Object updateUser(@Path("userId") String userId, @Body User user);
 
         @POST("/" + CLASSES + USER)
-        Object addUserByParams(@Body User user);
+        User addUserByParams(@Body User user);
 
         @DELETE("/" + CLASSES + USER + "/" + "{userId}")
         Object deleteUser(@Path("userId") String userId);

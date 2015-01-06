@@ -7,6 +7,7 @@ import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.ReviewDataContainer;
 import com.application.material.takeacoffee.app.models.User;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
@@ -20,9 +21,12 @@ public class DataApplication extends Application {
     private CoffeeMachineStatus coffeeMachineStatus;
     private User user;
     private Bitmap reviewPictureTemp;
+    private ParseUser parseUser;
+    private User userId;
+    private String userProfilePicture;
 
     public DataApplication() {
-        user = new User("4nmvMJNk1R", null, "John Bla");
+//        user = new User("4nmvMJNk1R", null, "John Bla");
     }
 
     public ArrayList<User> restoreUserList() {
@@ -49,12 +53,24 @@ public class DataApplication extends Application {
         this.userList = userList;
     }
 
+    public boolean isUserSet() {
+        return user != null;
+    }
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+    public void setUserId(String userId) {
+        if(user == null) {
+            //TODO handle it better
+            user = new User(userId, null, null, null);
+            return;
+        }
+
+        user.setId(userId);
     }
 
     public String getUserId() {
@@ -63,6 +79,9 @@ public class DataApplication extends Application {
 
     public String getUsername() {
         return user == null ? "Guest" : user.getUsername();
+    }
+    public String getProfilePicturePath() {
+        return user == null ? null : user.getProfilePicturePath();
     }
 
     public void setUsername(String username) {

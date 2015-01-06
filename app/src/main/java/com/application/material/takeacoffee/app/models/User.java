@@ -9,10 +9,12 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class User extends ParseUser implements Parcelable {
+public class User implements Parcelable {
     private static final String EMPTY_PIC_PATH = "EMPTY_PIC_PATH";
     public static String USER_OBJ_KEY = "USER_OBJ_KEY";
     public static String USER_ID_KEY = "USER_ID_KEY";
+    public static int PROFILE_PIC_URL = 111;
+    public static String EMPTY_ID = "EMPTY_ID";
 
     @SerializedName("objectId")
     private String id;
@@ -20,6 +22,7 @@ public class User extends ParseUser implements Parcelable {
     private String username;
 //	private String reviewsListId;
     private String profilePicturePath;
+    private String profilePictureName;
 
     /*
         public User(String id, String username, ArrayList<Review> reviewsList){
@@ -32,14 +35,22 @@ public class User extends ParseUser implements Parcelable {
         this.id = in.readString();
         this.username = in.readString();
         this.profilePicturePath = in.readString();
+        this.profilePictureName = in.readString();
     }
 
-	public User(String id, String profilePicturePath, String username) {
+//	public User(String id, String profilePicturePath, String username) {
+//		this.id = id;
+//		this.username = username;
+//        this.profilePicturePath = profilePicturePath;
+//	}
+
+	public User(String id, String profilePicturePath, String profilePictureName, String username) {
 		this.id = id;
 		this.username = username;
         this.profilePicturePath = profilePicturePath;
+        this.profilePictureName = profilePictureName;
 	}
-	
+
 	public void setId(String id){
 		this.id = id;
 	}
@@ -94,6 +105,7 @@ public class User extends ParseUser implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.username);
         dest.writeString(this.profilePicturePath);
+        dest.writeString(this.profilePictureName);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

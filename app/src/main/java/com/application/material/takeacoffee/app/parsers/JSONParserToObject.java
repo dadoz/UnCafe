@@ -246,8 +246,10 @@ public class JSONParserToObject {
                     .getString("username");
             String profilePicturePath = jsonObj
                     .getString("profile_picture_path");
+            String profilePictureName = jsonObj
+                    .getString("profile_picture_name");
 
-            return new User(userId, profilePicturePath, username);
+            return new User(userId, profilePicturePath, profilePictureName, username);
         } catch (JSONException e) {
             e.printStackTrace();
         }

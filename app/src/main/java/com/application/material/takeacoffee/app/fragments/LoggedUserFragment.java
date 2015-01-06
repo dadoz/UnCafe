@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.Utils;
+import com.application.material.takeacoffee.app.VolleyImageRequestWrapper;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
@@ -42,6 +44,9 @@ public class LoggedUserFragment extends Fragment
     EditText loginUsernameEdit;
     @InjectView(R.id.deleteUserButtonId)
     LinearLayout deleteUserButton;
+    @InjectView(R.id.profilePictureViewId)
+    ImageView profilePictureView;
+
     private DataApplication dataApplication;
     private String meUserId;
 
@@ -101,6 +106,16 @@ public class LoggedUserFragment extends Fragment
                 .setActionBarCustomViewById(R.id.customActionLoggedUserLayoutId, null);
         ((SetActionBarInterface) mainActivityRef)
                 .setCustomNavigation(LoggedUserFragment.class);
+
+        try {
+            int defaultIconId = R.id.userIconId;
+            ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
+                    dataApplication.getProfilePicturePath(), profilePictureView,
+                    defaultIconId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         loginUsernameEdit.setText(dataApplication.getUsername());
         deleteUserButton.setVisibility(View.VISIBLE);

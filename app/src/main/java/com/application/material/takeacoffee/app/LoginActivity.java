@@ -1,7 +1,7 @@
 package com.application.material.takeacoffee.app;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -9,13 +9,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import butterknife.ButterKnife;
+import com.application.material.takeacoffee.app.facebookServices.FacebookLogin;
 import com.application.material.takeacoffee.app.fragments.LoginFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
+import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
+import com.parse.ParseFacebookUtils;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
 
 
 public class LoginActivity extends ActionBarActivity implements
@@ -23,8 +29,6 @@ public class LoginActivity extends ActionBarActivity implements
     private static final String TAG = "LoginActivity";
     private String currentFragTag;
     private String CURRENT_FRAGMENT_TAG;
-    public ProgressDialog progressDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +137,39 @@ public class LoginActivity extends ActionBarActivity implements
         startActivityForResult(intent, requestCode);
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "" + requestCode);
+        switch (requestCode) {
+            case FacebookLogin.REQUEST_CODE_FB:
+                ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+                return;
+            case ImagePickerSingleton.PICK_PHOTO_CODE:
+                try {
+                    super.onActivityResult(requestCode, resultCode, data);
+                    ImagePickerSingleton imagePickerSingleton = ImagePickerSingleton
+                            .getInstance(this.getApplicationContext());
+
+                    Bitmap picture = imagePickerSingleton.onActivityResultWrapped(requestCode, resultCode, data);
+                    Fragment fragment = getSupportFragmentManager().findFragmentByTag(getCurrentFragTag());
+
+                    ((ImageView) fragment.getView().findViewById(R.id.profilePictureViewId))
+                            .setImageBitmap(picture);
+                    (fragment.getView().findViewById(R.id.profilePictureViewId))
+                            .setTag(imagePickerSingleton.getPictureUrl());
+                    picture = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return;
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
+
 //        switch (resultCode) {
 //            case RESULT_OK:
 //                Bundle bundle;

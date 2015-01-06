@@ -24,8 +24,9 @@ import static android.app.Activity.RESULT_OK;
 public class ImagePickerSingleton {
     private static ImagePickerSingleton imagePickerInstance;
     private static Context context;
-    private int PICK_PHOTO_CODE = 99;
+    public final static int PICK_PHOTO_CODE = 99;
     private final int thumbnailSize = 500;
+    private String pictureUrl;
 
     private ImagePickerSingleton() {
     }
@@ -57,6 +58,8 @@ public class ImagePickerSingleton {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
+                pictureUrl = takenPhotoUri.getPath();
+
                 // by this point we have the camera photo on disk
 //                Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
                 Bitmap takenImage = BitmapFlipper.rotateBitmapOrientation(takenPhotoUri.getPath());
@@ -71,11 +74,9 @@ public class ImagePickerSingleton {
         //from gallery
         if (data != null) {
             Uri photoUri = data.getData();
-            // Do something with the photo based on Uri
-//            Bitmap selectedImage = getBitmap(context.getContentResolver(),
-//                    photoUri);
             File file = getFileFromContentUri(photoUri);
 
+            pictureUrl = file.getPath();
             Bitmap selectedImage = BitmapFlipper.rotateBitmapOrientation(file.getPath());
             // Load the selected image into a preview
             return getThumbnail(selectedImage);
@@ -153,6 +154,9 @@ public class ImagePickerSingleton {
         return BitmapScaler.scaleToFitHeight(pic, thumbnailSize);
     }
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
 
     public static class BitmapScaler {
         // Scale and maintain aspect ratio given a desired width

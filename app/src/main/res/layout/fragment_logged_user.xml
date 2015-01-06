@@ -9,6 +9,7 @@
               android:gravity="center">
 
         <ImageView
+                android:id="@+id/profilePictureViewId"
                 android:layout_width="@dimen/extra_huge_icon_size"
                 android:layout_height="@dimen/extra_huge_icon_size"
                 android:src="@drawable/user_icon"/>
@@ -35,6 +36,7 @@
                 android:hint="username"/>
 
         <com.neopixl.pixlui.components.textview.TextView
+                android:id="@+id/facebookLoginButtonId"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
                 pixlui:typeface="chimphand-regular.ttf"
