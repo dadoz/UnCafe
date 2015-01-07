@@ -41,17 +41,18 @@
     <GridView
             android:id="@+id/coffeeMachineGridLayoutId"
             android:listSelector="@color/listview_selector"
+
             android:paddingTop="@dimen/medium_padding"
             android:paddingBottom="@dimen/medium_padding"
             android:layout_above="@id/titleContainerLayoutId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:columnWidth="90dp"
             android:numColumns="2"
             android:verticalSpacing="@dimen/small_padding"
             android:horizontalSpacing="@dimen/small_padding"
             android:stretchMode="columnWidth"
-            android:gravity="center"/>
+            android:gravity="top"/>
 
 
 </RelativeLayout>

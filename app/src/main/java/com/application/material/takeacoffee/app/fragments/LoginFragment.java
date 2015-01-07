@@ -56,6 +56,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @InjectView(R.id.profilePictureViewId)
     ImageView profilePictureView;
     @InjectView(R.id.facebookLoginButtonId) View facebookLoginButton;
+    @InjectView(R.id.userIdDebug) View userIdDebugButton;
     private DataApplication dataApplication;
     private FacebookLogin facebookLogin;
     private ImagePickerSingleton imagePicker;
@@ -81,14 +82,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // Fetch Facebook user info if the session is active
         facebookLogin = FacebookLogin.getInstance(loginActivityRef);
-//        uiHelper = new UiLifecycleHelper(this, callback);
         Session session = ParseFacebookUtils.getSession();
         if (session != null &&
                 session.isOpened()) {
             session.close();
-//            facebookLogin.setUsernameTextView((EditText) loginUsernameEditText);
-//            facebookLogin.setUserProfilePictureView(profilePictureView);
-//            facebookLogin.makeMeRequest();
         }
 
 
@@ -127,6 +124,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginContinueButton.setOnClickListener(this);
         facebookLoginButton.setOnClickListener(this);
         profilePictureView.setOnClickListener(this);
+        userIdDebugButton.setOnClickListener(this);
     }
 
     @Override
@@ -163,6 +161,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 imagePicker.onPickPhoto();
                 break;
             case R.id.loginContinueButtonId:
+                //TODO DEBUG
+                if(! ((EditText) userIdDebugButton).getText().toString().equals("")) {
+                    SharedPreferencesWrapper.putString(loginActivityRef,
+                            LOGGED_USER_ID, ((EditText) userIdDebugButton).getText().toString());
+                    loginMainView.setVisibility(View.GONE);
+                    ((OnLoadViewHandlerInterface) loginActivityRef).initOnLoadView(loaderView);
+
+                    //check if valid user
+                    HttpIntentService.checkUserRequest(loginActivityRef,
+                            ((EditText) userIdDebugButton).getText().toString());
+                    return;
+                }
+                //TODO END OF DEBUG
+
                 String username = ((EditText) loginUsernameEditText).getText().toString();
                 if(username.compareTo("") == 0) {
                     Toast.makeText(loginActivityRef, "empty username", Toast.LENGTH_SHORT).show();

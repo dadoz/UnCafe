@@ -231,7 +231,7 @@ public class ReviewListFragment extends Fragment
                 R.layout.review_template, reviewList, coffeeMachineId);
 
         statusHeaderLayout.setVisibility(! isReviewListEmpty ? View.VISIBLE : View.GONE);
-        
+
         listView.setEmptyView(emptyView);
         listView.addHeaderView(headerView);
         setHasMoreReviewView();

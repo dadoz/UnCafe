@@ -162,7 +162,7 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
         intent.setAction(COFFEE_MACHINE_STATUS_REQUEST);
         intent.putExtra(EXTRA_COFFEE_MACHINE_ID, coffeeMachineId);
-        intent.putExtra(EXTRA_TIMESTAMP, Long.toString(timestamp));
+        intent.putExtra(EXTRA_TIMESTAMP, timestamp);
         context.startService(intent);
     }
 
@@ -397,7 +397,7 @@ public class HttpIntentService extends IntentService {
                     }
 
                     String coffeeMachineId = intent.getExtras().getString(EXTRA_COFFEE_MACHINE_ID);
-                    long timestamp = (Long) intent.getExtras().get(EXTRA_TIMESTAMP);
+                    long timestamp = intent.getExtras().getLong(EXTRA_TIMESTAMP);
                     CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId, timestamp);
                     BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
                 } catch (Exception e) {

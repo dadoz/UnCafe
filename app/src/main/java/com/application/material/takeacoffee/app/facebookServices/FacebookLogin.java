@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import com.application.material.takeacoffee.app.singletons.PrivateApplicationDirSingleton;
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
@@ -294,6 +295,9 @@ public class FacebookLogin {
 
                             Bitmap profilePicture = new ProfilePictureAsyncTask()
                                     .execute(profilePicURL).get();
+
+                            ImagePickerSingleton imagePickerSingleton = ImagePickerSingleton.getInstance(activityRef);
+                            profilePicture = imagePickerSingleton.getRoundedPicture(profilePicture);
 
                             String profilePictureUrl = BitmapStore.store(profilePicture,
                                     PrivateApplicationDirSingleton.getDir(activityRef));

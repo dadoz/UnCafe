@@ -49,8 +49,6 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
 
         holder.nameTextView.setText(coffeeMachine.getName());
         holder.addressTextView.setText(coffeeMachine.getAddress());
-//        holder.nameTextView.setTextColor(mainActivityRef
-//                .getResources().getColor(R.color.light_black));
         holder.iconImageView.setImageResource(R.drawable.coffee_cup_icon);
 
         //retrieve icon from server volley
@@ -63,9 +61,6 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
 //            VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
 //            volleySingleton.imageRequest(coffeeMachine.getIconPath(),
 //                    holder.iconImageView, defaultIconId);
-////            ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
-////                    coffeeMachine.getIconPath(), holder.iconImageView, defaultIconId);
-////
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }

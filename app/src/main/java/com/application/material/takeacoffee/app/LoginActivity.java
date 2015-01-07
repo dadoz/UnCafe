@@ -162,6 +162,7 @@ public class LoginActivity extends ActionBarActivity implements
                             .getInstance(this.getApplicationContext());
 
                     Bitmap picture = imagePickerSingleton.onActivityResultWrapped(requestCode, resultCode, data);
+                    picture = imagePickerSingleton.getRoundedPicture(picture);
                     Fragment fragment = getSupportFragmentManager().findFragmentByTag(getCurrentFragTag());
 
                     ((ImageView) fragment.getView().findViewById(R.id.profilePictureViewId))

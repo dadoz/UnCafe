@@ -154,6 +154,10 @@ public class ImagePickerSingleton {
         return BitmapScaler.scaleToFitHeight(pic, thumbnailSize);
     }
 
+    public Bitmap getRoundedPicture(Bitmap pic) {
+        return BitmapRounder.roundBitmap(pic, pic.getHeight());
+    }
+
     public String getPictureUrl() {
         return pictureUrl;
     }

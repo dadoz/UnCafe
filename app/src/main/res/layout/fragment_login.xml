@@ -87,6 +87,25 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="right|center">
+
+        <com.neopixl.pixlui.components.textview.TextView
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="chimphand-regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="debug:"/>
+
+        <com.neopixl.pixlui.components.edittext.EditText
+                android:id="@+id/userIdDebug"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="chimphand-regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="userId"/>
+
+
         <com.neopixl.pixlui.components.textview.TextView
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
