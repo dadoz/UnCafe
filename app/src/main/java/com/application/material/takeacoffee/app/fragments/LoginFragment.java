@@ -181,24 +181,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
 
-                String profilePictureUrlLocal = (String) profilePictureView.getTag();
-
                 ParseFile file = null;
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(profilePictureUrlLocal);
-
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] image = stream.toByteArray();
-
-                    file = new ParseFile("profilePicture.png", image);
-
-                    file.save();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(profilePictureView.getTag() != null) {
+                    String profilePictureUrlLocal = (String) profilePictureView.getTag();
+                    file = saveFile(profilePictureUrlLocal);
                 }
 
-//                HttpIntentService.addUserRequest(loginActivityRef, new User("4nmvMJNk1R", null, username));
                 User user = new User(
                         null,
                         file != null ? file.getUrl() : null,
@@ -206,6 +194,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         username);
                 dataApplication.setUser(user);
                 HttpIntentService.addUserRequest(loginActivityRef, user);
+//                HttpIntentService.addUserRequest(loginActivityRef, new User("4nmvMJNk1R", null, username));
                 break;
             case R.id.facebookLoginButtonId:
                 FacebookLogin facebookLogin = FacebookLogin.getInstance(loginActivityRef);
@@ -214,6 +203,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 facebookLogin.onLoginButtonClicked();
                 break;
         }
+    }
+
+    private ParseFile saveFile(String url) {
+        ParseFile file;
+        try {
+            Bitmap bitmap = BitmapFactory.decodeFile(url);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] image = stream.toByteArray();
+
+            file = new ParseFile("profilePicture.png", image);
+
+            file.save();
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

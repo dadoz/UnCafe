@@ -115,7 +115,8 @@ public class JSONParserToObject {
 
             return new Review(reviewId, reviewComment,
                     reviewStatus, timestamp,
-                    reviewUserId, reviewCoffeeMachineId);
+                    reviewUserId, reviewCoffeeMachineId,
+                    null, null);
         } catch (JSONException e) {
             e.printStackTrace();
         }

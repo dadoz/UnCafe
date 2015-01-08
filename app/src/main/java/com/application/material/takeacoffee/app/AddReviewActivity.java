@@ -3,34 +3,26 @@ package com.application.material.takeacoffee.app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.*;
 import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.neopixl.pixlui.components.imageview.*;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -122,24 +114,18 @@ public class AddReviewActivity extends ActionBarActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.take_a_coffee, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
                 Log.d(TAG, "hey home button");
                 finish();
                 return true;
-//            case R.id.action_settings:
-//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -195,19 +181,27 @@ public class AddReviewActivity extends ActionBarActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            Bitmap picture = ImagePickerSingleton.getInstance(this.getApplicationContext())
-                    .onActivityResultWrapped(requestCode, resultCode, data);
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(getCurrentFragTag());
+            Fragment fragment = getSupportFragmentManager()
+                    .findFragmentByTag(getCurrentFragTag());
+
+            ImagePickerSingleton imagePicker = ImagePickerSingleton
+                    .getInstance(this.getApplicationContext());
+            Bitmap picture = imagePicker.onActivityResultWrapped(requestCode, resultCode, data);
+            String pictureUrl = imagePicker.getPictureUrl();
+
             ((ImageView) fragment.getView().findViewById(R.id.imagePreviewViewId))
                     .setImageBitmap(picture);
+            (fragment.getView().findViewById(R.id.imagePreviewViewId))
+                    .setTag(pictureUrl);
+
             dataApplication.setReviewPictureTemp(picture);
+
             picture = null;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

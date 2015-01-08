@@ -2,6 +2,8 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,8 +24,11 @@ import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
+import com.parse.ParseFile;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
+
+import java.io.ByteArrayOutputStream;
 
 
 /**
@@ -33,9 +38,6 @@ public class AddReviewFragment extends Fragment implements
         View.OnClickListener {
     private static final String TAG = "AddReviewFragment";
     private AddReviewActivity addActivityRef;
-    private Bundle bundle;
-    private View addReviewView;
-//    private String meUserId = "4nmvMJNk1R";
     private String meUserId;
     @InjectView(R.id.commentTextId) View commentTextView;
     @InjectView(R.id.statusRatingBarId) View statusRatingBarView;
@@ -73,7 +75,7 @@ public class AddReviewFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstance) {
         super.onActivityCreated(savedInstance);
         //getArgs
-        bundle = getArguments();
+        Bundle bundle = getArguments();
         try {
             coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY);
         } catch (Exception e) {
@@ -83,7 +85,7 @@ public class AddReviewFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
+        View addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
         ButterKnife.inject(this, addReviewView);
         //initOnLoadView();
         if(savedInstance != null) {
@@ -184,41 +186,71 @@ public class AddReviewFragment extends Fragment implements
         Log.e(TAG, "save review");
         switch (item.getItemId()) {
             case R.id.action_save:
-                addReview();
+                reviewParams = addReview();
 
-                Utils.hideKeyboard(addActivityRef, (EditText) commentTextView);
-                addActivityRef.initOnLoadView(); //get spinner
-                HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
+                if(reviewParams != null) {
+                    Utils.hideKeyboard(addActivityRef, (EditText) commentTextView);
+                    addActivityRef.initOnLoadView(); //get spinner
+
+                    if(imagePreviewView.getTag() != null) {
+                        String pictureUrlLocal = (String) imagePreviewView.getTag();
+                        ParseFile file = saveFile(pictureUrlLocal);
+                        reviewParams.setReviewPictureUrl(file.getUrl());
+                        reviewParams.setReviewPictureName(file.getUrl());
+                    }
+                    HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
+                }
                 break;
         }
         return true;
     }
 
-    private boolean addReview() {
+    private Review addReview() {
         addActivityRef.initOnLoadView(); //get spinner
 
-        //on callback
         String comment = ((EditText) commentTextView).getText().toString();
         if(comment.compareTo("") == 0) {
             Toast.makeText(addActivityRef.getApplicationContext(),
                     "Failed - write some comment!", Toast.LENGTH_LONG).show();
             addActivityRef.hideOnLoadView(); //get spinner
-            return false;
+            return null;
         }
+
         ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
                 ((RatingBar) statusRatingBarView).getRating());
 
         long timestamp = new DateTime().getMillis();
-        reviewParams = new Review(null, comment, ReviewStatus.toString(status),
-                timestamp, meUserId, coffeeMachineId);
-        return true;
+        return new Review(null, comment, ReviewStatus.toString(status),
+                timestamp, meUserId, coffeeMachineId, null, null);
     }
 
+    private ParseFile saveFile(String url) {
+        ParseFile file;
+        try {
+            Bitmap bitmap = BitmapFactory.decodeFile(url);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] image = stream.toByteArray();
+
+            file = new ParseFile("reviewPic.png", image);
+
+            file.save();
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public void addReviewSuccessCallback(String reviewId) {
         Review review = new Review(reviewId, reviewParams.getComment(),
                 reviewParams.getStatus(),
-                reviewParams.getTimestamp(), meUserId, coffeeMachineId);
+                reviewParams.getTimestamp(),
+                meUserId,
+                coffeeMachineId,
+                reviewParams.getReviewPictureName(),
+                reviewParams.getReviewPictureUrl());
 
         Intent intent = new Intent();
 

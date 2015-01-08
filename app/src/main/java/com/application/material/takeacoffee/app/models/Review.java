@@ -19,16 +19,16 @@ public class Review implements Parcelable {
     public static final String ERROR_MESSAGE = "Sorry! there's a problem to save or retrieve review data! Try again later";
     public static String REVIEW_OBJ_KEY = "REVIEW_OBJ_KEY";
     public static String REVIEW_PARAMS_KEY = "REVIEW_PARAMS_KEY";
-//    private String objectId;
 
     @SerializedName("objectId")
     private String id;
-//	private ReviewStatusEnum status;
 	private String status;
     private String comment;
     private String timestamp;
     private String userIdString;
     private String coffeeMachineIdString;
+    private String reviewPictureName;
+    private String reviewPictureUrl;
 
     public Review(Parcel in) {
         this.id = in.readString();
@@ -37,16 +37,21 @@ public class Review implements Parcelable {
         this.comment = in.readString();
         this.timestamp = in.readString();
         this.coffeeMachineIdString = in.readString();
+        this.reviewPictureName = in.readString();
+        this.reviewPictureUrl = in.readString();
     }
 
 	public Review(String id, String comment, String status,
-                  long timestamp, String userId, String coffeeMachineId) {
+                  long timestamp, String userId, String coffeeMachineId,
+                  String reviewPictureName, String reviewPictureUrl) {
         this.id = id;
         this.userIdString = userId;
         this.status = status;
         this.comment = comment;
         this.timestamp = Long.toString(timestamp);
         this.coffeeMachineIdString = coffeeMachineId;
+        this.reviewPictureName = reviewPictureName;
+        this.reviewPictureUrl = reviewPictureUrl;
     }
 
 	public String getCoffeeMachineId() {
@@ -76,6 +81,7 @@ public class Review implements Parcelable {
     public void setStatus(String status) {
         this.status = status;
     }
+
     public String getStatus() {
         return this.status;
     }
@@ -85,10 +91,8 @@ public class Review implements Parcelable {
     }
 
     public String getFormattedTimestamp() {
-        //TODO replace with it
-//        long timestamp = new DateTime().getMillis();
-
-        return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(Long.parseLong(timestamp)));
+        return new SimpleDateFormat("dd-MM-yyyy HH:mm")
+                .format(new Date(Long.parseLong(timestamp)));
     }
 
     @Override
@@ -98,10 +102,10 @@ public class Review implements Parcelable {
             "status: " + this.status +
             "comment: " + this.comment +
             "timestamp: " + this.timestamp +
-            "coffeeMachineIdString: " + this.coffeeMachineIdString;
+            "coffeeMachineIdString: " + this.coffeeMachineIdString +
+            "reviewPictureName: " + this.reviewPictureName +
+            "reviewPictureUrl: " + this.reviewPictureUrl;
     }
-
-
 
     @Override
     public int describeContents() {
@@ -112,11 +116,12 @@ public class Review implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
         dest.writeString(this.userIdString);
-//        dest.writeString(this.status.name());
         dest.writeString(this.status);
         dest.writeString(comment);
         dest.writeString(this.timestamp);
         dest.writeString(this.coffeeMachineIdString);
+        dest.writeString(this.reviewPictureName);
+        dest.writeString(this.reviewPictureUrl);
     }
 
     public static Creator CREATOR = new Creator() {
@@ -136,7 +141,22 @@ public class Review implements Parcelable {
     }
 
     public void setTimestamp() {
+    }
 
+    public void setReviewPictureName(String reviewPictureName) {
+        this.reviewPictureName = reviewPictureName;
+    }
+
+    public void setReviewPictureUrl(String reviewPictureUrl) {
+        this.reviewPictureUrl = reviewPictureUrl;
+    }
+
+    public String getReviewPictureUrl() {
+        return reviewPictureUrl;
+    }
+
+    public String getReviewPictureName() {
+        return reviewPictureName;
     }
 
 
@@ -234,7 +254,7 @@ public class Review implements Parcelable {
 
         }
     }
-
+/*
     public static class AddReviewParams implements Parcelable {
         private String status;
         private String comment;
@@ -273,7 +293,7 @@ public class Review implements Parcelable {
             return timestamp;
         }
     }
-
+*/
     public static class MoreReviewsParams {
         private String coffeeMachineId;
         private String fromReviewId;
@@ -285,7 +305,6 @@ public class Review implements Parcelable {
 
     public static class DeletedResponse {
         Object response;
-
         public DeletedResponse(Object response) {
             this.response = response;
         }

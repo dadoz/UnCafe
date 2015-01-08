@@ -55,17 +55,27 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.profilePicImageView = ((ImageView) convertView.findViewById(R.id.profilePicReviewTemplateId));
             holder.statusRatingBarView = ((RatingBar) convertView.findViewById(R.id.statusRatingBarId));
 
-//          TODO SET DATA TO VIEW
             EllipsizedComment comment = getReviewCommentEllipsized(review.getComment());
+            convertView.setTag(comment);
+
+//          TODO SET DATA TO VIEW
             holder.reviewCommentTextView.setText(comment.isEllipsized() ?
                     comment.getEllipsizedComment() : review.getComment());
             holder.reviewDateTextView.setText(review.getFormattedTimestamp());
             holder.statusRatingBarView.setRating(
                     ReviewStatus.parseStatusToRating(
-                        Review.ReviewStatus.parseStatus(review.getStatus())));
-
+                            Review.ReviewStatus.parseStatus(review.getStatus())));
             holder.expandDescriptionTextView.setVisibility(comment.isEllipsized() ? View.VISIBLE : View.GONE);
-            convertView.setTag(comment);
+
+            //add swiping view to show picture
+            boolean hasReviewPicture = review.getReviewPictureUrl() != null;
+            holder.swipeViewButton.setVisibility(hasReviewPicture ? View.VISIBLE : View.GONE);
+
+            if(hasReviewPicture) {
+                View reviewPictureView = LayoutInflater.from(mainActivityRef.getApplicationContext())
+                        .inflate(R.layout.review_template, parent, false);
+                ((ViewGroup)convertView).addView(reviewPictureView);
+            }
 
 //            holder.statusRatingBarView.setVisibility(View.GONE);
 //            ((TextView) convertView.findViewById(R.id.statusRatingBarId)).setText(
@@ -83,9 +93,6 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
                 VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
                 volleySingleton.imageRequest( user.getProfilePicturePath(), holder.profilePicImageView,
                         defaultIconId);
-
-//                ((VolleyImageRequestWrapper) mainActivityRef).volleyImageRequest(
-//                        user.getProfilePicturePath(), holder.profilePicImageView, defaultIconId);
             }
 
             //TODO check if selectedItem then background color middle grey
