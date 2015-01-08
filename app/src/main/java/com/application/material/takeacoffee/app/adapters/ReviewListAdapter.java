@@ -27,7 +27,8 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     private Bitmap defaultIcon;
     private String coffeeMachineId;
     private FragmentActivity mainActivityRef;
-    private ArrayList<User> userList;
+    private ArrayList<User> userList = new ArrayList<User>();
+    ;
     private int MAX_CHAR_COMMENT = 30;
 
     public ReviewListAdapter(FragmentActivity activity, int resource, ArrayList<Review> reviewList,
@@ -109,7 +110,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     }
 
     public boolean setUserList(ArrayList<User> userList) {
-        this.userList = userList;
+        this.userList.addAll(userList);
         return true;
     }
 

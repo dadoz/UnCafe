@@ -33,7 +33,7 @@ public class VolleySingleton implements ImageLoader.ImageCache {
 
     private static void initVolley(Context ctx) {
         //VOLLEY stuff
-        requestQueue = Volley.newRequestQueue(ctx);
+        requestQueue = Volley.newRequestQueue(ctx); //TODO app crash :S out of memory :O
         imageLoader = new ImageLoader(requestQueue, volleyInstance);
     }
 

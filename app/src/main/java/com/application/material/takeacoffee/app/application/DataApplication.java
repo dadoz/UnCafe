@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class DataApplication extends Application {
 
-    private ArrayList<User> userList;
+    private ArrayList<User> userList = new ArrayList<User>();
     private ReviewDataContainer reviewDataContainer;
     private CoffeeMachineStatus coffeeMachineStatus;
     private User user;
@@ -50,7 +50,7 @@ public class DataApplication extends Application {
     }
 
     public void saveUserList(ArrayList<User> userList) {
-        this.userList = userList;
+        this.userList.addAll(userList);
     }
 
     public boolean isUserSet() {
@@ -114,7 +114,7 @@ public class DataApplication extends Application {
                     reviewDataContainer = null;
                     break;
                 case 2:
-                    userList = null;
+                    userList = new ArrayList<User>();
                     break;
             }
         }

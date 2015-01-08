@@ -293,12 +293,16 @@ public class ReviewListFragment extends Fragment
         //get more review
         switch (view.getId()) {
             case R.id.headerTemplateId :
+                //MORE REVIEW
                 if(view.findViewById(R.id.moreReviewTemplateId).getVisibility() == View.VISIBLE) {
                     Log.e(TAG, "get previous review");
                     swipeRefreshLayout.setRefreshing(true);
 
                     //request review
-                    String fromReviewId = null;
+                    String fromReviewId = reviewList.size() == 0 ?
+                            null :
+                            reviewList.get(0).getId();
+
                     HttpIntentService.moreReviewListRequest(this.getActivity(),
                             coffeeMachineId, fromReviewId);
                     isMoreReviewRequest = true;
@@ -309,6 +313,7 @@ public class ReviewListFragment extends Fragment
                     return;
                 }
 
+                //OLD REVIEW
                 if(view.findViewById(R.id.oldReviewTemplateId).getVisibility() == View.VISIBLE) {
                     Log.e(TAG, "get old review");
                     Toast.makeText(mainActivityRef, "load old review", Toast.LENGTH_SHORT).show();
@@ -532,7 +537,6 @@ public class ReviewListFragment extends Fragment
     @Subscribe
     public void onNetworkRespose(CoffeeMachineStatus response){
         Log.d(TAG, "Response  COFFEE_MACHINE_STATUS");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
         if(response == null) {
             return;
         }
@@ -541,13 +545,13 @@ public class ReviewListFragment extends Fragment
 
         ((TextView) statusPeriodView).setText("01.12 - today");
         goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
+
+//        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
     }
 
     @Subscribe
     public void onNetworkRespose(ReviewDataContainer reviewDataContainer){
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-
         if(reviewDataContainer == null ||
                 reviewDataContainer.getReviewList() == null) {
             Log.e(TAG, "empty review list data");
@@ -588,6 +592,8 @@ public class ReviewListFragment extends Fragment
         }
 
         initView();
+
+        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(); //sync with review
     }
 
     @Subscribe

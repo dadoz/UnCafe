@@ -485,7 +485,7 @@ public class HttpIntentService extends IntentService {
         ArrayList<CoffeeMachine> listCoffeeMachine();
 
         @POST("/" + FUNCTIONS + MORE_REVIEW)
-        ReviewDataContainer listMoreReview(@Body Review.MoreReviewsParams user);
+        ReviewDataContainer listMoreReview(@Body Review.MoreReviewsParams params);
 
         @POST("/" + FUNCTIONS + WEEK_REVIEWS)
         ReviewDataContainer listReview(@Body Review.Params reviewParams);
