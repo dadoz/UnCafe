@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.singletons;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.LruCache;
@@ -24,16 +25,18 @@ public class VolleySingleton implements ImageLoader.ImageCache {
     }
 
     public static VolleySingleton getInstance(Context ctx) {
-        volleyInstance = volleyInstance == null ?
-                new VolleySingleton() :
-                volleyInstance;
-        initVolley(ctx);
+        if(volleyInstance == null) {
+            volleyInstance = new VolleySingleton();
+            initVolley(ctx);
+            return volleyInstance;
+        }
+
         return volleyInstance;
     }
 
     private static void initVolley(Context ctx) {
         //VOLLEY stuff
-        requestQueue = Volley.newRequestQueue(ctx); //TODO app crash :S out of memory :O
+        requestQueue = Volley.newRequestQueue(ctx);
         imageLoader = new ImageLoader(requestQueue, volleyInstance);
     }
 
