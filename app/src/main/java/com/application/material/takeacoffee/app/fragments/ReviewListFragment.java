@@ -238,10 +238,10 @@ public class ReviewListFragment extends Fragment
 
         listView.setAdapter(reviewListenerAdapter);
 
-        listView.setOnItemLongClickListener(! isReviewListEmpty ? this : null);
-        listView.setOnItemClickListener(! isReviewListEmpty ? this : null);
-        listView.setOnScrollListener(! isReviewListEmpty ? this : null);
-        swipeRefreshLayout.setOnRefreshListener(! isReviewListEmpty ? this : null);
+        listView.setOnItemLongClickListener(!isReviewListEmpty ? this : null);
+        listView.setOnItemClickListener(!isReviewListEmpty ? this : null);
+        listView.setOnScrollListener(!isReviewListEmpty ? this : null);
+        swipeRefreshLayout.setOnRefreshListener(!isReviewListEmpty ? this : null);
         swipeRefreshLayout.setProgressViewOffset(true, 100, 200); //TODO replace please with dimen size
         addReviewFabButton.setOnClickListener(this);
 
@@ -320,6 +320,33 @@ public class ReviewListFragment extends Fragment
                 }
                 break;
             case R.id.reviewLayoutId:
+                //TODO DEBUG
+                ImageView swipeViewButton = (ImageView) view.findViewById(R.id.swipeViewButtonId);
+                if(swipeViewButton.getVisibility() == View.VISIBLE) {
+                    try {
+                        view.findViewById(R.id.mainReviewLayoutId).setVisibility(View.GONE);
+
+                        View reviewPictureLayout = view.findViewById(R.id.reviewPictureLayoutId);
+                        reviewPictureLayout.setVisibility(View.VISIBLE);
+                        swipeViewButton.setVisibility(View.GONE);
+                        //set picture on imageView
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+
+                //TODO DEBUG
+                if(view.findViewById(R.id.reviewPictureLayoutId) != null) {
+                    view.findViewById(R.id.mainReviewLayoutId).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.reviewPictureLayoutId).setVisibility(View.GONE);
+                    swipeViewButton.setVisibility(View.VISIBLE);
+                    //CLEAR DATA
+                    return;
+                }
+
+                //OR ELLIPSIZE TEXT
                 EllipsizedComment comment = (EllipsizedComment) view.getTag();
 
                 if(! comment.isEllipsized()) {

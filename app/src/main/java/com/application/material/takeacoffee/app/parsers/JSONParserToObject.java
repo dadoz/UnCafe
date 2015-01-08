@@ -112,11 +112,15 @@ public class JSONParserToObject {
                     .getLong("timestamp");
             String reviewStatus = reviewJsonObj
                     .getString("status");
+            String reviewPictureName = reviewJsonObj
+                    .getString("review_picture_name");
+            String reviewPictureUrl = reviewJsonObj
+                    .getString("review_picture_url");
 
             return new Review(reviewId, reviewComment,
                     reviewStatus, timestamp,
                     reviewUserId, reviewCoffeeMachineId,
-                    null, null);
+                    reviewPictureName, reviewPictureUrl);
         } catch (JSONException e) {
             e.printStackTrace();
         }

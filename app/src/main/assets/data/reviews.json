@@ -11,6 +11,8 @@
                 "objectId": "qaeWjprTDF",
                 "createdAt": "2014-09-08T22:27:18.833Z",
                 "updatedAt": "2014-09-08T22:27:18.833Z",
+                "review_picture_name": "fake",
+                "review_picture_url": "fake",
                 "__type": "Object",
                 "className": "reviews"
             },
@@ -23,6 +25,8 @@
                 "objectId": "XjCGKwJKlV",
                 "createdAt": "2014-09-09T14:24:47.478Z",
                 "updatedAt": "2014-09-09T14:24:47.478Z",
+                "review_picture_name": "fake",
+                "review_picture_url": "fake",
                 "__type": "Object",
                 "className": "reviews"
             },
@@ -35,6 +39,8 @@
                 "objectId": "izV9MBTfWz",
                 "createdAt": "2014-09-10T09:18:57.920Z",
                 "updatedAt": "2014-09-10T09:18:57.920Z",
+                "review_picture_name": "fake",
+                "review_picture_url": "fake",
                 "__type": "Object",
                 "className": "reviews"
             },
@@ -47,6 +53,8 @@
                 "objectId": "f3RRMYo8At",
                 "createdAt": "2014-09-10T21:29:08.984Z",
                 "updatedAt": "2014-09-10T21:29:08.984Z",
+                "review_picture_name": "fake",
+                "review_picture_url": "fake",
                 "__type": "Object",
                 "className": "reviews"
             },
@@ -59,6 +67,8 @@
                 "objectId": "FGtcX2Lsaj",
                 "createdAt": "2014-09-10T21:36:44.396Z",
                 "updatedAt": "2014-09-10T21:36:44.396Z",
+                "review_picture_name": "fake",
+                "review_picture_url": "fake",
                 "__type": "Object",
                 "className": "reviews"
             },
@@ -71,6 +81,8 @@
                 "objectId": "GRKgXnQEzF",
                 "createdAt": "2014-09-10T21:37:52.441Z",
                 "updatedAt": "2014-09-22T17:26:21.076Z",
+                "review_picture_name": "fake",
+                "review_picture_url": "fake",
                 "__type": "Object",
                 "className": "reviews"
             }

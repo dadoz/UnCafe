@@ -52,6 +52,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.reviewDateTextView = ((TextView) convertView.findViewById(R.id.reviewDateTextId));
             holder.reviewCommentTextView = ((TextView) convertView.findViewById(R.id.reviewCommentTextId));
             holder.expandDescriptionTextView = ((TextView) convertView.findViewById(R.id.expandDescriptionTextId));
+            holder.swipeViewButton = ((ImageView) convertView.findViewById(R.id.swipeViewButtonId));
             holder.profilePicImageView = ((ImageView) convertView.findViewById(R.id.profilePicReviewTemplateId));
             holder.statusRatingBarView = ((RatingBar) convertView.findViewById(R.id.statusRatingBarId));
 
@@ -73,8 +74,14 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
 
             if(hasReviewPicture) {
                 View reviewPictureView = LayoutInflater.from(mainActivityRef.getApplicationContext())
-                        .inflate(R.layout.review_template, parent, false);
-                ((ViewGroup)convertView).addView(reviewPictureView);
+                        .inflate(R.layout.review_picture_template, parent, false);
+                reviewPictureView.setVisibility(View.GONE);
+                ((ViewGroup) convertView).addView(reviewPictureView);
+                User user = getUserByUserId(review.getUserId());
+                if(user != null) {
+                    ((TextView) reviewPictureView.findViewById(R.id.reviewUsernameTextId))
+                            .setText(user.getUsername());
+                }
             }
 
 //            holder.statusRatingBarView.setVisibility(View.GONE);
@@ -198,6 +205,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
         ImageView profilePicImageView;
         TextView usernameTextView;
         TextView expandDescriptionTextView;
+        ImageView swipeViewButton;
     }
 
 }

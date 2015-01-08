@@ -3,15 +3,14 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="fill_parent"
+        android:background="@color/light_grey">
     <RelativeLayout
-                    xmlns:filledcircle="http://schemas.android.com/apk/views"
-                    android:id="@+id/reviewsButtonId"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
-                    android:background="@color/light_grey">
+            android:id="@+id/reviewsButtonId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -86,24 +85,24 @@
 
         <!--bottom bar-->
         <!--<LinearLayout-->
-                <!--android:id="@+id/addReviewButtonId"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center"-->
-                <!--android:minHeight="@dimen/button_height"-->
-                <!--android:background="@color/light_black"-->
-                <!--android:padding="@dimen/small_padding">-->
+        <!--android:id="@+id/addReviewButtonId"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:minHeight="@dimen/button_height"-->
+        <!--android:background="@color/light_black"-->
+        <!--android:padding="@dimen/small_padding">-->
 
-            <!--<com.neopixl.pixlui.components.textview.TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textColor="@color/light_grey"-->
-                    <!--android:textSize="@dimen/text_big_30"-->
-                    <!--android:text="Add Review!"-->
-                    <!--pixlui:copyandpaste="false"-->
-                    <!--pixlui:clearclipboardcontent="true"-->
-                    <!--pixlui:typeface="chimphand-light.ttf"/>-->
+        <!--<com.neopixl.pixlui.components.textview.TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/light_grey"-->
+        <!--android:textSize="@dimen/text_big_30"-->
+        <!--android:text="Add Review!"-->
+        <!--pixlui:copyandpaste="false"-->
+        <!--pixlui:clearclipboardcontent="true"-->
+        <!--pixlui:typeface="chimphand-light.ttf"/>-->
         <!--</LinearLayout>-->
 
     </RelativeLayout>
