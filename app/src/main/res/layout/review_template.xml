@@ -7,49 +7,54 @@
                 android:paddingTop="@dimen/small_padding"
                 android:paddingBottom="@dimen/small_padding">
 
-        <RelativeLayout
-                android:id="@+id/mainReviewLayoutId"
+        <ImageView
+                android:id="@+id/profilePicReviewTemplateId"
+                android:layout_width="@dimen/medium_icon_size"
+                android:layout_height="@dimen/medium_icon_size"
+                android:layout_marginLeft="@dimen/medium_padding"
+                android:layout_marginRight="@dimen/medium_padding"
+                android:src="@drawable/user_icon"/>
+
+        <RatingBar
+                android:id="@+id/statusRatingBarId"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/profilePicReviewTemplateId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true">
-                <ImageView
-                    android:id="@+id/profilePicReviewTemplateId"
-                    android:layout_width="@dimen/medium_icon_size"
-                    android:layout_height="@dimen/medium_icon_size"
-                    android:layout_marginLeft="@dimen/medium_padding"
-                    android:layout_marginRight="@dimen/medium_padding"
-                    android:src="@drawable/user_icon"/>
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_marginLeft="@dimen/small_padding"
+                android:isIndicator="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:stepSize="1"
+                android:numStars="3"
+                style="@style/AppTheme.RatingBar"/>
 
-            <com.neopixl.pixlui.components.textview.TextView
-                    android:id="@+id/reviewDateTextId"
-                    android:layout_width="@dimen/timestamp_width"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="@dimen/small_padding"
-                    android:layout_marginEnd="@dimen/small_padding"
-                    android:textColor="@color/material_grey"
-                    android:textSize="@dimen/timestamp_text_size"
-                    android:text="date"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-light.ttf"/>
+        <ImageView
+                android:visibility="gone"
+                android:id="@+id/reviewPictureButtonId"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="@dimen/medium_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/attachment_icon"/>
 
-            <LinearLayout
-                    android:id="@+id/reviewContainerId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginRight="@dimen/small_padding"
-                    android:layout_marginEnd="@dimen/small_padding"
-                    android:layout_toRightOf="@id/profilePicReviewTemplateId"
-                    android:layout_toLeftOf="@id/reviewDateTextId">
+        <LinearLayout
+                android:id="@+id/reviewContainerId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="@dimen/small_padding"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:layout_toRightOf="@id/profilePicReviewTemplateId"
+                android:layout_toLeftOf="@id/reviewPictureButtonId">
 
                 <com.neopixl.pixlui.components.textview.TextView
                         android:id="@+id/reviewUsernameTextId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" - "
+                        android:text="Guest"
                         android:textColor="@color/material_blue_200"
                         android:gravity="top"
                         android:textSize="@dimen/title_text_size"
@@ -58,6 +63,17 @@
                         pixlui:copyandpaste="false"
                         pixlui:clearclipboardcontent="true"
                         pixlui:typeface="chimphand-regular.ttf"/>
+                <com.neopixl.pixlui.components.textview.TextView
+                android:id="@+id/reviewDateTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/small_padding"
+                android:textColor="@color/material_grey"
+                android:textSize="@dimen/timestamp_text_size"
+                android:text="date"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="chimphand-regular.ttf"/>
 
 
                 <com.neopixl.pixlui.components.textview.TextView
@@ -71,50 +87,32 @@
                         android:textSize="@dimen/content_text_size"
                         pixlui:copyandpaste="false"
                         pixlui:clearclipboardcontent="true"
-                        pixlui:typeface="chimphand-light.ttf"/>
+                        pixlui:typeface="chimphand-regular.ttf"/>
 
-            </LinearLayout>
+                <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/reviewPictureImageViewId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/large_icon_size"
+                        android:src="@android:drawable/ic_menu_report_image"/>
 
-            <com.neopixl.pixlui.components.textview.TextView
-                    android:id="@+id/expandDescriptionTextId"
-                    android:layout_below="@id/reviewContainerId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/small_padding"
-                    android:layout_centerHorizontal="true"
-                    android:text="tap to expand this review"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textColor="@color/material_grey"
-                    android:textSize="@dimen/text_small_14"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-light.ttf"/>
+        </LinearLayout>
 
 
-            <RatingBar
-                    android:id="@+id/statusRatingBarId"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@id/reviewContainerId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_padding"
-                    android:isIndicator="true"
-                    android:focusableInTouchMode="false"
-                    android:focusable="false"
-                    android:stepSize="1"
-                    android:numStars="3"
-                    style="@style/AppTheme.RatingBar"/>
-        <ImageView
-                android:id="@+id/swipeViewButtonId"
-                android:visibility="gone"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_width="@dimen/medium_icon_size"
-                android:layout_height="@dimen/medium_icon_size"
-                android:src="@drawable/left_arrow"/>
-
-
-        </RelativeLayout>
-
+        <!-- BOTTOM HINT -->
+        <com.neopixl.pixlui.components.textview.TextView
+                android:id="@+id/expandDescriptionTextId"
+                android:layout_below="@id/reviewContainerId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_padding"
+                android:layout_centerHorizontal="true"
+                android:text="tap to expand this review"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="@color/material_red"
+                android:textSize="@dimen/text_small_14"
+                pixlui:copyandpaste="false"
+                pixlui:clearclipboardcontent="true"
+                pixlui:typeface="chimphand-light.ttf"/>
 </RelativeLayout>

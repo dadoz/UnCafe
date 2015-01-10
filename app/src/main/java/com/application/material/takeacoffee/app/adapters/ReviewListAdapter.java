@@ -17,6 +17,7 @@ import com.application.material.takeacoffee.app.models.EllipsizedComment;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 
 import java.util.ArrayList;
@@ -30,8 +31,9 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     private ArrayList<User> userList = new ArrayList<User>();
     ;
     private int MAX_CHAR_COMMENT = 30;
+    private View.OnClickListener onClickListenerRef;
 
-    public ReviewListAdapter(FragmentActivity activity, int resource, ArrayList<Review> reviewList,
+    public ReviewListAdapter(FragmentActivity activity, View.OnClickListener onClickListenerRef, int resource, ArrayList<Review> reviewList,
                                String coffeeMachineId) {
         //this constructor to handle empty getView function
         super(activity.getApplicationContext(), resource, R.id.reviewCommentTextId, reviewList);
@@ -40,56 +42,54 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
         this.coffeeMachineId = coffeeMachineId;
         //SAVE MEMORY - DEFAULT ICON ALLOCATION
         this.defaultIcon = BitmapFactory.decodeResource(mainActivityRef.getResources(), R.drawable.user_icon);
+        this.onClickListenerRef = onClickListenerRef;
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
+        View view = LayoutInflater.from(mainActivityRef
+                .getApplicationContext()).inflate(R.layout.review_template, parent, false);
+
         try {
-            convertView = LayoutInflater.from(mainActivityRef
-                    .getApplicationContext()).inflate(R.layout.review_template, parent, false);
             Review review = reviewList.get(position);
+            boolean hasReviewPicture = review.getReviewPictureUrl() != null;
+
             ViewHolder holder = new ViewHolder();
-            holder.usernameTextView = (TextView) convertView.findViewById(R.id.reviewUsernameTextId);
-            holder.reviewDateTextView = ((TextView) convertView.findViewById(R.id.reviewDateTextId));
-            holder.reviewCommentTextView = ((TextView) convertView.findViewById(R.id.reviewCommentTextId));
-            holder.expandDescriptionTextView = ((TextView) convertView.findViewById(R.id.expandDescriptionTextId));
-            holder.swipeViewButton = ((ImageView) convertView.findViewById(R.id.swipeViewButtonId));
-            holder.profilePicImageView = ((ImageView) convertView.findViewById(R.id.profilePicReviewTemplateId));
-            holder.statusRatingBarView = ((RatingBar) convertView.findViewById(R.id.statusRatingBarId));
+            holder.usernameTextView = (TextView) view.findViewById(R.id.reviewUsernameTextId);
+            holder.reviewDateTextView = ((TextView) view.findViewById(R.id.reviewDateTextId));
+            holder.reviewCommentTextView = ((TextView) view.findViewById(R.id.reviewCommentTextId));
+            holder.expandDescriptionTextView = ((TextView) view.findViewById(R.id.expandDescriptionTextId));
+            holder.reviewPictureButton = ((ImageView) view.findViewById(R.id.reviewPictureButtonId));
+            holder.profilePicImageView = ((ImageView) view.findViewById(R.id.profilePicReviewTemplateId));
+            holder.statusRatingBarView = ((RatingBar) view.findViewById(R.id.statusRatingBarId));
+            holder.reviewPictureImageView = ((ImageView) view.findViewById(R.id.reviewPictureImageViewId));
 
             EllipsizedComment comment = getReviewCommentEllipsized(review.getComment());
-            convertView.setTag(comment);
+            view.setTag(comment);
+            boolean isCommentEllipsized = comment.isEllipsized();
 
 //          TODO SET DATA TO VIEW
-            holder.reviewCommentTextView.setText(comment.isEllipsized() ?
+            holder.reviewCommentTextView.setText(isCommentEllipsized ?
                     comment.getEllipsizedComment() : review.getComment());
             holder.reviewDateTextView.setText(review.getFormattedTimestamp());
             holder.statusRatingBarView.setRating(
                     ReviewStatus.parseStatusToRating(
                             Review.ReviewStatus.parseStatus(review.getStatus())));
-            holder.expandDescriptionTextView.setVisibility(comment.isEllipsized() ? View.VISIBLE : View.GONE);
+            holder.expandDescriptionTextView.setVisibility(isCommentEllipsized || hasReviewPicture ? View.VISIBLE : View.GONE);
 
             //add swiping view to show picture
-            boolean hasReviewPicture = review.getReviewPictureUrl() != null;
-            holder.swipeViewButton.setVisibility(hasReviewPicture ? View.VISIBLE : View.GONE);
+            holder.reviewPictureButton.setVisibility(hasReviewPicture ? View.VISIBLE : View.INVISIBLE);
+            holder.reviewPictureImageView.setOnClickListener(hasReviewPicture ? onClickListenerRef : null);
+            //with VOLLEY u can do it :) without no - cos u got out of memory
+//            holder.reviewPictureImageView.setImageBitmap(! hasReviewPicture ? null :
+//                    JSONParserToObject.getMockupPicture(mainActivityRef, review.getReviewPictureUrl()));
 
-            if(hasReviewPicture) {
-                View reviewPictureView = LayoutInflater.from(mainActivityRef.getApplicationContext())
-                        .inflate(R.layout.review_picture_template, parent, false);
-                reviewPictureView.setVisibility(View.GONE);
-                ((ViewGroup) convertView).addView(reviewPictureView);
-                User user = getUserByUserId(review.getUserId());
-                if(user != null) {
-                    ((TextView) reviewPictureView.findViewById(R.id.reviewUsernameTextId))
-                            .setText(user.getUsername());
-                }
-            }
 
 //            holder.statusRatingBarView.setVisibility(View.GONE);
-//            ((TextView) convertView.findViewById(R.id.statusRatingBarId)).setText(
+//            ((TextView) view.findViewById(R.id.statusRatingBarId)).setText(
 //                    String.valueOf(ReviewStatus.parseStatusToRating(review.getStatus())));
 
             if(userList == null) {
-                return convertView;
+                return view;
             }
 
             User user = getUserByUserId(review.getUserId());
@@ -106,13 +106,13 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             if(((SetActionBarInterface) mainActivityRef).isItemSelected() &&
                 ((SetActionBarInterface) mainActivityRef).getSelectedItemPosition() == position + 1) {
                 //due to header on listview
-                ((SetActionBarInterface) mainActivityRef).setSelectedItemView(convertView);
+                ((SetActionBarInterface) mainActivityRef).setSelectedItemView(view);
             }
         } catch (Exception e) {
             Log.e(TAG, " - " + e.getMessage());
             e.printStackTrace();
         }
-        return convertView;
+        return view;
     }
 
     private EllipsizedComment getReviewCommentEllipsized(String comment) {
@@ -120,7 +120,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             //ellipsize comment
             return new EllipsizedComment(comment, comment.substring(0, MAX_CHAR_COMMENT) + "...", true);
         }
-        return new EllipsizedComment(comment, null, false);
+        return new EllipsizedComment(comment, comment, false);
     }
 
     public boolean setUserList(ArrayList<User> userList) {
@@ -205,7 +205,8 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
         ImageView profilePicImageView;
         TextView usernameTextView;
         TextView expandDescriptionTextView;
-        ImageView swipeViewButton;
+        ImageView reviewPictureButton;
+        ImageView reviewPictureImageView;
     }
 
 }

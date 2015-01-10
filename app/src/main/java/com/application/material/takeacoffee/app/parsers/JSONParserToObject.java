@@ -1,8 +1,11 @@
 package com.application.material.takeacoffee.app.parsers;
 
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import com.application.material.takeacoffee.app.models.*;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.gson.JsonParseException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +36,26 @@ public class JSONParserToObject {
 
             // byte buffer into a string
             return new String(buffer);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+    public static Bitmap getMockupPicture(FragmentActivity fragmentActivity, String filename) {
+        AssetManager assetManager = fragmentActivity.getAssets();
+        InputStream input;
+        try {
+            input = assetManager.open("pictures/" + filename);
+
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
+
+            // byte buffer into a string
+            return BitmapFactory.decodeByteArray(buffer, 0, buffer.length);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -116,11 +139,11 @@ public class JSONParserToObject {
                     .getString("review_picture_name");
             String reviewPictureUrl = reviewJsonObj
                     .getString("review_picture_url");
-
             return new Review(reviewId, reviewComment,
                     reviewStatus, timestamp,
                     reviewUserId, reviewCoffeeMachineId,
-                    reviewPictureName, reviewPictureUrl);
+                    reviewPictureName.equals("null") ? null : reviewPictureName,
+                    reviewPictureUrl.equals("null") ? null : reviewPictureUrl);
         } catch (JSONException e) {
             e.printStackTrace();
         }

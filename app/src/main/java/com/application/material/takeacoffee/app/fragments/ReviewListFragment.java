@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.material.takeacoffee.app.AddReviewActivity;
@@ -24,12 +26,15 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFra
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.*;
+import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.neopixl.pixlui.components.imageview.*;
 import com.neopixl.pixlui.components.textview.TextView;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,6 +82,11 @@ public class ReviewListFragment extends Fragment
     private boolean isRefreshAction = false;
     private int REVIEW_MAX_LINES = 5; //max line number of review
     private int REVIEW_MIN_LINES = 2; //max line number of review
+
+    boolean mSwiping = false;
+    boolean mItemPressed = false;
+    static final int SWIPE_DURATION = 10;
+    private boolean isSwipedViewShown = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -159,6 +169,7 @@ public class ReviewListFragment extends Fragment
         HttpIntentService.reviewListRequest(this.getActivity(),
                 coffeeMachineId, timestamp);
 
+
         //TODO REFACTORING
 /*        long fromTimestamp = bundle.getLong(Common.FROM_TIMESTAMP_KEY);
         long toTimestamp = bundle.getLong(Common.TO_TIMESTAMP_KEY);
@@ -228,7 +239,7 @@ public class ReviewListFragment extends Fragment
 //        leftArrowIcon.setOnClickListener(this);
         Collections.reverse(reviewList);
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
-                R.layout.review_template, reviewList, coffeeMachineId);
+                this, R.layout.review_template, reviewList, coffeeMachineId);
 
         statusHeaderLayout.setVisibility(! isReviewListEmpty ? View.VISIBLE : View.GONE);
 
@@ -320,54 +331,44 @@ public class ReviewListFragment extends Fragment
                 }
                 break;
             case R.id.reviewLayoutId:
-                //TODO DEBUG
-                ImageView swipeViewButton = (ImageView) view.findViewById(R.id.swipeViewButtonId);
-                if(swipeViewButton.getVisibility() == View.VISIBLE) {
-                    try {
-                        view.findViewById(R.id.mainReviewLayoutId).setVisibility(View.GONE);
+                try {
+                    Review review = (Review) adapterView.getAdapter().getItem(position);
+                    boolean hasReviewPicture = review.getReviewPictureUrl() != null;
+                    EllipsizedComment comment = (EllipsizedComment) view.getTag();
+                    boolean isReviewHidden = comment.isHidden();
 
-                        View reviewPictureLayout = view.findViewById(R.id.reviewPictureLayoutId);
-                        reviewPictureLayout.setVisibility(View.VISIBLE);
-                        swipeViewButton.setVisibility(View.GONE);
-                        //set picture on imageView
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if(! comment.isEllipsized() &&
+                            ! hasReviewPicture) {
+                        (view.findViewById(R.id.expandDescriptionTextId))
+                                .setVisibility(View.GONE);
+                        return;
                     }
-                    return;
-                }
 
-                //TODO DEBUG
-                if(view.findViewById(R.id.reviewPictureLayoutId) != null) {
-                    view.findViewById(R.id.mainReviewLayoutId).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.reviewPictureLayoutId).setVisibility(View.GONE);
-                    swipeViewButton.setVisibility(View.VISIBLE);
-                    //CLEAR DATA
-                    return;
-                }
-
-                //OR ELLIPSIZE TEXT
-                EllipsizedComment comment = (EllipsizedComment) view.getTag();
-
-                if(! comment.isEllipsized()) {
+                    int maxLines = isReviewHidden ? REVIEW_MAX_LINES : REVIEW_MIN_LINES;
+                    ((TextView) view.findViewById(R.id.reviewCommentTextId))
+                            .setMaxLines(maxLines);
                     (view.findViewById(R.id.expandDescriptionTextId))
-                            .setVisibility(View.GONE);
-                    return;
+                            .setVisibility(isReviewHidden ? View.GONE : View.VISIBLE);
+
+                    ((TextView) view.findViewById(R.id.reviewCommentTextId))
+                            .setText(isReviewHidden ?
+                                    comment.getPlainComment() :
+                                    comment.getEllipsizedComment());
+
+                    //set reviewPicture
+                    if(hasReviewPicture) {
+                        ((ImageView) view.findViewById(R.id.reviewPictureImageViewId)).setImageBitmap(! isReviewHidden ?
+                                null :
+                                JSONParserToObject.getMockupPicture(mainActivityRef, review.getReviewPictureUrl()));
+                        (view.findViewById(R.id.reviewPictureImageViewId)).setVisibility(isReviewHidden ? View.VISIBLE : View.GONE);
+                    }
+
+                    //UPDATE - TOGGLE
+                    comment.setHidden(! isReviewHidden);
+                    view.setTag(comment);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                int maxLines = comment.isHidden() ? REVIEW_MAX_LINES : REVIEW_MIN_LINES;
-                ((TextView) view.findViewById(R.id.reviewCommentTextId))
-                        .setMaxLines(maxLines);
-                (view.findViewById(R.id.expandDescriptionTextId))
-                        .setVisibility(comment.isHidden() ? View.GONE : View.VISIBLE);
-
-                ((TextView) view.findViewById(R.id.reviewCommentTextId))
-                        .setText(comment.isHidden() ?
-                                comment.getPlainComment() :
-                                comment.getEllipsizedComment());
-                //UPDATE
-                comment.setHidden(! comment.isHidden());
-                view.setTag(comment);
 
                 break;
         }
@@ -485,14 +486,26 @@ public class ReviewListFragment extends Fragment
                         .startActivityWrapper(AddReviewActivity.class,
                                 CoffeeMachineActivity.ACTION_ADD_REVIEW, bundle);
                 break;
-//            case R.id.leftArrowIconId:
-//                Toast.makeText(mainActivityRef, "got statistics on machine",
-//                        Toast.LENGTH_SHORT).show();
-//                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-//                        .startActivityWrapper(AddReviewActivity.class,
-//                                CoffeeMachineActivity.ACTION_ADD_REVIEW, null);
-//                break;
+            case R.id.reviewPictureImageViewId:
+                Log.e(TAG, "expand pic view");
+                ImageView reviewPictureView = new ImageView(mainActivityRef);
+                reviewPictureView.setImageDrawable(((ImageView) v).getDrawable());
+//                reviewPictureView.setLayoutParams(new ViewGroup.LayoutParams(600, ViewGroup.LayoutParams.WRAP_CONTENT));
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef).
+                        setView(reviewPictureView).
+                        setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                Dialog dialog = builder.create();
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.show();
 
+
+
+                break;
         }
     }
 
@@ -666,130 +679,147 @@ public class ReviewListFragment extends Fragment
     }
 
 
-/*    @Override
-    public Loader<RestResponse> onCreateLoader(int id, Bundle params) {
-        try {
-            String action = RetrofitLoader.getActionByActionRequestEnum(id);
-            return new RetrofitLoader(this.getActivity(), action, params);
-        } catch (Exception e) {
-//            e.printStackTrace();
-        }
-        return null;
-    }
+    /**
+     * Handle touch events to fade/move dragged items as they are swiped out
+     */
+/*    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
 
-    @Override
-    public void onLoadFinished(Loader<RestResponse> loader,
-                               RestResponse restResponse) {
-        //TODO REFACTORIZE IT - add a new class with an interface
-        //TODO FIX IT
-        final int REVIEW_REQ = 0; //REVIEW_REQUEST.ordinal();
-        final int MORE_REVIEW_REQ = 1; //MORE_REVIEW_REQUEST.ordinal();
-        final int USER_REQ = 6; //USER_REQUEST.ordinal();
-        final int COFFEE_MACHINE_STATUS_REQ = 5; //.ordinal();
-        Log.i(TAG, "request id - " + loader.getId());
-        try {
-            switch (loader.getId()) {
-                case COFFEE_MACHINE_STATUS_REQ:
-                    Log.i(TAG, "STATUS_REQ");
+        float mDownX;
+        private int mSwipeSlop = -1;
 
-                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-//                    reviewStatus = (ReviewStatus) restResponse.getParsedData();
-
-                    //MOCKUP
-                    String filename = "review_status.json";
-                    String data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    coffeeMachineStatus = JSONParserToObject.coffeeMachineStatusParser(data);
-
-                    //real json data
-//                    coffeeMachineStatus = (CoffeeMachineStatus) restResponse.getParsedData();
-
-                    if(getLoaderManager().getLoader(REVIEW_REQUEST.ordinal()) != null) {
-                        getLoaderManager().restartLoader(REVIEW_REQUEST.ordinal(), null, this).forceLoad();
-                        goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
-                        return;
-                    }
-
-                    getLoaderManager().initLoader(REVIEW_REQUEST.ordinal(), null, this)
-                            .forceLoad();
-                    break;
-                case REVIEW_REQ:
-                    Log.i(TAG, "REVIEW_REQ");
-
-                    ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-
-                    filename = "reviews.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    ReviewDataContainer reviewDataContainer = JSONParserToObject.getReviewListParser(data);
-                    //real json data
-//                    reviewList = (ArrayList<Review>) restResponse.getParsedData();
-
-                    reviewList = reviewDataContainer.getReviewList();
-                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
-
-                    Bundle params = new Bundle();
-                    if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
-                        setHasMoreReviewView();
-                        getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-
-                        getAdapterWrapper().setReviewList(reviewList);
-                        getAdapterWrapper().notifyDataSetChanged();
-                        return;
-                    }
-
-                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                    initView();
-                    break;
-                case MORE_REVIEW_REQ:
-                    Log.i(TAG, "MORE_REVIEW_REQ");
-                    swipeRefreshLayout.setRefreshing(false);
-
-                    filename = "prev_reviews.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    reviewDataContainer = JSONParserToObject.getReviewListParser(data);
-                    prevReviewList = reviewDataContainer.getReviewList();
-                    hasMoreReviews = reviewDataContainer.getHasMoreReviews();
-                    setHasMoreReviewView();
-//                    prevReviewList = (ArrayList<Review>) restResponse.getParsedData();
-
-                    //TODO add review to adapter
-                    getAdapterWrapper().setPrevReview(prevReviewList);
-                    //create new loader for user
-                    params = new Bundle();
-                    if(getLoaderManager().getLoader(USER_REQUEST.ordinal()) != null) {
-                        getLoaderManager().restartLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                        getAdapterWrapper().notifyDataSetChanged();
-                        return;
-                    }
-
-                    getLoaderManager().initLoader(USER_REQUEST.ordinal(), params, this).forceLoad();
-                    break;
-                case USER_REQ:
-                    Log.i(TAG, "USER_REQ");
-
-                    //TODO TEST
-                    filename = "user.json";
-                    data = RetrofitLoader.getJSONDataMockup(this.getActivity(), filename);
-                    userList = JSONParserToObject.getUserListParser(data);
-
-//                    ArrayList<User> userList = (ArrayList<User>) restResponse.getParsedData();
-                    getAdapterWrapper().setUserList(userList);
-                    getAdapterWrapper().notifyDataSetChanged();
-//                    swipeRefreshLayout.setRefreshing(false);
-                    break;
+        @Override
+        public boolean onTouch(final View v, MotionEvent event) {
+            if (mSwipeSlop < 0) {
+                mSwipeSlop = ViewConfiguration.get(mainActivityRef).
+                        getScaledTouchSlop();
             }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.e(TAG, "down");
+                    if (mItemPressed) {
+                        // Multi-item swipes not handled
+                        return false;
+                    }
+                    mItemPressed = true;
+                    mDownX = event.getX();
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    v.setAlpha(1);
+                    v.setTranslationX(0);
+                    mItemPressed = false;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                {
+                    float x = event.getX() + v.getTranslationX();
+                    float deltaX = x - mDownX;
+                    float deltaXAbs = Math.abs(deltaX);
+                    if (!mSwiping) {
+                        if (deltaXAbs > mSwipeSlop) {
+                            mSwiping = true;
+                            listView.requestDisallowInterceptTouchEvent(true);
+//                            mBackgroundContainer.showBackground(v.getTop(), v.getHeight());
+                        }
+                    }
+                    if (mSwiping) {
+                        v.setTranslationX((x - mDownX));
+                        v.setAlpha(1 - deltaXAbs / v.getWidth());
+                    }
+                }
+                break;
+                case MotionEvent.ACTION_UP:
+                {
+                    // User let go - figure out whether to animate the view out, or back into place
+                    if (mSwiping) {
+                        float x = event.getX() + v.getTranslationX();
+                        float deltaX = x - mDownX;
+                        float deltaXAbs = Math.abs(deltaX);
+                        float fractionCovered;
+                        float endX;
+                        float endAlpha;
+                        final boolean remove;
+                        if (deltaXAbs > v.getWidth() / 4) {
+                            // Greater than a quarter of the width - animate it out
+                            fractionCovered = deltaXAbs / v.getWidth();
+                            endX = deltaX < 0 ? -v.getWidth() : v.getWidth();
+                            endAlpha = 0;
+                            remove = true;
+                        } else {
+                            // Not far enough - animate it back
+                            fractionCovered = 1 - (deltaXAbs / v.getWidth());
+                            endX = 0;
+                            endAlpha = 1;
+                            remove = false;
+                        }
+                        // Animate position and alpha of swiped item
+                        // NOTE: This is a simplified version of swipe behavior, for the
+                        // purposes of this demo about animation. A real version should use
+                        // velocity (via the VelocityTracker class) to send the item off or
+                        // back at an appropriate speed.
+                        long duration = (int) ((1 - fractionCovered) * SWIPE_DURATION);
+                        listView.setEnabled(false);
+//                        v.animate().setDuration(duration).
+//                                alpha(endAlpha).translationX(endX).
+//                                withEndAction(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        Restore animated values
+//                                        v.setAlpha(1);
+//                                        v.setTranslationX(0);
+//                                        if (remove) {
+//                                            animateRemoval(listView, v);
+//                                        } else {
+//                                            mBackgroundContainer.hideBackground();
+//                                            mSwiping = false;
+//                                            listView.setEnabled(true);
+//                                        }
+//                                    }
+//                                });
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                        v.setAlpha(1);
+                        v.setTranslationX(0);
+                        if (remove) {
+                            Log.e(TAG, "swipe");
+                            swipeView(listView, v);
+                        } else {
+//                          mBackgroundContainer.hideBackground();
+                            Log.e(TAG, "not swipe");
+                            mSwiping = false;
+                            listView.setEnabled(true);
+                        }
+                    }
+                }
+                mItemPressed = false;
+                break;
+                default:
+                    return false;
+            }
+            return true;
         }
+    };*/
+
+    private void swipeView(ListView listView, View v) {
+        Log.e(TAG, "finish to swipe");
+        mSwiping = false;
+        listView.setEnabled(true);
+
+        //TODO swipe to new view
+        if(! isSwipedViewShown) {
+            try {
+//                v.findViewById(R.id.mainReviewLayoutId).setVisibility(View.GONE);
+                View reviewPictureLayout = v.findViewById(R.id.reviewPictureLayoutId);
+                reviewPictureLayout.setVisibility(View.VISIBLE);
+                //set picture on imageView
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        //TODO swipeBack
+//        v.findViewById(R.id.mainReviewLayoutId).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.reviewPictureLayoutId).setVisibility(View.GONE);
     }
 
-    @Override
-    public void onLoaderReset(Loader<RestResponse> restResponseLoader) {
-        //called on release resources - on back press and when loader is deleted/abandoned
-        Log.e(TAG, "reset loader");
-    }
-
-*/
 
 }
 
