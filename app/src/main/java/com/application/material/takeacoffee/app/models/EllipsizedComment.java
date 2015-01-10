@@ -8,6 +8,8 @@ public class EllipsizedComment {
     private boolean isHidden;
     private String plainComment;
     private String ellipsizedComment;
+    public static int MAX_CHAR_COMMENT = 22;
+
 
     public EllipsizedComment(String plainComment, String ellipsizedComment, boolean isEllipsized) {
         this.plainComment = plainComment;

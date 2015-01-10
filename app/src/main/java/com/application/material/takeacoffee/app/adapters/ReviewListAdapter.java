@@ -22,6 +22,8 @@ import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 
 import java.util.ArrayList;
 
+import static com.application.material.takeacoffee.app.models.EllipsizedComment.MAX_CHAR_COMMENT;
+
 public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnClickListener {
     private static final String TAG = "ReviewListAdapter";
     private ArrayList<Review> reviewList;
@@ -29,8 +31,6 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     private String coffeeMachineId;
     private FragmentActivity mainActivityRef;
     private ArrayList<User> userList = new ArrayList<User>();
-    ;
-    private int MAX_CHAR_COMMENT = 30;
     private View.OnClickListener onClickListenerRef;
 
     public ReviewListAdapter(FragmentActivity activity, View.OnClickListener onClickListenerRef, int resource, ArrayList<Review> reviewList,

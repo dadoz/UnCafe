@@ -63,7 +63,7 @@
 
                     pixlui:copyandpaste="true"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-light.ttf"/>
+                    pixlui:typeface="chimphand-regular.ttf"/>
 
 
             <RatingBar

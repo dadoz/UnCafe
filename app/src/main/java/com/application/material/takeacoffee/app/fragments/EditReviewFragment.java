@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewH
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
@@ -30,21 +32,15 @@ public class EditReviewFragment extends Fragment implements
     private EditReviewActivity editActivityRef;
     private Bundle bundle;
     private View addReviewView;
-    private User user;
     private Review review;
     @InjectView(R.id.editReviewCommentTextId) View editReviewCommentText;
     @InjectView(R.id.editStatusRatingBarViewId) View editStatusRatingBarView;
-//    @InjectView(R.id.saveReviewButtonId) View saveReviewButton;
     @InjectView(R.id.deletePictureIconId) View deletePictureButton;
     @InjectView(R.id.pickPictureFromCameraIconId) View pickPictureFromCameraButton;
     @InjectView(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
     @InjectView(R.id.imagePreviewViewId) View imagePreviewView;
     private DataApplication dataApplication;
-    private String meUserId;
     private boolean isReviewPictureSet = false;
-//    @InjectView(R.id.usernameTextId) View usernameText;
-//    @InjectView(R.id.userIconId) View userIconView;
-//    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
 
 
     @Override
@@ -61,7 +57,7 @@ public class EditReviewFragment extends Fragment implements
 
         //getArgs
         bundle = getArguments();
-        meUserId = dataApplication.getUserId();
+//        meUserId = dataApplication.getUserId();
         try {
 //            user = bundle.getParcelable(User.USER_OBJ_KEY);
             review = bundle.getParcelable(Review.REVIEW_OBJ_KEY);
@@ -115,15 +111,23 @@ public class EditReviewFragment extends Fragment implements
                         Review.ReviewStatus.parseStatus(review.getStatus())));
         ((EditText) editReviewCommentText).setText(review.getComment());
 
-//        saveReviewButton.setOnClickListener(this);
         deletePictureButton.setOnClickListener(this);
         pickPictureFromCameraButton.setOnClickListener(this);
         pickPictureFromGalleryButton.setOnClickListener(this);
+
+        //if pic is set
         if(isReviewPictureSet) {
             ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
+            return;
         }
 
-//        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
+        //retrieve pic from review
+        if(review.getReviewPictureUrl() != null) {
+            Bitmap pic = JSONParserToObject.
+                    getMockupPicture(editActivityRef, review.getReviewPictureUrl());
+            dataApplication.setReviewPictureTemp(pic);
+            ((ImageView) imagePreviewView).setImageBitmap(pic);
+        }
     }
 
     public boolean updateReview() {
