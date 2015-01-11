@@ -9,7 +9,7 @@
 
     <LinearLayout
             android:id="@+id/titleContainerLayoutId"
-            android:background="@color/material_text_black"
+            android:background="@color/light_black"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/small_padding"
             android:layout_width="fill_parent"
@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_medium_20"
-                android:textColor="@color/material_red_200"
+                android:textColor="@color/material_amber_200"
                 android:text="Takeacoffee"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_small_14"
-                android:textColor="@color/light_grey"
+                android:textColor="@color/material_light_yellow_200"
                 android:text="Politecnico di torino - c.so Vinzaglio"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"

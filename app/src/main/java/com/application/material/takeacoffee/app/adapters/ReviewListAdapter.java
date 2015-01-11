@@ -60,7 +60,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.expandDescriptionTextView = ((TextView) view.findViewById(R.id.expandDescriptionTextId));
             holder.reviewPictureButton = ((ImageView) view.findViewById(R.id.reviewPictureButtonId));
             holder.profilePicImageView = ((ImageView) view.findViewById(R.id.profilePicReviewTemplateId));
-            holder.statusRatingBarView = ((RatingBar) view.findViewById(R.id.statusRatingBarId));
+//            holder.statusRatingBarView = ((RatingBar) view.findViewById(R.id.statusRatingBarId));
             holder.reviewPictureImageView = ((ImageView) view.findViewById(R.id.reviewPictureImageViewId));
 
             EllipsizedComment comment = getReviewCommentEllipsized(review.getComment());
@@ -71,12 +71,12 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.reviewCommentTextView.setText(isCommentEllipsized ?
                     comment.getEllipsizedComment() : review.getComment());
             holder.reviewDateTextView.setText(review.getFormattedTimestamp());
-            holder.statusRatingBarView.setRating(
-                    ReviewStatus.parseStatusToRating(
-                            Review.ReviewStatus.parseStatus(review.getStatus())));
+//            holder.statusRatingBarView.setRating(
+//                    ReviewStatus.parseStatusToRating(
+//                            Review.ReviewStatus.parseStatus(review.getStatus())));
             holder.expandDescriptionTextView.setVisibility(isCommentEllipsized || hasReviewPicture ? View.VISIBLE : View.GONE);
 
-            //add swiping view to show picture
+            //view to show review picture
             holder.reviewPictureButton.setVisibility(hasReviewPicture ? View.VISIBLE : View.INVISIBLE);
             holder.reviewPictureImageView.setOnClickListener(hasReviewPicture ? onClickListenerRef : null);
             //with VOLLEY u can do it :) without no - cos u got out of memory
@@ -94,9 +94,10 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
 
             User user = getUserByUserId(review.getUserId());
             if(user != null) {
+                int defaultIconId = R.drawable.user_icon;
+
                 holder.usernameTextView.setText(user.getUsername());
 
-                int defaultIconId = R.drawable.user_icon;
                 VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
                 volleySingleton.imageRequest( user.getProfilePicturePath(), holder.profilePicImageView,
                         defaultIconId);

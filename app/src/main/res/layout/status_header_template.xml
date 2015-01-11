@@ -4,9 +4,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
         android:id="@+id/statusHeaderLayoutId"
+
         android:layout_width="fill_parent"
         android:layout_height="@dimen/coffee_machine_status_header_size"
-        android:background="@color/light_grey">
+        android:background="@color/material_grey_200">
         <ImageView
                 android:id="@+id/statusCoffeeIconId"
                 android:layout_centerVertical="true"
@@ -24,7 +25,7 @@
                         android:id="@+id/periodTextId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/material_text_black"
+                        android:textColor="@color/material_text_brown"
                         android:textSize="@dimen/title_text_size"
                         android:text=" - "
                         android:layout_marginBottom="@dimen/small_padding"
@@ -37,7 +38,7 @@
                     android:id="@+id/goodReviewPercentageTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/material_red_200"
+                    android:textColor="@color/material_light_red"
                     android:textSize="@dimen/title_text_size"
                     android:text="- %"
                     pixlui:copyandpaste="false"
@@ -47,7 +48,7 @@
                 <com.neopixl.pixlui.components.textview.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/material_text_black"
+                    android:textColor="@color/material_text_brown"
                     android:textSize="@dimen/small_content_text_size"
                     android:text="of good review"
                     pixlui:copyandpaste="false"
@@ -73,7 +74,7 @@
                     <!--android:layout_height="wrap_content"-->
                     <!--android:textSize="@dimen/text_medium_20"-->
                     <!--android:text="prev reviews"-->
-                    <!--android:textColor="@color/material_text_black"-->
+                    <!--android:textColor="@color/material_text_brown"-->
                     <!--pixlui:copyandpaste="false"-->
                     <!--pixlui:clearclipboardcontent="true"-->
                     <!--pixlui:typeface="chimphand-regular.ttf"/>-->

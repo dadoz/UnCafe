@@ -15,20 +15,20 @@
             android:layout_marginRight="@dimen/medium_padding"
             android:src="@drawable/user_icon"/>
 
-    <RatingBar
-            android:id="@+id/statusRatingBarId"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/profilePicReviewTemplateId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_padding"
-            android:layout_marginLeft="@dimen/small_padding"
-            android:isIndicator="true"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            android:stepSize="1"
-            android:numStars="3"
-            style="@style/AppTheme.RatingBar"/>
+    <!--<RatingBar-->
+            <!--android:id="@+id/statusRatingBarId"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_below="@id/profilePicReviewTemplateId"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/small_padding"-->
+            <!--android:layout_marginLeft="@dimen/small_padding"-->
+            <!--android:isIndicator="true"-->
+            <!--android:focusableInTouchMode="false"-->
+            <!--android:focusable="false"-->
+            <!--android:stepSize="1"-->
+            <!--android:numStars="3"-->
+            <!--style="@style/AppTheme.RatingBar"/>-->
 
     <ImageView
             android:visibility="gone"
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Guest"
-                android:textColor="@color/material_blue_200"
+                android:textColor="@color/material_light_red"
                 android:gravity="top"
                 android:textSize="@dimen/title_text_size"
                 android:maxLines="1"
@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/small_padding"
-                    android:textColor="@color/material_blue_200"
+                    android:textColor="@color/material_light_red"
                     android:textSize="@dimen/timestamp_text_size"
                     android:text="at: "
                     pixlui:copyandpaste="false"
@@ -99,7 +99,7 @@
                 android:text="review content"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textColor="@color/material_text_black"
+                android:textColor="@color/material_text_brown"
                 android:textSize="@dimen/content_text_size"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
@@ -123,12 +123,12 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/small_padding"
             android:layout_centerHorizontal="true"
-            android:text="tap to expand this review"
+            android:text="tap to expand it!"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textColor="@color/material_red"
+            android:textColor="@color/material_grey"
             android:textSize="@dimen/text_small_14"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
-            pixlui:typeface="chimphand-light.ttf"/>
+            pixlui:typeface="chimphand-regular.ttf"/>
 </RelativeLayout>

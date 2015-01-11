@@ -29,6 +29,8 @@ import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -45,6 +47,7 @@ public class AddReviewFragment extends Fragment implements
     @InjectView(R.id.pickPictureIconId) View pickPictureButton;
     @InjectView(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
     @InjectView(R.id.imagePreviewViewId) View imagePreviewView;
+    @InjectView(R.id.setRatingButtonId) View setRatingButton;
 
 //    @InjectView(R.id.filledCircleId) View filledCircleView;
 //    @InjectView(R.id.seekBarId) View seekBarView;
@@ -53,6 +56,8 @@ public class AddReviewFragment extends Fragment implements
     private Review reviewParams;
     private DataApplication dataApplication;
     private boolean isReviewPictureSet = false;
+    private boolean mItemPressed = false;
+
 //    @InjectView(R.id.usernameTextId) View usernameText;
 //    @InjectView(R.id.userIconId) View userIconView;
 //    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
@@ -145,6 +150,8 @@ public class AddReviewFragment extends Fragment implements
         if(isReviewPictureSet) {
             ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
         }
+        setRatingButton.setOnTouchListener(setRatingTouchListener);
+
 //        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
     }
 
@@ -267,6 +274,51 @@ public class AddReviewFragment extends Fragment implements
 
     }
 
+    private View.OnTouchListener setRatingTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(final View v, MotionEvent event) {
+            //start counter
+            Timer timer = new Timer();
+            final int [] counterArray = new int[1];
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    counterArray[0] = 0;
+                    Log.e(TAG, "down");
+
+                    if (mItemPressed) {
+                        // Multi-item swipes not handled
+                        return false;
+                    }
+                    mItemPressed = true;
+
+                    timer.scheduleAtFixedRate(new TimerTask() {
+                        @Override
+                        public void run() {
+                            addActivityRef.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    counterArray[0] ++;
+                                    Log.e(TAG, "expand coffee cup - " + counterArray[0]);
+                                }
+                            });
+                        }
+                    }, 1000, 1000);
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    timer.cancel();
+                    Log.e(TAG, "down");
+                    if (mItemPressed) {
+                        // Multi-item swipes not handled
+                        return false;
+                    }
+                    mItemPressed = true;
+
+                    break;
+            }
+            return true;
+        }
+    };
 
     @Subscribe
     public void onNetworkResponse(Review review) {

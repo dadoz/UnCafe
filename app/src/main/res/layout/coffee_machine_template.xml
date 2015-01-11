@@ -18,7 +18,7 @@
             android:id="@+id/coffeeMachineNameTextId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/material_blue_200"
+            android:textColor="@color/material_light_red"
             android:text="Coffee machine name"
             android:textSize="@dimen/title_text_size"
             pixlui:copyandpaste="false"
@@ -27,9 +27,10 @@
 
     <com.neopixl.pixlui.components.textview.TextView
             android:id="@+id/coffeeMachineAddressTextId"
+            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/material_red_200"
+            android:textColor="@color/material_text_brown"
             android:text="position"
             android:textSize="@dimen/text_medium_20"
             pixlui:copyandpaste="false"

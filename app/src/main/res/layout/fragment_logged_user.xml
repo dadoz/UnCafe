@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_medium_20"
-                android:textColor="@color/material_text_black"
+                android:textColor="@color/material_text_brown"
                 android:text="Set a picture and choice your username:"/>
 
         <com.neopixl.pixlui.components.edittext.EditText
@@ -29,7 +29,7 @@
                 pixlui:clearclipboardcontent="true"
                 pixlui:typeface="chimphand-regular.ttf"
                 android:textSize="@dimen/text_medium_20"
-                android:textColor="@color/material_text_black"
+                android:textColor="@color/material_text_brown"
                 android:id="@+id/loginUsernameEditId"
                 android:layout_width="@dimen/extra_huge_icon_size"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 pixlui:clearclipboardcontent="true"
                 pixlui:typeface="chimphand-regular.ttf"
                 android:textSize="@dimen/text_medium_20"
-                android:textColor="@color/material_text_black"
+                android:textColor="@color/material_text_brown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="or login with facebook >"/>
@@ -61,7 +61,7 @@
                         pixlui:copyandpaste="false"
                         pixlui:clearclipboardcontent="true"
                         pixlui:typeface="chimphand-regular.ttf"
-                        android:textColor="@color/material_text_black"
+                        android:textColor="@color/material_text_brown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="delete user"/>

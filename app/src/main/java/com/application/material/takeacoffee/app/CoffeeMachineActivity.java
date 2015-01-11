@@ -343,7 +343,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     public void setSelectedItemView(View view) {
         selectedItemView = view;
         selectedItemView.setBackgroundColor(isItemSelected() ?
-                getResources().getColor(R.color.material_red_200) : 0x00000000);
+                getResources().getColor(R.color.material_amber_200) : 0x00000000);
     }
 
 
@@ -359,7 +359,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
             reviewListview.setOnItemLongClickListener(isItemSelected() ? null : listener);
             if(selectedItemView != null) {
                 selectedItemView.setBackgroundColor(isItemSelected() ?
-                        getResources().getColor(R.color.material_red_200) : 0x00000000);
+                        getResources().getColor(R.color.material_amber_200) : 0x00000000);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -369,7 +369,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private void setActionBarSelected() {
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(
-                        isItemSelected() ? R.color.material_grey : R.color.material_red_200)));
+                        isItemSelected() ? R.color.material_grey : R.color.action_bar)));
         invalidateOptionsMenu();
         //set new title on actionBar
         try {

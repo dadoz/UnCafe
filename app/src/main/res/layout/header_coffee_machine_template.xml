@@ -55,7 +55,7 @@
             <!--android:orientation="vertical"-->
             <!--android:gravity="center"-->
             <!--android:layout_alignParentLeft="true">-->
-        <!--android:background="@drawable/border_left_light_grey"-->
+        <!--android:background="@drawable/border_left_material_light_yellow_200"-->
 
         <!--<ImageView-->
                 <!--android:id="@+id/coffeeMachineStatusButtonId"-->

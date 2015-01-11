@@ -29,15 +29,11 @@ import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.neopixl.pixlui.components.imageview.*;
 import com.neopixl.pixlui.components.textview.TextView;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -677,5 +673,127 @@ public class ReviewListFragment extends Fragment
 
         Log.e(TAG, "error - " + message + code);
     }
+
+
+
+    /**
+     * Handle touch events to fade/move dragged items as they are swiped out
+     */
+/*    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+
+        float mDownX;
+        private int mSwipeSlop = -1;
+
+        @Override
+        public boolean onTouch(final View v, MotionEvent event) {
+            if (mSwipeSlop < 0) {
+                mSwipeSlop = ViewConfiguration.get(mainActivityRef).
+                        getScaledTouchSlop();
+            }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.e(TAG, "down");
+                    if (mItemPressed) {
+                        // Multi-item swipes not handled
+                        return false;
+                    }
+                    mItemPressed = true;
+                    mDownX = event.getX();
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    v.setAlpha(1);
+                    v.setTranslationX(0);
+                    mItemPressed = false;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                {
+                    float x = event.getX() + v.getTranslationX();
+                    float deltaX = x - mDownX;
+                    float deltaXAbs = Math.abs(deltaX);
+                    if (!mSwiping) {
+                        if (deltaXAbs > mSwipeSlop) {
+                            mSwiping = true;
+                            listView.requestDisallowInterceptTouchEvent(true);
+//                            mBackgroundContainer.showBackground(v.getTop(), v.getHeight());
+                        }
+                    }
+                    if (mSwiping) {
+                        v.setTranslationX((x - mDownX));
+                        v.setAlpha(1 - deltaXAbs / v.getWidth());
+                    }
+                }
+                break;
+                case MotionEvent.ACTION_UP:
+                {
+                    // User let go - figure out whether to animate the view out, or back into place
+                    if (mSwiping) {
+                        float x = event.getX() + v.getTranslationX();
+                        float deltaX = x - mDownX;
+                        float deltaXAbs = Math.abs(deltaX);
+                        float fractionCovered;
+                        float endX;
+                        float endAlpha;
+                        final boolean remove;
+                        if (deltaXAbs > v.getWidth() / 4) {
+                            // Greater than a quarter of the width - animate it out
+                            fractionCovered = deltaXAbs / v.getWidth();
+                            endX = deltaX < 0 ? -v.getWidth() : v.getWidth();
+                            endAlpha = 0;
+                            remove = true;
+                        } else {
+                            // Not far enough - animate it back
+                            fractionCovered = 1 - (deltaXAbs / v.getWidth());
+                            endX = 0;
+                            endAlpha = 1;
+                            remove = false;
+                        }
+                        // Animate position and alpha of swiped item
+                        // NOTE: This is a simplified version of swipe behavior, for the
+                        // purposes of this demo about animation. A real version should use
+                        // velocity (via the VelocityTracker class) to send the item off or
+                        // back at an appropriate speed.
+                        long duration = (int) ((1 - fractionCovered) * SWIPE_DURATION);
+                        listView.setEnabled(false);
+//                        v.animate().setDuration(duration).
+//                                alpha(endAlpha).translationX(endX).
+//                                withEndAction(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        Restore animated values
+//                                        v.setAlpha(1);
+//                                        v.setTranslationX(0);
+//                                        if (remove) {
+//                                            animateRemoval(listView, v);
+//                                        } else {
+//                                            mBackgroundContainer.hideBackground();
+//                                            mSwiping = false;
+//                                            listView.setEnabled(true);
+//                                        }
+//                                    }
+//                                });
+
+                        v.setAlpha(1);
+                        v.setTranslationX(0);
+                        if (remove) {
+                            Log.e(TAG, "swipe");
+                            swipeView(listView, v);
+                        } else {
+//                          mBackgroundContainer.hideBackground();
+                            Log.e(TAG, "not swipe");
+                            mSwiping = false;
+                            listView.setEnabled(true);
+                        }
+                    }
+                }
+                mItemPressed = false;
+                break;
+                default:
+                    return false;
+            }
+            return true;
+        }
+    };*/
+
+
 }
 

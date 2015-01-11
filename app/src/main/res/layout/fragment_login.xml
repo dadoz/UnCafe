@@ -5,7 +5,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/material_red_200">
+                android:background="@color/material_amber_200">
 
     <!--<LinearLayout-->
             <!--android:layout_alignParentTop="true"-->

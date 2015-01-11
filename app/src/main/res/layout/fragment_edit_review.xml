@@ -20,7 +20,7 @@
         <!--<com.neopixl.pixlui.components.textview.TextView-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="@color/material_red_200"-->
+                <!--android:textColor="@color/material_amber_200"-->
                 <!--android:textSize="@dimen/text_big_30"-->
                 <!--android:text="Save your changes"-->
                 <!--pixlui:copyandpaste="false"-->
@@ -54,7 +54,7 @@
                     android:paddingLeft="@dimen/text_big_26"
                     android:paddingRight="@dimen/text_big_26"
                     android:textColorHint="@color/dark_grey"
-                    android:background="@color/light_grey"
+                    android:background="@color/material_light_yellow_200"
                     android:hint="Write something..."
                     android:textSize="@dimen/text_big_24"
                     android:minLines="3"
