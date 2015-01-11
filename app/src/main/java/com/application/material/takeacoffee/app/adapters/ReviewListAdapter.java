@@ -59,7 +59,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
             holder.reviewCommentTextView = ((TextView) view.findViewById(R.id.reviewCommentTextId));
             holder.expandDescriptionTextView = ((TextView) view.findViewById(R.id.expandDescriptionTextId));
             holder.reviewPictureButton = ((ImageView) view.findViewById(R.id.reviewPictureButtonId));
-            holder.profilePicImageView = ((ImageView) view.findViewById(R.id.profilePicReviewTemplateId));
+            holder.profilePicImageView = ((ImageView) view.findViewById(R.id.reviewProfilePicIconId));
 //            holder.statusRatingBarView = ((RatingBar) view.findViewById(R.id.statusRatingBarId));
             holder.reviewPictureImageView = ((ImageView) view.findViewById(R.id.reviewPictureImageViewId));
 

@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!--<item name="android:actionModeBackground">@color/material_amber</item>-->
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/material_text_brown</item>
         <item name="colorPrimary">@color/action_bar</item>
         <!--<item name="actionBarSize">150dp</item>-->
         <!--<item name="colorPrimaryDark">@color/material_text_black</item>-->

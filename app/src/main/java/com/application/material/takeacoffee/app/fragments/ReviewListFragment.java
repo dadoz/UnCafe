@@ -1,5 +1,7 @@
 package com.application.material.takeacoffee.app.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.*;
+import android.view.animation.Animation;
 import android.widget.*;
 import android.widget.ImageView;
 import butterknife.ButterKnife;
@@ -332,13 +335,22 @@ public class ReviewListFragment extends Fragment
                     boolean hasReviewPicture = review.getReviewPictureUrl() != null;
                     EllipsizedComment comment = (EllipsizedComment) view.getTag();
                     boolean isReviewHidden = comment.isHidden();
+                    final ViewFlipper viewFlipper = (ViewFlipper) view.findViewById(R.id.reviewIconImagesLayoutId);
 
                     if(! comment.isEllipsized() &&
                             ! hasReviewPicture) {
+                        //set review rating on tap
+                        flipView(viewFlipper);
+
+                        //UPDATE - TOGGLE
+                        comment.setHidden(! isReviewHidden);
+                        view.setTag(comment);
+
                         (view.findViewById(R.id.expandDescriptionTextId))
                                 .setVisibility(View.GONE);
                         return;
                     }
+
 
                     int maxLines = isReviewHidden ? REVIEW_MAX_LINES : REVIEW_MIN_LINES;
                     ((TextView) view.findViewById(R.id.reviewCommentTextId))
@@ -359,6 +371,9 @@ public class ReviewListFragment extends Fragment
                         (view.findViewById(R.id.reviewPictureImageViewId)).setVisibility(isReviewHidden ? View.VISIBLE : View.GONE);
                     }
 
+                    //set review rating on tap
+                    flipView(viewFlipper);
+
                     //UPDATE - TOGGLE
                     comment.setHidden(! isReviewHidden);
                     view.setTag(comment);
@@ -370,6 +385,30 @@ public class ReviewListFragment extends Fragment
         }
 
 
+
+    }
+
+    private void flipView(final ViewFlipper viewFlipper) {
+        viewFlipper.setOutAnimation(null);
+        viewFlipper.setInAnimation(mainActivityRef, R.anim.shrink_to_middle);
+        viewFlipper.startAnimation(viewFlipper.getInAnimation());
+        viewFlipper.getInAnimation().setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                viewFlipper.setInAnimation(null);
+                viewFlipper.setInAnimation(mainActivityRef, R.anim.grow_from_middle);
+                viewFlipper.showNext();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
     }
 
