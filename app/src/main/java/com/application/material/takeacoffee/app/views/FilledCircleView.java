@@ -25,7 +25,7 @@ public class FilledCircleView extends View {
 
     private int strokeColor;
     private float strokeWidth;
-    private double value;
+    private double value = MAX_VALUE;
     private int fillColor;
     private float radius;
     private static final double MIN_VALUE = 0;
@@ -33,7 +33,11 @@ public class FilledCircleView extends View {
     private Path path = new Path();
     private double width;
     private double height;
+    private int offsetX;
+    private int offsetY;
     private double diagonalWidth;
+    private double currentValue = MAX_VALUE;
+    private int MAX_DRAWING_VALUE = 42;
 
 
     public FilledCircleView(Context context) {
@@ -58,10 +62,13 @@ public class FilledCircleView extends View {
             value = attributes.getInteger(R.styleable.FilledCircleView_value,
                     20);
 
-            width = 400;
-            height = 700;
-            diagonalWidth = 100;
-
+            width = 130; //300
+            height = 400; //700
+            diagonalWidth = 50; //100
+            offsetX = 120;
+            offsetY = 80;
+            float density = getResources().getDisplayMetrics().density;
+            Log.e(TAG, "" + density);
             adjustValue(value);
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +86,6 @@ public class FilledCircleView extends View {
         strokePaint.setStyle(Paint.Style.STROKE);
 
         coffeeCupBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.coffee_cup_icon);
-
     }
 
     public void setFillColor(int fillColor) {
@@ -108,10 +114,20 @@ public class FilledCircleView extends View {
     }
 
     public void setValue(int value) {
-        adjustValue(value);
-        setPolygonPaths();
+        if(value <= MAX_DRAWING_VALUE) {
+            //dont draw anything - top offset
+            return;
+        }
 
+        adjustValue(value);
+        changeFilingColor();
+        setPolygonPaths();
+        //invalidate view
         invalidate();
+    }
+
+    private void changeFilingColor() {
+        fillPaint.setColor(fillColor + ((int) (value) * 2));
     }
 
     public float getStrokeWidth() {
@@ -156,16 +172,17 @@ public class FilledCircleView extends View {
     }
 
     private void setPolygonPaths() {
-        float w = (float) width;
-        float h= (float) (height * value / 100 - 1); //inverse animation from bottom to up
-        float d = (float) (diagonalWidth * value / 100 - 1);
+        float w = (float) (width);
+        float h = (float) (height * value / 100 - 1);
+        float d = (float) (diagonalWidth * (100 - value) / 100 - 1);
+//        float d = (float) (diagonalWidth * (value + 30) / 100 - 1);
 
         //draw poligone
         Point points[] = {
-                new Point(0, 0),
-                new Point(w + (2 * d), 0),
-                new Point(w + d, h),
-                new Point(d, h)
+                new Point(0 + offsetX - d, h - offsetY),
+                new Point((float) width + offsetX + d, h - offsetY),
+                new Point((float) width + offsetX, (float) height - offsetY),
+                new Point(0 + offsetX, (float) height - offsetY)
         };
 
         segment.rewind();
@@ -194,6 +211,18 @@ public class FilledCircleView extends View {
         }
 
         segment.lineTo(points[0].x, points[0].y);
+    }
+
+    public double getMaxValue() {
+        return MAX_VALUE;
+    }
+
+    public double getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(int currentValue) {
+        this.currentValue = currentValue;
     }
 
     public class Point {

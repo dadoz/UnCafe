@@ -24,6 +24,7 @@ import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
+import com.application.material.takeacoffee.app.views.FilledCircleView;
 import com.parse.ParseFile;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
@@ -49,7 +50,7 @@ public class AddReviewFragment extends Fragment implements
     @InjectView(R.id.imagePreviewViewId) View imagePreviewView;
     @InjectView(R.id.setRatingButtonId) View setRatingButton;
 
-//    @InjectView(R.id.filledCircleId) View filledCircleView;
+    @InjectView(R.id.filledCircleId) View filledCircleView;
 //    @InjectView(R.id.seekBarId) View seekBarView;
 
     private String coffeeMachineId;
@@ -274,47 +275,50 @@ public class AddReviewFragment extends Fragment implements
 
     }
 
+    Timer timer = new Timer();
+    int counter = 0;
+
     private View.OnTouchListener setRatingTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(final View v, MotionEvent event) {
             //start counter
-            Timer timer = new Timer();
-            final int [] counterArray = new int[1];
+            final double MAX_VALUE = ((FilledCircleView) filledCircleView).getMaxValue();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    counterArray[0] = 0;
+                    timer = new Timer();
+                    counter = (int) ((FilledCircleView) filledCircleView).getCurrentValue();
                     Log.e(TAG, "down");
-
                     if (mItemPressed) {
                         // Multi-item swipes not handled
+                        timer.cancel();
                         return false;
                     }
-                    mItemPressed = true;
 
-                    timer.scheduleAtFixedRate(new TimerTask() {
-                        @Override
-                        public void run() {
-                            addActivityRef.runOnUiThread(new Runnable() {
+                    mItemPressed = true;
+                            timer.scheduleAtFixedRate(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    counterArray[0] ++;
-                                    Log.e(TAG, "expand coffee cup - " + counterArray[0]);
+                                    counter --;
+                                    Log.e(TAG, "expand coffee cup - " + counter);
+                                    if(counter < 0 ) {
+                                        counter = (int) MAX_VALUE;
+                                    }
+
+                                    addActivityRef.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ((FilledCircleView) filledCircleView).setValue(counter);
+                                        }
+                                    });
                                 }
-                            });
-                        }
-                    }, 1000, 1000);
-
-                    break;
+                            }, 20, 20);
+                    return true;
                 case MotionEvent.ACTION_UP:
+                    Log.e(TAG, "up");
                     timer.cancel();
-                    Log.e(TAG, "down");
-                    if (mItemPressed) {
-                        // Multi-item swipes not handled
-                        return false;
-                    }
-                    mItemPressed = true;
-
-                    break;
+                    ((FilledCircleView) filledCircleView).setCurrentValue(counter);
+                    mItemPressed = false;
+                    return true;
             }
             return true;
         }

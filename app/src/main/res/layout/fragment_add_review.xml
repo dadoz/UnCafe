@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:filledcircle="http://schemas.android.com/apk/res-auto"
         xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -36,14 +37,14 @@
                     pixlui:typeface="chimphand-regular.ttf"/>
 
 
-            <!--<com.application.material.takeacoffee.app.views.FilledCircleView-->
-            <!--android:id="@+id/filledCircleId"-->
-            <!--android:layout_width="@dimen/ultra_huge_icon_size"-->
-            <!--android:layout_height="@dimen/ultra_huge_icon_size"-->
-            <!--filledcircle:fillColor="@color/material_brown"-->
-            <!--filledcircle:strokeColor="@color/material_blue_grey_900"-->
-            <!--filledcircle:strokeWidth="20"-->
-            <!--filledcircle:value="65" />-->
+            <com.application.material.takeacoffee.app.views.FilledCircleView
+            android:id="@+id/filledCircleId"
+            android:layout_width="@dimen/ultra_huge_icon_size"
+            android:layout_height="@dimen/ultra_huge_icon_size"
+            filledcircle:fillColor="@color/material_brown"
+            filledcircle:strokeColor="@color/material_blue_grey_900"
+            filledcircle:strokeWidth="20"
+            filledcircle:value="65" />
 
             <!--<SeekBar android:id="@+id/seekBarId"-->
             <!--android:layout_width="match_parent"-->
@@ -106,10 +107,12 @@
         <!--</LinearLayout>-->
 
         <ImageView
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:id="@+id/setRatingButtonId"
                 android:layout_width="@dimen/medium_icon_size"
                 android:layout_height="@dimen/medium_icon_size"
-                android:src="@drawable/coffee_cup_icon"/>
+                android:src="@drawable/skull_icon"/>
 
 
     </RelativeLayout>
