@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
@@ -28,7 +29,7 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 
 
-public class AddReviewActivity extends ActionBarActivity implements
+public class AddReviewActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
     private static final String TAG = "CoffeeMachineActivity";
     private static String ADD_REVIEW_FRAG_TAG = "ADD_REVIEW_FRAG_TAG";

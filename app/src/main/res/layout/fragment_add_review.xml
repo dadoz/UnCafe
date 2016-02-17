@@ -41,7 +41,7 @@
             android:id="@+id/filledCircleId"
             android:layout_width="@dimen/ultra_huge_icon_size"
             android:layout_height="@dimen/ultra_huge_icon_size"
-            filledcircle:fillColor="@color/material_brown"
+            filledcircle:fillColor="@color/material_brown400"
             filledcircle:strokeColor="@color/material_blue_grey_900"
             filledcircle:strokeWidth="20"
             filledcircle:value="65" />

@@ -1,58 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
-            android:id="@+id/coffeeMachineFragmentLayoutId"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+    android:id="@+id/coffeeMachineFragmentLayoutId"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-            android:id="@+id/titleContainerLayoutId"
-            android:background="@color/light_black"
-            android:layout_alignParentBottom="true"
-            android:padding="@dimen/small_padding"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:id="@+id/titleContainerLayoutId"
+        android:background="@color/light_black"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/small_padding"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <com.neopixl.pixlui.components.textview.TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_medium_20"
-                android:textColor="@color/material_light_red"
-                android:text="Takeacoffee"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-regular.ttf"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_medium_20"
+            android:textColor="@color/material_light_red"
+            android:text="Takeacoffee"
+            pixlui:copyandpaste="false"
+            pixlui:clearclipboardcontent="true"
+            pixlui:typeface="chimphand-regular.ttf"/>
 
         <com.neopixl.pixlui.components.textview.TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_small_14"
-                android:textColor="@color/material_light_yellow_200"
-                android:text="Politecnico di torino - c.so Vinzaglio"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-regular.ttf"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small_14"
+            android:textColor="@color/material_light_yellow_200"
+            android:text="Politecnico di torino - c.so Vinzaglio"
+            pixlui:copyandpaste="false"
+            pixlui:clearclipboardcontent="true"
+            pixlui:typeface="chimphand-regular.ttf"/>
 
     </LinearLayout>
 
 
     <GridView
-            android:id="@+id/coffeeMachineGridLayoutId"
-            android:listSelector="@color/listview_selector"
-
-            android:paddingTop="@dimen/medium_padding"
-            android:paddingBottom="@dimen/medium_padding"
-            android:layout_above="@id/titleContainerLayoutId"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:columnWidth="90dp"
-            android:numColumns="2"
-            android:verticalSpacing="@dimen/small_padding"
-            android:horizontalSpacing="@dimen/small_padding"
-            android:stretchMode="columnWidth"
-            android:gravity="top"/>
+        android:id="@+id/coffeeMachineGridLayoutId"
+        android:listSelector="@color/listview_selector"
+        android:padding="@dimen/small_padding"
+        android:layout_above="@id/titleContainerLayoutId"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:columnWidth="90dp"
+        android:numColumns="2"
+        android:verticalSpacing="@dimen/small_padding"
+        android:horizontalSpacing="@dimen/small_padding"
+        android:stretchMode="columnWidth"
+        android:gravity="top"/>
 
 
 </RelativeLayout>

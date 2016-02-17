@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +26,7 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 
 
-public class LoginActivity extends ActionBarActivity implements
+public class LoginActivity extends AppCompatActivity implements
         OnChangeFragmentWrapperInterface, OnLoadViewHandlerInterface {
     private static final String TAG = "LoginActivity";
     private String currentFragTag;

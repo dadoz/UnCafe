@@ -2,14 +2,9 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!--<item name="android:actionModeBackground">@color/material_amber</item>-->
-        <item name="android:textColorPrimary">@color/material_text_brown</item>
-        <item name="colorPrimary">@color/action_bar</item>
-        <!--<item name="actionBarSize">150dp</item>-->
-        <!--<item name="colorPrimaryDark">@color/material_text_black</item>-->
-        <!--<item name="android:textColor">@color/material_amber_200</item>-->
-        <!--<item name="android:windowNoTitle">true</item>-->
-        <!--<item name="windowActionBar">false</item>-->
+        <item name="android:textColorPrimary">@color/material_grey200</item>
+        <item name="colorPrimaryDark">@color/material_brown600</item>
+        <item name="colorPrimary">@color/material_brown400</item>
     </style>
 
     <style name="AppTheme.RatingBar" parent="@android:style/Widget.RatingBar">
@@ -19,11 +14,4 @@
         <item name="android:minWidth">@dimen/small_icon_size</item>
         <item name="android:maxWidth">@dimen/small_icon_size</item>
     </style>
-
-
-    <!--<style name="pixlUICustomTextView" parent="android:style/Widget.TextView">-->
-        <!--<item name="pixlui:copyandpaste">false</item>-->
-        <!--<item name="pixlui:clearclipboardcontent">true</item>-->
-        <!--<item name="pixlui:typeface">chimphand-light.ttf</item>-->
-    <!--</style>-->
 </resources>

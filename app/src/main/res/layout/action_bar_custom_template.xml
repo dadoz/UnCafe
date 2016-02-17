@@ -1,123 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
-              android:orientation="vertical"
-              android:gravity="center_vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="match_parent">
+    xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent">
 
 
     <com.neopixl.pixlui.components.textview.TextView
-            android:id="@+id/cActBarTitleId"
-            android:textSize="@dimen/text_big_24"
-            android:visibility="gone"
+        android:id="@+id/cActBarTitleId"
+        android:textSize="@dimen/text_big_24"
+        android:visibility="gone"
 
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textColor="@color/material_text_brown"
-            android:paddingRight="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:text="@string/titleTakeACoffee"
-            pixlui:typeface="chimphand-regular.ttf"/>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textColor="@color/material_brown800"
+        android:paddingRight="@dimen/small_padding"
+        android:gravity="center_vertical"
+        android:text="@string/titleTakeACoffee"
+        pixlui:typeface="chimphand-regular.ttf"/>
 
 
     <!--coffee machine template -->
     <RelativeLayout
-            android:visibility="gone"
-            android:id="@+id/customActionBarCoffeeMachineLayoutId"
-            android:paddingBottom="@dimen/small_padding"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent">
+        android:visibility="gone"
+        android:id="@+id/customActionBarCoffeeMachineLayoutId"
+        android:paddingBottom="@dimen/small_padding"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
 
-            <com.neopixl.pixlui.components.textview.TextView
-                    android:id="@+id/cActBarCoffeeMachineLocationId"
-                    android:textSize="@dimen/text_big_26"
-                    android:textColor="@color/material_text_brown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="@dimen/small_padding"
-                    android:text="location"
-                    pixlui:typeface="chimphand-regular.ttf"/>
+        <com.neopixl.pixlui.components.textview.TextView
+            android:id="@+id/cActBarCoffeeMachineLocationId"
+            android:textSize="@dimen/text_big_26"
+            android:textColor="@color/material_text_brown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/small_padding"
+            android:text="location"
+            pixlui:typeface="chimphand-regular.ttf"/>
 
     </RelativeLayout>
 
     <!--user template -->
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:gravity="center_vertical"
-            android:id="@+id/customActionBarUserLayoutId"
-            android:orientation="horizontal">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:id="@+id/customActionBarUserLayoutId"
+        android:orientation="horizontal">
 
-            <ImageView
-                    android:id="@+id/userIconId"
-                    android:layout_width="@dimen/medium_small_icon_size"
-                    android:layout_height="@dimen/medium_small_icon_size"
-                    android:src="@drawable/user_icon" />
+        <ImageView
+            android:id="@+id/userIconId"
+            android:layout_width="@dimen/medium_small_icon_size"
+            android:layout_height="@dimen/medium_small_icon_size"
+            android:src="@drawable/user_icon" />
 
         <com.neopixl.pixlui.components.textview.TextView
-                    android:id="@+id/usernameId"
-                    android:textSize="@dimen/text_big_24"
-                    android:textColor="@color/material_text_brown"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/small_padding"
-                    android:text=" - "
-                    pixlui:typeface="chimphand-regular.ttf"/>
+            android:id="@+id/usernameId"
+            android:textSize="@dimen/text_big_24"
+            android:textColor="@color/material_text_brown"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/small_padding"
+            android:text=" - "
+            pixlui:typeface="chimphand-regular.ttf"/>
     </LinearLayout>
 
     <!--review list template -->
     <LinearLayout
-            android:id="@+id/customActionBarReviewListLayoutId"
-            android:orientation="vertical"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:id="@+id/customActionBarReviewListLayoutId"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <com.neopixl.pixlui.components.textview.TextView
-                android:id="@+id/cActBarCoffeeMachineNameId"
-                android:textSize="@dimen/text_big_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/material_text_brown"
-                android:paddingRight="@dimen/small_padding"
-                android:text=" - "
-                pixlui:typeface="chimphand-regular.ttf"/>
+            android:id="@+id/cActBarCoffeeMachineNameId"
+            android:textSize="@dimen/text_big_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/material_text_brown"
+            android:paddingRight="@dimen/small_padding"
+            android:text=" - "
+            pixlui:typeface="chimphand-regular.ttf"/>
 
         <com.neopixl.pixlui.components.textview.TextView
-                android:id="@+id/cActBarPeriodTextId"
-                android:textSize="@dimen/text_small_14"
-                android:textColor="@color/material_text_brown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/small_padding"
-                android:text=" - "
-                pixlui:typeface="chimphand-regular.ttf"/>
+            android:id="@+id/cActBarPeriodTextId"
+            android:textSize="@dimen/text_small_14"
+            android:textColor="@color/material_text_brown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/small_padding"
+            android:text=" - "
+            pixlui:typeface="chimphand-regular.ttf"/>
 
     </LinearLayout>
 
     <!--review list template -->
     <View
-            android:id="@+id/customActionBarMapLayoutId"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:id="@+id/customActionBarMapLayoutId"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <!--Settings-->
     <View
-            android:id="@+id/customActionSettingsLayoutId"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:id="@+id/customActionSettingsLayoutId"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <!--LoggedUser-->
     <View
-            android:id="@+id/customActionLoggedUserLayoutId"
-            android:background="@color/blue_cobalt"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:id="@+id/customActionLoggedUserLayoutId"
+        android:background="@color/blue_cobalt"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

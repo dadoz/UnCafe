@@ -34,7 +34,7 @@
             android:paddingTop="@dimen/small_padding"
             android:layout_below="@id/emptyDataOldReviewIconId"
             android:gravity="center_horizontal"
-            android:textColor="@color/material_grey"
+            android:textColor="@color/material_grey400"
             android:textSize="@dimen/text_medium_20"
             android:text="get oldest ones or add a new one"
             pixlui:copyandpaste="false"

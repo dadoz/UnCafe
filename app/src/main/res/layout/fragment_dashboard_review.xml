@@ -37,7 +37,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="@dimen/floating_action_button_margin_normal_minus"
             android:layout_marginRight="@dimen/floating_action_button_margin_normal"
-            app:floatingActionButtonColor="@color/material_amber"
+            app:floatingActionButtonColor="@color/material_amber400"
             android:src="@drawable/edit_icon_ultra_small_b"/>
 
 </RelativeLayout>

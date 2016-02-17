@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
@@ -38,7 +39,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 
 
-public class CoffeeMachineActivity extends ActionBarActivity implements
+public class CoffeeMachineActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
         SetActionBarInterface, View.OnClickListener {
     private static final String TAG = "CoffeeMachineActivity";
@@ -48,9 +49,8 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     View onLoadLayout;
     //Volley lib
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
-    private static ArrayList<String> currentFragTagList = new ArrayList<String>();
+    private static ArrayList<String> currentFragTagList = new ArrayList<>();
     public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
-    public static String ACTION_ADD_REVIEW_RESULT = "ADD_RESULT";
     public static final String ERROR_MESSAGE_KEY = "EMK";
     public static final int ACTION_EDIT_REVIEW = 1;
     public static final int ACTION_ADD_REVIEW = 2;
@@ -68,29 +68,38 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
         ButterKnife.inject(this);
 
         //custom actionBar
-        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
 
+        initView(savedInstanceState);
+    }
 
+    /**
+     * pre init view
+     * @param savedInstanceState
+     */
+    private void initView(Bundle savedInstanceState) {
         dataApplication = ((DataApplication) this.getApplication());
+        //TODO please refactor
+//        if (savedInstanceState != null) {
+//            String currentFragTag = getCurrentFragTag();
+//
+//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+//                    currentFragTag);
+//            if (fragment == null ||
+//                    currentFragTag == null) {
+//                //if sm error init again app
+//                pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
+//                fragment = new CoffeeMachineFragment();
+//            }
 
-        //INIT VIEW
-        if(savedInstanceState != null) {
-            String currentFragTag = getCurrentFragTag();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.coffeeAppFragmentContainerId, new CoffeeMachineFragment(),
+                            CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG)
+                    .commit();
+//        }
 
-            if(currentFragTag == null) {
-                Log.e(TAG, "BUG - this shouldnt happen!");
-                return;
-            }
-
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                    currentFragTag);
-            initView(fragment);
-            return;
-        }
-
-        pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
-        initView(new CoffeeMachineFragment());
+//        pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
     }
 
     @Override
@@ -107,17 +116,6 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
 
 
     private void initView(Fragment fragment) {
-        String currentFragTag = getCurrentFragTag();
-        if(fragment == null ||
-                currentFragTag == null) {
-            //if sm error init again app
-            pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
-            fragment = new CoffeeMachineFragment();
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.coffeeAppFragmentContainerId, fragment, currentFragTag)
-                .commit();
     }
 
     @Override
@@ -142,23 +140,23 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     public void onBackPressed() {
         Log.d(TAG, "OnBackPressed - ");
 
-        String currentFragTag = getCurrentFragTag();
-        if(currentFragTag.compareTo(ReviewListFragment.REVIEW_LIST_FRAG_TAG) == 0 &&
-                isItemSelected()) {
-            selectedItemPosition = -1; //false
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                    currentFragTag);
-            //no item popped out
-            updateSelectedItem((AdapterView.OnItemLongClickListener) fragment,
-                    ((ReviewListFragment) fragment).getListView(), null, -1);
-            return;
-        }
-
-        //popCurrentFragment :)
-        if(popCurrentFragTag() == null) {
-            Log.e(TAG, "BUG - this shouldnt happen!");//TODO HANDLE THIS
-            return;
-        }
+//        String currentFragTag = getCurrentFragTag();
+//        if (currentFragTag.compareTo(ReviewListFragment.REVIEW_LIST_FRAG_TAG) == 0 &&
+//                isItemSelected()) {
+//            selectedItemPosition = -1; //false
+//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+//                    currentFragTag);
+//            //no item popped out
+//            updateSelectedItem((AdapterView.OnItemLongClickListener) fragment,
+//                    ((ReviewListFragment) fragment).getListView(), null, -1);
+//            return;
+//        }
+//
+//        //popCurrentFragment :)
+//        if(popCurrentFragTag() == null) {
+//            Log.e(TAG, "BUG - this shouldnt happen!");//TODO HANDLE THIS
+//            return;
+//        }
 
         super.onBackPressed();
     }
@@ -369,7 +367,7 @@ public class CoffeeMachineActivity extends ActionBarActivity implements
     private void setActionBarSelected() {
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(
-                        isItemSelected() ? R.color.material_grey : R.color.action_bar)));
+                        isItemSelected() ? R.color.material_grey400 : R.color.action_bar)));
         invalidateOptionsMenu();
         //set new title on actionBar
         try {

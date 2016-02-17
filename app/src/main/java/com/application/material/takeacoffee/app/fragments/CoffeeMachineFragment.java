@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app.fragments;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -39,20 +40,20 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 //    @InjectView(R.id.settingsLayoutId) LinearLayout settingsLayout;
 //    @InjectView(R.id.emptyCoffeeMachineLayoutId) View emptyCoffeeMachineView;
     @InjectView(R.id.coffeeMachineGridLayoutId) GridView coffeeMachineGridLayout;
+    private ArrayList<CoffeeMachine> coffeeMachineList;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (! (activity instanceof OnLoadViewHandlerInterface)) {
-            throw new ClassCastException(activity.toString()
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof OnLoadViewHandlerInterface)) {
+            throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        if (! (activity instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(activity.toString()
+        if (!(context instanceof OnChangeFragmentWrapperInterface)) {
+            throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-
-        mainActivityRef =  (CoffeeMachineActivity) activity;
+        mainActivityRef = (CoffeeMachineActivity) context;
     }
 
     @Override
@@ -65,8 +66,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         coffeeMachineView = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_coffee_machine, container, false);
         ButterKnife.inject(this, coffeeMachineView);
-        setHasOptionsMenu(true);
-        initOnLoadView();
+        initView();
         return coffeeMachineView;
     }
 
@@ -86,27 +86,24 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         //initOnLoadView
         ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
 
-//        getLoaderManager().initLoader(COFFEE_MACHINE_REQUEST.ordinal(), null, this)
-//                .forceLoad();
-
         //request coffee machine list
         HttpIntentService.coffeeMachineRequest(mainActivityRef);
     }
 
-    public void initView(ArrayList<CoffeeMachine> coffeeMachineList) {
-        //initOnLoadView
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+    public void initView() {
+        setHasOptionsMenu(true);
 
-        //set action bar view
-        ((SetActionBarInterface) mainActivityRef)
-                .setActionBarCustomViewById(R.id.customActionBarUserLayoutId, null);
-        ((SetActionBarInterface) mainActivityRef)
-                .setCustomNavigation(CoffeeMachineFragment.class);
-
-        if(coffeeMachineList == null) {
-            Log.e(TAG, "empty data - show empty list");
-            return;
+        if (BuildConfig.DEBUG) {
+            coffeeMachineList = getCoffeeMachineListTest();
         }
+//        //initOnLoadView
+//        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+//
+//        //set action bar view
+//        ((SetActionBarInterface) mainActivityRef)
+//                .setActionBarCustomViewById(R.id.customActionBarUserLayoutId, null);
+//        ((SetActionBarInterface) mainActivityRef)
+//                .setCustomNavigation(CoffeeMachineFragment.class);
 
         coffeeMachineGridLayout.setAdapter(new CoffeeMachineGridAdapter(this.getActivity(),
                 R.layout.coffee_machine_template, coffeeMachineList));
@@ -162,7 +159,17 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
             return;
         }
 
-        initView(coffeeMachinesList);
+        this.coffeeMachineList = coffeeMachinesList;
+        initView();
     }
 
+    public ArrayList<CoffeeMachine> getCoffeeMachineListTest() {
+        ArrayList<CoffeeMachine> tmp = new ArrayList<>();
+        tmp.add(new CoffeeMachine("0", "balllala", "hey", null));
+        tmp.add(new CoffeeMachine("1", "balllala", "hey", null));
+        tmp.add(new CoffeeMachine("2", "balllala", "hey", null));
+        tmp.add(new CoffeeMachine("3", "balllala", "hey", null));
+        tmp.add(new CoffeeMachine("4", "balllala", "hey", null));
+        return tmp;
+    }
 }
