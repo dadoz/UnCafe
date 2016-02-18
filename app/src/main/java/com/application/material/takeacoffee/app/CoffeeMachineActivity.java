@@ -79,7 +79,14 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
      * @param savedInstanceState
      */
     private void initView(Bundle savedInstanceState) {
-        dataApplication = ((DataApplication) this.getApplication());
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.coffeeAppFragmentContainerId, new CoffeeMachineFragment(),
+                        CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG)
+                .commit();
+    }
+
+//    private void initView(Bundle savedInstanceState) {
+//        dataApplication = ((DataApplication) this.getApplication());
         //TODO please refactor
 //        if (savedInstanceState != null) {
 //            String currentFragTag = getCurrentFragTag();
@@ -92,15 +99,15 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 //                pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
 //                fragment = new CoffeeMachineFragment();
 //            }
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.coffeeAppFragmentContainerId, new CoffeeMachineFragment(),
-                            CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG)
-                    .commit();
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.coffeeAppFragmentContainerId, new CoffeeMachineFragment(),
+//                            CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG)
+//                    .commit();
 //        }
 
 //        pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
-    }
+//    }
 
     @Override
     public void onResume(){
