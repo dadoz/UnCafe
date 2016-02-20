@@ -3,16 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.application.material.takeacoffee.app.CoffeeMachineActivity" >
     <item
-            android:id="@+id/action_position"
-            android:title="position"
-            android:icon="@drawable/position_icon_small_b"
-            android:orderInCategory="100"
-            app:showAsAction="always" />
+        android:id="@+id/action_position"
+        android:title="Map"
+        android:icon="@drawable/position_icon_small_b"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
     <item
-            android:id="@+id/action_settings"
-            android:title="settins"
-            android:icon="@drawable/settings_icon_small_b"
-            android:orderInCategory="100"
-            app:showAsAction="always" />
-
+        android:id="@+id/action_settings"
+        android:title="Settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         getSupportActionBar().hide();
 
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements
         Log.e(TAG, "" + requestCode);
         switch (requestCode) {
             case FacebookLogin.REQUEST_CODE_FB:
-                ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+//                ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
                 return;
             case ImagePickerSingleton.PICK_PHOTO_CODE:
                 try {

@@ -10,8 +10,9 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.adapters.CoffeeMachineGridAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -39,7 +40,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 
 //    @InjectView(R.id.settingsLayoutId) LinearLayout settingsLayout;
 //    @InjectView(R.id.emptyCoffeeMachineLayoutId) View emptyCoffeeMachineView;
-    @InjectView(R.id.coffeeMachineGridLayoutId) GridView coffeeMachineGridLayout;
+    @Bind(R.id.coffeeMachineGridLayoutId) GridView coffeeMachineGridLayout;
     private ArrayList<CoffeeMachine> coffeeMachineList;
 
     @Override
@@ -65,7 +66,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         coffeeMachineView = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_coffee_machine, container, false);
-        ButterKnife.inject(this, coffeeMachineView);
+        ButterKnife.bind(this, coffeeMachineView);
         initView();
         return coffeeMachineView;
     }
@@ -164,7 +165,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     }
 
     public ArrayList<CoffeeMachine> getCoffeeMachineListTest() {
-        ArrayList<CoffeeMachine> tmp = new ArrayList<>();
+        ArrayList<CoffeeMachine> tmp = new ArrayList<CoffeeMachine>();
         tmp.add(new CoffeeMachine("0", "balllala", "hey", null));
         tmp.add(new CoffeeMachine("1", "balllala", "hey", null));
         tmp.add(new CoffeeMachine("2", "balllala", "hey", null));

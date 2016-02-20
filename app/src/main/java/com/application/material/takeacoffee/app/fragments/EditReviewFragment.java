@@ -8,8 +8,9 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
@@ -33,12 +34,12 @@ public class EditReviewFragment extends Fragment implements
     private Bundle bundle;
     private View addReviewView;
     private Review review;
-    @InjectView(R.id.editReviewCommentTextId) View editReviewCommentText;
-    @InjectView(R.id.editStatusRatingBarViewId) View editStatusRatingBarView;
-    @InjectView(R.id.deletePictureIconId) View deletePictureButton;
-    @InjectView(R.id.pickPictureFromCameraIconId) View pickPictureFromCameraButton;
-    @InjectView(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
-    @InjectView(R.id.imagePreviewViewId) View imagePreviewView;
+    @Bind(R.id.editReviewCommentTextId) View editReviewCommentText;
+    @Bind(R.id.editStatusRatingBarViewId) View editStatusRatingBarView;
+    @Bind(R.id.deletePictureIconId) View deletePictureButton;
+    @Bind(R.id.pickPictureFromCameraIconId) View pickPictureFromCameraButton;
+    @Bind(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
+    @Bind(R.id.imagePreviewViewId) View imagePreviewView;
     private DataApplication dataApplication;
     private boolean isReviewPictureSet = false;
 
@@ -77,7 +78,7 @@ public class EditReviewFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         addReviewView = inflater.inflate(R.layout.fragment_edit_review, container, false);
-        ButterKnife.inject(this, addReviewView);
+        ButterKnife.bind(this, addReviewView);
         if(savedInstance != null) {
             isReviewPictureSet = dataApplication.isReviewPictureSet();
         }

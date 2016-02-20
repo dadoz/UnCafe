@@ -51,7 +51,7 @@ public class StatusFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         statusView = inflater.inflate(R.layout.fragment_status, container, false);
-        ButterKnife.inject(statusView);
+        ButterKnife.bind(statusView);
         initOnLoadView();
 
         return statusView;

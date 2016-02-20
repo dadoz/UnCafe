@@ -1,43 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
-        android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-    <!-- MAIN CONTENT -->
     <RelativeLayout
-            android:id="@+id/reviewDashboardContainerLayoutId"
+        android:id="@+id/reviewDashboardContainerLayoutId"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="@dimen/small_padding"
+        android:layout_alignParentLeft="true">
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:padding="@dimen/small_padding"
-            android:layout_alignParentLeft="true">
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:orientation="vertical">
-            <!--<include layout="@layout/header_coffee_machine_template"/>-->
-            <include layout="@layout/dashboard_today_review_template"/>
+            android:layout_alignParentLeft="true"
+            android:orientation="vertical">
         </LinearLayout>
     </RelativeLayout>
 
-
-    <com.shamanland.fab.FloatingActionButton
-            android:id="@+id/addReviewFabId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="@dimen/floating_action_button_margin_normal_minus"
-            android:layout_marginRight="@dimen/floating_action_button_margin_normal"
-            app:floatingActionButtonColor="@color/material_amber400"
-            android:src="@drawable/edit_icon_ultra_small_b"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addReviewFabId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/edit_icon_ultra_small_b"/>
 
 </RelativeLayout>

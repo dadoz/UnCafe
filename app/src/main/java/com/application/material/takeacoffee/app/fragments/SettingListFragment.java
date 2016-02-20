@@ -11,8 +11,9 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
@@ -36,7 +37,7 @@ public class SettingListFragment extends Fragment
     private View settingListView;
     private String coffeeMachineId;
     private Bundle bundle;
-    @InjectView(R.id.settingsContainerListViewId) ListView listView;
+    @Bind(R.id.settingsContainerListViewId) ListView listView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -54,7 +55,7 @@ public class SettingListFragment extends Fragment
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         settingListView = inflater.inflate(R.layout.fragment_settings, container, false);
-        ButterKnife.inject(this, settingListView);
+        ButterKnife.bind(this, settingListView);
         setHasOptionsMenu(true);
         initOnLoadView();
         return settingListView;

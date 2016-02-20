@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
     android:id="@+id/coffeeMachineFragmentLayoutId"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:id="@+id/titleContainerLayoutId"
         android:background="@color/light_black"
@@ -37,8 +35,6 @@
             pixlui:typeface="chimphand-regular.ttf"/>
 
     </LinearLayout>
-
-
     <GridView
         android:id="@+id/coffeeMachineGridLayoutId"
         android:listSelector="@color/listview_selector"
@@ -53,6 +49,4 @@
         android:horizontalSpacing="@dimen/small_padding"
         android:stretchMode="columnWidth"
         android:gravity="top"/>
-
-
 </RelativeLayout>

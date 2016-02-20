@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,14 +13,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
 import android.widget.*;
 import android.widget.ImageView;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.AddReviewActivity;
+import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
@@ -48,7 +52,7 @@ public class ReviewListFragment extends Fragment
         OnRefreshListener, AbsListView.OnScrollListener {
     private static final String TAG = "ReviewListFragment";
     public static final String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
-    private static FragmentActivity mainActivityRef = null;
+    private static AppCompatActivity mainActivityRef = null;
     public static String EDIT_REVIEW_STRING = "Edit";
 
     private View reviewListView;
@@ -57,18 +61,17 @@ public class ReviewListFragment extends Fragment
     private CoffeeMachineStatus coffeeMachineStatus;
     private String meUserId;
 
-    @InjectView(R.id.reviewsContainerListViewId) ListView listView;
-    @InjectView(R.id.addReviewFabId) View addReviewFabButton;
-    @InjectView(R.id.goodReviewPercentageTextId) TextView goodReviewPercentageView;
-    @InjectView(R.id.statusCoffeeIconId) ImageView statusCoffeeIcon;
-    @InjectView(R.id.swipeRefreshLayoutId) SwipeRefreshLayout swipeRefreshLayout;
-    @InjectView(R.id.statusHeaderLayoutId) View statusHeaderLayout;
-    @InjectView(R.id.periodTextId) View statusPeriodView;
-    @InjectView(android.R.id.empty) View emptyView;
+    @Bind(R.id.reviewsContainerListViewId) ListView listView;
+    @Bind(R.id.addReviewFabId) View addReviewFabButton;
+//    @Bind(R.id.goodReviewPercentageTextId) TextView goodReviewPercentageView;
+//    @Bind(R.id.statusCoffeeIconId) ImageView statusCoffeeIcon;
+    @Bind(R.id.swipeRefreshLayoutId) SwipeRefreshLayout swipeRefreshLayout;
+//    @Bind(R.id.statusHeaderLayoutId) View statusHeaderLayout;
+//    @Bind(R.id.periodTextId) View statusPeriodView;
+//    @Bind(android.R.id.empty) View emptyView;
 
 
     private View moreReviewLoaderView;
-//    private View emptyView;
     private ArrayList<Review> reviewList;
     private ArrayList<User> userList;
     private CoffeeMachine coffeeMachine;
@@ -82,66 +85,27 @@ public class ReviewListFragment extends Fragment
     private int REVIEW_MAX_LINES = 5; //max line number of review
     private int REVIEW_MIN_LINES = 2; //max line number of review
 
-    boolean mSwiping = false;
-    boolean mItemPressed = false;
-    static final int SWIPE_DURATION = 10;
-    private boolean isSwipedViewShown = false;
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof OnLoadViewHandlerInterface)) {
-            throw new ClassCastException(activity.toString()
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof OnLoadViewHandlerInterface)) {
+            throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        if (!(activity instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(activity.toString()
+        if (!(context instanceof OnChangeFragmentWrapperInterface)) {
+            throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        mainActivityRef =  (CoffeeMachineActivity) activity;
+        mainActivityRef =  (CoffeeMachineActivity) context;
         dataApplication = ((DataApplication) mainActivityRef.getApplication());
         meUserId = dataApplication.getUserId();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         reviewListView = inflater.inflate(R.layout.fragment_review_list, container, false);
-        ButterKnife.inject(this, reviewListView);
-//        emptyView = inflater.inflate(R.layout.empty_data_status_layout, listView, false);
-        headerView = inflater.inflate(R.layout.header_listview_template, listView, false);
-        oldReviewView = headerView.findViewById(R.id.oldReviewTemplateId);
-        moreReviewLoaderView = headerView.findViewById(R.id.moreReviewTemplateId);
-        setHasOptionsMenu(true);
-
-        try {
-            bundle = getArguments();
-            coffeeMachine = bundle.getParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
-            coffeeMachineId = coffeeMachine.getId();
-        //        reviewStatus = ReviewStatus.ReviewStatusEnum.valueOf(bundle
-        //                .getString(ReviewStatus.REVIEW_STATUS_KEY));
-
-        } catch (Exception e) {
-            Log.e(TAG, "" + e.getMessage());
-        }
-
-        if(savedInstance != null) {
-            restoreData();
-            initView();
-            return reviewListView;
-        }
-
-        //TODO mmmmmm
-        if(reviewList != null) {
-            initView();
-            return reviewListView;
-        }
-
-        initOnLoadView();
+        ButterKnife.bind(this, reviewListView);
+        initView();
         return reviewListView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstance) {
-        super.onActivityCreated(savedInstance);
     }
 
     @Override
@@ -156,6 +120,39 @@ public class ReviewListFragment extends Fragment
         super.onPause();
     }
 
+    /**
+     * init actionbar
+     */
+    public void initActionbar() {
+        mainActivityRef.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    /**
+     * init view to handle review data
+     */
+    public void initView() {
+        initActionbar();
+        if (BuildConfig.DEBUG) {
+            reviewList = getReviewListTest();
+        }
+//        Collections.reverse(reviewList);
+        ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
+                this, R.layout.review_template, reviewList, coffeeMachineId);
+
+//        listView.setEmptyView(emptyView);
+        listView.setAdapter(reviewListenerAdapter);
+
+        listView.setOnItemLongClickListener(this);
+        listView.setOnItemClickListener(this);
+        listView.setOnScrollListener(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        addReviewFabButton.setOnClickListener(this);
+
+        if (userList != null) {
+            getAdapterWrapper().setUserList(userList);
+            getAdapterWrapper().notifyDataSetChanged();
+        }
+    }
+
     private void initOnLoadView() {
         ((OnLoadViewHandlerInterface) mainActivityRef).initOnLoadView();
         Log.w(TAG, "call initLoader getCoffeeMachineStatus");
@@ -167,13 +164,6 @@ public class ReviewListFragment extends Fragment
 
         HttpIntentService.reviewListRequest(this.getActivity(),
                 coffeeMachineId, timestamp);
-
-
-        //TODO REFACTORING
-/*        long fromTimestamp = bundle.getLong(Common.FROM_TIMESTAMP_KEY);
-        long toTimestamp = bundle.getLong(Common.TO_TIMESTAMP_KEY);
-        Bundle params = RestResponse.createBundleReview(coffeeMachineId, fromTimestamp, toTimestamp);
-*/
     }
 
     private void restoreData() {
@@ -194,8 +184,7 @@ public class ReviewListFragment extends Fragment
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
 
         if(coffeeMachineStatus != null) {
-            goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
-//            statusCoffeeIcon.setImageDrawable();
+//            goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
         }
         //action bar
         setActionBarData();
@@ -208,8 +197,6 @@ public class ReviewListFragment extends Fragment
         setHasMoreReviewView();
         Collections.reverse(reviewList);
         getAdapterWrapper().setReviewList(reviewList);
-//        listView.setVisibility(reviewList.size() == 0 ? View.GONE : View.VISIBLE);
-        //retrieve user if are not null
         if(userList != null) {
             getAdapterWrapper().setUserList(userList);
             getAdapterWrapper().notifyDataSetChanged();
@@ -218,12 +205,38 @@ public class ReviewListFragment extends Fragment
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
-    public void initView() {
+    public View preInitViewOld(LayoutInflater inflater, Bundle savedInstance) {
+                headerView = inflater.inflate(R.layout.header_listview_template, listView, false);
+        oldReviewView = headerView.findViewById(R.id.oldReviewTemplateId);
+        moreReviewLoaderView = headerView.findViewById(R.id.moreReviewTemplateId);
+        setHasOptionsMenu(true);
+        try {
+            bundle = getArguments();
+            coffeeMachine = bundle.getParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
+            coffeeMachineId = coffeeMachine.getId();
+
+        } catch (Exception e) {
+            Log.e(TAG, "" + e.getMessage());
+        }
+        if(savedInstance != null) {
+            restoreData();
+            initView();
+            return reviewListView;
+        }
+        //TODO mmmmmm
+        if(reviewList != null) {
+            initViewOld();
+            return reviewListView;
+        }
+        initOnLoadView();
+        return null;
+    }
+
+    public void initViewOld() {
         ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
         boolean isReviewListEmpty = false;
         if(coffeeMachineStatus != null) {
-            goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
-//            statusCoffeeIcon.setImageDrawable();
+//            goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
         }
 
         setActionBarData();
@@ -240,9 +253,9 @@ public class ReviewListFragment extends Fragment
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 this, R.layout.review_template, reviewList, coffeeMachineId);
 
-        statusHeaderLayout.setVisibility(! isReviewListEmpty ? View.VISIBLE : View.GONE);
+//        statusHeaderLayout.setVisibility(!isReviewListEmpty ? View.VISIBLE : View.GONE);
 
-        listView.setEmptyView(emptyView);
+//        listView.setEmptyView(emptyView);
         listView.addHeaderView(headerView);
         setHasMoreReviewView();
 
@@ -256,8 +269,7 @@ public class ReviewListFragment extends Fragment
         addReviewFabButton.setOnClickListener(this);
 
         //STATUS header
-        statusHeaderLayout.setOnClickListener(this);
-        //retrieve user if are not null
+//        statusHeaderLayout.setOnClickListener(this);
         if(userList != null) {
             getAdapterWrapper().setUserList(userList);
             getAdapterWrapper().notifyDataSetChanged();
@@ -437,7 +449,6 @@ public class ReviewListFragment extends Fragment
             e.printStackTrace();
         }
 
-        //disable onItemLongClick (only one edit per time)
         ((SetActionBarInterface) mainActivityRef)
                 .updateSelectedItem(this, listView, view, position);
         return true;
@@ -453,7 +464,6 @@ public class ReviewListFragment extends Fragment
             return;
         }
         menuInflater.inflate(R.menu.review_list, menu);
-//        listView.setOnItemLongClickListener(this);
     }
 
     @Override
@@ -525,7 +535,6 @@ public class ReviewListFragment extends Fragment
                 Log.e(TAG, "expand pic view");
                 ImageView reviewPictureView = new ImageView(mainActivityRef);
                 reviewPictureView.setImageDrawable(((ImageView) v).getDrawable());
-//                reviewPictureView.setLayoutParams(new ViewGroup.LayoutParams(600, ViewGroup.LayoutParams.WRAP_CONTENT));
                 AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef).
                         setView(reviewPictureView).
                         setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -559,7 +568,6 @@ public class ReviewListFragment extends Fragment
         HttpIntentService.coffeeMachineStatusRequest(this.getActivity(),
                 coffeeMachineId, timestamp);
         //request review
-//        long timestamp = 123456; //TODO replace with joda time
         HttpIntentService.reviewListRequest(this.getActivity(),
                 coffeeMachineId, timestamp);
 
@@ -575,8 +583,6 @@ public class ReviewListFragment extends Fragment
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         try {
             if(firstVisibleItem == 0) {
-//                Animation jumpUp = AnimationUtils.loadAnimation(mainActivityRef, R.anim.slide_up);
-//                Animation jumpDown =AnimationUtils.loadAnimation(mainActivityRef, R.anim.slide_down);
                 if(view.getChildAt(firstVisibleItem) == null) {
                     return;
                 }
@@ -585,10 +591,10 @@ public class ReviewListFragment extends Fragment
 
                 //hide and show element
                 if(Math.abs(view.getChildAt(firstVisibleItem).getY()) > offset) {
-                    statusHeaderLayout.setVisibility(View.GONE);
+//                    statusHeaderLayout.setVisibility(View.GONE);
                     return;
                 }
-                statusHeaderLayout.setVisibility(View.VISIBLE);
+//                statusHeaderLayout.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -609,230 +615,110 @@ public class ReviewListFragment extends Fragment
         return userIdList;
     }
 
-    @Subscribe
-    public void onNetworkRespose(CoffeeMachineStatus response){
-        Log.d(TAG, "Response  COFFEE_MACHINE_STATUS");
-        if(response == null) {
-            return;
-        }
-        coffeeMachineStatus = response;
-        dataApplication.saveCoffeeMachineStatus(coffeeMachineStatus);
+    public ArrayList<Review> getReviewListTest() {
+        ArrayList<Review> list = new ArrayList<Review>();
+        list.add(new Review("0", "heheeheheheh", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("0", "blalallalll", "balal", 1111, "1", "1", null, null));
+        return list;
+    }
 
-        ((TextView) statusPeriodView).setText("01.12 - today");
-        goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
-
+//    @Subscribe
+//    public void onNetworkRespose(CoffeeMachineStatus response){
+//        Log.d(TAG, "Response  COFFEE_MACHINE_STATUS");
+//        if(response == null) {
+//            return;
+//        }
+//        coffeeMachineStatus = response;
+//        dataApplication.saveCoffeeMachineStatus(coffeeMachineStatus);
+//
+//        ((TextView) statusPeriodView).setText("01.12 - today");
+//        goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
+//
+////        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+//    }
+//
+//    @Subscribe
+//    public void onNetworkRespose(ReviewDataContainer reviewDataContainer){
+//        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
+//        if(reviewDataContainer == null ||
+//                reviewDataContainer.getReviewList() == null) {
+//            Log.e(TAG, "empty review list data");
+//            //TODO handle adapter with empty data
+//            return;
+//        }
+//        dataApplication.saveReviewDataContainer(reviewDataContainer);
+//
+//        reviewList = reviewDataContainer.getReviewList();
+//        hasMoreReviews = reviewDataContainer.getHasMoreReviews();
+//
+//        if(reviewList.size() != 0) {
+//            ArrayList<String> userIdList = getUserIdListFromReviewList(reviewList);
+//            HttpIntentService.userListRequest(mainActivityRef, userIdList);
+//        }
+//
+//        //or init view
+//        if(isMoreReviewRequest) {
+//            isMoreReviewRequest = false;
+//            swipeRefreshLayout.setRefreshing(false);
+//
+//            setHasMoreReviewView();
+//            Collections.reverse(reviewList);
+//            getAdapterWrapper().setPrevReview(reviewList);
+//            return;
+//        }
+//
+////        if() //TODO add refreshstatus -
+//        if(isRefreshAction) {
+//            refreshView();
+//            isRefreshAction = false;
+//            return;
+//        }
+//
+//        initView();
+//
+//        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(); //sync with review
+//    }
+//
+//    @Subscribe
+//    public void onNetworkRespose(ArrayList<User> userList) {
+//        Log.d(TAG, "get response from bus - USER_REQUEST");
 //        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-    }
-
-    @Subscribe
-    public void onNetworkRespose(ReviewDataContainer reviewDataContainer){
-        Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        if(reviewDataContainer == null ||
-                reviewDataContainer.getReviewList() == null) {
-            Log.e(TAG, "empty review list data");
-            //TODO handle adapter with empty data
-            return;
-        }
-        dataApplication.saveReviewDataContainer(reviewDataContainer);
-
-        reviewList = reviewDataContainer.getReviewList();
-        hasMoreReviews = reviewDataContainer.getHasMoreReviews();
-
-        if(reviewList.size() != 0) {
-            ArrayList<String> userIdList = getUserIdListFromReviewList(reviewList);
-            HttpIntentService.userListRequest(mainActivityRef, userIdList);
-        }
-
-        //notify changes
-//        setHasMoreReviewView();
-//        getAdapterWrapper().setReviewList(reviewList);
+//
+//        if(userList == null) {
+//            //TODO handle adapter with empty data
+//            return;
+//        }
+//        dataApplication.saveUserList(userList);
+//
+//        getAdapterWrapper().setUserList(userList);
 //        getAdapterWrapper().notifyDataSetChanged();
-
-        //or init view
-        if(isMoreReviewRequest) {
-            isMoreReviewRequest = false;
-            swipeRefreshLayout.setRefreshing(false);
-
-            setHasMoreReviewView();
-            Collections.reverse(reviewList);
-            getAdapterWrapper().setPrevReview(reviewList);
-            return;
-        }
-
-//        if() //TODO add refreshstatus -
-        if(isRefreshAction) {
-            refreshView();
-            isRefreshAction = false;
-            return;
-        }
-
-        initView();
-
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView(); //sync with review
-    }
-
-    @Subscribe
-    public void onNetworkRespose(ArrayList<User> userList) {
-        Log.d(TAG, "get response from bus - USER_REQUEST");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-
-        if(userList == null) {
-            //TODO handle adapter with empty data
-            return;
-        }
-        dataApplication.saveUserList(userList);
-
-        getAdapterWrapper().setUserList(userList);
-        getAdapterWrapper().notifyDataSetChanged();
-//                    swipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Subscribe
-    public void onNetworkRespose(Review.DeletedResponse deleteReviewResponse) {
-        Log.d(TAG, "get response from bus - DELETE_REVIEW_REQ");
-        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-
-        if(deleteReviewResponse == null) {
-            //TODO handle adapter with empty data
-            Log.e(TAG, "error - not able to delete review");
-            return;
-        }
-
-        Review review = (Review) bundle.get(Review.REVIEW_OBJ_KEY);
-        getAdapterWrapper().deleteReview(review.getId());
-        getAdapterWrapper().notifyDataSetChanged();
-        return;
-    }
-
-
-    @Subscribe
-    public void onHandlingError(Throwable cause) {
-        String message = cause.getMessage();
-        int code = Integer.parseInt(cause.getCause().getMessage());
-
-        Log.e(TAG, "error - " + message + code);
-    }
-
-
-
-    /**
-     * Handle touch events to fade/move dragged items as they are swiped out
-     */
-/*    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-
-        float mDownX;
-        private int mSwipeSlop = -1;
-
-        @Override
-        public boolean onTouch(final View v, MotionEvent event) {
-            if (mSwipeSlop < 0) {
-                mSwipeSlop = ViewConfiguration.get(mainActivityRef).
-                        getScaledTouchSlop();
-            }
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    Log.e(TAG, "down");
-                    if (mItemPressed) {
-                        // Multi-item swipes not handled
-                        return false;
-                    }
-                    mItemPressed = true;
-                    mDownX = event.getX();
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    v.setAlpha(1);
-                    v.setTranslationX(0);
-                    mItemPressed = false;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                {
-                    float x = event.getX() + v.getTranslationX();
-                    float deltaX = x - mDownX;
-                    float deltaXAbs = Math.abs(deltaX);
-                    if (!mSwiping) {
-                        if (deltaXAbs > mSwipeSlop) {
-                            mSwiping = true;
-                            listView.requestDisallowInterceptTouchEvent(true);
-//                            mBackgroundContainer.showBackground(v.getTop(), v.getHeight());
-                        }
-                    }
-                    if (mSwiping) {
-                        v.setTranslationX((x - mDownX));
-                        v.setAlpha(1 - deltaXAbs / v.getWidth());
-                    }
-                }
-                break;
-                case MotionEvent.ACTION_UP:
-                {
-                    // User let go - figure out whether to animate the view out, or back into place
-                    if (mSwiping) {
-                        float x = event.getX() + v.getTranslationX();
-                        float deltaX = x - mDownX;
-                        float deltaXAbs = Math.abs(deltaX);
-                        float fractionCovered;
-                        float endX;
-                        float endAlpha;
-                        final boolean remove;
-                        if (deltaXAbs > v.getWidth() / 4) {
-                            // Greater than a quarter of the width - animate it out
-                            fractionCovered = deltaXAbs / v.getWidth();
-                            endX = deltaX < 0 ? -v.getWidth() : v.getWidth();
-                            endAlpha = 0;
-                            remove = true;
-                        } else {
-                            // Not far enough - animate it back
-                            fractionCovered = 1 - (deltaXAbs / v.getWidth());
-                            endX = 0;
-                            endAlpha = 1;
-                            remove = false;
-                        }
-                        // Animate position and alpha of swiped item
-                        // NOTE: This is a simplified version of swipe behavior, for the
-                        // purposes of this demo about animation. A real version should use
-                        // velocity (via the VelocityTracker class) to send the item off or
-                        // back at an appropriate speed.
-                        long duration = (int) ((1 - fractionCovered) * SWIPE_DURATION);
-                        listView.setEnabled(false);
-//                        v.animate().setDuration(duration).
-//                                alpha(endAlpha).translationX(endX).
-//                                withEndAction(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        Restore animated values
-//                                        v.setAlpha(1);
-//                                        v.setTranslationX(0);
-//                                        if (remove) {
-//                                            animateRemoval(listView, v);
-//                                        } else {
-//                                            mBackgroundContainer.hideBackground();
-//                                            mSwiping = false;
-//                                            listView.setEnabled(true);
-//                                        }
-//                                    }
-//                                });
-
-                        v.setAlpha(1);
-                        v.setTranslationX(0);
-                        if (remove) {
-                            Log.e(TAG, "swipe");
-                            swipeView(listView, v);
-                        } else {
-//                          mBackgroundContainer.hideBackground();
-                            Log.e(TAG, "not swipe");
-                            mSwiping = false;
-                            listView.setEnabled(true);
-                        }
-                    }
-                }
-                mItemPressed = false;
-                break;
-                default:
-                    return false;
-            }
-            return true;
-        }
-    };*/
-
-
+////                    swipeRefreshLayout.setRefreshing(false);
+//    }
+//
+//    @Subscribe
+//    public void onNetworkRespose(Review.DeletedResponse deleteReviewResponse) {
+//        Log.d(TAG, "get response from bus - DELETE_REVIEW_REQ");
+//        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
+//
+//        if(deleteReviewResponse == null) {
+//            //TODO handle adapter with empty data
+//            Log.e(TAG, "error - not able to delete review");
+//            return;
+//        }
+//
+//        Review review = (Review) bundle.get(Review.REVIEW_OBJ_KEY);
+//        getAdapterWrapper().deleteReview(review.getId());
+//        getAdapterWrapper().notifyDataSetChanged();
+//        return;
+//    }
+//
+//
+//    @Subscribe
+//    public void onHandlingError(Throwable cause) {
+//        String message = cause.getMessage();
+//        int code = Integer.parseInt(cause.getCause().getMessage());
+//
+//        Log.e(TAG, "error - " + message + code);
+//    }
 }
 

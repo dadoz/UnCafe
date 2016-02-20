@@ -5,8 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import com.application.material.takeacoffee.app.models.*;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.gson.JsonParseException;
+//import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,7 +119,7 @@ public class JSONParserToObject {
 //        return null;
 //    }
 
-    private static Review reviewParser(String data) {
+    public static Review reviewParser(String data) {
         JSONObject reviewJsonObj = null;
         try {
             reviewJsonObj = new JSONObject(data);

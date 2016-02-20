@@ -14,8 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import android.widget.ImageView;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -33,7 +34,7 @@ public class AddReviewActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
     private static final String TAG = "CoffeeMachineActivity";
     private static String ADD_REVIEW_FRAG_TAG = "ADD_REVIEW_FRAG_TAG";
-    @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
+    @Bind(R.id.onLoadLayoutId) View onLoadLayout;
     //Volley lib
     private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
@@ -46,7 +47,7 @@ public class AddReviewActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_review);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         String coffeeMachineId = getIntent().getStringExtra(CoffeeMachineActivity.EXTRA_DATA);
         bundle = new Bundle();

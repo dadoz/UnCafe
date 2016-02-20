@@ -9,8 +9,9 @@ import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.singletons.VolleySingleton;
@@ -38,11 +39,11 @@ public class LoggedUserFragment extends Fragment
     private View settingListView;
     private String coffeeMachineId;
     private Bundle bundle;
-    @InjectView(R.id.loginUsernameEditId)
+    @Bind(R.id.loginUsernameEditId)
     EditText loginUsernameEdit;
-    @InjectView(R.id.deleteUserButtonId)
+    @Bind(R.id.deleteUserButtonId)
     LinearLayout deleteUserButton;
-    @InjectView(R.id.profilePictureViewId)
+    @Bind(R.id.profilePictureViewId)
     ImageView profilePictureView;
 
     private DataApplication dataApplication;
@@ -66,7 +67,7 @@ public class LoggedUserFragment extends Fragment
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         settingListView = inflater.inflate(R.layout.fragment_logged_user, container, false);
-        ButterKnife.inject(this, settingListView);
+        ButterKnife.bind(this, settingListView);
         setHasOptionsMenu(true);
         initOnLoadView();
         return settingListView;

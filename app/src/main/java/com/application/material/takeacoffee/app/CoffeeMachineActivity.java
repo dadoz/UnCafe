@@ -16,8 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import android.widget.ImageView;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
@@ -45,11 +46,11 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
     private static final String TAG = "CoffeeMachineActivity";
     public static final int RESULT_FAILED = 111;
     public static String EXTRA_DATA = "EXTRA_DATA";
-    @InjectView(R.id.onLoadLayoutId)
-    View onLoadLayout;
+//    @Bind(R.id.onLoadLayoutId)
+//    View onLoadLayout;
     //Volley lib
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
-    private static ArrayList<String> currentFragTagList = new ArrayList<>();
+    private static ArrayList<String> currentFragTagList = new ArrayList<String>();
     public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
     public static final String ERROR_MESSAGE_KEY = "EMK";
     public static final int ACTION_EDIT_REVIEW = 1;
@@ -65,7 +66,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coffee_machine);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         //custom actionBar
 //        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
@@ -174,7 +175,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 
     @Override
     public void initOnLoadView() {
-            onLoadLayout.setVisibility(View.VISIBLE);
+//            onLoadLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -183,7 +184,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 
     @Override
     public void hideOnLoadView() {
-        onLoadLayout.setVisibility(View.GONE);
+//        onLoadLayout.setVisibility(View.GONE);
     }
 
     @Override

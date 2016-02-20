@@ -24,7 +24,6 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
-import com.google.gson.JsonObject;
 import com.parse.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,8 +64,8 @@ public class FacebookLogin {
                         .getString(R.string.parseClientKey));
 
         //init ParceFacebookUtils
-        ParseFacebookUtils.initialize(activityRef.getResources()
-                .getString(R.string.facebook_app_id));
+//        ParseFacebookUtils.initialize(activityRef.getResources()
+//                .getString(R.string.facebook_app_id));
 
         dataApplication = (DataApplication) activityRef.getApplication();
         this.activityRef = activityRef;
@@ -90,26 +89,24 @@ public class FacebookLogin {
         progressDialog = ProgressDialog.show(
                 activityRef, "", "Logging in...", true);
         List<String> permissions = Arrays.asList("public_profile");
-//        List<String> permissions = Arrays.asList("public_profile", "user_friends", "user_about_me",
-//                "user_relationships", "user_birthday", "user_location");
-        ParseFacebookUtils.logIn(permissions, activityRef, REQUEST_CODE_FB, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException err) {
-                progressDialog.dismiss();
-                if (user == null) {
-                    Log.d(TAG,
-                            "Uh oh. The user cancelled the Facebook login.");
-                } else if (user.isNew()) {
-                    Log.d(TAG,
-                            "User signed up and logged in through Facebook!");
-                    showUserDetailsActivity(user);
-                } else {
-                    Log.d(TAG,
-                            "User logged in through Facebook!");
-                    showUserDetailsActivity(user);
-                }
-            }
-        });
+//        ParseFacebookUtils.logInInBackground(permissions, activityRef, REQUEST_CODE_FB, new LogInCallback() {
+//            @Override
+//            public void done(ParseUser user, ParseException err) {
+//                progressDialog.dismiss();
+//                if (user == null) {
+//                    Log.d(TAG,
+//                            "Uh oh. The user cancelled the Facebook login.");
+//                } else if (user.isNew()) {
+//                    Log.d(TAG,
+//                            "User signed up and logged in through Facebook!");
+//                    showUserDetailsActivity(user);
+//                } else {
+//                    Log.d(TAG,
+//                            "User logged in through Facebook!");
+//                    showUserDetailsActivity(user);
+//                }
+//            }
+//        });
     }
 
     private void onLogoutButtonClicked() {
@@ -125,7 +122,7 @@ public class FacebookLogin {
     }
 
     public void makeMeRequest() {
-        Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
+        Request request = Request.newMeRequest( null,//ParseFacebookUtils.getSession(),
                 new Request.GraphUserCallback() {
                     @Override
                     public void onCompleted(GraphUser user, Response response) {
@@ -270,7 +267,7 @@ public class FacebookLogin {
 //                .getResources().getDimension(R.dimen.huge_icon_size)));
 //        params.putString("width", String.valueOf(activityRef
 //                .getResources().getDimension(R.dimen.huge_icon_size)));
-        new Request(ParseFacebookUtils.getSession(),
+        new Request(null, //ParseFacebookUtils.getSession(),
                 "/me/picture",
                 params,
                 HttpMethod.GET,
@@ -283,7 +280,7 @@ public class FacebookLogin {
                         if(response == null ||
                                 response.getGraphObject() == null) {
                             Log.e(TAG, "error - response null from FB stateChange"); //IMPROVEMENT check if there is internet connection
-                            ParseFacebookUtils.getSession().close();
+//                            ParseFacebookUtils.getSession().close();
 //                            progressDialog.cancel();
                             return;
                         }
@@ -308,7 +305,7 @@ public class FacebookLogin {
                             e.printStackTrace();
                         } finally {
                             //please count ref to release
-                            ParseFacebookUtils.getSession().close();
+//                            ParseFacebookUtils.getSession().close();
 //                            progressDialog.cancel();
                         }
                     }

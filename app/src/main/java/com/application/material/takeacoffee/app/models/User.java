@@ -3,7 +3,7 @@ package com.application.material.takeacoffee.app.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.gson.annotations.SerializedName;
+//import com.google.gson.annotations.SerializedName;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class User implements Parcelable {
     public static int PROFILE_PIC_URL = 111;
     public static String EMPTY_ID = "EMPTY_ID";
 
-    @SerializedName("objectId")
+//    @SerializedName("objectId")
     private String id;
 //    private String objectid;
     private String username;

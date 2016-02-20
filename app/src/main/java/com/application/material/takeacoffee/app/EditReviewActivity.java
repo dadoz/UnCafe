@@ -15,8 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
@@ -37,7 +38,7 @@ public class EditReviewActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
     private static final String TAG = "CoffeeMachineActivity";
     private static String EDIT_REVIEW_FRAG_TAG = "EDIT_REVIEW_FRAG_TAG";
-    @InjectView(R.id.onLoadLayoutId) View onLoadLayout;
+    @Bind(R.id.onLoadLayoutId) View onLoadLayout;
     //Volley lib
     private RequestQueue requestQueue;
     private ImageLoader imageLoader;
@@ -52,7 +53,7 @@ public class EditReviewActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_review);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         bundle = getIntent().getBundleExtra(CoffeeMachineActivity.EXTRA_DATA);
 

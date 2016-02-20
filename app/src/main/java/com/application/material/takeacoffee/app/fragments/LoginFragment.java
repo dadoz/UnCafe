@@ -12,8 +12,9 @@ import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.LoginActivity;
 import com.application.material.takeacoffee.app.R;
@@ -49,14 +50,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private View settingListView;
     private String coffeeMachineId;
     private Bundle bundle;
-    @InjectView(R.id.loginContinueButtonId) View loginContinueButton;
-    @InjectView(R.id.loginUsernameEditId) View loginUsernameEditText;
-    @InjectView(R.id.loginMainLayoutId) View loginMainView;
-    @InjectView(R.id.loaderLayoutId) View loaderView;
-    @InjectView(R.id.profilePictureViewId)
+    @Bind(R.id.loginContinueButtonId) View loginContinueButton;
+    @Bind(R.id.loginUsernameEditId) View loginUsernameEditText;
+    @Bind(R.id.loginMainLayoutId) View loginMainView;
+    @Bind(R.id.loaderLayoutId) View loaderView;
+    @Bind(R.id.profilePictureViewId)
     ImageView profilePictureView;
-    @InjectView(R.id.facebookLoginButtonId) View facebookLoginButton;
-    @InjectView(R.id.userIdDebug) View userIdDebugButton;
+    @Bind(R.id.facebookLoginButtonId) View facebookLoginButton;
+    @Bind(R.id.userIdDebug) View userIdDebugButton;
     private DataApplication dataApplication;
     private FacebookLogin facebookLogin;
     private ImagePickerSingleton imagePicker;
@@ -78,15 +79,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         settingListView = inflater.inflate(R.layout.fragment_login, container, false);
-        ButterKnife.inject(this, settingListView);
+        ButterKnife.bind(this, settingListView);
 
         // Fetch Facebook user info if the session is active
         facebookLogin = FacebookLogin.getInstance(loginActivityRef);
-        Session session = ParseFacebookUtils.getSession();
-        if (session != null &&
-                session.isOpened()) {
-            session.close();
-        }
+//        Session session = ParseFacebookUtils.getSession();
+//        if (session != null &&
+//                session.isOpened()) {
+//            session.close();
+//        }
 
 
         initOnLoadView();

@@ -10,8 +10,9 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import android.widget.ImageView;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.CoffeeMachineActivity;
 import com.application.material.takeacoffee.app.R;
@@ -42,16 +43,16 @@ public class AddReviewFragment extends Fragment implements
     private static final String TAG = "AddReviewFragment";
     private AddReviewActivity addActivityRef;
     private String meUserId;
-    @InjectView(R.id.commentTextId) View commentTextView;
-    @InjectView(R.id.statusRatingBarId) View statusRatingBarView;
-//    @InjectView(R.id.addReviewButtonId) View addReviewButton;
-    @InjectView(R.id.pickPictureIconId) View pickPictureButton;
-    @InjectView(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
-    @InjectView(R.id.imagePreviewViewId) View imagePreviewView;
-    @InjectView(R.id.setRatingButtonId) View setRatingButton;
+    @Bind(R.id.commentTextId) View commentTextView;
+    @Bind(R.id.statusRatingBarId) View statusRatingBarView;
+//    @Bind(R.id.addReviewButtonId) View addReviewButton;
+    @Bind(R.id.pickPictureIconId) View pickPictureButton;
+    @Bind(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
+    @Bind(R.id.imagePreviewViewId) View imagePreviewView;
+    @Bind(R.id.setRatingButtonId) View setRatingButton;
 
-    @InjectView(R.id.filledCircleId) View filledCircleView;
-//    @InjectView(R.id.seekBarId) View seekBarView;
+    @Bind(R.id.filledCircleId) View filledCircleView;
+//    @Bind(R.id.seekBarId) View seekBarView;
 
     private String coffeeMachineId;
     private Review reviewParams;
@@ -59,9 +60,9 @@ public class AddReviewFragment extends Fragment implements
     private boolean isReviewPictureSet = false;
     private boolean mItemPressed = false;
 
-//    @InjectView(R.id.usernameTextId) View usernameText;
-//    @InjectView(R.id.userIconId) View userIconView;
-//    @InjectView(R.id.editDeleteIconId) View editDeleteIcon;
+//    @Bind(R.id.usernameTextId) View usernameText;
+//    @Bind(R.id.userIconId) View userIconView;
+//    @Bind(R.id.editDeleteIconId) View editDeleteIcon;
 
 
     @Override
@@ -92,7 +93,7 @@ public class AddReviewFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         View addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
-        ButterKnife.inject(this, addReviewView);
+        ButterKnife.bind(this, addReviewView);
         //initOnLoadView();
         if(savedInstance != null) {
             isReviewPictureSet = dataApplication.isReviewPictureSet();

@@ -3,7 +3,6 @@ package com.application.material.takeacoffee.app.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import com.google.gson.annotations.SerializedName;
 import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
@@ -20,7 +19,7 @@ public class Review implements Parcelable {
     public static String REVIEW_OBJ_KEY = "REVIEW_OBJ_KEY";
     public static String REVIEW_PARAMS_KEY = "REVIEW_PARAMS_KEY";
 
-    @SerializedName("objectId")
+//    @SerializedName("objectId")
     private String id;
 	private String status;
     private String comment;

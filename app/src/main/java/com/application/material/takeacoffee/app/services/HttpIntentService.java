@@ -11,12 +11,6 @@ import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.restServices.CustomErrorHandler;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.google.gson.*;
-import com.google.gson.annotations.SerializedName;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
-import retrofit.http.*;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -68,16 +62,15 @@ public class HttpIntentService extends IntentService {
     private static String CHECK_USER_REQUEST = "CHECK_USER_REQUEST";
     private static String EXTRA_USER_LIST = "EXTRA_USER_LIST";
 
-    RequestInterceptor requestInterceptor = new RequestInterceptor() {
-        @Override
-        public void intercept(RequestFacade request) {
-//            request.addHeader("X-Parse-Application-Id", "61rFqlbDy0UWBfY56RcLdiJVB1EPe8ce1yUxdAEY");
-            request.addHeader("X-Parse-Application-Id", getResources().getString(R.string.parseApplicationId));
-            request.addHeader("X-Parse-REST-API-Key", "J37VkDdADU7jPfZSwLluAEixwJ3BmjPQJeuR1EzJ");
-            request.addHeader("Content-Type", "application/json");
-
-        }
-    };
+//    RequestInterceptor requestInterceptor = new RequestInterceptor() {
+//        @Override
+//        public void intercept(RequestFacade request) {
+//            request.addHeader("X-Parse-Application-Id", getResources().getString(R.string.parseApplicationId));
+//            request.addHeader("X-Parse-REST-API-Key", "J37VkDdADU7jPfZSwLluAEixwJ3BmjPQJeuR1EzJ");
+//            request.addHeader("Content-Type", "application/json");
+//
+//        }
+//    };
     private static boolean isConnected;
 
     public static void reviewListRequest(Context context,
@@ -221,27 +214,27 @@ public class HttpIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<ArrayList<CoffeeMachine>>(){}.getType();
-        Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<ArrayList<User>>(){}.getType();
-        Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<ReviewDataContainer>(){}.getType();
-
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .registerTypeAdapter(typeOfListOfCategory, new CustomDeserializer())
-                .registerTypeAdapter(typeOfListOfCategoryUser, new CustomDeserializerUser())
-                .registerTypeAdapter(typeOfListOfCategoryReview, new CustomDeserializerReview())
-                .create();
-
-        RestAdapter restAdapter =  new RestAdapter.Builder()
-                .setEndpoint("https://api.parse.com") // set baseUrl
-                .setRequestInterceptor(requestInterceptor)
-                .setConverter(new GsonConverter(gson))
-                .setErrorHandler(new CustomErrorHandler())
-                .build();
-
-        BusSingleton.getInstance().register(this);
-
-        service = restAdapter.create(RetrofitServiceInterface.class);
+//        Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<ArrayList<CoffeeMachine>>(){}.getType();
+//        Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<ArrayList<User>>(){}.getType();
+//        Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<ReviewDataContainer>(){}.getType();
+//
+//        Gson gson = new GsonBuilder()
+//                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+//                .registerTypeAdapter(typeOfListOfCategory, new CustomDeserializer())
+//                .registerTypeAdapter(typeOfListOfCategoryUser, new CustomDeserializerUser())
+//                .registerTypeAdapter(typeOfListOfCategoryReview, new CustomDeserializerReview())
+//                .create();
+//
+//        RestAdapter restAdapter =  new RestAdapter.Builder()
+//                .setEndpoint("https://api.parse.com") // set baseUrl
+//                .setRequestInterceptor(requestInterceptor)
+//                .setConverter(new GsonConverter(gson))
+//                .setErrorHandler(new CustomErrorHandler())
+//                .build();
+//
+//        BusSingleton.getInstance().register(this);
+//
+//        service = restAdapter.create(RetrofitServiceInterface.class);
     }
 
     @Override
@@ -265,7 +258,7 @@ public class HttpIntentService extends IntentService {
                     String coffeeMachineId = (String) intent.getExtras().get(EXTRA_COFFEE_MACHINE_ID);
                     Long timestamp = (Long) intent.getExtras().get(EXTRA_TIMESTAMP);
                     Review.Params params = new Review.Params(coffeeMachineId, timestamp);
-                    BusSingleton.getInstance().post(service.listReview(params));
+//                    BusSingleton.getInstance().post(service.listReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -287,7 +280,7 @@ public class HttpIntentService extends IntentService {
                     String coffeeMachineId = intent.getExtras().getString(EXTRA_COFFEE_MACHINE_ID);
                     String fromReviewId = intent.getExtras().getString(EXTRA_REVIEW_ID);
                     Review.MoreReviewsParams params = new Review.MoreReviewsParams(coffeeMachineId, fromReviewId);
-                    BusSingleton.getInstance().post(service.listMoreReview(params));
+//                    BusSingleton.getInstance().post(service.listMoreReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -309,7 +302,7 @@ public class HttpIntentService extends IntentService {
 //                    User.Params params = new User.Params(new ArrayList(Arrays.asList(array)));
                     ArrayList<String> userList = (ArrayList<String>) intent.getExtras().get(EXTRA_USER_LIST);
                     User.Params params = new User.Params(userList);
-                    BusSingleton.getInstance().post(service.listUserByIdList(params));
+//                    BusSingleton.getInstance().post(service.listUserByIdList(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -327,7 +320,7 @@ public class HttpIntentService extends IntentService {
                         return;
                     }
 
-                    BusSingleton.getInstance().post(service.listCoffeeMachine());
+//                    BusSingleton.getInstance().post(service.listCoffeeMachine());
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -338,12 +331,12 @@ public class HttpIntentService extends IntentService {
                 try {
                     if(! isConnected) {
                         Review review = null;
-                        BusSingleton.getInstance().post(service.updateReview("LerbzRfN95", review));
+//                        BusSingleton.getInstance().post(service.updateReview("LerbzRfN95", review));
                         return;
                     }
 
                     Review review = (Review) intent.getExtras().get(EXTRA_REVIEW);
-                    BusSingleton.getInstance().post(service.updateReview(review.getId(), review));
+//                    BusSingleton.getInstance().post(service.updateReview(review.getId(), review));
                     //{"updatedAt":"2014-12-30T12:43:00.235Z"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -360,8 +353,7 @@ public class HttpIntentService extends IntentService {
                     }
 
                     Review review = (Review) intent.getExtras().get(EXTRA_REVIEW);
-                    BusSingleton.getInstance().post(service.addReviewByParams(review));
-//                    {"createdAt":"2014-12-30T00:27:21.653Z","objectId":"eDJaDagkSv"}
+//                    BusSingleton.getInstance().post(service.addReviewByParams(review));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -372,12 +364,12 @@ public class HttpIntentService extends IntentService {
                 try{
                     if(! isConnected) {
                         String reviewId = "LerbzRfN95";
-                        BusSingleton.getInstance().post(service.deleteReview(reviewId));
+//                        BusSingleton.getInstance().post(service.deleteReview(reviewId));
                         return;
                     }
 
                     String reviewId = intent.getExtras().getString(EXTRA_REVIEW_ID);
-                    BusSingleton.getInstance().post(new Review.DeletedResponse(service.deleteReview(reviewId)));
+//                    BusSingleton.getInstance().post(new Review.DeletedResponse(service.deleteReview(reviewId)));
                     //{}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -399,7 +391,7 @@ public class HttpIntentService extends IntentService {
                     String coffeeMachineId = intent.getExtras().getString(EXTRA_COFFEE_MACHINE_ID);
                     long timestamp = intent.getExtras().getLong(EXTRA_TIMESTAMP);
                     CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId, timestamp);
-                    BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
+//                    BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -410,12 +402,12 @@ public class HttpIntentService extends IntentService {
                 try{
                     if(! isConnected) {
                         User user = (User) intent.getExtras().get(EXTRA_USER);
-                        BusSingleton.getInstance().post(service.updateUser("LerbzRfN95", null));
+//                        BusSingleton.getInstance().post(service.updateUser("LerbzRfN95", null));
                         return;
                     }
 
                     User user = (User) intent.getExtras().get(EXTRA_USER);
-                    BusSingleton.getInstance().post(service.updateUser(user.getId(), user));
+//                    BusSingleton.getInstance().post(service.updateUser(user.getId(), user));
 //                  {"updatedAt":"2014-12-30T12:50:55.468Z"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -434,8 +426,7 @@ public class HttpIntentService extends IntentService {
                     }
 
                     User userLocal = (User) intent.getExtras().get(EXTRA_USER);
-                    User user = service.addUserByParams(userLocal);
-                    BusSingleton.getInstance().post(user != null ? user.getId() : User.EMPTY_ID);
+//                    BusSingleton.getInstance().post(user != null ? user.getId() : User.EMPTY_ID);
 //                    {"createdAt":"2014-12-30T12:49:26.916Z","objectId":"f140rB6aRo"}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -447,12 +438,12 @@ public class HttpIntentService extends IntentService {
                 try{
                     if(! isConnected) {
                         String userId = "LerbzRfN95";
-                        BusSingleton.getInstance().post(service.deleteUser(userId));
+//                        BusSingleton.getInstance().post(service.deleteUser(userId));
                         return;
                     }
 
                     String userId = intent.getExtras().getString(EXTRA_USER_ID);
-                    BusSingleton.getInstance().post(new User.DeletedResponse(service.deleteUser(userId)));
+//                    BusSingleton.getInstance().post(new User.DeletedResponse(service.deleteUser(userId)));
                     //{}
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
@@ -468,7 +459,7 @@ public class HttpIntentService extends IntentService {
                     }
 
                     String userId = intent.getExtras().getString(EXTRA_USER_ID);
-                    BusSingleton.getInstance().post(service.checkUser(userId));
+//                    BusSingleton.getInstance().post(service.checkUser(userId));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());
                 }
@@ -479,45 +470,45 @@ public class HttpIntentService extends IntentService {
 
 
     public static interface RetrofitServiceInterface {
-
-        //get coffee machine
-        @GET("/" + CLASSES + COFFEE_MACHINE)
-        ArrayList<CoffeeMachine> listCoffeeMachine();
-
-        @POST("/" + FUNCTIONS + MORE_REVIEW)
-        ReviewDataContainer listMoreReview(@Body Review.MoreReviewsParams params);
-
-        @POST("/" + FUNCTIONS + WEEK_REVIEWS)
-        ReviewDataContainer listReview(@Body Review.Params reviewParams);
-
-        @POST("/" + FUNCTIONS + USER_BY_ID_LIST)
-        ArrayList<User> listUserByIdList(@Body User.Params userParams);
-
-        /**** REVIEW ACTIONS ****/
-        @PUT("/" + CLASSES + REVIEW + "/" + "{reviewId}")
-        Review updateReview(@Path("reviewId") String reviewId, @Body Review review);
-
-        @POST("/" + CLASSES + REVIEW)
-        Review addReviewByParams(@Body Review review);
-
-        @DELETE("/" + CLASSES + REVIEW + "/" + "{reviewId}")
-        Object deleteReview(@Path("reviewId") String reviewId);
-
-        /**** USER ACTIONS ****/
-        @PUT("/" + CLASSES + USER + "/" + "{userId}")
-        Object updateUser(@Path("userId") String userId, @Body User user);
-
-        @POST("/" + CLASSES + USER)
-        User addUserByParams(@Body User user);
-
-        @DELETE("/" + CLASSES + USER + "/" + "{userId}")
-        Object deleteUser(@Path("userId") String userId);
-
-        @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS)
-        CoffeeMachineStatus getCoffeeMachineStatus(@Body CoffeeMachineStatus.Params params);
-
-        @GET("/" + CLASSES + USER + "/" + "{userId}")
-        User checkUser(@Path("userId") String userId);
+//
+//        //get coffee machine
+//        @GET("/" + CLASSES + COFFEE_MACHINE)
+//        ArrayList<CoffeeMachine> listCoffeeMachine();
+//
+//        @POST("/" + FUNCTIONS + MORE_REVIEW)
+//        ReviewDataContainer listMoreReview(@Body Review.MoreReviewsParams params);
+//
+//        @POST("/" + FUNCTIONS + WEEK_REVIEWS)
+//        ReviewDataContainer listReview(@Body Review.Params reviewParams);
+//
+//        @POST("/" + FUNCTIONS + USER_BY_ID_LIST)
+//        ArrayList<User> listUserByIdList(@Body User.Params userParams);
+//
+//        /**** REVIEW ACTIONS ****/
+//        @PUT("/" + CLASSES + REVIEW + "/" + "{reviewId}")
+//        Review updateReview(@Path("reviewId") String reviewId, @Body Review review);
+//
+//        @POST("/" + CLASSES + REVIEW)
+//        Review addReviewByParams(@Body Review review);
+//
+//        @DELETE("/" + CLASSES + REVIEW + "/" + "{reviewId}")
+//        Object deleteReview(@Path("reviewId") String reviewId);
+//
+//        /**** USER ACTIONS ****/
+//        @PUT("/" + CLASSES + USER + "/" + "{userId}")
+//        Object updateUser(@Path("userId") String userId, @Body User user);
+//
+//        @POST("/" + CLASSES + USER)
+//        User addUserByParams(@Body User user);
+//
+//        @DELETE("/" + CLASSES + USER + "/" + "{userId}")
+//        Object deleteUser(@Path("userId") String userId);
+//
+//        @POST("/" + FUNCTIONS + GET_COFFEE_MACHINE_STATUS)
+//        CoffeeMachineStatus getCoffeeMachineStatus(@Body CoffeeMachineStatus.Params params);
+//
+//        @GET("/" + CLASSES + USER + "/" + "{userId}")
+//        User checkUser(@Path("userId") String userId);
 
     }
 
@@ -560,66 +551,66 @@ public class HttpIntentService extends IntentService {
 
 
     }*/
-    public static class CustomDeserializer implements JsonDeserializer<ArrayList<CoffeeMachine>> {
-
-        @Override
-        public ArrayList<CoffeeMachine> deserialize(JsonElement jsonElement, Type type,
-                                               JsonDeserializationContext jsonDeserializationContext)
-                throws JsonParseException {
-            Log.e(TAG, type.toString());
-            ArrayList<CoffeeMachine> coffeeMachineList = new ArrayList<CoffeeMachine>();
-            JsonArray jsonArray = jsonElement.getAsJsonObject().get("results").getAsJsonArray();
-            for(int i = 0; i < jsonArray.size(); i++) {
-                coffeeMachineList.add(jsonDeserializationContext.<CoffeeMachine>deserialize(jsonArray.get(i), CoffeeMachine.class));
-            }
-            return coffeeMachineList;
-
-        }
-    }
-
-    public static class CustomDeserializerReview implements JsonDeserializer<ReviewDataContainer> {
-
-        @Override
-        public ReviewDataContainer deserialize(JsonElement jsonElement, Type type,
-                                               JsonDeserializationContext jsonDeserializationContext)
-                throws JsonParseException {
-//            Log.e(TAG, jsonElement.toString() + " - " + type.toString());
-            Log.e(TAG, type.toString());
-//            Class<? extends Type> classType = type.getClass();
-            ArrayList<Review> reviewList = new ArrayList<Review>();
-            JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("data").getAsJsonArray();
-            for(int i = 0; i < jsonArray.size(); i++) {
-                Review review = jsonDeserializationContext.<Review>deserialize(jsonArray.get(i), Review.class);
-                review.setId(((JsonObject) jsonArray.get(i)).get("objectId").getAsString());
-                reviewList.add(review);
-            }
-            boolean hasMoreReviews = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("hasMoreReviews").getAsBoolean();
-
-            return  new ReviewDataContainer(hasMoreReviews, reviewList);
-
-//            return reviewList;
-
-        }
-    }
-
-    public static class CustomDeserializerUser implements JsonDeserializer<ArrayList<User>> {
-
-        @Override
-        public ArrayList<User> deserialize(JsonElement jsonElement, Type type,
-                                      JsonDeserializationContext jsonDeserializationContext)
-                throws JsonParseException {
-            Log.e(TAG, type.toString());
-            ArrayList<User> userList = new ArrayList<User>();
-            JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonArray();
-            for(int i = 0; i < jsonArray.size(); i++) {
-                User user = jsonDeserializationContext.<User>deserialize(jsonArray.get(i), User.class);
-                user.setId(((JsonObject) jsonArray.get(i)).get("objectId").getAsString());
-                userList.add(user);
-            }
-            return userList;
-
-        }
-    }
+//    public static class CustomDeserializer implements JsonDeserializer<ArrayList<CoffeeMachine>> {
+//
+//        @Override
+//        public ArrayList<CoffeeMachine> deserialize(JsonElement jsonElement, Type type,
+//                                               JsonDeserializationContext jsonDeserializationContext)
+//                throws JsonParseException {
+//            Log.e(TAG, type.toString());
+//            ArrayList<CoffeeMachine> coffeeMachineList = new ArrayList<CoffeeMachine>();
+//            JsonArray jsonArray = jsonElement.getAsJsonObject().get("results").getAsJsonArray();
+//            for(int i = 0; i < jsonArray.size(); i++) {
+//                coffeeMachineList.add(jsonDeserializationContext.<CoffeeMachine>deserialize(jsonArray.get(i), CoffeeMachine.class));
+//            }
+//            return coffeeMachineList;
+//
+//        }
+//    }
+//
+//    public static class CustomDeserializerReview implements JsonDeserializer<ReviewDataContainer> {
+//
+//        @Override
+//        public ReviewDataContainer deserialize(JsonElement jsonElement, Type type,
+//                                               JsonDeserializationContext jsonDeserializationContext)
+//                throws JsonParseException {
+////            Log.e(TAG, jsonElement.toString() + " - " + type.toString());
+//            Log.e(TAG, type.toString());
+////            Class<? extends Type> classType = type.getClass();
+//            ArrayList<Review> reviewList = new ArrayList<Review>();
+//            JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("data").getAsJsonArray();
+//            for(int i = 0; i < jsonArray.size(); i++) {
+//                Review review = jsonDeserializationContext.<Review>deserialize(jsonArray.get(i), Review.class);
+//                review.setId(((JsonObject) jsonArray.get(i)).get("objectId").getAsString());
+//                reviewList.add(review);
+//            }
+//            boolean hasMoreReviews = jsonElement.getAsJsonObject().get("result").getAsJsonObject().get("hasMoreReviews").getAsBoolean();
+//
+//            return  new ReviewDataContainer(hasMoreReviews, reviewList);
+//
+////            return reviewList;
+//
+//        }
+//    }
+//
+//    public static class CustomDeserializerUser implements JsonDeserializer<ArrayList<User>> {
+//
+//        @Override
+//        public ArrayList<User> deserialize(JsonElement jsonElement, Type type,
+//                                      JsonDeserializationContext jsonDeserializationContext)
+//                throws JsonParseException {
+//            Log.e(TAG, type.toString());
+//            ArrayList<User> userList = new ArrayList<User>();
+//            JsonArray jsonArray = jsonElement.getAsJsonObject().get("result").getAsJsonArray();
+//            for(int i = 0; i < jsonArray.size(); i++) {
+//                User user = jsonDeserializationContext.<User>deserialize(jsonArray.get(i), User.class);
+//                user.setId(((JsonObject) jsonArray.get(i)).get("objectId").getAsString());
+//                userList.add(user);
+//            }
+//            return userList;
+//
+//        }
+//    }
 
     public static class ParseAction {
         public static final String CLASSES = "1/classes/";
