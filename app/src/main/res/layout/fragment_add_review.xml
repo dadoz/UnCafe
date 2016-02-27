@@ -34,7 +34,7 @@
 
                     pixlui:copyandpaste="true"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-regular.ttf"/>
+                    style="@style/AppTheme.TextChimphand"/>
 
 
             <com.application.material.takeacoffee.app.views.FilledCircleView
@@ -95,7 +95,7 @@
         <!--android:background="@color/light_black"-->
         <!--android:padding="@dimen/small_padding">-->
 
-        <!--<com.neopixl.pixlui.components.textview.TextView-->
+        <!--<np.TextView-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:textColor="@color/material_light_yellow_200"-->

@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_medium_20"
@@ -22,9 +22,9 @@
             android:text="Takeacoffee"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
 
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_small_14"
@@ -32,7 +32,7 @@
             android:text="Politecnico di torino - c.so Vinzaglio"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
 
     </LinearLayout>
     <GridView

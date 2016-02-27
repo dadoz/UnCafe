@@ -10,7 +10,7 @@
               android:paddingTop="@dimen/top_header_height"
               android:background="@color/light_black">
 
-    <com.neopixl.pixlui.components.textview.TextView
+    <np.TextView
             android:id="@+id/oldReviewButtonId"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
@@ -22,6 +22,6 @@
             android:text="old reviews"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
 
 </LinearLayout>

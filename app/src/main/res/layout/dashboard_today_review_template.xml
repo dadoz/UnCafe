@@ -12,7 +12,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_padding"
                 android:orientation="horizontal">
-            <com.neopixl.pixlui.components.textview.TextView
+            <np.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_medium_20"
@@ -21,7 +21,7 @@
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
                     pixlui:typeface="chimphand-light.ttf"/>
-            <com.neopixl.pixlui.components.textview.TextView
+            <np.TextView
                     android:id="@+id/coffeeMachineStatusTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
             android:orientation="horizontal">
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_medium_20"
@@ -53,7 +53,7 @@
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
                 pixlui:typeface="chimphand-light.ttf"/>
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
                 android:id="@+id/coffeeMachineWeeklyReviewTextId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

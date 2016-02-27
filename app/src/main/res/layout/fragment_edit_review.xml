@@ -17,7 +17,7 @@
             <!--android:background="@color/light_black"-->
             <!--android:padding="@dimen/small_padding">-->
 
-        <!--<com.neopixl.pixlui.components.textview.TextView-->
+        <!--<np.TextView-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:textColor="@color/material_amber_200"-->
@@ -46,7 +46,7 @@
                       android:orientation="vertical"
                       android:gravity="center_horizontal">
 
-            <com.neopixl.pixlui.components.edittext.EditText
+            <np.EditText
                     android:id="@+id/editReviewCommentTextId"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
 
                     pixlui:copyandpaste="true"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-regular.ttf"/>
+                    style="@style/AppTheme.TextChimphand"/>
 
 
             <RatingBar

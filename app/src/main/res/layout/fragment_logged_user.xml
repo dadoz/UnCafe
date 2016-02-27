@@ -14,10 +14,10 @@
                 android:layout_height="@dimen/extra_huge_icon_size"
                 android:src="@drawable/user_icon"/>
 
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-regular.ttf"
+                style="@style/AppTheme.TextChimphand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_medium_20"
@@ -27,7 +27,7 @@
         <com.neopixl.pixlui.components.edittext.EditText
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-regular.ttf"
+                style="@style/AppTheme.TextChimphand"
                 android:textSize="@dimen/text_medium_20"
                 android:textColor="@color/material_text_brown"
                 android:id="@+id/loginUsernameEditId"
@@ -35,11 +35,11 @@
                 android:layout_height="wrap_content"
                 android:hint="username"/>
 
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
                 android:id="@+id/facebookLoginButtonId"
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-regular.ttf"
+                style="@style/AppTheme.TextChimphand"
                 android:textSize="@dimen/text_medium_20"
                 android:textColor="@color/material_text_brown"
                 android:layout_width="wrap_content"
@@ -57,10 +57,10 @@
                         android:layout_width="@dimen/medium_icon_size"
                         android:layout_height="@dimen/medium_icon_size"
                         android:src="@drawable/delete_icon"/>
-                <com.neopixl.pixlui.components.textview.TextView
+                <np.TextView
                         pixlui:copyandpaste="false"
                         pixlui:clearclipboardcontent="true"
-                        pixlui:typeface="chimphand-regular.ttf"
+                        style="@style/AppTheme.TextChimphand"
                         android:textColor="@color/material_text_brown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

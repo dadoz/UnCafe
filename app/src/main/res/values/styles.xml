@@ -5,6 +5,16 @@
         <item name="colorPrimaryDark">@color/material_brown600</item>
         <item name="colorPrimary">@color/material_brown400</item>
     </style>
+    <style name="AppTheme.TextChimphand">
+        <item name="typeface">chimphand-regular.ttf</item>
+        <!--<item name="copyandpaste">false</item>-->
+        <!--<item name="clearclipboardcontent">true</item>-->
+    </style>
+    <style name="AppTheme.TextChimphand.Light">
+        <item name="typeface">chimphand-light.ttf.ttf</item>
+        <!--<item name="copyandpaste">false</item>-->
+        <!--<item name="clearclipboardcontent">true</item>-->
+    </style>
 
     <style name="AppTheme.RatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_bar_custom_full</item>

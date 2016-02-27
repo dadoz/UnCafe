@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
 
-    <com.neopixl.pixlui.components.textview.TextView
+    <np.TextView
         android:id="@+id/cActBarTitleId"
         android:textSize="@dimen/text_big_24"
         android:visibility="gone"
@@ -19,7 +19,7 @@
         android:paddingRight="@dimen/small_padding"
         android:gravity="center_vertical"
         android:text="@string/titleTakeACoffee"
-        pixlui:typeface="chimphand-regular.ttf"/>
+        style="@style/AppTheme.TextChimphand"/>
 
 
     <!--coffee machine template -->
@@ -32,7 +32,7 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent">
 
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
             android:id="@+id/cActBarCoffeeMachineLocationId"
             android:textSize="@dimen/text_big_26"
             android:textColor="@color/material_text_brown"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/small_padding"
             android:text="location"
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
 
     </RelativeLayout>
 
@@ -59,7 +59,7 @@
             android:layout_height="@dimen/medium_small_icon_size"
             android:src="@drawable/user_icon" />
 
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
             android:id="@+id/usernameId"
             android:textSize="@dimen/text_big_24"
             android:textColor="@color/material_text_brown"
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/small_padding"
             android:text=" - "
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
     </LinearLayout>
 
     <!--review list template -->
@@ -77,7 +77,7 @@
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
             android:id="@+id/cActBarCoffeeMachineNameId"
             android:textSize="@dimen/text_big_24"
             android:layout_width="wrap_content"
@@ -85,9 +85,9 @@
             android:textColor="@color/material_text_brown"
             android:paddingRight="@dimen/small_padding"
             android:text=" - "
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
 
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
             android:id="@+id/cActBarPeriodTextId"
             android:textSize="@dimen/text_small_14"
             android:textColor="@color/material_text_brown"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/small_padding"
             android:text=" - "
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
 
     </LinearLayout>
 

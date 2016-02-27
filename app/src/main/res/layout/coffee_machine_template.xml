@@ -24,18 +24,17 @@
             android:gravity="center"
             android:background="@color/material_grey200"
             android:orientation="vertical">
-            <com.neopixl.pixlui.components.textview.TextView
+            <np.TextView
                 android:id="@+id/coffeeMachineNameTextId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/material_light_red"
                 android:text="Coffee machine name"
                 android:textSize="@dimen/title_text_size"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-regular.ttf"/>
+                style="@style/AppTheme.TextChimphand"/>
 
-            <com.neopixl.pixlui.components.textview.TextView
+            <np.TextView
+
                 android:id="@+id/coffeeMachineAddressTextId"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -43,9 +42,7 @@
                 android:textColor="@color/material_text_brown"
                 android:text="position"
                 android:textSize="@dimen/text_medium_20"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-regular.ttf"/>
+                style="@style/AppTheme.TextChimphand"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

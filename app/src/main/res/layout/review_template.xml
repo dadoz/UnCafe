@@ -49,7 +49,7 @@
             android:layout_toRightOf="@id/reviewIconImagesLayoutId"
             android:layout_toLeftOf="@id/reviewPictureButtonId">
 
-                <com.neopixl.pixlui.components.textview.TextView
+                <np.TextView
                     android:id="@+id/reviewUsernameTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,10 +61,10 @@
                     android:ellipsize="end"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-regular.ttf"/>
+                    style="@style/AppTheme.TextChimphand"/>
 
 
-                <com.neopixl.pixlui.components.textview.TextView
+                <np.TextView
                     android:id="@+id/reviewDateTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -74,9 +74,9 @@
                     android:text="date"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-regular.ttf"/>
+                    style="@style/AppTheme.TextChimphand"/>
 
-                <com.neopixl.pixlui.components.textview.TextView
+                <np.TextView
                     android:id="@+id/reviewCommentTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                     android:textSize="@dimen/text_small_16"
                     pixlui:copyandpaste="false"
                     pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-regular.ttf"/>
+                    style="@style/AppTheme.TextChimphand"/>
 
                 <ImageView
                     android:visibility="gone"
@@ -102,7 +102,7 @@
 
 
         <!-- BOTTOM HINT -->
-        <com.neopixl.pixlui.components.textview.TextView
+        <np.TextView
             android:id="@+id/expandDescriptionTextId"
             android:layout_below="@id/reviewContainerId"
             android:layout_width="wrap_content"
@@ -115,5 +115,5 @@
             android:textSize="@dimen/text_small_14"
             pixlui:copyandpaste="false"
             pixlui:clearclipboardcontent="true"
-            pixlui:typeface="chimphand-regular.ttf"/>
+            style="@style/AppTheme.TextChimphand"/>
 </RelativeLayout>

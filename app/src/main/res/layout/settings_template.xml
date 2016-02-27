@@ -12,7 +12,7 @@
             android:layout_marginLeft="@dimen/medium_padding"
             android:layout_marginRight="@dimen/medium_padding"
             android:src="@drawable/settings_icon_small_b" />
-    <com.neopixl.pixlui.components.textview.TextView
+    <np.TextView
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
