@@ -46,11 +46,7 @@
                 pixlui:copyandpaste="false"
                 pixlui:clearclipboardcontent="true"
                 pixlui:typeface="chimphand-regular.ttf"/>
-
-
         </LinearLayout>
-
     </LinearLayout>
-
 </android.support.v7.widget.CardView>
 

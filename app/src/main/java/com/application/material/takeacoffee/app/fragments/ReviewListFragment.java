@@ -8,6 +8,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.BuildConfig;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
+import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
@@ -41,6 +43,9 @@ import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
 import java.util.*;
+
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.*;
 
 
 /**
@@ -96,7 +101,7 @@ public class ReviewListFragment extends Fragment
             throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        mainActivityRef =  (CoffeeMachineActivity) context;
+        mainActivityRef =  (ReviewListActivity) context;
         dataApplication = ((DataApplication) mainActivityRef.getApplication());
         meUserId = dataApplication.getUserId();
     }
@@ -121,16 +126,9 @@ public class ReviewListFragment extends Fragment
     }
 
     /**
-     * init actionbar
-     */
-    public void initActionbar() {
-        mainActivityRef.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-    /**
      * init view to handle review data
      */
     public void initView() {
-        initActionbar();
         if (BuildConfig.DEBUG) {
             reviewList = getReviewListTest();
         }
@@ -138,12 +136,17 @@ public class ReviewListFragment extends Fragment
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 this, R.layout.review_template, reviewList, coffeeMachineId);
 
+        //TODO replace with recyclerView :)
 //        listView.setEmptyView(emptyView);
         listView.setAdapter(reviewListenerAdapter);
 
         listView.setOnItemLongClickListener(this);
         listView.setOnItemClickListener(this);
         listView.setOnScrollListener(this);
+        if (SDK_INT >= LOLLIPOP) {
+            listView.setNestedScrollingEnabled(true);
+        }
+
         swipeRefreshLayout.setOnRefreshListener(this);
         addReviewFabButton.setOnClickListener(this);
 
@@ -342,58 +345,58 @@ public class ReviewListFragment extends Fragment
                 }
                 break;
             case R.id.reviewLayoutId:
-                try {
-                    Review review = (Review) adapterView.getAdapter().getItem(position);
-                    boolean hasReviewPicture = review.getReviewPictureUrl() != null;
-                    EllipsizedComment comment = (EllipsizedComment) view.getTag();
-                    boolean isReviewHidden = comment.isHidden();
-                    final ViewFlipper viewFlipper = (ViewFlipper) view.findViewById(R.id.reviewIconImagesLayoutId);
-
-                    if(! comment.isEllipsized() &&
-                            ! hasReviewPicture) {
-                        //set review rating on tap
-                        flipView(viewFlipper);
-
-                        //UPDATE - TOGGLE
-                        comment.setHidden(! isReviewHidden);
-                        view.setTag(comment);
-
-                        (view.findViewById(R.id.expandDescriptionTextId))
-                                .setVisibility(View.GONE);
-                        return;
-                    }
-
-
-                    int maxLines = isReviewHidden ? REVIEW_MAX_LINES : REVIEW_MIN_LINES;
-                    ((TextView) view.findViewById(R.id.reviewCommentTextId))
-                            .setMaxLines(maxLines);
-                    (view.findViewById(R.id.expandDescriptionTextId))
-                            .setVisibility(isReviewHidden ? View.GONE : View.VISIBLE);
-
-                    ((TextView) view.findViewById(R.id.reviewCommentTextId))
-                            .setText(isReviewHidden ?
-                                    comment.getPlainComment() :
-                                    comment.getEllipsizedComment());
-
-                    //set reviewPicture
-                    if(hasReviewPicture) {
-                        ((ImageView) view.findViewById(R.id.reviewPictureImageViewId)).setImageBitmap(! isReviewHidden ?
-                                null :
-                                JSONParserToObject.getMockupPicture(mainActivityRef, review.getReviewPictureUrl()));
-                        (view.findViewById(R.id.reviewPictureImageViewId)).setVisibility(isReviewHidden ? View.VISIBLE : View.GONE);
-                    }
-
-                    //set review rating on tap
-                    flipView(viewFlipper);
-
-                    //UPDATE - TOGGLE
-                    comment.setHidden(! isReviewHidden);
-                    view.setTag(comment);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                break;
+//                try {
+//                    Review review = (Review) adapterView.getAdapter().getItem(position);
+//                    boolean hasReviewPicture = review.getReviewPictureUrl() != null;
+//                    EllipsizedComment comment = (EllipsizedComment) view.getTag();
+//                    boolean isReviewHidden = comment.isHidden();
+//                    final ViewFlipper viewFlipper = (ViewFlipper) view.findViewById(R.id.reviewIconImagesLayoutId);
+//
+//                    if(! comment.isEllipsized() &&
+//                            ! hasReviewPicture) {
+//                        //set review rating on tap
+//                        flipView(viewFlipper);
+//
+//                        //UPDATE - TOGGLE
+//                        comment.setHidden(! isReviewHidden);
+//                        view.setTag(comment);
+//
+//                        (view.findViewById(R.id.expandDescriptionTextId))
+//                                .setVisibility(View.GONE);
+//                        return;
+//                    }
+//
+//
+//                    int maxLines = isReviewHidden ? REVIEW_MAX_LINES : REVIEW_MIN_LINES;
+//                    ((TextView) view.findViewById(R.id.reviewCommentTextId))
+//                            .setMaxLines(maxLines);
+//                    (view.findViewById(R.id.expandDescriptionTextId))
+//                            .setVisibility(isReviewHidden ? View.GONE : View.VISIBLE);
+//
+//                    ((TextView) view.findViewById(R.id.reviewCommentTextId))
+//                            .setText(isReviewHidden ?
+//                                    comment.getPlainComment() :
+//                                    comment.getEllipsizedComment());
+//
+//                    //set reviewPicture
+//                    if(hasReviewPicture) {
+//                        ((ImageView) view.findViewById(R.id.reviewPictureImageViewId)).setImageBitmap(! isReviewHidden ?
+//                                null :
+//                                JSONParserToObject.getMockupPicture(mainActivityRef, review.getReviewPictureUrl()));
+//                        (view.findViewById(R.id.reviewPictureImageViewId)).setVisibility(isReviewHidden ? View.VISIBLE : View.GONE);
+//                    }
+//
+//                    //set review rating on tap
+//                    flipView(viewFlipper);
+//
+//                    //UPDATE - TOGGLE
+//                    comment.setHidden(! isReviewHidden);
+//                    view.setTag(comment);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                break;
         }
 
 
@@ -449,8 +452,8 @@ public class ReviewListFragment extends Fragment
             e.printStackTrace();
         }
 
-        ((SetActionBarInterface) mainActivityRef)
-                .updateSelectedItem(this, listView, view, position);
+//        ((SetActionBarInterface) mainActivityRef)
+//                .updateSelectedItem(this, listView, view, position);
         return true;
     }
 
@@ -480,10 +483,10 @@ public class ReviewListFragment extends Fragment
                 Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
                 ((OnChangeFragmentWrapperInterface) mainActivityRef)
                         .startActivityWrapper(EditReviewActivity.class,
-                                CoffeeMachineActivity.ACTION_EDIT_REVIEW, bundle);
+                                ReviewListActivity.ACTION_EDIT_REVIEW, bundle);
                 //deselect Item
-                ((SetActionBarInterface) mainActivityRef)
-                        .updateSelectedItem(this, listView, null, -1);
+//                ((SetActionBarInterface) mainActivityRef)
+//                        .updateSelectedItem(this, listView, null, -1);
                 break;
             case R.id.action_delete:
                 Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
@@ -509,8 +512,8 @@ public class ReviewListFragment extends Fragment
 
 
                 //deselect Item
-                ((SetActionBarInterface) mainActivityRef)
-                        .updateSelectedItem(this, listView, null, -1);
+//                ((SetActionBarInterface) mainActivityRef)
+//                        .updateSelectedItem(this, listView, null, -1);
                 break;
 
         }
@@ -529,7 +532,7 @@ public class ReviewListFragment extends Fragment
             case R.id.addReviewFabId:
                 ((OnChangeFragmentWrapperInterface) mainActivityRef)
                         .startActivityWrapper(AddReviewActivity.class,
-                                CoffeeMachineActivity.ACTION_ADD_REVIEW, bundle);
+                                ReviewListActivity.ACTION_ADD_REVIEW, bundle);
                 break;
             case R.id.reviewPictureImageViewId:
                 Log.e(TAG, "expand pic view");
@@ -618,7 +621,17 @@ public class ReviewListFragment extends Fragment
     public ArrayList<Review> getReviewListTest() {
         ArrayList<Review> list = new ArrayList<Review>();
         list.add(new Review("0", "heheeheheheh", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("0", "blalallalll", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("1", "blalallalll", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("2", "blalallalll2", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("3", "blalallall3", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("4", "blalallall4", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("5", "blalallall5", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("6", "blalallall6", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("7", "blalallall6", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("7", "blalallall7", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("8", "blalallall8", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("9", "blalallall9", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("10", "blalallall10", "balal", 1111, "1", "1", null, null));
         return list;
     }
 

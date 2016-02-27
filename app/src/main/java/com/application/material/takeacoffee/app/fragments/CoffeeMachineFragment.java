@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.fragments;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -118,8 +119,16 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 //        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachine.getId());
         bundle.putParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY, coffeeMachine);
 
-        ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
+//        ((OnChangeFragmentWrapperInterface) mainActivityRef)
+//                .changeFragment(new ReviewListFragment(), bundle, ReviewListFragment.REVIEW_LIST_FRAG_TAG);
+        changeActivity();
+    }
+
+    /**
+     * change actiity on reviewList
+     */
+    private void changeActivity() {
+        startActivity(new Intent(getActivity(), ReviewListActivity.class));
     }
 
     @Override

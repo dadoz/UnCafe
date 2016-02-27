@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.*;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
@@ -35,14 +36,18 @@ import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.VolleySingleton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
 
+
 public class CoffeeMachineActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
-        SetActionBarInterface, View.OnClickListener {
+        SetActionBarInterface, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "CoffeeMachineActivity";
     public static final int RESULT_FAILED = 111;
     public static String EXTRA_DATA = "EXTRA_DATA";
@@ -61,6 +66,8 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
     private ListView reviewListview;
     private DataApplication dataApplication;
 
+    @Bind(R.id.coffeeToolbarId)
+    public android.support.v7.widget.Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +78,26 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
         //custom actionBar
 //        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
 //        getSupportActionBar().setDisplayShowCustomEnabled(true);
-
+        samplePlacesApi();
+        initActionBar();
         initView(savedInstanceState);
+    }
+
+    /**
+     * init action bar
+     */
+    private void initActionBar() {
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getResources().getString(R.string.app_name));
+    }
+
+    private void samplePlacesApi() {
+//        GoogleApiClient mGoogleApiClient = new GoogleApiClient
+//                .Builder(this)
+//                .addApi(Places.GEO_DATA_API)
+//                .addApi(Places.PLACE_DETECTION_API)
+//                .enableAutoManage(this, this)
+//                .build();
     }
 
     /**
@@ -347,29 +372,29 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 
     @Override
     public void setSelectedItemView(View view) {
-        selectedItemView = view;
-        selectedItemView.setBackgroundColor(isItemSelected() ?
-                getResources().getColor(R.color.material_amber_200) : 0x00000000);
+//        selectedItemView = view;
+//        selectedItemView.setBackgroundColor(isItemSelected() ?
+//                getResources().getColor(R.color.material_amber_200) : 0x00000000);
     }
 
 
     @Override
     public void updateSelectedItem(AdapterView.OnItemLongClickListener listener,
                                    ListView listView, View view, int itemPos) {
-        try {
-            selectedItemPosition = itemPos; // due to header on listview
-            reviewListview = listView;
-            selectedItemView = isItemSelected() ? view : selectedItemView;
-
-            setActionBarSelected();
-            reviewListview.setOnItemLongClickListener(isItemSelected() ? null : listener);
-            if(selectedItemView != null) {
-                selectedItemView.setBackgroundColor(isItemSelected() ?
-                        getResources().getColor(R.color.material_amber_200) : 0x00000000);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            selectedItemPosition = itemPos; // due to header on listview
+//            reviewListview = listView;
+//            selectedItemView = isItemSelected() ? view : selectedItemView;
+//
+//            setActionBarSelected();
+//            reviewListview.setOnItemLongClickListener(isItemSelected() ? null : listener);
+//            if(selectedItemView != null) {
+//                selectedItemView.setBackgroundColor(isItemSelected() ?
+//                        getResources().getColor(R.color.material_amber_200) : 0x00000000);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void setActionBarSelected() {
@@ -547,4 +572,8 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e(TAG, "not able to connect");
+    }
 }
