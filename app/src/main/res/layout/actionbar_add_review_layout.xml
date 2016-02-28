@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:background="@color/material_brown400"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="30dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/small_padding"
+        android:paddingRight="@dimen/small_padding"
+        android:orientation="vertical">
+
+        <np.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dadoz"
+            android:textSize="@dimen/header_text_size"
+            style="@style/AppTheme.TextChimphand"/>
+        <RatingBar
+            android:id="@+id/statusRatingBarId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stepSize="1"
+            android:numStars="3"/>
+    </LinearLayout>
+</FrameLayout>

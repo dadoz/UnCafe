@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
@@ -33,15 +34,11 @@ import java.io.IOException;
 public class AddReviewActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
     private static final String TAG = "CoffeeMachineActivity";
-    private static String ADD_REVIEW_FRAG_TAG = "ADD_REVIEW_FRAG_TAG";
-    @Bind(R.id.onLoadLayoutId) View onLoadLayout;
-    //Volley lib
-    private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
-    private Bundle bundle;
-    private DataApplication dataApplication;
 
+    @Bind(R.id.addReviewToolbarId)
+    public Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +46,34 @@ public class AddReviewActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_add_review);
         ButterKnife.bind(this);
 
-        String coffeeMachineId = getIntent().getStringExtra(CoffeeMachineActivity.EXTRA_DATA);
-        bundle = new Bundle();
-        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachineId);
-//        User user = bundle.getParcelable(User.USER_OBJ_KEY);
+        initActionbar();
+        initView(savedInstanceState);
+
+//        String coffeeMachineId = getIntent().getStringExtra(CoffeeMachineActivity.EXTRA_DATA);
+//        bundle = new Bundle();
+//        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachineId);
 
         //custom actionBar
-        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setActionBarCustomViewById(-1, "Add new review");
+//        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        setActionBarCustomViewById(-1, "Add new review");
         //INIT VIEW
-        dataApplication = (DataApplication) this.getApplication();
+//        dataApplication = (DataApplication) this.getApplication();
 
-        if(savedInstanceState != null) {
-            //already init app - try retrieve frag from manager
-            Fragment fragment = getSupportFragmentManager()
-                    .findFragmentByTag(getCurrentFragTag());
-            initView(fragment, savedInstanceState);
-            return;
-        }
+//        setCurrentFragTag(AddReviewActivity.ADD_REVIEW_FRAG_TAG);
+//        initView(new AddReviewFragment(), null);
+    }
 
-        setCurrentFragTag(AddReviewActivity.ADD_REVIEW_FRAG_TAG);
-        initView(new AddReviewFragment(), null);
+    /**
+     * init actionBar
+     */
+    private void initActionbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.actionbar_add_review_layout);
     }
 
     @Override
@@ -86,13 +88,14 @@ public class AddReviewActivity extends AppCompatActivity implements
         super.onPause();
     }
 
-    private void initView(Fragment fragment, Bundle savedInstanceState) {
-        if(savedInstanceState == null) {
-            fragment.setArguments(bundle);
-        }
+    /**
+     *
+     * @param savedInstanceState
+     */
+    private void initView(Bundle savedInstanceState) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.addReviewFragmentContainerId,
-                        fragment, getCurrentFragTag())
+                        new AddReviewFragment(), getCurrentFragTag())
                 .commit();
     }
 
@@ -116,7 +119,7 @@ public class AddReviewActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.take_a_coffee, menu);
+//        getMenuInflater().inflate(R.menu.take_a_coffee, menu);
         return true;
     }
 
@@ -167,7 +170,6 @@ public class AddReviewActivity extends AppCompatActivity implements
 
     @Override
     public void initOnLoadView() {
-        onLoadLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -176,7 +178,6 @@ public class AddReviewActivity extends AppCompatActivity implements
 
     @Override
     public void hideOnLoadView() {
-        onLoadLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -196,7 +197,7 @@ public class AddReviewActivity extends AppCompatActivity implements
             (fragment.getView().findViewById(R.id.imagePreviewViewId))
                     .setTag(pictureUrl);
 
-            dataApplication.setReviewPictureTemp(picture);
+//            dataApplication.setReviewPictureTemp(picture);
 
             picture = null;
         } catch (IOException e) {

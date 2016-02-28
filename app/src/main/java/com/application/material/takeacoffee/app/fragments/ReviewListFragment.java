@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
@@ -67,7 +68,8 @@ public class ReviewListFragment extends Fragment
     private String meUserId;
 
     @Bind(R.id.reviewsContainerListViewId) ListView listView;
-    @Bind(R.id.addReviewFabId) View addReviewFabButton;
+//    @Bind(R.id.addReviewFabId) View addReviewFabButton;
+    public View addReviewFabButton;
 //    @Bind(R.id.goodReviewPercentageTextId) TextView goodReviewPercentageView;
 //    @Bind(R.id.statusCoffeeIconId) ImageView statusCoffeeIcon;
     @Bind(R.id.swipeRefreshLayoutId) SwipeRefreshLayout swipeRefreshLayout;
@@ -132,7 +134,21 @@ public class ReviewListFragment extends Fragment
         if (BuildConfig.DEBUG) {
             reviewList = getReviewListTest();
         }
-//        Collections.reverse(reviewList);
+        addReviewFabButton = mainActivityRef.findViewById(R.id.addReviewFabId);
+        addReviewFabButton.setOnClickListener(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        initListView();
+//        if (userList != null) {
+//            getAdapterWrapper().setUserList(userList);
+//            getAdapterWrapper().notifyDataSetChanged();
+//        }
+    }
+
+    /**
+     * init list view
+     */
+    private void initListView() {
+        //        Collections.reverse(reviewList);
         ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
                 this, R.layout.review_template, reviewList, coffeeMachineId);
 
@@ -145,14 +161,6 @@ public class ReviewListFragment extends Fragment
         listView.setOnScrollListener(this);
         if (SDK_INT >= LOLLIPOP) {
             listView.setNestedScrollingEnabled(true);
-        }
-
-        swipeRefreshLayout.setOnRefreshListener(this);
-        addReviewFabButton.setOnClickListener(this);
-
-        if (userList != null) {
-            getAdapterWrapper().setUserList(userList);
-            getAdapterWrapper().notifyDataSetChanged();
         }
     }
 
@@ -530,9 +538,11 @@ public class ReviewListFragment extends Fragment
         //dialog button
         switch (v.getId()) {
             case R.id.addReviewFabId:
-                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .startActivityWrapper(AddReviewActivity.class,
-                                ReviewListActivity.ACTION_ADD_REVIEW, bundle);
+                startActivity(new Intent(mainActivityRef, AddReviewActivity.class));
+
+//                ((OnChangeFragmentWrapperInterface) mainActivityRef)
+//                        .startActivityWrapper(AddReviewActivity.class,
+//                                ReviewListActivity.ACTION_ADD_REVIEW, bundle);
                 break;
             case R.id.reviewPictureImageViewId:
                 Log.e(TAG, "expand pic view");

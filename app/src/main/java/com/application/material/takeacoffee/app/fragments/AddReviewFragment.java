@@ -44,26 +44,19 @@ public class AddReviewFragment extends Fragment implements
     private AddReviewActivity addActivityRef;
     private String meUserId;
     @Bind(R.id.commentTextId) View commentTextView;
-    @Bind(R.id.statusRatingBarId) View statusRatingBarView;
-//    @Bind(R.id.addReviewButtonId) View addReviewButton;
-    @Bind(R.id.pickPictureIconId) View pickPictureButton;
-    @Bind(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
-    @Bind(R.id.imagePreviewViewId) View imagePreviewView;
-    @Bind(R.id.setRatingButtonId) View setRatingButton;
-
-    @Bind(R.id.filledCircleId) View filledCircleView;
-//    @Bind(R.id.seekBarId) View seekBarView;
+//    @Bind(R.id.statusRatingBarId) View statusRatingBarView;
+//    @Bind(R.id.pickPictureIconId) View pickPictureButton;
+//    @Bind(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
+//    @Bind(R.id.imagePreviewViewId) View imagePreviewView;
+//    @Bind(R.id.setRatingButtonId) View setRatingButton;
+//
+//    @Bind(R.id.filledCircleId) View filledCircleView;
 
     private String coffeeMachineId;
     private Review reviewParams;
     private DataApplication dataApplication;
     private boolean isReviewPictureSet = false;
     private boolean mItemPressed = false;
-
-//    @Bind(R.id.usernameTextId) View usernameText;
-//    @Bind(R.id.userIconId) View userIconView;
-//    @Bind(R.id.editDeleteIconId) View editDeleteIcon;
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -94,12 +87,11 @@ public class AddReviewFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         View addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
         ButterKnife.bind(this, addReviewView);
-        //initOnLoadView();
         if(savedInstance != null) {
             isReviewPictureSet = dataApplication.isReviewPictureSet();
         }
 
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
         initView();
         return addReviewView;
     }
@@ -117,71 +109,36 @@ public class AddReviewFragment extends Fragment implements
     }
 
     private void initOnLoadView() {
-        //initOnLoadView
         addActivityRef.initOnLoadView();
         initView();
     }
 
     private void initView() {
-//        try {
-//            ((SeekBar) seekBarView).setProgress((int) ((FilledCircleView) filledCircleView).getValue());
-//            ((SeekBar) seekBarView).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//                @Override
-//                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                    if (fromUser)
-//                        ((FilledCircleView) filledCircleView).setValue(progress);
-//                }
-//
-//                @Override
-//                public void onStartTrackingTouch(SeekBar seekBar) {
-//                }
-//
-//                @Override
-//                public void onStopTrackingTouch(SeekBar seekBar) {
-//                }
-//            });
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
+//        addActivityRef.hideOnLoadView();
+//        pickPictureButton.setOnClickListener(this);
+//        pickPictureFromGalleryButton.setOnClickListener(this);
+//        if(isReviewPictureSet) {
+//            ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
 //        }
-
-        addActivityRef.hideOnLoadView();
-//        addReviewButton.setOnClickListener(this);
-        pickPictureButton.setOnClickListener(this);
-        pickPictureFromGalleryButton.setOnClickListener(this);
-        if(isReviewPictureSet) {
-            ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
-        }
-        setRatingButton.setOnTouchListener(setRatingTouchListener);
-
-//        Log.e(TAG, "user" + user.getUsername() + "review" + review.toString());
+//        setRatingButton.setOnTouchListener(setRatingTouchListener);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.addReviewButtonId:
-//                if(! addReview()) {
-//                    return;
-//                }
-//
-//                Utils.hideKeyboard(addActivityRef, (EditText) commentTextView);
-//                addActivityRef.initOnLoadView(null); //get spinner
-//                HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
+//        switch (v.getId()) {
+//            case R.id.pickPictureIconId:
+//                ImagePickerSingleton imagePicker = ImagePickerSingleton
+//                        .getInstance(addActivityRef);
+//                imagePicker.onLaunchCamera();
+//                Log.e(TAG, "hey");
 //                break;
-            case R.id.pickPictureIconId:
-                ImagePickerSingleton imagePicker = ImagePickerSingleton
-                        .getInstance(addActivityRef);
-                imagePicker.onLaunchCamera();
-                Log.e(TAG, "hey");
-                break;
-            case R.id.pickPictureFromGalleryIconId:
-                imagePicker = ImagePickerSingleton
-                        .getInstance(addActivityRef);
-                imagePicker.onPickPhoto();
-                Log.e(TAG, "hey");
-                break;
-        }
+//            case R.id.pickPictureFromGalleryIconId:
+//                imagePicker = ImagePickerSingleton
+//                        .getInstance(addActivityRef);
+//                imagePicker.onPickPhoto();
+//                Log.e(TAG, "hey");
+//                break;
+//        }
     }
 
     @Override
@@ -201,12 +158,12 @@ public class AddReviewFragment extends Fragment implements
                     Utils.hideKeyboard(addActivityRef, (EditText) commentTextView);
                     addActivityRef.initOnLoadView(); //get spinner
 
-                    if(imagePreviewView.getTag() != null) {
-                        String pictureUrlLocal = (String) imagePreviewView.getTag();
-                        ParseFile file = saveFile(pictureUrlLocal);
-                        reviewParams.setReviewPictureUrl(file.getUrl());
-                        reviewParams.setReviewPictureName(file.getUrl());
-                    }
+//                    if(imagePreviewView.getTag() != null) {
+//                        String pictureUrlLocal = (String) imagePreviewView.getTag();
+//                        ParseFile file = saveFile(pictureUrlLocal);
+//                        reviewParams.setReviewPictureUrl(file.getUrl());
+//                        reviewParams.setReviewPictureName(file.getUrl());
+//                    }
                     HttpIntentService.addReviewRequest(addActivityRef, reviewParams);
                 }
                 break;
@@ -225,8 +182,9 @@ public class AddReviewFragment extends Fragment implements
             return null;
         }
 
-        ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
-                ((RatingBar) statusRatingBarView).getRating());
+//        ReviewStatus.ReviewStatusEnum status = ReviewStatus.parseStatus(
+//                ((RatingBar) statusRatingBarView).getRating());
+        ReviewStatus.ReviewStatusEnum status =  ReviewStatus.ReviewStatusEnum.GOOD;
 
         long timestamp = new DateTime().getMillis();
         return new Review(null, comment, ReviewStatus.toString(status),
@@ -283,44 +241,44 @@ public class AddReviewFragment extends Fragment implements
         @Override
         public boolean onTouch(final View v, MotionEvent event) {
             //start counter
-            final double MAX_VALUE = ((FilledCircleView) filledCircleView).getMaxValue();
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    timer = new Timer();
-                    counter = (int) ((FilledCircleView) filledCircleView).getCurrentValue();
-                    Log.e(TAG, "down");
-                    if (mItemPressed) {
-                        // Multi-item swipes not handled
-                        timer.cancel();
-                        return false;
-                    }
-
-                    mItemPressed = true;
-                            timer.scheduleAtFixedRate(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    counter --;
-                                    Log.e(TAG, "expand coffee cup - " + counter);
-                                    if(counter < 0 ) {
-                                        counter = (int) MAX_VALUE;
-                                    }
-
-                                    addActivityRef.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ((FilledCircleView) filledCircleView).setValue(counter);
-                                        }
-                                    });
-                                }
-                            }, 20, 20);
-                    return true;
-                case MotionEvent.ACTION_UP:
-                    Log.e(TAG, "up");
-                    timer.cancel();
-                    ((FilledCircleView) filledCircleView).setCurrentValue(counter);
-                    mItemPressed = false;
-                    return true;
-            }
+//            final double MAX_VALUE = ((FilledCircleView) filledCircleView).getMaxValue();
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    timer = new Timer();
+//                    counter = (int) ((FilledCircleView) filledCircleView).getCurrentValue();
+//                    Log.e(TAG, "down");
+//                    if (mItemPressed) {
+//                        // Multi-item swipes not handled
+//                        timer.cancel();
+//                        return false;
+//                    }
+//
+//                    mItemPressed = true;
+//                            timer.scheduleAtFixedRate(new TimerTask() {
+//                                @Override
+//                                public void run() {
+//                                    counter --;
+//                                    Log.e(TAG, "expand coffee cup - " + counter);
+//                                    if(counter < 0 ) {
+//                                        counter = (int) MAX_VALUE;
+//                                    }
+//
+//                                    addActivityRef.runOnUiThread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            ((FilledCircleView) filledCircleView).setValue(counter);
+//                                        }
+//                                    });
+//                                }
+//                            }, 20, 20);
+//                    return true;
+//                case MotionEvent.ACTION_UP:
+//                    Log.e(TAG, "up");
+//                    timer.cancel();
+//                    ((FilledCircleView) filledCircleView).setCurrentValue(counter);
+//                    mItemPressed = false;
+//                    return true;
+//            }
             return true;
         }
     };
@@ -328,7 +286,7 @@ public class AddReviewFragment extends Fragment implements
     @Subscribe
     public void onNetworkResponse(Review review) {
         Log.d(TAG, "get response from bus - REVIEW_REQUEST");
-        ((OnLoadViewHandlerInterface) addActivityRef).hideOnLoadView();
+        (addActivityRef).hideOnLoadView();
 
         if(review == null) {
             addReviewErrorCallback();
