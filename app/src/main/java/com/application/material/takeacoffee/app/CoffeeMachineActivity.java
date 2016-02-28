@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -212,18 +213,20 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 //        onLoadLayout.setVisibility(View.GONE);
     }
 
+    /**
+     * @param fragment
+     * @param bundle
+     * @param tag
+     */
     @Override
-    public void changeFragment(Fragment fragment, Bundle bundle, String tag) {
-        if (fragment == null) {
-            Log.e(TAG, "cannot change fragment!");
-            return;
+    public void changeFragment(@NonNull Fragment fragment, Bundle bundle, String tag) {
+        if (bundle != null){
+            fragment.setArguments(bundle);
         }
-
         pushCurrentFragTag(tag);
-        fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.coffeeAppFragmentContainerId, fragment, tag)
-                .addToBackStack("TAG")
+                .addToBackStack(tag)
                 .commit();
     }
 

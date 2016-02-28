@@ -8,7 +8,6 @@
             android:id="@+id/settingsContainerListViewId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:listSelector="@color/listview_selector"
             android:divider="@color/middle_grey"
             android:dividerHeight="0.5dp"
             android:orientation="vertical" />

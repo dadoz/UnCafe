@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,25 +36,12 @@ public class MapFragment extends Fragment {
     private Bundle bundle;
 //    private GoogleMap mMap;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof OnLoadViewHandlerInterface)) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnLoadViewHandlerInterface");
-        }
-        if (!(activity instanceof OnChangeFragmentWrapperInterface)) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnLoadViewHandlerInterface");
-        }
-        mainActivityRef =  (CoffeeMachineActivity) activity;
-    }
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
+        mainActivityRef = getActivity();
         mapView = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, mapView);
-        setHasOptionsMenu(true);
-        initView(); //NO LOAD DATA IS REQUIRED
+
+        initView();
         return mapView;
     }
 
@@ -61,21 +49,22 @@ public class MapFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstance) {
         super.onActivityCreated(savedInstance);
-        //get all bundle
         bundle = getArguments();
     }
 
-//    private void initOnLoadView() {
-//        initView();
-//    }
+    public void initActionBar() {
+        setHasOptionsMenu(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar()
+                .setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar()
+                .setTitle("Map");
+    }
 
+    /**
+     * init view
+     */
     public void initView() {
-        //action bar
-        ((SetActionBarInterface) mainActivityRef)
-                .setActionBarCustomViewById(R.id.customActionBarMapLayoutId, null);
-        ((SetActionBarInterface) mainActivityRef)
-                .setCustomNavigation(MapFragment.class);
-
+        initActionBar();
 //        try {
 //            SupportMapFragment supportMapFragment = new SupportMapFragment() {
 //                @Override
@@ -119,13 +108,11 @@ public class MapFragment extends Fragment {
 //        }
     }
 
+    /**
+     * destroy view
+     */
     public void onDestroyView() {
         super.onDestroyView();
-//        FragmentManager fm = getActivity().getSupportFragmentManager();
-//        Fragment fragment = (fm.findFragmentById(R.id.map));
-//        FragmentTransaction ft = fm.beginTransaction();
-//        ft.remove(fragment);
-//        ft.commit();
     }
 
 }

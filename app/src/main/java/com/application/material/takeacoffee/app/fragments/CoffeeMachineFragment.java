@@ -1,12 +1,10 @@
 package com.application.material.takeacoffee.app.fragments;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -18,17 +16,12 @@ import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.adapters.CoffeeMachineGridAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
-import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
-import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created by davide on 3/13/14.
@@ -93,6 +86,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
     }
 
     public void initView() {
+        initActionBar();
         setHasOptionsMenu(true);
 
         if (BuildConfig.DEBUG) {
@@ -110,6 +104,17 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         coffeeMachineGridLayout.setAdapter(new CoffeeMachineGridAdapter(this.getActivity(),
                 R.layout.coffee_machine_template, coffeeMachineList));
         coffeeMachineGridLayout.setOnItemClickListener(this);
+    }
+
+    /**
+     * init action bar
+     */
+    public void initActionBar() {
+        ((AppCompatActivity) getActivity()).getSupportActionBar()
+            .setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar()
+                .setTitle(getString(R.string.app_name));
+
     }
 
     @Override
@@ -173,6 +178,10 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
         initView();
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<CoffeeMachine> getCoffeeMachineListTest() {
         ArrayList<CoffeeMachine> tmp = new ArrayList<CoffeeMachine>();
         tmp.add(new CoffeeMachine("0", "balllala", "hey", null));
