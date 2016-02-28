@@ -42,11 +42,10 @@
         android:layout_above="@id/titleContainerLayoutId"
         android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:columnWidth="90dp"
         android:numColumns="2"
         android:verticalSpacing="@dimen/small_padding"
         android:horizontalSpacing="@dimen/small_padding"
-        android:stretchMode="columnWidth"
-        android:gravity="top"/>
+        android:stretchMode="columnWidth" />
 </RelativeLayout>

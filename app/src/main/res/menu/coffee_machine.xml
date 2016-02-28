@@ -5,9 +5,9 @@
     <item
         android:id="@+id/action_position"
         android:title="Map"
-        android:icon="@drawable/position_icon_small_b"
+        android:icon="@drawable/position_icon_small_w"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"
         android:title="Settings"
