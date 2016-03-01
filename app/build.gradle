@@ -52,6 +52,10 @@ dependencies {
         exclude module: 'bolts-android'
         exclude module: 'support-v4'
     }
+    compile ('com.google.android.gms:play-services-location:8.4.0') {
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+    }
     compile ('com.google.android.gms:play-services-maps:8.4.0') {
         exclude module: 'support-v4'
         exclude module: 'support-annotations'
