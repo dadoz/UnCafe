@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by davide on 3/13/14.
  */
-public class CoffeeMachineFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class CoffeePlacesFragment extends Fragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
@@ -48,7 +48,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
             throw new ClassCastException(context.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        mainActivityRef = (CoffeeMachineActivity) context;
+        mainActivityRef = (CoffeePlacesActivity) context;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class CoffeeMachineFragment extends Fragment implements AdapterView.OnIte
 //        ((SetActionBarInterface) mainActivityRef)
 //                .setActionBarCustomViewById(R.id.customActionBarUserLayoutId, null);
 //        ((SetActionBarInterface) mainActivityRef)
-//                .setCustomNavigation(CoffeeMachineFragment.class);
+//                .setCustomNavigation(CoffeePlacesFragment.class);
 
         coffeeMachineGridLayout.setAdapter(new CoffeeMachineGridAdapter(this.getActivity(),
                 R.layout.coffee_machine_template, coffeeMachineList));

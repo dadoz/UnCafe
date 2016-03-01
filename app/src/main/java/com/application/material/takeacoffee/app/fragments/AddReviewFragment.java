@@ -9,12 +9,11 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import android.widget.ImageView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.AddReviewActivity;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
+import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.utils.Utils;
 import com.application.material.takeacoffee.app.application.DataApplication;
@@ -24,15 +23,12 @@ import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.application.material.takeacoffee.app.views.FilledCircleView;
 import com.parse.ParseFile;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -228,8 +224,8 @@ public class AddReviewFragment extends Fragment implements
 
     public void addReviewErrorCallback() {
         Intent intent = new Intent();
-        intent.putExtra(CoffeeMachineActivity.ERROR_MESSAGE_KEY, Review.ERROR_MESSAGE);
-        addActivityRef.setResult(CoffeeMachineActivity.RESULT_FAILED, intent);
+        intent.putExtra(CoffeePlacesActivity.ERROR_MESSAGE_KEY, Review.ERROR_MESSAGE);
+        addActivityRef.setResult(CoffeePlacesActivity.RESULT_FAILED, intent);
         addActivityRef.finish();
 
     }

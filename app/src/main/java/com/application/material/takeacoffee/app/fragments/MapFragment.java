@@ -1,29 +1,21 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
+
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 //import com.google.android.gms.maps.GoogleMap;
 //import com.google.android.gms.maps.SupportMapFragment;
 //import com.google.android.gms.maps.model.LatLng;
 //import com.google.android.gms.maps.model.Marker;
 //import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 
 /**
  * Created by davide on 19/11/14.

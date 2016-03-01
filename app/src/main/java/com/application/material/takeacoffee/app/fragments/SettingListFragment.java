@@ -1,7 +1,6 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +12,7 @@ import android.widget.ListView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
+import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
 import com.application.material.takeacoffee.app.models.Setting;
@@ -34,7 +33,7 @@ public class SettingListFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mainActivityRef =  (CoffeeMachineActivity) context;
+        mainActivityRef =  (CoffeePlacesActivity) context;
     }
 
     @Override

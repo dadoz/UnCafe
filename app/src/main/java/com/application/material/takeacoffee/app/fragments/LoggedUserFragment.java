@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
+import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 import com.application.material.takeacoffee.app.utils.Utils;
@@ -60,7 +60,7 @@ public class LoggedUserFragment extends Fragment
             throw new ClassCastException(activity.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        mainActivityRef =  (CoffeeMachineActivity) activity;
+        mainActivityRef =  (CoffeePlacesActivity) activity;
         dataApplication = ((DataApplication) mainActivityRef.getApplication());
         meUserId = dataApplication.getUserId();
     }

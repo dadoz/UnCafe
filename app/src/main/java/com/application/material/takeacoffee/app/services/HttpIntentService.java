@@ -6,29 +6,11 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
-import com.application.material.takeacoffee.app.restServices.CustomErrorHandler;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static com.application.material.takeacoffee.app.services.HttpIntentService.ParseAction.*;
-
-//import it.ennova.myhd.BusSingleton;
-//import it.ennova.myhd.Constants;
-//import it.ennova.myhd.GlobalVarSingleton;
-//import it.ennova.myhd.networking.response.BaseResponse;
-//import it.ennova.myhd.networking.response.FirstSlot;
-//import it.ennova.myhd.networking.response.ListSlots;
-//import it.ennova.myhd.networking.response.ListTickets;
-//import it.ennova.myhd.networking.response.Message;
-//import it.ennova.myhd.networking.response.PostTicket;
 
 
 /**

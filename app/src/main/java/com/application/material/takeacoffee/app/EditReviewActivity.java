@@ -1,14 +1,11 @@
 package com.application.material.takeacoffee.app;
 
-import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
@@ -20,13 +17,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import com.squareup.otto.Subscribe;
@@ -36,7 +31,7 @@ import java.io.IOException;
 
 public class EditReviewActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
-    private static final String TAG = "CoffeeMachineActivity";
+    private static final String TAG = "CoffeePlacesActivity";
     private static String EDIT_REVIEW_FRAG_TAG = "EDIT_REVIEW_FRAG_TAG";
     @Bind(R.id.onLoadLayoutId) View onLoadLayout;
     //Volley lib
@@ -55,7 +50,7 @@ public class EditReviewActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_edit_review);
         ButterKnife.bind(this);
 
-        bundle = getIntent().getBundleExtra(CoffeeMachineActivity.EXTRA_DATA);
+        bundle = getIntent().getBundleExtra(CoffeePlacesActivity.EXTRA_DATA);
 
         //custom actionBar
         getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);

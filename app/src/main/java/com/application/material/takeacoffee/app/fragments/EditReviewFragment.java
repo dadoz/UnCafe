@@ -16,7 +16,6 @@ import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
-import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
@@ -211,7 +210,7 @@ public class EditReviewFragment extends Fragment implements
         Intent intent = new Intent();
 
         //on callback
-        intent.putExtra(CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
+        intent.putExtra(CoffeePlacesActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
         intent.putExtra(Review.REVIEW_OBJ_KEY, review);
         editActivityRef.setResult(Activity.RESULT_OK, intent);
         editActivityRef.finish();

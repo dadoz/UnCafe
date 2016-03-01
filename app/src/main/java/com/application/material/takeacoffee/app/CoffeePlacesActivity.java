@@ -1,18 +1,13 @@
 package com.application.material.takeacoffee.app;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.*;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,12 +16,10 @@ import android.widget.ImageView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
+
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
 import com.application.material.takeacoffee.app.application.DataApplication;
-import com.application.material.takeacoffee.app.fragments.CoffeeMachineFragment;
+import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
 import com.application.material.takeacoffee.app.fragments.LoggedUserFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
@@ -39,17 +32,16 @@ import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
 
 
-public class CoffeeMachineActivity extends AppCompatActivity implements
+public class CoffeePlacesActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, OnChangeFragmentWrapperInterface,
         SetActionBarInterface, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = "CoffeeMachineActivity";
+    private static final String TAG = "CoffeePlacesActivity";
     public static final int RESULT_FAILED = 111;
     public static String EXTRA_DATA = "EXTRA_DATA";
 //    @Bind(R.id.onLoadLayoutId)
@@ -107,8 +99,8 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
      */
     private void initView(Bundle savedInstanceState) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.coffeeAppFragmentContainerId, new CoffeeMachineFragment(),
-                        CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG)
+                .replace(R.id.coffeeAppFragmentContainerId, new CoffeePlacesFragment(),
+                        CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG)
                 .commit();
     }
 
@@ -123,17 +115,17 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 //            if (fragment == null ||
 //                    currentFragTag == null) {
 //                //if sm error init again app
-//                pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
-//                fragment = new CoffeeMachineFragment();
+//                pushCurrentFragTag(CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG);
+//                fragment = new CoffeePlacesFragment();
 //            }
 //
 //            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.coffeeAppFragmentContainerId, new CoffeeMachineFragment(),
-//                            CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG)
+//                    .replace(R.id.coffeeAppFragmentContainerId, new CoffeePlacesFragment(),
+//                            CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG)
 //                    .commit();
 //        }
 
-//        pushCurrentFragTag(CoffeeMachineFragment.COFFEE_MACHINE_FRAG_TAG);
+//        pushCurrentFragTag(CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG);
 //    }
 
     @Override
@@ -236,7 +228,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
         //EditReviewActivity
         if(activityClassName.equals(EditReviewActivity.class)) {
             try {
-                intent.putExtra(CoffeeMachineActivity.EXTRA_DATA, bundle);
+                intent.putExtra(CoffeePlacesActivity.EXTRA_DATA, bundle);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -245,7 +237,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
         if(activityClassName.equals(AddReviewActivity.class)) {
             try {
                 CoffeeMachine coffeeMachine = (CoffeeMachine) bundle.get(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY);
-                intent.putExtra(CoffeeMachineActivity.EXTRA_DATA, coffeeMachine.getId());
+                intent.putExtra(CoffeePlacesActivity.EXTRA_DATA, coffeeMachine.getId());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -278,9 +270,9 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
                 }
 
                 switch (requestCode) {
-                    case CoffeeMachineActivity.ACTION_EDIT_REVIEW:
+                    case CoffeePlacesActivity.ACTION_EDIT_REVIEW:
                         String action = bundle.getString(
-                                CoffeeMachineActivity.ACTION_EDIT_REVIEW_RESULT);
+                                CoffeePlacesActivity.ACTION_EDIT_REVIEW_RESULT);
                         Review review = (Review) bundle.get(
                                 Review.REVIEW_OBJ_KEY);
                         if (action == null || review == null) {
@@ -296,7 +288,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 
                         Log.e(TAG, "hey return form edit review");
                         break;
-                    case CoffeeMachineActivity.ACTION_ADD_REVIEW:
+                    case CoffeePlacesActivity.ACTION_ADD_REVIEW:
                         //get current frag
                         review = (Review) bundle.get(
                                 Review.REVIEW_OBJ_KEY);
@@ -316,7 +308,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
 //                Log.e(TAG, "error got from above activity" + message);
 //                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 break;
-            case CoffeeMachineActivity.RESULT_FAILED:
+            case CoffeePlacesActivity.RESULT_FAILED:
                 String message =  data.getExtras().getString(ERROR_MESSAGE_KEY);
                 Log.e(TAG, "error got from above activity" + message);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -522,7 +514,7 @@ public class CoffeeMachineActivity extends AppCompatActivity implements
             return;
         }
 
-        if(id.equals(CoffeeMachineFragment.class)) {
+        if(id.equals(CoffeePlacesFragment.class)) {
             actionBar.setDisplayHomeAsUpEnabled(false);
             return;
         }

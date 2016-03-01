@@ -33,7 +33,7 @@ import java.io.IOException;
 
 public class AddReviewActivity extends AppCompatActivity implements
         OnLoadViewHandlerInterface, SetActionBarInterface, OnChangeFragmentWrapperInterface {
-    private static final String TAG = "CoffeeMachineActivity";
+    private static final String TAG = "CoffeePlacesActivity";
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
 
@@ -49,7 +49,7 @@ public class AddReviewActivity extends AppCompatActivity implements
         initActionbar();
         initView(savedInstanceState);
 
-//        String coffeeMachineId = getIntent().getStringExtra(CoffeeMachineActivity.EXTRA_DATA);
+//        String coffeeMachineId = getIntent().getStringExtra(CoffeePlacesActivity.EXTRA_DATA);
 //        bundle = new Bundle();
 //        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachineId);
 

@@ -2,7 +2,6 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.CoffeeMachineActivity;
+import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.LoginActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.DataApplication;
@@ -27,12 +26,10 @@ import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.facebook.Session;
-import com.facebook.widget.ProfilePictureView;
+
 import android.widget.ImageView;
-import com.parse.ParseFacebookUtils;
+
 import com.parse.ParseFile;
-import com.parse.ParseUser;
 import com.squareup.otto.Subscribe;
 
 import java.io.ByteArrayOutputStream;
@@ -239,7 +236,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         //check
         dataApplication.setUser(user);
 
-        Intent intent = new Intent(this.getActivity(), CoffeeMachineActivity.class);
+        Intent intent = new Intent(this.getActivity(), CoffeePlacesActivity.class);
         startActivity(intent);
 
         loginActivityRef.finish();
@@ -263,7 +260,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     LOGGED_USER_ID, userId);
         }
 
-        Intent intent = new Intent(this.getActivity(), CoffeeMachineActivity.class);
+        Intent intent = new Intent(this.getActivity(), CoffeePlacesActivity.class);
         startActivity(intent);
 
         loginActivityRef.finish();
