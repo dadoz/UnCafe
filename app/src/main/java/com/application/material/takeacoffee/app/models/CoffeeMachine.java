@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app.models;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,6 +14,7 @@ public class CoffeeMachine implements Parcelable {
     private String iconPath;
 	private String name;
 	private String address;
+    private Bitmap photo;
 
     public CoffeeMachine(Parcel in) {
         this.id = in.readString();
@@ -68,4 +70,19 @@ public class CoffeeMachine implements Parcelable {
             return new CoffeeMachine[size];
         }
     };
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
+    }
+
+    public Bitmap getPhoto() {
+        return photo;
+    }
 }

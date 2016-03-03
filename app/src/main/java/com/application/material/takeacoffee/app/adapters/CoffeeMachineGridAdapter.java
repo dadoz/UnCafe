@@ -1,7 +1,11 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.graphics.drawable.DrawableUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +44,6 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.coffee_machine_template, null);
-
         holder = new ViewHolder();
         holder.nameTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineNameTextId));
         holder.addressTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineAddressTextId));
@@ -49,7 +52,9 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
 
         holder.nameTextView.setText(coffeeMachine.getName());
         holder.addressTextView.setText(coffeeMachine.getAddress());
-        holder.iconImageView.setImageResource(R.drawable.coffee_cup_icon);
+        holder.iconImageView.setImageBitmap(coffeeMachine.getPhoto() == null ? BitmapFactory
+                .decodeResource(getContext().getResources(),
+                R.drawable.coffee_cup_icon) : coffeeMachine.getPhoto());
 
         //retrieve icon from server volley
         int defaultIconId = R.drawable.coffee_cup_icon;
