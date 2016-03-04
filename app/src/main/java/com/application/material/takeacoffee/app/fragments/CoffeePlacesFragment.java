@@ -33,6 +33,7 @@ import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.PlacePhotoResult;
 import com.google.android.gms.location.places.Places;
@@ -227,46 +228,91 @@ public class CoffeePlacesFragment extends Fragment implements
      */
     public void getInfo(final String placeId) {
         //get name and address
-        final PendingResult<PlaceBuffer> result = Places.GeoDataApi
-                .getPlaceById(mGoogleApiClient, placeId);
-        result.setResultCallback(new ResultCallback<PlaceBuffer>() {
-            @Override
-            public void onResult(@NonNull PlaceBuffer placeBuffer) {
-                Place place = placeBuffer.get(0);
-                Log.e("TAG", place.getName().toString() + place.getAddress().toString());
-                coffeePlacesList.get(0).setName(place.getName().toString().toLowerCase());
-                coffeePlacesList.get(0).setAddress(place.getAddress().toString().toLowerCase());
-                synchronized (coffeeMachineGridLayout.getAdapter()) {
-                    ((ArrayAdapter) coffeeMachineGridLayout.getAdapter()).notifyDataSetChanged();
+        Places.GeoDataApi
+            .getPlaceById(mGoogleApiClient, placeId)
+            .setResultCallback(new ResultCallback<PlaceBuffer>() {
+                @Override
+                public void onResult(@NonNull PlaceBuffer placeBuffer) {
+                    while (placeBuffer.iterator().hasNext()) {
+                        addCoffeePlaceInfoOnGridView(placeBuffer.iterator().next());
+                    }
+                    placeBuffer.release();
                 }
+            });
+    }
 
+    /**
+     *
+     * @param place
+     */
+    private void addCoffeePlaceInfoOnGridView(Place place) {
+        setCoffeePlaceInfoOnList(place);
+        synchronized (coffeeMachineGridLayout.getAdapter()) {
+            ((ArrayAdapter) coffeeMachineGridLayout.getAdapter()).notifyDataSetChanged();
+        }
+
+    }
+
+    /**
+     *
+     * @param place
+     */
+    private void setCoffeePlaceInfoOnList(Place place) {
+        int index = listContainId(place.getId());
+        if (index != -1) {
+            coffeePlacesList.get(index).setName(place.getName().toString().toLowerCase());
+            coffeePlacesList.get(index).setAddress(place.getAddress().toString().toLowerCase());
+            return;
+        }
+        coffeePlacesList.add(new CoffeeMachine(place.getId(), place.getName().toString().toLowerCase(),
+                place.getAddress().toString().toLowerCase(), null));
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    private int listContainId(String id) {
+        int j = 0;
+        for (CoffeeMachine coffeePlace : coffeePlacesList) {
+            j ++;
+            if (coffeePlace.getId().equals(id)) {
+                return j;
             }
-        });
+        }
+        return -1;
     }
 
     /**
      *
      * @param placeId
      */
-    public void getPhoto(String placeId) {
+    public void getPhoto(final String placeId) {
         //get photo
         PendingResult<PlacePhotoMetadataResult> result1 = Places.GeoDataApi
                 .getPlacePhotos(mGoogleApiClient, placeId);
+
         result1.setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
             @Override
             public void onResult(@NonNull PlacePhotoMetadataResult placePhotoMetadataResult) {
-                PlacePhotoMetadata photoMetadata = placePhotoMetadataResult.getPhotoMetadata().get(0);
-                photoMetadata.getPhoto(mGoogleApiClient).setResultCallback(new ResultCallback<PlacePhotoResult>() {
-                    @Override
-                    public void onResult(@NonNull PlacePhotoResult placePhotoResult) {
+                PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
+                if (photoMetadataBuffer.getCount() > 0) {
+                    photoMetadataBuffer.get(0).getPhoto(mGoogleApiClient).setResultCallback(new ResultCallback<PlacePhotoResult>() {
+                        @Override
+                        public void onResult(@NonNull PlacePhotoResult photo) {
 //                        placePhotoResult.getBitmap();
-                        Log.e("TAG", "u got photo");
-                        coffeePlacesList.get(0).setPhoto(placePhotoResult.getBitmap());
-                        synchronized (coffeeMachineGridLayout.getAdapter()) {
-                            ((ArrayAdapter) coffeeMachineGridLayout.getAdapter()).notifyDataSetChanged();
+                            Log.e("TAG", "u got photo");
+                            if (photo.getStatus().isSuccess()) {
+                                coffeePlacesList.get(0).setPhoto(photo.getBitmap());
+                                synchronized (coffeeMachineGridLayout.getAdapter()) {
+                                    ((ArrayAdapter) coffeeMachineGridLayout.getAdapter()).notifyDataSetChanged();
+                                }
+                            }
                         }
-                    }
-                });
+                    });
+                    photoMetadataBuffer.release();
+                }
             }
         });
     }
