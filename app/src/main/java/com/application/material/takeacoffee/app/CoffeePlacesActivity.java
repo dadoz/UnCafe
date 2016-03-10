@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
+import com.application.material.takeacoffee.app.utils.PermissionManager;
 
 public class CoffeePlacesActivity extends AppCompatActivity {
     public static final int RESULT_FAILED = -1;
@@ -13,12 +14,15 @@ public class CoffeePlacesActivity extends AppCompatActivity {
 
     @Bind(R.id.coffeeToolbarId)
     public android.support.v7.widget.Toolbar toolbar;
+    private PermissionManager permissionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coffee_machine);
         ButterKnife.bind(this);
+
+        permissionManager = PermissionManager.getInstance();
         initView();
     }
 
@@ -39,6 +43,12 @@ public class CoffeePlacesActivity extends AppCompatActivity {
                 .replace(R.id.coffeeAppFragmentContainerId, new CoffeePlacesFragment(),
                         CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG)
                 .commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

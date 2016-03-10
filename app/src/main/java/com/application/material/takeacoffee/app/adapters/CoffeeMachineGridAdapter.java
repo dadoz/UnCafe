@@ -1,11 +1,8 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.graphics.drawable.DrawableUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.*;
-import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 
 import java.util.ArrayList;
 
@@ -43,7 +39,7 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.coffee_machine_template, null);
+        convertView = inflater.inflate(R.layout.coffee_place_template, null);
         holder = new ViewHolder();
         holder.nameTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineNameTextId));
         holder.addressTextView = ((TextView) convertView.findViewById(R.id.coffeeMachineAddressTextId));
@@ -54,21 +50,8 @@ public class CoffeeMachineGridAdapter extends ArrayAdapter<CoffeeMachine> {
         holder.addressTextView.setText(coffeeMachine.getAddress());
         holder.iconImageView.setImageBitmap(coffeeMachine.getPhoto() == null ? BitmapFactory
                 .decodeResource(getContext().getResources(),
-                R.drawable.coffee_cup_icon) : coffeeMachine.getPhoto());
+                        R.drawable.coffee_cup_icon) : coffeeMachine.getPhoto());
 
-        //retrieve icon from server volley
-        int defaultIconId = R.drawable.coffee_cup_icon;
-
-        //TODO save mb in this way :D
-        holder.iconImageView.setImageDrawable(mainActivityRef.
-                getResources().getDrawable(defaultIconId));
-//        try {
-//            VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
-//            volleySingleton.imageRequest(coffeeMachine.getIconPath(),
-//                    holder.iconImageView, defaultIconId);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         return convertView;
     }

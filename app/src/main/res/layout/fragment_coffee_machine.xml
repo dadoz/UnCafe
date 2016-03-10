@@ -35,17 +35,11 @@
             style="@style/AppTheme.TextChimphand"/>
 
     </LinearLayout>
-    <GridView
-        android:id="@+id/coffeeMachineGridLayoutId"
-        android:listSelector="@color/listview_selector"
-        android:padding="@dimen/small_padding"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/coffeePlacesRecyclerViewId"
         android:layout_above="@id/titleContainerLayoutId"
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="90dp"
-        android:numColumns="2"
-        android:verticalSpacing="@dimen/small_padding"
-        android:horizontalSpacing="@dimen/small_padding"
-        android:stretchMode="columnWidth" />
+        android:clipToPadding="false"/>
 </RelativeLayout>

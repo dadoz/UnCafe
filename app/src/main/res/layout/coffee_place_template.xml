@@ -13,36 +13,35 @@
         android:orientation="vertical">
         <ImageView
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_marginBottom="@dimen/medium_padding"
-            android:layout_marginTop="@dimen/medium_padding"
             android:id="@+id/coffeeIconId"
-            android:layout_width="@dimen/coffee_icon_size"
-            android:layout_height="@dimen/coffee_icon_size"
+            android:layout_width="fill_parent"
+            android:layout_height="130dp"
             android:src="@drawable/coffee_cup_icon" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="vertical">
             <np.TextView
                 android:id="@+id/coffeeMachineNameTextId"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/material_light_red"
-                android:textSize="@dimen/title_text_size"
+                android:gravity="center"
+                android:textSize="@dimen/header_button_text"
                 android:maxLines="2"
                 android:ellipsize="end"
+                android:text="dalksfalskdfj"
                 style="@style/AppTheme.TextChimphand"/>
 
             <np.TextView
                 android:id="@+id/coffeeMachineAddressTextId"
-                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/material_text_brown"
-                android:textSize="@dimen/text_medium_20"
-                android:maxLines="2"
+                android:textSize="@dimen/text_small_16"
+                android:maxLines="1"
                 android:ellipsize="end"
+                android:text="dalksfalskdfj"
                 style="@style/AppTheme.TextChimphand"/>
         </LinearLayout>
     </LinearLayout>
