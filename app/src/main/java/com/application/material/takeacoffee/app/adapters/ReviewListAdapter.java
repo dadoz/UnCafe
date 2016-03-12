@@ -103,12 +103,7 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
                         defaultIconId);
             }
 
-            //TODO check if selectedItem then background color middle grey
-            if(((SetActionBarInterface) mainActivityRef).isItemSelected() &&
-                ((SetActionBarInterface) mainActivityRef).getSelectedItemPosition() == position + 1) {
-                //due to header on listview
-                ((SetActionBarInterface) mainActivityRef).setSelectedItemView(view);
-            }
+
         } catch (Exception e) {
             Log.e(TAG, " - " + e.getMessage());
             e.printStackTrace();

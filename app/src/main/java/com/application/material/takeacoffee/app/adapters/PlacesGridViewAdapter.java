@@ -1,6 +1,5 @@
 package com.application.material.takeacoffee.app.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +49,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         return itemList.size();
     }
 
+
     /**
      *
      */
@@ -84,7 +84,14 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      *
      */
     public interface CustomItemClickListener {
-        public void onItemClick(int pos, View v);
+        void onItemClick(int pos, View v);
     }
 
+    /**
+     *
+     * @param data
+     */
+    public void addAllItems(ArrayList<CoffeeMachine> data) {
+        itemList.addAll(data);
+    }
 }

@@ -1,51 +1,42 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
 import com.application.material.takeacoffee.app.*;
-import com.application.material.takeacoffee.app.adapters.CoffeeMachineGridAdapter;
 import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.PlaceDetectionApi;
 import com.google.android.gms.location.places.PlaceFilter;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
@@ -53,8 +44,6 @@ import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.PlacePhotoResult;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.squareup.otto.Subscribe;
 
 import java.lang.ref.WeakReference;
@@ -67,13 +56,16 @@ import java.util.ArrayList;
  */
 public class CoffeePlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
-        ResultCallback<AutocompletePredictionBuffer>, PlacesGridViewAdapter.CustomItemClickListener, PermissionManager.OnHandleGrantPermissionCallbackInterface {
+        PlacesGridViewAdapter.CustomItemClickListener,
+        PermissionManager.OnHandleGrantPermissionCallbackInterface {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
     private View coffeeMachineView;
     @Bind(R.id.coffeePlacesRecyclerViewId)
     RecyclerView coffeePlacesRecyclerview;
+    @Bind(R.id.coffeePlacesProgressId)
+    ProgressBar coffeePlacesProgress;
     private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private Object photo;
@@ -112,12 +104,12 @@ public class CoffeePlacesFragment extends Fragment implements
     public void initView() {
         initActionBar();
         setHasOptionsMenu(true);
-//        if (BuildConfig.DEBUG) {
-//            coffeePlacesList = getcoffeePlacesListTest();
-//        }
-        initGooglePlaces();
+        if (BuildConfig.DEBUG) {
+            coffeePlacesList = getCoffeePlacesListTest();
+        }
         initGridViewAdapter();
-        findCoffeePlacesByGooglePlaces();
+//        initGooglePlaces();
+//        findCoffeePlacesByGooglePlaces();
     }
 
     @Override
@@ -125,6 +117,12 @@ public class CoffeePlacesFragment extends Fragment implements
 //        CoffeeMachine coffeeMachine = (CoffeeMachine) adapterView.getAdapter().getItem(position);
 //        Bundle bundle = new Bundle();
 //        bundle.putParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY, coffeeMachine);
+        changeActivity();
+    }
+
+    @Override
+    public void onItemClick(int pos, View v) {
+        Log.e("TAG", "DOING job");
         changeActivity();
     }
 
@@ -152,7 +150,7 @@ public class CoffeePlacesFragment extends Fragment implements
     }
 
     /**
-     * change actiity on reviewList
+     * change activity on reviewList
      */
     private void changeActivity() {
         startActivity(new Intent(getActivity(), ReviewListActivity.class));
@@ -188,6 +186,8 @@ public class CoffeePlacesFragment extends Fragment implements
     private void initGridViewAdapter() {
         PlacesGridViewAdapter adapter = new PlacesGridViewAdapter(new WeakReference<>(getContext()),
                 coffeePlacesList);
+        adapter.registerAdapterDataObserver(new CoffeePlaceAdapterObserver(new WeakReference<>(adapter),
+                coffeePlacesProgress));
         adapter.setOnItemClickListener(this);
         coffeePlacesRecyclerview.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
@@ -212,7 +212,7 @@ public class CoffeePlacesFragment extends Fragment implements
      *
      * @return
      */
-    public ArrayList<CoffeeMachine> getcoffeePlacesListTest() {
+    public ArrayList<CoffeeMachine> getCoffeePlacesListTest() {
         ArrayList<CoffeeMachine> tmp = new ArrayList<CoffeeMachine>();
         tmp.add(new CoffeeMachine("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
         tmp.add(new CoffeeMachine("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
@@ -247,16 +247,7 @@ public class CoffeePlacesFragment extends Fragment implements
 
     }
 
-    @Override
-    public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
-        for (AutocompletePrediction item : autocompletePredictions) {
-            Log.e("INFO result", item.getFullText(null).toString());
-            String placeId = item.getPlaceId();
-            getPhoto(placeId);
-            getInfo(placeId);
-        }
-        autocompletePredictions.release();
-    }
+
     /**
      *
      * @param placeId
@@ -352,11 +343,6 @@ public class CoffeePlacesFragment extends Fragment implements
         return null;
     }
 
-    @Override
-    public void onItemClick(int pos, View v) {
-        Log.e("TAG", "DOING job");
-    }
-
 //    @Override
 //    public void onHandleGrantPermissionCallback() {
         //        String query = "coffee";
@@ -368,14 +354,28 @@ public class CoffeePlacesFragment extends Fragment implements
 //                .build();
 //        PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi
 //                .getAutocompletePredictions(mGoogleApiClient, query, bounds, autocompleteFilter);
+//            result.setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
+//                @Override
+//                public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
+//                    for (AutocompletePrediction item : autocompletePredictions) {
+//                        Log.e("INFO result", item.getFullText(null).toString());
+//                        String placeId = item.getPlaceId();
+//                        getPhoto(placeId);
+//                        getInfo(placeId);
+//                    }
+//                    autocompletePredictions.release();
+//                }
+//            });
 //    }
 
     @Override
     public void onHandleGrantPermissionCallback() {
         try {
-            PlaceFilter autocompleteFilter = new PlaceFilter();
+//            Collection<Integer> restrictToPlaceTypes = 0;
+//            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
+            PlaceFilter filter = new PlaceFilter();
             PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                    .getCurrentPlace(mGoogleApiClient, autocompleteFilter);
+                    .getCurrentPlace(mGoogleApiClient, filter);
             result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
                 @Override
                 public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
@@ -409,8 +409,6 @@ public class CoffeePlacesFragment extends Fragment implements
 //        this.coffeePlacesList = coffeeMachinesList;
 //        initView();
     }
-
-
 
     /**
      * item offste to handle margin btw cardview
