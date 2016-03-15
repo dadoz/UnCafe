@@ -22,6 +22,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     private final ArrayList<CoffeeMachine> itemList;
     private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
+    private PlacesGridViewAdapter.ViewHolder holder;
 
     public PlacesGridViewAdapter(WeakReference<Context> context, ArrayList<CoffeeMachine> itemList) {
         this.itemList = itemList;
@@ -31,7 +32,8 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.coffee_place_template, parent, false);
-        return new PlacesGridViewAdapter.ViewHolder(view);
+        holder = new PlacesGridViewAdapter.ViewHolder(view);
+        return holder;
     }
 
     @Override
@@ -49,6 +51,14 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         return itemList.size();
     }
 
+    /**
+     *
+     * @return
+     */
+    public int getCardviewWidth() {
+        return holder.itemView.getWidth();
+    }
+
 
     /**
      *
@@ -57,12 +67,14 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         private final ImageView iconImageView;
         private final TextView nameTextView;
         private final TextView addressTextView;
+        private final View itemView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             nameTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineNameTextId));
             addressTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineAddressTextId));
             iconImageView = (ImageView) itemView.findViewById(R.id.coffeeIconId);
+            this.itemView = itemView;
             itemView.setOnClickListener(this);
         }
 

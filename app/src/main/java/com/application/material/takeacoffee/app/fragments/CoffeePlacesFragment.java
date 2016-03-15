@@ -3,7 +3,6 @@ package com.application.material.takeacoffee.app.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
@@ -17,7 +16,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import butterknife.Bind;
@@ -29,12 +27,11 @@ import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
+import com.application.material.takeacoffee.app.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlaceFilter;
@@ -51,13 +48,14 @@ import java.util.ArrayList;
 
 
 
+
 /**
  * Created by davide on 3/13/14.
  */
 public class CoffeePlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
-        PermissionManager.OnHandleGrantPermissionCallbackInterface {
+        PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
@@ -66,10 +64,13 @@ public class CoffeePlacesFragment extends Fragment implements
     RecyclerView coffeePlacesRecyclerview;
     @Bind(R.id.coffeePlacesProgressId)
     ProgressBar coffeePlacesProgress;
+    @Bind(R.id.coffeePlaceFilterLayoutId)
+    View coffeePlaceFilterLayout;
     private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
-    private Object photo;
     private PermissionManager permissionManager;
+    private int photoHeight;
+    private int photoWidth;
 
     @Override
     public void onAttach(Context context) {
@@ -108,6 +109,7 @@ public class CoffeePlacesFragment extends Fragment implements
             coffeePlacesList = getCoffeePlacesListTest();
         }
         initGridViewAdapter();
+        coffeePlaceFilterLayout.setOnClickListener(this);
 //        initGooglePlaces();
 //        findCoffeePlacesByGooglePlaces();
     }
@@ -122,31 +124,41 @@ public class CoffeePlacesFragment extends Fragment implements
 
     @Override
     public void onItemClick(int pos, View v) {
-        Log.e("TAG", "DOING job");
         changeActivity();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.coffee_machine, menu);
+        menuInflater.inflate(R.menu.coffee_place, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_position:
-                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .changeFragment(new MapFragment(), null,
-                                MapFragment.MAP_FRAG_TAG);
+                changeFragment(new MapFragment(),
+                        MapFragment.MAP_FRAG_TAG);
                 break;
             case R.id.action_settings:
-                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .changeFragment(new SettingListFragment(), null,
-                                SettingListFragment.SETTING_LIST_FRAG_TAG);
+                changeFragment(new SettingListFragment(),
+                        SettingListFragment.SETTING_LIST_FRAG_TAG);
                 break;
         }
         return true;
+    }
+
+    /**
+     *
+     * @param fragment
+     * @param tag
+     */
+    private void changeFragment(Fragment fragment, String tag) {
+        getActivity()
+            .getSupportFragmentManager().beginTransaction()
+            .replace(R.id.coffeeAppFragmentContainerId, fragment, tag)
+            .addToBackStack("TAG")
+            .commit();
     }
 
     /**
@@ -194,6 +206,9 @@ public class CoffeePlacesFragment extends Fragment implements
         coffeePlacesRecyclerview.setAdapter(adapter);
         coffeePlacesRecyclerview.addItemDecoration(new ItemOffsetDecoration(getContext(),
                 R.dimen.small_padding));
+
+        photoWidth = 600;
+        photoHeight = 300;
     }
 
     /**
@@ -203,9 +218,8 @@ public class CoffeePlacesFragment extends Fragment implements
         ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(false);
-            actionbar.setTitle(getString(R.string.app_name));
+            actionbar.setTitle(getResources().getString(R.string.coffee_place_actionbar));
         }
-
     }
 
     /**
@@ -299,15 +313,17 @@ public class CoffeePlacesFragment extends Fragment implements
             public void onResult(@NonNull PlacePhotoMetadataResult placePhotoMetadataResult) {
                 PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
                 if (photoMetadataBuffer.getCount() > 0) {
-                    photoMetadataBuffer.get(0).getPhoto(mGoogleApiClient).setResultCallback(new ResultCallback<PlacePhotoResult>() {
-                        @Override
-                        public void onResult(@NonNull PlacePhotoResult photo) {
-                            if (photo.getStatus().isSuccess()) {
-                                Log.e("BLA", "HEY :)");
-                                setPhotoOnList(placeId, photo.getBitmap());
-                            }
-                        }
-                    });
+                    photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
+                            photoWidth, photoHeight)
+                            .setResultCallback(new ResultCallback<PlacePhotoResult>() {
+                                @Override
+                                public void onResult(@NonNull PlacePhotoResult photo) {
+                                    if (photo.getStatus().isSuccess()) {
+                                        Log.e("BLA", "HEY :)");
+                                        setPhotoOnList(placeId, photo.getBitmap());
+                                    }
+                                }
+                            });
                     photoMetadataBuffer.release();
                 }
             }
@@ -408,6 +424,15 @@ public class CoffeePlacesFragment extends Fragment implements
 //
 //        this.coffeePlacesList = coffeeMachinesList;
 //        initView();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.coffeePlaceFilterLayoutId:
+                Log.e("TAG", "click");
+                break;
+        }
     }
 
     /**

@@ -1,10 +1,15 @@
 package com.application.material.takeacoffee.app;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
+import com.application.material.takeacoffee.app.utils.Utils;
 
 public class CoffeePlacesActivity extends AppCompatActivity {
     public static final int RESULT_FAILED = -1;
@@ -27,11 +32,10 @@ public class CoffeePlacesActivity extends AppCompatActivity {
     }
 
     /**
-     * init action bar
+     * init action bar - set only toolbar
      */
     private void initActionBar() {
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getResources().getString(R.string.app_name));
     }
 
     /**

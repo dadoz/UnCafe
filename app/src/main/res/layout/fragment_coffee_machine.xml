@@ -1,49 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:pixlui="http://schemas.android.com/apk/com.neopixl.pixlui"
     android:id="@+id/coffeeMachineFragmentLayoutId"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:id="@+id/titleContainerLayoutId"
-        android:background="@color/light_black"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/coffeePlaceFilterLayoutId"
+        android:background="@color/material_brown300"
+        android:layout_alignParentTop="true"
         android:padding="@dimen/small_padding"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/position_icon_small_w"/>
         <np.TextView
+            android:layout_marginLeft="@dimen/small_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_medium_20"
-            android:textColor="@color/material_light_red"
-            android:text="Takeacoffee"
-            pixlui:copyandpaste="false"
-            pixlui:clearclipboardcontent="true"
-            style="@style/AppTheme.TextChimphand"/>
-
-        <np.TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small_14"
-            android:textColor="@color/material_light_yellow_200"
-            android:text="Politecnico di torino - c.so Vinzaglio"
-            pixlui:copyandpaste="false"
-            pixlui:clearclipboardcontent="true"
+            android:textColor="@color/material_white"
+            android:text="Current position"
             style="@style/AppTheme.TextChimphand"/>
 
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/coffeePlacesRecyclerViewId"
-        android:layout_above="@id/titleContainerLayoutId"
+        android:layout_below="@id/coffeePlaceFilterLayoutId"
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"/>
     <ProgressBar
-        android:visibility="gone"
         android:id="@+id/coffeePlacesProgressId"
         style="@android:style/Widget.Material.Light.ProgressBar.Large"
         android:layout_width="wrap_content"

@@ -17,5 +17,6 @@
     <string name="facebook_app_id">269437213077030</string>
     <string name="PLACES_API_KEY">AIzaSyAWf-vfZJNezNMeFMSXl7UJ8Glusipor5E</string>
     <string name="review_actionbar_title">Coffee reviews</string>
+    <string name="coffee_place_actionbar">Places</string>
 
 </resources>
