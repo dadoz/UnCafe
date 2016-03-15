@@ -22,7 +22,6 @@ import java.lang.ref.WeakReference;
  * Created by davide on 10/03/16.
  */
 public class PermissionManager {
-
     private static final int PERMISSIONS_TO_REQUEST_FINE_LOCATION = 0;
     public static final int ACTION_LOCATION_SOURCE_SETTINGS = 1;
     private static PermissionManager instance;

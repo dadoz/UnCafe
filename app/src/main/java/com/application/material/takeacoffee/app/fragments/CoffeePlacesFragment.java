@@ -26,6 +26,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFra
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.application.material.takeacoffee.app.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
@@ -327,6 +328,19 @@ public class CoffeePlacesFragment extends Fragment implements
      * @param placeId
      */
     public void getPhoto(final String placeId) {
+        Bitmap cachedBitmap = CacheManager.getInstance().getBitmapFromMemCache(placeId);
+        if (cachedBitmap == null) {
+            retrievePhotoFromApi(placeId);
+            return;
+        }
+        setPhotoOnList(placeId, cachedBitmap);
+    }
+
+    /**
+     *
+     * @param placeId
+     */
+    public void retrievePhotoFromApi(final String placeId) {
         //get photo
         PendingResult<PlacePhotoMetadataResult> result1 = Places.GeoDataApi
                 .getPlacePhotos(mGoogleApiClient, placeId);
@@ -341,7 +355,8 @@ public class CoffeePlacesFragment extends Fragment implements
                                 @Override
                                 public void onResult(@NonNull PlacePhotoResult photo) {
                                     if (photo.getStatus().isSuccess()) {
-                                        Log.e("BLA", "HEY :)");
+                                        CacheManager.getInstance().addBitmapToMemoryCache(placeId,
+                                                photo.getBitmap());
                                         setPhotoOnList(placeId, photo.getBitmap());
                                     }
                                 }
@@ -350,8 +365,8 @@ public class CoffeePlacesFragment extends Fragment implements
                 }
             }
         });
-    }
 
+    }
     /**
      *
      * @param placeId
