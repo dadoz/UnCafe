@@ -75,8 +75,8 @@ public class CoffeePlacesFragment extends Fragment implements
     private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private PermissionManager permissionManager;
-    private int photoHeight;
-    private int photoWidth;
+    private int maxHeight = 0;
+    private int maxWidth = 300;
 
     @Override
     public void onAttach(Context context) {
@@ -229,9 +229,6 @@ public class CoffeePlacesFragment extends Fragment implements
         coffeePlacesRecyclerview.setAdapter(adapter);
         coffeePlacesRecyclerview.addItemDecoration(new ItemOffsetDecoration(getContext(),
                 R.dimen.small_padding));
-
-        photoWidth = 600;
-        photoHeight = 300;
     }
 
     /**
@@ -350,7 +347,7 @@ public class CoffeePlacesFragment extends Fragment implements
                 PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
                 if (photoMetadataBuffer.getCount() > 0) {
                     photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
-                            photoWidth, photoHeight)
+                            maxWidth, maxHeight)
                             .setResultCallback(new ResultCallback<PlacePhotoResult>() {
                                 @Override
                                 public void onResult(@NonNull PlacePhotoResult photo) {
@@ -404,11 +401,7 @@ public class CoffeePlacesFragment extends Fragment implements
                 @Override
                 public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
                     for (PlaceLikelihood itemPlace : placeLikelihoods) {
-                        Place item = itemPlace.getPlace();
-                        Log.i(TAG, String.format("Place '%s' has likelihood: %g",
-                                itemPlace.getPlace().getName(),
-                                itemPlace.getLikelihood()));
-                        String placeId = item.getId();
+                        String placeId = itemPlace.getPlace().getId();
                         getPhoto(placeId);
                         getInfo(placeId);
                     }
