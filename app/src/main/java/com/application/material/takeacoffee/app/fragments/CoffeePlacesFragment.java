@@ -9,6 +9,7 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -22,13 +23,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
-import com.application.material.takeacoffee.app.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -46,8 +45,7 @@ import com.squareup.otto.Subscribe;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-
-
+import java.util.Collection;
 
 
 /**
@@ -57,7 +55,7 @@ public class CoffeePlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
         PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
-        PermissionManager.OnEnablePositionCallbackInterface {
+        PermissionManager.OnEnablePositionCallbackInterface, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
@@ -72,6 +70,8 @@ public class CoffeePlacesFragment extends Fragment implements
     View noLocationServiceLayout;
     @Bind(R.id.noLocationServiceButtonId)
     View noLocationServiceButton;
+    @Bind(R.id.coffeePlaceSwipeRefreshLayoutId)
+    SwipeRefreshLayout coffeePlaceSwipeRefreshLayout;
     private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private PermissionManager permissionManager;
@@ -87,7 +87,7 @@ public class CoffeePlacesFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         coffeeMachineView = getActivity().getLayoutInflater()
-                .inflate(R.layout.fragment_coffee_machine, container, false);
+                .inflate(R.layout.fragment_coffee_places_layout, container, false);
         ButterKnife.bind(this, coffeeMachineView);
         initView();
         return coffeeMachineView;
@@ -112,7 +112,7 @@ public class CoffeePlacesFragment extends Fragment implements
         initActionBar();
         setHasOptionsMenu(true);
         coffeePlaceFilterLayout.setOnClickListener(this);
-
+        coffeePlaceSwipeRefreshLayout.setOnRefreshListener(this);
 //        if (BuildConfig.DEBUG) {
 //            coffeePlacesList = getCoffeePlacesListTest();
 //        }
@@ -278,9 +278,7 @@ public class CoffeePlacesFragment extends Fragment implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
     }
-
 
     /**
      *
@@ -375,20 +373,7 @@ public class CoffeePlacesFragment extends Fragment implements
     }
 
     /**
-     *
-     * @param placeId
-     */
-    private CoffeeMachine findPlaceOnListById(String placeId) {
-        for (CoffeeMachine item : coffeePlacesList) {
-            if (item.getId().equals(placeId)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    /**
-     *
+     * main function to retrieve places data from google api
      */
     private void retrievePlacesFromAPI() {
         try {
@@ -405,7 +390,7 @@ public class CoffeePlacesFragment extends Fragment implements
                         getPhoto(placeId);
                         getInfo(placeId);
                     }
-                    placeLikelihoods.release();
+//                    placeLikelihoods.release();
                 }
             });
         } catch (SecurityException e) {
@@ -460,21 +445,24 @@ public class CoffeePlacesFragment extends Fragment implements
     public void showHideLocationServiceLayout(boolean isEnabled) {
         noLocationServiceLayout.setVisibility(isEnabled ? View.GONE : View.VISIBLE);
         noLocationServiceButton.setOnClickListener(isEnabled ? null : this);
-        coffeePlacesProgress.setVisibility(isEnabled ? View.VISIBLE :View.GONE);
-
+        coffeePlacesProgress.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
     }
-    @Subscribe
-    public void onNetworkRespose(ArrayList<CoffeeMachine> coffeeMachinesList) {
-//        Log.d(TAG, "get response from bus");
-//        ((OnLoadViewHandlerInterface) mainActivityRef).hideOnLoadView();
-//
-//        if(coffeeMachinesList == null) {
-//            //TODO handle adapter with empty data
-//            return;
-//        }
-//
-//        this.coffeePlacesList = coffeeMachinesList;
-//        initView();
+
+    /**
+     *
+     */
+    private void handleRefreshInitCallback() {
+        coffeePlacesList.clear();
+        synchronized (coffeePlacesRecyclerview.getAdapter()) {
+            coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    /**
+     *
+     */
+    private void handleRefreshEndCallback() {
+        coffeePlaceSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -488,6 +476,13 @@ public class CoffeePlacesFragment extends Fragment implements
                         .enablePosition(new WeakReference<>((AppCompatActivity) mainActivityRef));
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        handleRefreshInitCallback();
+        retrievePlacesFromAPI();
+        handleRefreshEndCallback();
     }
 
     /**
