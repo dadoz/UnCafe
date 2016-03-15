@@ -41,4 +41,5 @@
         android:layout_centerInParent="true"
         android:indeterminateTint="@color/material_brown600"
         android:indeterminateTintMode="src_in"/>
+    <include layout="@layout/no_location_service_layout" />
 </RelativeLayout>

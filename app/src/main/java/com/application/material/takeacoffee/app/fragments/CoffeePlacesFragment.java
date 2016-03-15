@@ -55,7 +55,8 @@ import java.util.ArrayList;
 public class CoffeePlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
-        PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener {
+        PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
+        PermissionManager.OnEnablePositionCallbackInterface {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
@@ -66,6 +67,10 @@ public class CoffeePlacesFragment extends Fragment implements
     ProgressBar coffeePlacesProgress;
     @Bind(R.id.coffeePlaceFilterLayoutId)
     View coffeePlaceFilterLayout;
+    @Bind(R.id.noLocationServiceLayoutId)
+    View noLocationServiceLayout;
+    @Bind(R.id.noLocationServiceButtonId)
+    View noLocationServiceButton;
     private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private PermissionManager permissionManager;
@@ -105,13 +110,21 @@ public class CoffeePlacesFragment extends Fragment implements
     public void initView() {
         initActionBar();
         setHasOptionsMenu(true);
-        if (BuildConfig.DEBUG) {
-            coffeePlacesList = getCoffeePlacesListTest();
-        }
-        initGridViewAdapter();
         coffeePlaceFilterLayout.setOnClickListener(this);
-//        initGooglePlaces();
-//        findCoffeePlacesByGooglePlaces();
+
+//        if (BuildConfig.DEBUG) {
+//            coffeePlacesList = getCoffeePlacesListTest();
+//        }
+        initGridViewAdapter();
+        initGooglePlaces();
+        initLocationPermission();
+    }
+
+    /**
+     * location permission
+     */
+    private void initLocationPermission() {
+        handleLocationPermissions();
     }
 
     @Override
@@ -168,7 +181,6 @@ public class CoffeePlacesFragment extends Fragment implements
         startActivity(new Intent(getActivity(), ReviewListActivity.class));
     }
 
-
     /**
      * samplePlacesApi
      */
@@ -179,16 +191,26 @@ public class CoffeePlacesFragment extends Fragment implements
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
                 .build();
-
     }
 
     /**
-     * samplePlacesApi
+     *
      */
-    public void findCoffeePlacesByGooglePlaces() {
+    public void handleLocationPermissions() {
         permissionManager = PermissionManager.getInstance();
-        permissionManager.onRequestPermissions(
-                new WeakReference<>((AppCompatActivity) mainActivityRef), this);
+        WeakReference<AppCompatActivity> activityRef =
+                new WeakReference<>((AppCompatActivity) mainActivityRef);
+        permissionManager.onRequestPermissions(activityRef, this);
+    }
+
+    /**
+     *
+     */
+    public void handleLocationServiceEnabled() {
+        permissionManager = PermissionManager.getInstance();
+        WeakReference<AppCompatActivity> activityRef =
+                new WeakReference<>((AppCompatActivity) mainActivityRef);
+        permissionManager.checkLocationServiceIsEnabled(activityRef, this);
     }
 
 
@@ -359,8 +381,37 @@ public class CoffeePlacesFragment extends Fragment implements
         return null;
     }
 
-//    @Override
-//    public void onHandleGrantPermissionCallback() {
+    /**
+     *
+     */
+    private void retrievePlacesFromAPI() {
+        try {
+//            Collection<Integer> restrictToPlaceTypes = 0;
+//            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
+            PlaceFilter filter = new PlaceFilter();
+            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                    .getCurrentPlace(mGoogleApiClient, filter);
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
+                    for (PlaceLikelihood itemPlace : placeLikelihoods) {
+                        Place item = itemPlace.getPlace();
+                        Log.i(TAG, String.format("Place '%s' has likelihood: %g",
+                                itemPlace.getPlace().getName(),
+                                itemPlace.getLikelihood()));
+                        String placeId = item.getId();
+                        getPhoto(placeId);
+                        getInfo(placeId);
+                    }
+                    placeLikelihoods.release();
+                }
+            });
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public void setPlacesFromPlacesApi() {
         //        String query = "coffee";
 //        LatLngBounds bounds = new LatLngBounds(
 //                new LatLng(45.06, 7.68),
@@ -386,32 +437,21 @@ public class CoffeePlacesFragment extends Fragment implements
 
     @Override
     public void onHandleGrantPermissionCallback() {
-        try {
-//            Collection<Integer> restrictToPlaceTypes = 0;
-//            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
-            PlaceFilter filter = new PlaceFilter();
-            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                    .getCurrentPlace(mGoogleApiClient, filter);
-            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-                @Override
-                public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
-                    for (PlaceLikelihood itemPlace : placeLikelihoods) {
-                        Place item = itemPlace.getPlace();
-                        Log.i(TAG, String.format("Place '%s' has likelihood: %g",
-                                itemPlace.getPlace().getName(),
-                                itemPlace.getLikelihood()));
-                        String placeId = item.getId();
-                        getPhoto(placeId);
-                        getInfo(placeId);
-                    }
-                    placeLikelihoods.release();
-                }
-            });
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-
+        handleLocationServiceEnabled();
     }
+
+    @Override
+    public void onEnablePositionCallback() {
+        retrievePlacesFromAPI();
+    }
+
+    @Override
+    public void onEnablePositionErrorCallback() {
+        noLocationServiceLayout.setVisibility(View.VISIBLE);
+        noLocationServiceButton.setOnClickListener(this);
+        coffeePlacesProgress.setVisibility(View.GONE);
+    }
+
     @Subscribe
     public void onNetworkRespose(ArrayList<CoffeeMachine> coffeeMachinesList) {
 //        Log.d(TAG, "get response from bus");
@@ -431,6 +471,10 @@ public class CoffeePlacesFragment extends Fragment implements
         switch (v.getId()) {
             case R.id.coffeePlaceFilterLayoutId:
                 Log.e("TAG", "click");
+                break;
+            case R.id.noLocationServiceButtonId:
+                permissionManager
+                        .enablePosition(new WeakReference<>((AppCompatActivity) mainActivityRef));
                 break;
         }
     }
