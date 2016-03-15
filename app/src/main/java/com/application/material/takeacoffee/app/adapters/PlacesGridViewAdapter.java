@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.utils.CacheManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
     private PlacesGridViewAdapter.ViewHolder holder;
+
 
     public PlacesGridViewAdapter(WeakReference<Context> context, ArrayList<CoffeeMachine> itemList) {
         this.itemList = itemList;
@@ -40,10 +43,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.nameTextView.setText(itemList.get(position).getName());
         holder.addressTextView.setText(itemList.get(position).getAddress());
-        holder.iconImageView.setImageBitmap(itemList.get(position).getPhoto() == null ? BitmapFactory
-                .decodeResource(contextWeakRef.get().getResources(),
-                        R.drawable.coffee_cup_icon) : itemList.get(position).getPhoto());
-
+        holder.iconImageView.setImageBitmap(getPicture(itemList.get(position).getId()));
     }
 
     @Override
@@ -57,6 +57,17 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      */
     public int getCardviewWidth() {
         return holder.itemView.getWidth();
+    }
+
+    /**
+     *
+     * @param placeId
+     */
+    public Bitmap getPicture(String placeId) {
+        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(placeId);
+        return cachedPic == null ? BitmapFactory
+                .decodeResource(contextWeakRef.get().getResources(),R.drawable.coffee_cup_icon) :
+                cachedPic;
     }
 
 

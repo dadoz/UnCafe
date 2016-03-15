@@ -333,7 +333,7 @@ public class CoffeePlacesFragment extends Fragment implements
             retrievePhotoFromApi(placeId);
             return;
         }
-        setPhotoOnList(placeId, cachedBitmap);
+        updatePhotoOnList();
     }
 
     /**
@@ -357,7 +357,7 @@ public class CoffeePlacesFragment extends Fragment implements
                                     if (photo.getStatus().isSuccess()) {
                                         CacheManager.getInstance().addBitmapToMemoryCache(placeId,
                                                 photo.getBitmap());
-                                        setPhotoOnList(placeId, photo.getBitmap());
+                                        updatePhotoOnList();
                                     }
                                 }
                             });
@@ -367,20 +367,14 @@ public class CoffeePlacesFragment extends Fragment implements
         });
 
     }
+
     /**
      *
-     * @param placeId
-     * @param photoBitmap
      */
-    private void setPhotoOnList(String placeId, Bitmap photoBitmap) {
-        CoffeeMachine item = findPlaceOnListById(placeId);
-        if (item != null) {
-            item.setPhoto(photoBitmap);
-            synchronized (coffeePlacesRecyclerview.getAdapter()) {
-                coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
-            }
+    private void updatePhotoOnList() {
+        synchronized (coffeePlacesRecyclerview.getAdapter()) {
+            coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
         }
-
     }
 
     /**
