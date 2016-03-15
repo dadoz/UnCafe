@@ -442,16 +442,25 @@ public class CoffeePlacesFragment extends Fragment implements
 
     @Override
     public void onEnablePositionCallback() {
+        showHideLocationServiceLayout(true);
         retrievePlacesFromAPI();
     }
 
     @Override
     public void onEnablePositionErrorCallback() {
-        noLocationServiceLayout.setVisibility(View.VISIBLE);
-        noLocationServiceButton.setOnClickListener(this);
-        coffeePlacesProgress.setVisibility(View.GONE);
+        showHideLocationServiceLayout(false);
     }
 
+    /**
+     *
+     * @param isEnabled
+     */
+    public void showHideLocationServiceLayout(boolean isEnabled) {
+        noLocationServiceLayout.setVisibility(isEnabled ? View.GONE : View.VISIBLE);
+        noLocationServiceButton.setOnClickListener(isEnabled ? null : this);
+        coffeePlacesProgress.setVisibility(isEnabled ? View.VISIBLE :View.GONE);
+
+    }
     @Subscribe
     public void onNetworkRespose(ArrayList<CoffeeMachine> coffeeMachinesList) {
 //        Log.d(TAG, "get response from bus");
