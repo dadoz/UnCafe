@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -469,7 +470,8 @@ public class CoffeePlacesFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.coffeePlaceFilterLayoutId:
-                Log.e("TAG", "click");
+                Toast.makeText(getContext(), "hey you call filter handlet", Toast.LENGTH_SHORT)
+                        .show();
                 break;
             case R.id.noLocationServiceButtonId:
                 permissionManager
