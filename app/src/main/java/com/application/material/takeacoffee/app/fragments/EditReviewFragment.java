@@ -12,7 +12,7 @@ import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.*;
-import com.application.material.takeacoffee.app.application.DataApplication;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
@@ -39,7 +39,7 @@ public class EditReviewFragment extends Fragment implements
     @Bind(R.id.pickPictureFromCameraIconId) View pickPictureFromCameraButton;
     @Bind(R.id.pickPictureFromGalleryIconId) View pickPictureFromGalleryButton;
     @Bind(R.id.imagePreviewViewId) View imagePreviewView;
-    private DataApplication dataApplication;
+    private CoffeePlacesApplication coffeePlacesApplication;
     private boolean isReviewPictureSet = false;
 
 
@@ -53,11 +53,11 @@ public class EditReviewFragment extends Fragment implements
         editActivityRef =  (EditReviewActivity) activity;
 
         //getArgs
-        dataApplication = (DataApplication) editActivityRef.getApplication();
+        coffeePlacesApplication = (CoffeePlacesApplication) editActivityRef.getApplication();
 
         //getArgs
         bundle = getArguments();
-//        meUserId = dataApplication.getUserId();
+//        meUserId = coffeePlacesApplication.getUserId();
         try {
 //            user = bundle.getParcelable(User.USER_OBJ_KEY);
             review = bundle.getParcelable(Review.REVIEW_OBJ_KEY);
@@ -79,7 +79,7 @@ public class EditReviewFragment extends Fragment implements
         addReviewView = inflater.inflate(R.layout.fragment_edit_review, container, false);
         ButterKnife.bind(this, addReviewView);
         if(savedInstance != null) {
-            isReviewPictureSet = dataApplication.isReviewPictureSet();
+            isReviewPictureSet = coffeePlacesApplication.isReviewPictureSet();
         }
         initOnLoadView();
         setHasOptionsMenu(true);
@@ -117,7 +117,7 @@ public class EditReviewFragment extends Fragment implements
 
         //if pic is set
         if(isReviewPictureSet) {
-            ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
+            ((ImageView) imagePreviewView).setImageBitmap(coffeePlacesApplication.getReviewPictureTemp());
             return;
         }
 
@@ -125,7 +125,7 @@ public class EditReviewFragment extends Fragment implements
         if(review.getReviewPictureUrl() != null) {
             Bitmap pic = JSONParserToObject.
                     getMockupPicture(editActivityRef, review.getReviewPictureUrl());
-            dataApplication.setReviewPictureTemp(pic);
+            coffeePlacesApplication.setReviewPictureTemp(pic);
             ((ImageView) imagePreviewView).setImageBitmap(pic);
         }
     }
@@ -153,7 +153,7 @@ public class EditReviewFragment extends Fragment implements
 //                saveReview();
 //                break;
             case R.id.deletePictureIconId:
-                dataApplication.deleteReviewPictureTemp();
+                coffeePlacesApplication.deleteReviewPictureTemp();
                 ((ImageView) imagePreviewView).setImageBitmap(null);
                 Log.e(TAG, "hey");
                 break;

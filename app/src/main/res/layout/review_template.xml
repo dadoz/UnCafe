@@ -49,7 +49,7 @@
             android:layout_toRightOf="@id/reviewIconImagesLayoutId"
             android:layout_toLeftOf="@id/reviewPictureButtonId">
 
-                <np.TextView
+                <TextView
                     android:id="@+id/reviewUsernameTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -59,12 +59,12 @@
                     android:textSize="@dimen/text_big_24"
                     android:maxLines="1"
                     android:ellipsize="end"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    style="@style/AppTheme.TextChimphand"/>
 
 
-                <np.TextView
+                    />
+
+
+                <TextView
                     android:id="@+id/reviewDateTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,11 +72,11 @@
                     android:textColor="@color/material_grey400"
                     android:textSize="@dimen/text_small_14"
                     android:text="date"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    style="@style/AppTheme.TextChimphand"/>
 
-                <np.TextView
+
+                    />
+
+                <TextView
                     android:id="@+id/reviewCommentTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,9 +86,9 @@
                     android:ellipsize="end"
                     android:textColor="@color/material_text_brown"
                     android:textSize="@dimen/text_small_16"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    style="@style/AppTheme.TextChimphand"/>
+
+
+                    />
 
                 <ImageView
                     android:visibility="gone"
@@ -102,7 +102,7 @@
 
 
         <!-- BOTTOM HINT -->
-        <np.TextView
+        <TextView
             android:id="@+id/expandDescriptionTextId"
             android:layout_below="@id/reviewContainerId"
             android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
             android:ellipsize="end"
             android:textColor="@color/material_grey400"
             android:textSize="@dimen/text_small_14"
-            pixlui:copyandpaste="false"
-            pixlui:clearclipboardcontent="true"
-            style="@style/AppTheme.TextChimphand"/>
+
+
+            />
 </RelativeLayout>

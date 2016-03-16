@@ -15,8 +15,8 @@ import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.utils.Utils;
-import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
@@ -50,7 +50,7 @@ public class AddReviewFragment extends Fragment implements
 
     private String coffeeMachineId;
     private Review reviewParams;
-    private DataApplication dataApplication;
+    private CoffeePlacesApplication coffeePlacesApplication;
     private boolean isReviewPictureSet = false;
     private boolean mItemPressed = false;
 
@@ -62,9 +62,9 @@ public class AddReviewFragment extends Fragment implements
                     + " must implement OnLoadViewHandlerInterface");
         }
         addActivityRef =  (AddReviewActivity) activity;
-        dataApplication = (DataApplication) addActivityRef.getApplication();
+        coffeePlacesApplication = (CoffeePlacesApplication) addActivityRef.getApplication();
 
-        meUserId = dataApplication.getUserId();
+        meUserId = coffeePlacesApplication.getUserId();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AddReviewFragment extends Fragment implements
         View addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
         ButterKnife.bind(this, addReviewView);
         if(savedInstance != null) {
-            isReviewPictureSet = dataApplication.isReviewPictureSet();
+            isReviewPictureSet = coffeePlacesApplication.isReviewPictureSet();
         }
 
 //        setHasOptionsMenu(true);
@@ -114,7 +114,7 @@ public class AddReviewFragment extends Fragment implements
 //        pickPictureButton.setOnClickListener(this);
 //        pickPictureFromGalleryButton.setOnClickListener(this);
 //        if(isReviewPictureSet) {
-//            ((ImageView) imagePreviewView).setImageBitmap(dataApplication.getReviewPictureTemp());
+//            ((ImageView) imagePreviewView).setImageBitmap(coffeePlacesApplication.getReviewPictureTemp());
 //        }
 //        setRatingButton.setOnTouchListener(setRatingTouchListener);
     }

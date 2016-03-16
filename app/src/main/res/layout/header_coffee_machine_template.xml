@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <np.TextView
+            <TextView
                     android:id="@+id/coffeeMachineNameHeaderId"
                     android:textSize="@dimen/text_big_38"
                     android:textColor="@color/dark_black"
@@ -27,11 +27,11 @@
                     android:layout_height="wrap_content"
                     android:paddingRight="@dimen/small_padding"
                     android:text="name"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-light.ttf"/>
 
-            <np.TextView
+
+                    />
+
+            <TextView
                     android:id="@+id/coffeeMachineLocationHeaderId"
                     android:textSize="@dimen/text_medium_20"
                     android:textColor="@color/dark_grey"
@@ -39,9 +39,9 @@
                     android:layout_height="wrap_content"
                     android:paddingRight="@dimen/small_padding"
                     android:text="location"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-light.ttf"/>
+
+
+                    />
 
 
     </LinearLayout>
@@ -72,16 +72,16 @@
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_marginLeft="@dimen/small_padding"-->
             <!--android:layout_toRightOf="@+id/coffeeMachineStatusContainerId">-->
-        <!--<np.TextView-->
+        <!--<TextView-->
                 <!--android:id="@+id/coffeeMachineNameReviewTextTemplateId"-->
                 <!--android:textSize="@dimen/text_big_38"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:paddingRight="@dimen/small_padding"-->
                 <!--android:text="name"-->
-                <!--pixlui:copyandpaste="false"-->
-                <!--pixlui:clearclipboardcontent="true"-->
-                <!--pixlui:typeface="chimphand-light.ttf"/>-->
+                <!---->
+                <!---->
+                <!--/>-->
 
     <!--</LinearLayout>-->
 

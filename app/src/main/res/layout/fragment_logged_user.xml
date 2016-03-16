@@ -14,10 +14,10 @@
                 android:layout_height="@dimen/extra_huge_icon_size"
                 android:src="@drawable/user_icon"/>
 
-        <np.TextView
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                style="@style/AppTheme.TextChimphand"
+        <TextView
+
+
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_medium_20"
@@ -25,9 +25,9 @@
                 android:text="Set a picture and choice your username:"/>
 
         <com.neopixl.pixlui.components.edittext.EditText
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                style="@style/AppTheme.TextChimphand"
+
+
+
                 android:textSize="@dimen/text_medium_20"
                 android:textColor="@color/material_text_brown"
                 android:id="@+id/loginUsernameEditId"
@@ -35,11 +35,11 @@
                 android:layout_height="wrap_content"
                 android:hint="username"/>
 
-        <np.TextView
+        <TextView
                 android:id="@+id/facebookLoginButtonId"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                style="@style/AppTheme.TextChimphand"
+
+
+
                 android:textSize="@dimen/text_medium_20"
                 android:textColor="@color/material_text_brown"
                 android:layout_width="wrap_content"
@@ -57,10 +57,10 @@
                         android:layout_width="@dimen/medium_icon_size"
                         android:layout_height="@dimen/medium_icon_size"
                         android:src="@drawable/delete_icon"/>
-                <np.TextView
-                        pixlui:copyandpaste="false"
-                        pixlui:clearclipboardcontent="true"
-                        style="@style/AppTheme.TextChimphand"
+                <TextView
+
+
+
                         android:textColor="@color/material_text_brown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

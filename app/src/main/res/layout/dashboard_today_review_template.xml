@@ -12,25 +12,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_padding"
                 android:orientation="horizontal">
-            <np.TextView
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_medium_20"
                     android:text="status: "
                     android:textColor="@color/dark_black"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-light.ttf"/>
-            <np.TextView
+
+
+                    />
+            <TextView
                     android:id="@+id/coffeeMachineStatusTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/dark_black"
                     android:textSize="@dimen/text_big_30"
                     android:text="Thats' Good"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    pixlui:typeface="chimphand-light.ttf"/>
+
+
+                    />
         </LinearLayout>
 
         <ImageView
@@ -44,25 +44,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
             android:orientation="horizontal">
-        <np.TextView
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_medium_20"
                 android:text="Review for this week: "
                 android:textColor="@color/dark_black"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-light.ttf"/>
-        <np.TextView
+
+
+                />
+        <TextView
                 android:id="@+id/coffeeMachineWeeklyReviewTextId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dark_black"
                 android:textSize="@dimen/text_big_30"
                 android:text="Thats' Good"
-                pixlui:copyandpaste="false"
-                pixlui:clearclipboardcontent="true"
-                pixlui:typeface="chimphand-light.ttf"/>
+
+
+                />
     </LinearLayout>
 
 

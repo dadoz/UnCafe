@@ -1,4 +1,5 @@
 package com.application.material.takeacoffee.app;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import android.text.style.TypefaceSpan;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.application.material.takeacoffee.app.utils.Utils;
@@ -21,6 +24,11 @@ public class CoffeePlacesActivity extends AppCompatActivity {
     @Bind(R.id.coffeeToolbarId)
     public android.support.v7.widget.Toolbar toolbar;
     private PermissionManager permissionManager;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

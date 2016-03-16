@@ -5,7 +5,7 @@
     android:padding="@dimen/small_padding"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <np.TextView
+    <TextView
         android:id="@+id/settingLabelId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,5 +16,5 @@
         android:textColor="@color/light_black"
         android:gravity="center"
         android:textSize="@dimen/text_big_22"
-        style="@style/AppTheme.TextChimphand"/>
+        />
 </LinearLayout>

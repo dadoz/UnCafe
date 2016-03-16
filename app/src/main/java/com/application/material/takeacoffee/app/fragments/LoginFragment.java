@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.LoginActivity;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.application.DataApplication;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.facebookServices.FacebookLogin;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
@@ -55,7 +55,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     ImageView profilePictureView;
     @Bind(R.id.facebookLoginButtonId) View facebookLoginButton;
     @Bind(R.id.userIdDebug) View userIdDebugButton;
-    private DataApplication dataApplication;
+    private CoffeePlacesApplication coffeePlacesApplication;
     private FacebookLogin facebookLogin;
     private ImagePickerSingleton imagePicker;
 
@@ -71,7 +71,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     + " must implement OnLoadViewHandlerInterface");
         }
         loginActivityRef =  (LoginActivity) activity;
-        dataApplication = ((DataApplication) loginActivityRef.getApplication());
+        coffeePlacesApplication = ((CoffeePlacesApplication) loginActivityRef.getApplication());
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
@@ -190,7 +190,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         file != null ? file.getUrl() : null,
                         file != null ? file.getName() : null,
                         username);
-                dataApplication.setUser(user);
+                coffeePlacesApplication.setUser(user);
                 HttpIntentService.addUserRequest(loginActivityRef, user);
 //                HttpIntentService.addUserRequest(loginActivityRef, new User("4nmvMJNk1R", null, username));
                 break;
@@ -234,7 +234,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
 
         //check
-        dataApplication.setUser(user);
+        coffeePlacesApplication.setUser(user);
 
         Intent intent = new Intent(this.getActivity(), CoffeePlacesActivity.class);
         startActivity(intent);
@@ -253,7 +253,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        dataApplication.setUserId(userId); //update user :)
+        coffeePlacesApplication.setUserId(userId); //update user :)
 
         if(SharedPreferencesWrapper.getValue(loginActivityRef, LOGGED_USER_ID) == null) {
             SharedPreferencesWrapper.putString(loginActivityRef,

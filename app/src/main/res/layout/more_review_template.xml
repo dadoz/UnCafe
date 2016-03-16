@@ -9,7 +9,7 @@
               android:paddingTop="@dimen/top_header_height"
               android:layout_height="wrap_content">
 
-    <np.TextView
+    <TextView
             android:id="@+id/moreReviewButtonId"
             android:gravity="center_horizontal"
             android:layout_width="fill_parent"
@@ -19,8 +19,8 @@
             android:textColor="@color/light_black"
             android:textSize="@dimen/text_big_24"
             android:text="load more review ..."
-            pixlui:copyandpaste="false"
-            pixlui:clearclipboardcontent="true"
-            style="@style/AppTheme.TextChimphand"/>
+
+
+            />
 
 </LinearLayout>

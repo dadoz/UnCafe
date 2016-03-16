@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewH
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class ReviewListActivity extends AppCompatActivity implements
@@ -21,6 +23,11 @@ public class ReviewListActivity extends AppCompatActivity implements
 
     @Bind(R.id.reviewsToolbarId)
     public android.support.v7.widget.Toolbar toolbar;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

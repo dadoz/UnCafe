@@ -11,22 +11,25 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 /**
  * Created by davide on 25/12/14.
  */
-public class DataApplication extends Application {
+public class CoffeePlacesApplication extends Application {
 
+    private static final String FONT_PATH = "fonts/chimphand-regular.ttf";
     private ArrayList<User> userList = new ArrayList<User>();
     private ReviewDataContainer reviewDataContainer;
     private CoffeeMachineStatus coffeeMachineStatus;
     private User user;
     private Bitmap reviewPictureTemp;
-    private ParseUser parseUser;
-    private User userId;
-    private String userProfilePicture;
 
-    public DataApplication() {
-//        user = new User("4nmvMJNk1R", null, "John Bla");
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        CalligraphyConfig.initDefault(new CalligraphyConfig
+                .Builder().setDefaultFontPath(FONT_PATH).build());
     }
 
     public ArrayList<User> restoreUserList() {
@@ -41,21 +44,6 @@ public class DataApplication extends Application {
         return coffeeMachineStatus;
     }
 
-    public void saveReviewDataContainer(ReviewDataContainer reviewDataContainer) {
-        this.reviewDataContainer = reviewDataContainer;
-    }
-
-    public void saveCoffeeMachineStatus(CoffeeMachineStatus coffeeMachineStatus) {
-        this.coffeeMachineStatus = coffeeMachineStatus;
-    }
-
-    public void saveUserList(ArrayList<User> userList) {
-        this.userList.addAll(userList);
-    }
-
-    public boolean isUserSet() {
-        return user != null;
-    }
     public User getUser() {
         return user;
     }

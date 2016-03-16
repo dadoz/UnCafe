@@ -1,15 +1,14 @@
 package com.application.material.takeacoffee.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +17,12 @@ import android.widget.ImageView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.application.DataApplication;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import com.squareup.otto.Subscribe;
@@ -39,6 +38,11 @@ public class AddReviewActivity extends AppCompatActivity implements
 
     @Bind(R.id.addReviewToolbarId)
     public Toolbar toolbar;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class AddReviewActivity extends AppCompatActivity implements
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        setActionBarCustomViewById(-1, "Add new review");
         //INIT VIEW
-//        dataApplication = (DataApplication) this.getApplication();
+//        dataApplication = (CoffeePlacesApplication) this.getApplication();
 
 //        setCurrentFragTag(AddReviewActivity.ADD_REVIEW_FRAG_TAG);
 //        initView(new AddReviewFragment(), null);

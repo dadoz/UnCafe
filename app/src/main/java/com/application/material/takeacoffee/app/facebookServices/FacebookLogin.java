@@ -1,21 +1,16 @@
 package com.application.material.takeacoffee.app.facebookServices;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.application.DataApplication;
-import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import com.application.material.takeacoffee.app.singletons.PrivateApplicationDirSingleton;
 import com.facebook.FacebookRequestError;
@@ -23,7 +18,6 @@ import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
-import com.facebook.widget.ProfilePictureView;
 import com.parse.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,18 +25,16 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by davide on 27/12/14.
  */
 public class FacebookLogin {
     private final Activity activityRef;
-    private final DataApplication dataApplication;
+    private final CoffeePlacesApplication coffeePlacesApplication;
     public String TAG = "FacebookLogin";
     private static ImageView userProfilePictureView;
     private ProgressDialog progressDialog;
@@ -67,7 +59,7 @@ public class FacebookLogin {
 //        ParseFacebookUtils.initialize(activityRef.getResources()
 //                .getString(R.string.facebook_app_id));
 
-        dataApplication = (DataApplication) activityRef.getApplication();
+        coffeePlacesApplication = (CoffeePlacesApplication) activityRef.getApplication();
         this.activityRef = activityRef;
     }
 
@@ -205,7 +197,7 @@ public class FacebookLogin {
                 String username = userProfile.getString("name");
 
 //                User loggedUser = new User(null, facebookId, username);
-//                dataApplication.setUser(loggedUser);
+//                coffeePlacesApplication.setUser(loggedUser);
             } catch (Exception e) {
                 e.printStackTrace();
             }

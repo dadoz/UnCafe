@@ -10,7 +10,7 @@
               android:paddingTop="@dimen/top_header_height"
               android:background="@color/light_black">
 
-    <np.TextView
+    <TextView
             android:id="@+id/oldReviewButtonId"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
@@ -20,8 +20,8 @@
             android:textColor="@color/material_light_yellow_200"
             android:textSize="@dimen/text_big_24"
             android:text="old reviews"
-            pixlui:copyandpaste="false"
-            pixlui:clearclipboardcontent="true"
-            style="@style/AppTheme.TextChimphand"/>
+
+
+            />
 
 </LinearLayout>

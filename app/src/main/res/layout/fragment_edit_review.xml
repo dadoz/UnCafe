@@ -17,15 +17,15 @@
             <!--android:background="@color/light_black"-->
             <!--android:padding="@dimen/small_padding">-->
 
-        <!--<np.TextView-->
+        <!--<TextView-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:textColor="@color/material_amber_200"-->
                 <!--android:textSize="@dimen/text_big_30"-->
                 <!--android:text="Save your changes"-->
-                <!--pixlui:copyandpaste="false"-->
-                <!--pixlui:clearclipboardcontent="true"-->
-                <!--pixlui:typeface="chimphand-light.ttf"/>-->
+                <!---->
+                <!---->
+                <!--/>-->
     <!--</LinearLayout>-->
 
 
@@ -62,8 +62,8 @@
                     android:gravity="top"
 
                     pixlui:copyandpaste="true"
-                    pixlui:clearclipboardcontent="true"
-                    style="@style/AppTheme.TextChimphand"/>
+
+                    />
 
 
             <RatingBar

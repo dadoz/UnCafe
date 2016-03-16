@@ -9,7 +9,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <np.TextView
+    <TextView
         android:id="@+id/moreReviewButtonId"
         android:gravity="center_horizontal"
         android:layout_width="fill_parent"
@@ -19,9 +19,9 @@
         android:textColor="@color/light_black"
         android:textSize="@dimen/text_big_24"
         android:text="No location services"
-        style="@style/AppTheme.TextChimphand"/>
+        />
 
-    <np.Button
+    <Button
         android:id="@+id/noLocationServiceButtonId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:paddingLeft="@dimen/medium_padding"
         android:paddingRight="@dimen/medium_padding"
         android:textSize="@dimen/text_small_16"
-        style="@style/AppTheme.TextChimphand">
+        >
 
-    </np.Button>
+    </Button>
 </LinearLayout>

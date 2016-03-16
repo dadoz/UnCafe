@@ -1,19 +1,12 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
@@ -31,16 +24,15 @@ import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
-import com.application.material.takeacoffee.app.application.DataApplication;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.*;
-import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.neopixl.pixlui.components.textview.TextView;
-import com.squareup.otto.Subscribe;
+
+
 import org.joda.time.DateTime;
 
 import java.util.*;
@@ -87,7 +79,7 @@ public class ReviewListFragment extends Fragment
     private boolean isAllowToEdit = false;
     private View headerView;
     private boolean isMoreReviewRequest = false;
-    private DataApplication dataApplication;
+    private CoffeePlacesApplication coffeePlacesApplication;
     private boolean isRefreshAction = false;
     private int REVIEW_MAX_LINES = 5; //max line number of review
     private int REVIEW_MIN_LINES = 2; //max line number of review
@@ -104,8 +96,8 @@ public class ReviewListFragment extends Fragment
                     + " must implement OnLoadViewHandlerInterface");
         }
         mainActivityRef =  (ReviewListActivity) context;
-        dataApplication = ((DataApplication) mainActivityRef.getApplication());
-        meUserId = dataApplication.getUserId();
+        coffeePlacesApplication = ((CoffeePlacesApplication) mainActivityRef.getApplication());
+        meUserId = coffeePlacesApplication.getUserId();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
@@ -179,13 +171,13 @@ public class ReviewListFragment extends Fragment
 
     private void restoreData() {
         try {
-            userList = dataApplication.restoreUserList();
-            ReviewDataContainer reviewDataContainer = dataApplication.restoreReviewDataContainer();
+            userList = coffeePlacesApplication.restoreUserList();
+            ReviewDataContainer reviewDataContainer = coffeePlacesApplication.restoreReviewDataContainer();
             if(reviewDataContainer != null) {
                 reviewList = reviewDataContainer.getReviewList();
                 hasMoreReviews = reviewDataContainer.getHasMoreReviews();
             }
-            coffeeMachineStatus = dataApplication.restoreCoffeeMachineStatus();
+            coffeeMachineStatus = coffeePlacesApplication.restoreCoffeeMachineStatus();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -575,7 +567,7 @@ public class ReviewListFragment extends Fragment
         isRefreshAction = true;
         //clear data on application
         int [] dataLabels = {0, 1, 2};
-        dataApplication.clearData(dataLabels);
+        coffeePlacesApplication.clearData(dataLabels);
 
         long timestamp = -1;
         HttpIntentService.coffeeMachineStatusRequest(this.getActivity(),
@@ -652,7 +644,7 @@ public class ReviewListFragment extends Fragment
 //            return;
 //        }
 //        coffeeMachineStatus = response;
-//        dataApplication.saveCoffeeMachineStatus(coffeeMachineStatus);
+//        coffeePlacesApplication.saveCoffeeMachineStatus(coffeeMachineStatus);
 //
 //        ((TextView) statusPeriodView).setText("01.12 - today");
 //        goodReviewPercentageView.setText(coffeeMachineStatus.getGoodReviewPercentage() + " %");
@@ -669,7 +661,7 @@ public class ReviewListFragment extends Fragment
 //            //TODO handle adapter with empty data
 //            return;
 //        }
-//        dataApplication.saveReviewDataContainer(reviewDataContainer);
+//        coffeePlacesApplication.saveReviewDataContainer(reviewDataContainer);
 //
 //        reviewList = reviewDataContainer.getReviewList();
 //        hasMoreReviews = reviewDataContainer.getHasMoreReviews();
@@ -711,7 +703,7 @@ public class ReviewListFragment extends Fragment
 //            //TODO handle adapter with empty data
 //            return;
 //        }
-//        dataApplication.saveUserList(userList);
+//        coffeePlacesApplication.saveUserList(userList);
 //
 //        getAdapterWrapper().setUserList(userList);
 //        getAdapterWrapper().notifyDataSetChanged();

@@ -14,9 +14,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.singletons.VolleySingleton;
 import com.application.material.takeacoffee.app.utils.Utils;
-import com.application.material.takeacoffee.app.application.DataApplication;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
@@ -46,7 +46,7 @@ public class LoggedUserFragment extends Fragment
     @Bind(R.id.profilePictureViewId)
     ImageView profilePictureView;
 
-    private DataApplication dataApplication;
+    private CoffeePlacesApplication coffeePlacesApplication;
     private String meUserId;
 
     @Override
@@ -61,8 +61,8 @@ public class LoggedUserFragment extends Fragment
                     + " must implement OnLoadViewHandlerInterface");
         }
         mainActivityRef =  (CoffeePlacesActivity) activity;
-        dataApplication = ((DataApplication) mainActivityRef.getApplication());
-        meUserId = dataApplication.getUserId();
+        coffeePlacesApplication = ((CoffeePlacesApplication) mainActivityRef.getApplication());
+        meUserId = coffeePlacesApplication.getUserId();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
@@ -109,14 +109,14 @@ public class LoggedUserFragment extends Fragment
         try {
             int defaultIconId = R.drawable.user_icon;
             VolleySingleton volleySingleton = VolleySingleton.getInstance(mainActivityRef);
-            volleySingleton.imageRequest(dataApplication.getProfilePicturePath(), profilePictureView,
+            volleySingleton.imageRequest(coffeePlacesApplication.getProfilePicturePath(), profilePictureView,
                     defaultIconId);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        loginUsernameEdit.setText(dataApplication.getUsername());
+        loginUsernameEdit.setText(coffeePlacesApplication.getUsername());
         deleteUserButton.setVisibility(View.VISIBLE);
         deleteUserButton.setOnClickListener(this);
     }
@@ -139,7 +139,7 @@ public class LoggedUserFragment extends Fragment
                     break;
                 }
 
-                HttpIntentService.updateUserRequest(mainActivityRef, dataApplication.getUser());
+                HttpIntentService.updateUserRequest(mainActivityRef, coffeePlacesApplication.getUser());
                 //TODO on callback
                 mainActivityRef.onBackPressed();
                 break;
@@ -155,7 +155,7 @@ public class LoggedUserFragment extends Fragment
 
         Utils.hideKeyboard(mainActivityRef, loginUsernameEdit);
 
-        dataApplication.setUsername(username);
+        coffeePlacesApplication.setUsername(username);
         return true;
     }
 

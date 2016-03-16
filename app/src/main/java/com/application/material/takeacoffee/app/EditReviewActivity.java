@@ -17,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.application.material.takeacoffee.app.application.DataApplication;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
@@ -41,7 +41,7 @@ public class EditReviewActivity extends AppCompatActivity implements
     public static final String CURRENT_FRAGMENT_TAG = "CURRENT_FRAGMENT_TAG";
     private static String currentFragTag = null;
     private Bundle bundle;
-    private DataApplication dataApplication;
+    private CoffeePlacesApplication coffeePlacesApplication;
 
 
     @Override
@@ -58,7 +58,7 @@ public class EditReviewActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setActionBarCustomViewById(-1, "Edit review");
 
-        dataApplication = ((DataApplication) this.getApplication());
+        coffeePlacesApplication = ((CoffeePlacesApplication) this.getApplication());
         //INIT VIEW
         if(savedInstanceState != null) {
             //already init app - try retrieve frag from manager
@@ -193,7 +193,7 @@ public class EditReviewActivity extends AppCompatActivity implements
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(getCurrentFragTag());
             ((ImageView) fragment.getView().findViewById(R.id.imagePreviewViewId))
                     .setImageBitmap(picture);
-            dataApplication.setReviewPictureTemp(picture);
+            coffeePlacesApplication.setReviewPictureTemp(picture);
             picture = null;
         } catch (IOException e) {
             e.printStackTrace();

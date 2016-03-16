@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <np.TextView
+                <TextView
                         android:id="@+id/periodTextId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -29,31 +29,31 @@
                         android:textSize="@dimen/title_text_size"
                         android:text=" - "
                         android:layout_marginBottom="@dimen/small_padding"
-                        pixlui:copyandpaste="false"
-                        pixlui:clearclipboardcontent="true"
-                        style="@style/AppTheme.TextChimphand"/>
 
 
-                <np.TextView
+                        />
+
+
+                <TextView
                     android:id="@+id/goodReviewPercentageTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/material_light_red"
                     android:textSize="@dimen/title_text_size"
                     android:text="- %"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    style="@style/AppTheme.TextChimphand"/>
 
-                <np.TextView
+
+                    />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/material_text_brown"
                     android:textSize="@dimen/small_content_text_size"
                     android:text="of good review"
-                    pixlui:copyandpaste="false"
-                    pixlui:clearclipboardcontent="true"
-                    style="@style/AppTheme.TextChimphand.Light"/>
+
+
+                    />
         </LinearLayout>
 
         <!--<LinearLayout-->
@@ -69,15 +69,15 @@
                     <!--android:layout_height="@dimen/medium_icon_size"-->
                     <!--android:src="@drawable/left_arrow" />-->
 
-            <!--<np.TextView-->
+            <!--<TextView-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:textSize="@dimen/text_medium_20"-->
                     <!--android:text="prev reviews"-->
                     <!--android:textColor="@color/material_text_brown"-->
-                    <!--pixlui:copyandpaste="false"-->
-                    <!--pixlui:clearclipboardcontent="true"-->
-                    <!--style="@style/AppTheme.TextChimphand"<np/>-->
+                    <!---->
+                    <!---->
+                    <!--<np/>-->
 
         <!--</LinearLayout>-->
 
