@@ -187,6 +187,10 @@ public class CoffeePlacesFragment extends Fragment implements
      * samplePlacesApi
      */
     private void initGooglePlaces() {
+        if (mGoogleApiClient != null) {
+            return;
+        }
+
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)

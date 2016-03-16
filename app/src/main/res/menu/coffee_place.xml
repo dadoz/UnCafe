@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_position"
         android:title="Map"
-        android:icon="@android:drawable/ic_dialog_map"
+        android:icon="@drawable/map"
         android:orderInCategory="100"
         app:showAsAction="always" />
     <item
