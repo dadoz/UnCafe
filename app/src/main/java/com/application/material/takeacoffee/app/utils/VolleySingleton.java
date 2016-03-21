@@ -1,7 +1,6 @@
-package com.application.material.takeacoffee.app.singletons;
+package com.application.material.takeacoffee.app.utils;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.LruCache;

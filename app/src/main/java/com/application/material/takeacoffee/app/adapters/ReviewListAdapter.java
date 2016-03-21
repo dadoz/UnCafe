@@ -12,13 +12,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.EllipsizedComment;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.models.User;
-import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
-import com.application.material.takeacoffee.app.singletons.VolleySingleton;
+import com.application.material.takeacoffee.app.utils.VolleySingleton;
 
 import java.util.ArrayList;
 

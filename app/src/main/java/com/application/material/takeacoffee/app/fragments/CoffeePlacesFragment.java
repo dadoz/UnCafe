@@ -1,10 +1,13 @@
 package com.application.material.takeacoffee.app.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -14,6 +17,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.test.suitebuilder.annotation.Suppress;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -45,6 +49,8 @@ import com.google.android.gms.location.places.Places;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.LogRecord;
 
 
 /**
@@ -403,7 +409,7 @@ public class CoffeePlacesFragment extends Fragment implements
 //            Collection<Integer> restrictToPlaceTypes = 0;
 //            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
             PlaceFilter filter = new PlaceFilter();
-            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+            final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
                     .getCurrentPlace(mGoogleApiClient, filter);
             result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
                 @Override
@@ -413,9 +419,9 @@ public class CoffeePlacesFragment extends Fragment implements
                         getPhoto(placeId);
                         getInfo(placeId);
                     }
-//                    placeLikelihoods.release();
                 }
             });
+
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -453,8 +459,14 @@ public class CoffeePlacesFragment extends Fragment implements
     @Override
     public void onEnablePositionCallback() {
         Log.e("TAG", "hey - enabled position");
+        //TODO big issue over here - position still not available
         showHideLocationServiceLayout(true);
-        retrievePlacesFromAPI();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                retrievePlacesFromAPI();
+            }
+        }, 2000);
     }
 
     @Override

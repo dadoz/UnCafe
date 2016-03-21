@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
-import com.application.material.takeacoffee.app.singletons.VolleySingleton;
+import com.application.material.takeacoffee.app.utils.VolleySingleton;
 import com.application.material.takeacoffee.app.utils.Utils;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
