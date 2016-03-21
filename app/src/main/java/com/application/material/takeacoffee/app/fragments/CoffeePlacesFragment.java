@@ -42,11 +42,9 @@ import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.PlacePhotoResult;
 import com.google.android.gms.location.places.Places;
-import com.squareup.otto.Subscribe;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
 
 
 /**
@@ -56,11 +54,19 @@ public class CoffeePlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
         PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
-        PermissionManager.OnEnablePositionCallbackInterface, SwipeRefreshLayout.OnRefreshListener {
+        PermissionManager.OnEnablePositionCallbackInterface,
+        PermissionManager.OnEnableNetworkCallbackInterface,
+        SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
     private View coffeeMachineView;
+    private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
+    private GoogleApiClient mGoogleApiClient;
+    private PermissionManager permissionManager;
+    private int maxHeight = 0;
+    private int maxWidth = 300;
+
     @Bind(R.id.coffeePlacesRecyclerViewId)
     RecyclerView coffeePlacesRecyclerview;
     @Bind(R.id.coffeePlacesProgressId)
@@ -69,15 +75,14 @@ public class CoffeePlacesFragment extends Fragment implements
     View coffeePlaceFilterLayout;
     @Bind(R.id.noLocationServiceLayoutId)
     View noLocationServiceLayout;
+    @Bind(R.id.noNetworkServiceLayoutId)
+    View noNetworkServiceLayout;
+    @Bind(R.id.noNetworkServiceButtonId)
+    View noNetworkServiceButton;
     @Bind(R.id.noLocationServiceButtonId)
     View noLocationServiceButton;
     @Bind(R.id.coffeePlaceSwipeRefreshLayoutId)
     SwipeRefreshLayout coffeePlaceSwipeRefreshLayout;
-    private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
-    private GoogleApiClient mGoogleApiClient;
-    private PermissionManager permissionManager;
-    private int maxHeight = 0;
-    private int maxWidth = 300;
 
     @Override
     public void onAttach(Context context) {
@@ -90,6 +95,8 @@ public class CoffeePlacesFragment extends Fragment implements
         coffeeMachineView = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_coffee_places_layout, container, false);
         ButterKnife.bind(this, coffeeMachineView);
+
+        permissionManager = PermissionManager.getInstance();
         initView();
         return coffeeMachineView;
     }
@@ -119,14 +126,18 @@ public class CoffeePlacesFragment extends Fragment implements
 //        }
         initGridViewAdapter();
         initGooglePlaces();
-        initLocationPermission();
+        initPermissionChainResponsibility();
+//        initNetworkPermission();
+//        initLocationPermission();
     }
 
     /**
-     * location permission
+     *
      */
-    private void initLocationPermission() {
-        handleLocationPermissions();
+    private void initPermissionChainResponsibility() {
+        //handle chain of responsibility
+        initNetworkPermission();
+//        initLocationPermission();
     }
 
     @Override
@@ -200,10 +211,18 @@ public class CoffeePlacesFragment extends Fragment implements
     }
 
     /**
+     * location permission
+     */
+    private void initNetworkPermission() {
+        WeakReference<AppCompatActivity> activityRef =
+                new WeakReference<>((AppCompatActivity) mainActivityRef);
+        permissionManager.checkNetworkServiceIsEnabled(activityRef, this);
+    }
+
+    /**
      *
      */
-    public void handleLocationPermissions() {
-        permissionManager = PermissionManager.getInstance();
+    public void initLocationPermission() {
         WeakReference<AppCompatActivity> activityRef =
                 new WeakReference<>((AppCompatActivity) mainActivityRef);
         permissionManager.onRequestPermissions(activityRef, this);
@@ -213,7 +232,6 @@ public class CoffeePlacesFragment extends Fragment implements
      *
      */
     public void handleLocationServiceEnabled() {
-        permissionManager = PermissionManager.getInstance();
         WeakReference<AppCompatActivity> activityRef =
                 new WeakReference<>((AppCompatActivity) mainActivityRef);
         permissionManager.checkLocationServiceIsEnabled(activityRef, this);
@@ -434,6 +452,7 @@ public class CoffeePlacesFragment extends Fragment implements
 
     @Override
     public void onEnablePositionCallback() {
+        Log.e("TAG", "hey - enabled position");
         showHideLocationServiceLayout(true);
         retrievePlacesFromAPI();
     }
@@ -443,6 +462,18 @@ public class CoffeePlacesFragment extends Fragment implements
         showHideLocationServiceLayout(false);
     }
 
+    @Override
+    public void onEnableNetworkCallback() {
+        showHideNetworkServiceLayout(true);
+        //chain
+        initLocationPermission();
+    }
+
+    @Override
+    public void onEnableNetworkErrorCallback() {
+        showHideNetworkServiceLayout(false);
+    }
+
     /**
      *
      * @param isEnabled
@@ -450,6 +481,16 @@ public class CoffeePlacesFragment extends Fragment implements
     public void showHideLocationServiceLayout(boolean isEnabled) {
         noLocationServiceLayout.setVisibility(isEnabled ? View.GONE : View.VISIBLE);
         noLocationServiceButton.setOnClickListener(isEnabled ? null : this);
+        coffeePlacesProgress.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     *
+     * @param isEnabled
+     */
+    public void showHideNetworkServiceLayout(boolean isEnabled) {
+        noNetworkServiceLayout.setVisibility(isEnabled ? View.GONE : View.VISIBLE);
+        noNetworkServiceButton.setOnClickListener(isEnabled ? null : this);
         coffeePlacesProgress.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
     }
 
@@ -481,6 +522,9 @@ public class CoffeePlacesFragment extends Fragment implements
                 permissionManager
                         .enablePosition(new WeakReference<>((AppCompatActivity) mainActivityRef));
                 break;
+            case R.id.noNetworkServiceButtonId:
+                initPermissionChainResponsibility();
+                break;
         }
     }
 
@@ -490,6 +534,7 @@ public class CoffeePlacesFragment extends Fragment implements
         retrievePlacesFromAPI();
         handleRefreshEndCallback();
     }
+
 
     /**
      * item offste to handle margin btw cardview

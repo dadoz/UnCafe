@@ -7,14 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import com.application.material.takeacoffee.app.CoffeePlacesActivity;
-import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
 
 import java.lang.ref.WeakReference;
 
@@ -90,6 +88,14 @@ public class PermissionManager {
     /**
      * handle callback
      */
+    public interface OnEnableNetworkCallbackInterface {
+        void onEnableNetworkCallback();
+        void onEnableNetworkErrorCallback();
+    }
+
+    /**
+     * handle callback
+     */
     public interface OnHandleGrantPermissionCallbackInterface {
         void onHandleGrantPermissionCallback();
     }
@@ -144,4 +150,23 @@ public class PermissionManager {
                 .startActivityForResult(new Intent(android.provider.Settings
                         .ACTION_LOCATION_SOURCE_SETTINGS), ACTION_LOCATION_SOURCE_SETTINGS);
     }
+
+    /**
+     *
+     * @param activityWeakRef
+     * @param networkListener
+     */
+    public void checkNetworkServiceIsEnabled(WeakReference<AppCompatActivity> activityWeakRef,
+                                              OnEnableNetworkCallbackInterface networkListener) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) activityWeakRef.get()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null &&
+                networkInfo.isConnectedOrConnecting()) {
+            networkListener.onEnableNetworkCallback();
+            return;
+        }
+        networkListener.onEnableNetworkErrorCallback();
+    }
+
 }

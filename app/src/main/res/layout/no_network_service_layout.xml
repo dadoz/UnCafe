@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/noLocationServiceLayoutId"
+    android:id="@+id/noNetworkServiceLayoutId"
     android:visibility="gone"
     android:gravity="center"
     android:orientation="vertical"
@@ -9,7 +8,6 @@
     android:layout_height="fill_parent">
 
     <TextView
-        android:id="@+id/moreReviewButtonId"
         android:gravity="center_horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -17,13 +15,13 @@
         android:paddingBottom="@dimen/small_padding"
         android:textColor="@color/light_black"
         android:textSize="@dimen/text_big_24"
-        android:text="No location services"/>
+        android:text="Network unavailable"/>
 
     <Button
-        android:id="@+id/noLocationServiceButtonId"
+        android:id="@+id/noNetworkServiceButtonId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ENABLE POSITION"
+        android:text="TRY AGAIN"
         android:paddingLeft="@dimen/medium_padding"
         android:paddingRight="@dimen/medium_padding"
         android:textSize="@dimen/text_small_16"/>
