@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app.singletons;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -15,10 +16,12 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.PlacePhotoResult;
+import com.google.android.gms.location.places.PlaceTypes;
 import com.google.android.gms.location.places.Places;
 
 import java.lang.ref.WeakReference;
 import java.util.IdentityHashMap;
+import java.util.Set;
 
 /**
  * Created by davide on 21/03/16.
@@ -56,8 +59,9 @@ public class PlaceApiManager {
     /**
      *
      * @param placeId
+     * @param isLatestItem
      */
-    public void getInfo(final String placeId) {
+    public void getInfo(final String placeId, final boolean isLatestItem) {
         //get name and address
         Places.GeoDataApi
                 .getPlaceById(mGoogleApiClient, placeId)
@@ -67,6 +71,9 @@ public class PlaceApiManager {
                         listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
                         listener.get().onUpdatePhotoOnListCallback();
                         placeBuffer.release();
+                        if (isLatestItem) {
+                            listener.get().handleLatestItem();
+                        }
                     }
                 });
     }
@@ -121,18 +128,20 @@ public class PlaceApiManager {
      */
     public void retrievePlaces() {
         try {
-//            Collection<Integer> restrictToPlaceTypes = 0;
-//            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
-            PlaceFilter filter = new PlaceFilter();
+            //TODO filter place tipe
+            Set<Integer> restrictToPlaceTypes = PlaceTypes.ALL;
+            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
             final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
                     .getCurrentPlace(mGoogleApiClient, filter);
             result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
                 @Override
                 public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
-                    for (PlaceLikelihood itemPlace : placeLikelihoods) {
+                    for (int i = 0; i < placeLikelihoods.getCount(); i ++) {
+                        PlaceLikelihood itemPlace = placeLikelihoods.get(i);
                         String placeId = itemPlace.getPlace().getId();
                         getPhoto(placeId);
-                        getInfo(placeId);
+                        boolean isLatest = placeLikelihoods.getCount() - 1 == i;
+                        getInfo(placeId, isLatest);
                     }
                 }
             });
@@ -141,6 +150,7 @@ public class PlaceApiManager {
             e.printStackTrace();
         }
     }
+
 
 //    public void setPlacesFromPlacesApi() {
     //        String query = "coffee";
@@ -172,6 +182,7 @@ public class PlaceApiManager {
     public interface OnHandlePlaceApiResult {
         void onSetCoffeePlaceInfoOnListCallback(Place place);
         void onUpdatePhotoOnListCallback();
+        void handleLatestItem();
     }
 
 

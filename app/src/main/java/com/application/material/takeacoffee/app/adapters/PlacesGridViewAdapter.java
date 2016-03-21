@@ -25,6 +25,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
     private PlacesGridViewAdapter.ViewHolder holder;
+    private boolean isEmptyResult;
 
 
     public PlacesGridViewAdapter(WeakReference<Context> context, ArrayList<CoffeeMachine> itemList) {
@@ -70,6 +71,20 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
                 cachedPic;
     }
 
+    /**
+     *
+     * @param value
+     */
+    public void setEmptyResult(boolean value) {
+        this.isEmptyResult = value;
+    }
+
+    /**
+     *
+     */
+    public boolean isEmptyResult() {
+        return this.isEmptyResult;
+    }
 
     /**
      *

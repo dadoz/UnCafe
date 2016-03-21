@@ -31,4 +31,5 @@
         android:indeterminateTintMode="src_in"/>
     <include layout="@layout/no_location_service_layout" />
     <include layout="@layout/no_network_service_layout" />
+    <include layout="@layout/no_result_layout" />
 </RelativeLayout>

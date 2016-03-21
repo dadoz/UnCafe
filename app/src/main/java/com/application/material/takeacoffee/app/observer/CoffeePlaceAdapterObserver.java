@@ -15,16 +15,22 @@ import java.lang.ref.WeakReference;
 public class CoffeePlaceAdapterObserver extends RecyclerView.AdapterDataObserver {
     private final WeakReference<PlacesGridViewAdapter> adapterWeakRef;
     private final ProgressBar progress;
+    private final View noResultView;
 
-    public CoffeePlaceAdapterObserver(WeakReference<PlacesGridViewAdapter> adapterWeakRef, ProgressBar coffeePlacesProgress) {
+    public CoffeePlaceAdapterObserver(WeakReference<PlacesGridViewAdapter> adapterWeakRef,
+                                      ProgressBar coffeePlacesProgress,
+                                      View noResultView) {
         this.adapterWeakRef = adapterWeakRef;
         this.progress = coffeePlacesProgress;
+        this.noResultView = noResultView;
     }
 
     @Override
     public void onChanged() {
-
-        Log.e("OBSERVER", "change data " + adapterWeakRef.get().getItemCount());
-        progress.setVisibility(adapterWeakRef.get().getItemCount() == 0 ? View.VISIBLE : View.GONE);
+//        Log.e("OBSERVER", "change data " + adapterWeakRef.get().getItemCount());
+        boolean isEmpty = adapterWeakRef.get().getItemCount() == 0 &&
+                !adapterWeakRef.get().isEmptyResult();
+        progress.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        noResultView.setVisibility(adapterWeakRef.get().isEmptyResult() ? View.VISIBLE : View.GONE);
     }
 }

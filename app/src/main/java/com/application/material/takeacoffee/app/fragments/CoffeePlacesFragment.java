@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
@@ -34,6 +35,8 @@ import com.google.android.gms.location.places.Places;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -48,6 +51,7 @@ public class CoffeePlacesFragment extends Fragment implements
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
+    private static final int CAFE_FILTER_ID = 9;
     private static FragmentActivity mainActivityRef;
     private ArrayList<CoffeeMachine> coffeePlacesList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
@@ -58,6 +62,8 @@ public class CoffeePlacesFragment extends Fragment implements
     RecyclerView coffeePlacesRecyclerview;
     @Bind(R.id.coffeePlacesProgressId)
     ProgressBar coffeePlacesProgress;
+    @Bind(R.id.coffeePlacesEmptyResultId)
+    View coffeePlacesEmptyResult;
     @Bind(R.id.coffeePlaceFilterLayoutId)
     View coffeePlaceFilterLayout;
     @Bind(R.id.noLocationServiceLayoutId)
@@ -232,7 +238,7 @@ public class CoffeePlacesFragment extends Fragment implements
         PlacesGridViewAdapter adapter = new PlacesGridViewAdapter(new WeakReference<>(getContext()),
                 coffeePlacesList);
         adapter.registerAdapterDataObserver(new CoffeePlaceAdapterObserver(new WeakReference<>(adapter),
-                coffeePlacesProgress));
+                coffeePlacesProgress, coffeePlacesEmptyResult));
         adapter.setOnItemClickListener(this);
         coffeePlacesRecyclerview.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
@@ -300,14 +306,24 @@ public class CoffeePlacesFragment extends Fragment implements
         }
     }
 
+    @Override
+    public void handleLatestItem() {
+        //TODO move out
+        boolean isEmpty = coffeePlacesRecyclerview.getAdapter().getItemCount() == 0;
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(isEmpty);
+    }
+
     /**
      *
      * @param place
      */
     @Override
     public void onSetCoffeePlaceInfoOnListCallback(Place place) {
-        coffeePlacesList.add(new CoffeeMachine(place.getId(), place.getName().toString().toLowerCase(),
-                place.getAddress().toString().toLowerCase(), null));
+        if (isValidPlaceType(place.getPlaceTypes())) {
+//        if (true) {
+            coffeePlacesList.add(new CoffeeMachine(place.getId(), place.getName().toString().toLowerCase(),
+                    place.getAddress().toString().toLowerCase(), null));
+        }
     }
 
 
@@ -404,6 +420,20 @@ public class CoffeePlacesFragment extends Fragment implements
         handleRefreshInitCallback();
         handleRefreshEndCallback();
         placesApiManager.retrievePlaces();
+    }
+
+    /**
+     *
+     * @param placeTypes
+     * @return
+     */
+    public boolean isValidPlaceType(List<Integer> placeTypes) {
+        for (int placeType : placeTypes) {
+            if (placeType == CAFE_FILTER_ID) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
