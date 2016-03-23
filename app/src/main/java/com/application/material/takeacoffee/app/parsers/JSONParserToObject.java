@@ -13,9 +13,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import static com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 
 /**
  * Created by davide on 05/11/14.
@@ -171,12 +168,12 @@ public class JSONParserToObject {
         return null;
     }
 
-    public static ArrayList<CoffeeMachine> coffeeMachineParser(String data) {
+    public static ArrayList<CoffeePlace> coffeeMachineParser(String data) {
         if(data != null) {
             try {
                 JSONArray jsonArray = new JSONObject(data).getJSONArray("results"); //STATIC
 
-                ArrayList<CoffeeMachine> coffeeMachineList = new ArrayList<CoffeeMachine>();
+                ArrayList<CoffeePlace> coffeeMachineList = new ArrayList<CoffeePlace>();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject coffeeMachineObj = jsonArray.getJSONObject(i);
@@ -190,7 +187,7 @@ public class JSONParserToObject {
                             .getString("icon_path");
 
 
-                    coffeeMachineList.add(new CoffeeMachine(
+                    coffeeMachineList.add(new CoffeePlace(
                             coffeeMachineId, name, address, iconPath));
                 }
                 return coffeeMachineList;

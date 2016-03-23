@@ -30,7 +30,8 @@ import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
 import android.widget.ImageView;
 
 import com.parse.ParseFile;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.ByteArrayOutputStream;
 

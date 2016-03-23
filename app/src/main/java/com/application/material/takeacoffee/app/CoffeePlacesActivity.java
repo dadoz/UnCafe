@@ -3,9 +3,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.TypefaceSpan;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -13,7 +10,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
-import com.application.material.takeacoffee.app.utils.Utils;
 
 public class CoffeePlacesActivity extends AppCompatActivity {
     public static final int RESULT_FAILED = -1;

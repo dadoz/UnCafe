@@ -25,7 +25,7 @@ import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewH
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class AddReviewActivity extends AppCompatActivity implements
 
 //        String coffeeMachineId = getIntent().getStringExtra(CoffeePlacesActivity.EXTRA_DATA);
 //        bundle = new Bundle();
-//        bundle.putString(CoffeeMachine.COFFEE_MACHINE_ID_KEY, coffeeMachineId);
+//        bundle.putString(CoffeePlace.COFFEE_MACHINE_ID_KEY, coffeeMachineId);
 
         //custom actionBar
 //        getSupportActionBar().setCustomView(R.layout.action_bar_custom_template);
@@ -82,13 +82,11 @@ public class AddReviewActivity extends AppCompatActivity implements
 
     @Override
     public void onResume(){
-        BusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onPause(){
-        BusSingleton.getInstance().unregister(this);
         super.onPause();
     }
 

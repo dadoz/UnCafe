@@ -196,7 +196,7 @@ public class HttpIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-//        Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<ArrayList<CoffeeMachine>>(){}.getType();
+//        Type typeOfListOfCategory = new com.google.gson.reflect.TypeToken<ArrayList<CoffeePlace>>(){}.getType();
 //        Type typeOfListOfCategoryUser = new com.google.gson.reflect.TypeToken<ArrayList<User>>(){}.getType();
 //        Type typeOfListOfCategoryReview = new com.google.gson.reflect.TypeToken<ReviewDataContainer>(){}.getType();
 //
@@ -294,7 +294,7 @@ public class HttpIntentService extends IntentService {
             if (COFFEE_MACHINE_REQUEST.equals(action)) {
                 try{
                     if(! isConnected) {
-                        ArrayList<CoffeeMachine> coffeeMachineList = JSONParserToObject
+                        ArrayList<CoffeePlace> coffeeMachineList = JSONParserToObject
                                 .coffeeMachineParser(JSONParserToObject.
                                         getMockupData(this.getApplicationContext().getAssets(),
                                                 "coffee_machines.json"));
@@ -455,7 +455,7 @@ public class HttpIntentService extends IntentService {
 //
 //        //get coffee machine
 //        @GET("/" + CLASSES + COFFEE_MACHINE)
-//        ArrayList<CoffeeMachine> listCoffeeMachine();
+//        ArrayList<CoffeePlace> listCoffeeMachine();
 //
 //        @POST("/" + FUNCTIONS + MORE_REVIEW)
 //        ReviewDataContainer listMoreReview(@Body Review.MoreReviewsParams params);
@@ -533,17 +533,17 @@ public class HttpIntentService extends IntentService {
 
 
     }*/
-//    public static class CustomDeserializer implements JsonDeserializer<ArrayList<CoffeeMachine>> {
+//    public static class CustomDeserializer implements JsonDeserializer<ArrayList<CoffeePlace>> {
 //
 //        @Override
-//        public ArrayList<CoffeeMachine> deserialize(JsonElement jsonElement, Type type,
+//        public ArrayList<CoffeePlace> deserialize(JsonElement jsonElement, Type type,
 //                                               JsonDeserializationContext jsonDeserializationContext)
 //                throws JsonParseException {
 //            Log.e(TAG, type.toString());
-//            ArrayList<CoffeeMachine> coffeeMachineList = new ArrayList<CoffeeMachine>();
+//            ArrayList<CoffeePlace> coffeeMachineList = new ArrayList<CoffeePlace>();
 //            JsonArray jsonArray = jsonElement.getAsJsonObject().get("results").getAsJsonArray();
 //            for(int i = 0; i < jsonArray.size(); i++) {
-//                coffeeMachineList.add(jsonDeserializationContext.<CoffeeMachine>deserialize(jsonArray.get(i), CoffeeMachine.class));
+//                coffeeMachineList.add(jsonDeserializationContext.<CoffeePlace>deserialize(jsonArray.get(i), CoffeePlace.class));
 //            }
 //            return coffeeMachineList;
 //

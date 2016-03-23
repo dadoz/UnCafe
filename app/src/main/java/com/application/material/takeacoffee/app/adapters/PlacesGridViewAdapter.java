@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.utils.CacheManager;
 
 import java.lang.ref.WeakReference;
@@ -21,14 +21,14 @@ import java.util.ArrayList;
  * Created by davide on 09/03/16.
  */
 public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAdapter.ViewHolder> {
-    private final ArrayList<CoffeeMachine> itemList;
+    private final ArrayList<CoffeePlace> itemList;
     private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
     private PlacesGridViewAdapter.ViewHolder holder;
     private boolean isEmptyResult;
 
 
-    public PlacesGridViewAdapter(WeakReference<Context> context, ArrayList<CoffeeMachine> itemList) {
+    public PlacesGridViewAdapter(WeakReference<Context> context, ArrayList<CoffeePlace> itemList) {
         this.itemList = itemList;
         this.contextWeakRef = context;
     }
@@ -129,7 +129,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      *
      * @param data
      */
-    public void addAllItems(ArrayList<CoffeeMachine> data) {
+    public void addAllItems(ArrayList<CoffeePlace> data) {
         itemList.addAll(data);
     }
 }

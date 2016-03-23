@@ -20,8 +20,9 @@ import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.squareup.otto.Subscribe;
 import com.application.material.takeacoffee.app.utils.Utils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by davide on 14/11/14.

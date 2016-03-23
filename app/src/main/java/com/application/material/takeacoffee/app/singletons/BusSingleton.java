@@ -1,20 +1,21 @@
 package com.application.material.takeacoffee.app.singletons;
 
-import com.squareup.otto.Bus;
-import com.application.material.takeacoffee.app.restServices.bus.*;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by davide on 24/12/14.
  */
 public class BusSingleton {
-    private static Bus bus = new BusWrapper();
-
-    public static Bus getInstance() {
-        return bus;
-    }
+    private static EventBus bus = new EventBus();
 
     private BusSingleton() {
-
     }
 
+    /**
+     *
+     * @return
+     */
+    public static EventBus getInstance() {
+        return bus;
+    }
 }

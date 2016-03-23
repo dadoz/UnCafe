@@ -23,7 +23,8 @@ import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBa
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by davide on 27/12/14.

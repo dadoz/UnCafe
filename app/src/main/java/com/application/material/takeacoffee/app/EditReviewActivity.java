@@ -22,9 +22,8 @@ import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 
@@ -74,13 +73,11 @@ public class EditReviewActivity extends AppCompatActivity implements
 
     @Override
     public void onResume(){
-        BusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onPause(){
-        BusSingleton.getInstance().unregister(this);
         super.onPause();
     }
 

@@ -137,10 +137,9 @@ public class PlaceApiManager {
                 @Override
                 public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
                     for (int i = 0; i < placeLikelihoods.getCount(); i ++) {
-                        PlaceLikelihood itemPlace = placeLikelihoods.get(i);
-                        String placeId = itemPlace.getPlace().getId();
-                        getPhoto(placeId);
                         boolean isLatest = placeLikelihoods.getCount() - 1 == i;
+                        String placeId = placeLikelihoods.get(i).getPlace().getId();
+                        getPhoto(placeId);
                         getInfo(placeId, isLatest);
                     }
                 }

@@ -10,7 +10,7 @@ import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
+import com.application.material.takeacoffee.app.models.CoffeePlace;
 
 /**
  * Created by davide on 20/11/14.
@@ -20,7 +20,7 @@ public class StatusFragment extends Fragment {
     private Activity mainActivityRef;
     private View statusView;
     public static final String STATUS_FRAG_TAG = "STATUS_FRAG_TAG";
-    private CoffeeMachine coffeeMachine;
+    private CoffeePlace coffeeMachine;
     private Bundle bundle;
 
     @Override
@@ -44,7 +44,7 @@ public class StatusFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         //get all bundle
         bundle = getArguments();
-        coffeeMachine = bundle.getParcelable(CoffeeMachine.COFFEE_MACHINE_OBJ_KEY); //NULL
+        coffeeMachine = bundle.getParcelable(CoffeePlace.COFFEE_MACHINE_OBJ_KEY); //NULL
 
     }
 
@@ -68,7 +68,7 @@ public class StatusFragment extends Fragment {
     }
 
     private void initView() {
-//        coffeeMachine = new CoffeeMachine("1", "fake0", "address", null);
+//        coffeeMachine = new CoffeePlace("1", "fake0", "address", null);
         ((SetActionBarInterface) mainActivityRef)
                 .setActionBarCustomViewById(R.id.customActionBarCoffeeMachineLayoutId,
                         coffeeMachine);

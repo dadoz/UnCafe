@@ -16,15 +16,16 @@ import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
+import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.utils.Utils;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.models.CoffeeMachine;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.parse.ParseFile;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 
 import java.io.ByteArrayOutputStream;
@@ -73,7 +74,7 @@ public class AddReviewFragment extends Fragment implements
         //getArgs
         Bundle bundle = getArguments();
         try {
-            coffeeMachineId = bundle.getString(CoffeeMachine.COFFEE_MACHINE_ID_KEY);
+            coffeeMachineId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
         } catch (Exception e) {
             e.printStackTrace();
         }

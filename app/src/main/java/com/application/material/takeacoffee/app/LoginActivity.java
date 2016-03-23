@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,11 +16,8 @@ import com.application.material.takeacoffee.app.facebookServices.FacebookLogin;
 import com.application.material.takeacoffee.app.fragments.LoginFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.models.User;
-import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import com.parse.ParseFacebookUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 
@@ -56,13 +52,11 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void onResume() {
-        BusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onStop() {
-        BusSingleton.getInstance().unregister(this);
         super.onStop();
     }
 
