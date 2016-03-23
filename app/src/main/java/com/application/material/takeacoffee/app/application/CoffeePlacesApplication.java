@@ -3,6 +3,8 @@ package com.application.material.takeacoffee.app.application;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+
+import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeeMachineStatus;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.ReviewDataContainer;
@@ -29,7 +31,10 @@ public class CoffeePlacesApplication extends Application {
     public void onCreate() {
         super.onCreate();
         CalligraphyConfig.initDefault(new CalligraphyConfig
-                .Builder().setDefaultFontPath(FONT_PATH).build());
+                .Builder()
+                .setDefaultFontPath(FONT_PATH)
+                .setFontAttrId(R.attr.fontPath)
+                .build());
     }
 
     public ArrayList<User> restoreUserList() {

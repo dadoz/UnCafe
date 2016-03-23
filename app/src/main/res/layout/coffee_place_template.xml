@@ -17,6 +17,7 @@
             android:id="@+id/coffeeIconId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="400dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/coffee_cup_icon" />
@@ -34,8 +35,7 @@
                 android:textSize="@dimen/header_button_text"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:text="dalksfalskdfj"
-                />
+                android:text="dalksfalskdfj"/>
 
             <TextView
                 android:id="@+id/coffeeMachineAddressTextId"

@@ -2,6 +2,8 @@ package com.application.material.takeacoffee.app.singletons;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.application.material.takeacoffee.app.utils.CacheManager;
@@ -29,31 +31,28 @@ import java.util.Set;
 public class PlaceApiManager {
     private static final int MAX_HEIGHT = 0;
     private static final int MAX_WIDTH = 300;
-    private GoogleApiClient mGoogleApiClient;
-    private WeakReference<OnHandlePlaceApiResult> listener;
+    private static GoogleApiClient mGoogleApiClient;
+    private static WeakReference<OnHandlePlaceApiResult> listener;
     private static PlaceApiManager instance;
 
     /**
      *
      * @param googleApiClient
-     * @param listener
      */
-    private PlaceApiManager(GoogleApiClient googleApiClient,
-                         WeakReference<OnHandlePlaceApiResult> listener) {
-        this.mGoogleApiClient = googleApiClient;
-        this.listener = listener;
+    private PlaceApiManager(GoogleApiClient googleApiClient) {
+        mGoogleApiClient = googleApiClient;
     }
 
     /**
      *
-     * @param googleApiClient
-     * @param listener
+     * @param placeApiListener
      * @return
      */
-    public static PlaceApiManager getInstance(GoogleApiClient googleApiClient,
-                                              WeakReference<OnHandlePlaceApiResult> listener) {
+    public static PlaceApiManager getInstance(WeakReference<OnHandlePlaceApiResult> placeApiListener,
+                                              GoogleApiClient mGoogleApiClient) {
+        listener = placeApiListener;
         return instance == null ?
-                instance = new PlaceApiManager(googleApiClient, listener) : instance;
+                instance = new PlaceApiManager(mGoogleApiClient) : instance;
     }
 
     /**
@@ -62,7 +61,6 @@ public class PlaceApiManager {
      * @param isLatestItem
      */
     public void getInfo(final String placeId, final boolean isLatestItem) {
-        //get name and address
         Places.GeoDataApi
                 .getPlaceById(mGoogleApiClient, placeId)
                 .setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -71,6 +69,7 @@ public class PlaceApiManager {
                         listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
                         listener.get().onUpdatePhotoOnListCallback();
                         placeBuffer.release();
+                        //TODO handle better
                         if (isLatestItem) {
                             listener.get().handleLatestItem();
                         }

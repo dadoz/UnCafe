@@ -1,32 +1,33 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.ReviewListActivity;
-import com.application.material.takeacoffee.app.EditReviewActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
 import com.application.material.takeacoffee.app.models.*;
-import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-
+import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
+import com.application.material.takeacoffee.app.utils.CacheManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
+import java.lang.ref.WeakReference;
 import java.util.*;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.*;
@@ -36,18 +37,19 @@ import static android.os.Build.VERSION_CODES.*;
  * Created by davide on 08/04/14.
  */
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
-        AdapterView.OnItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+        AdapterView.OnItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+        PlaceApiManager.OnHandlePlaceApiResult, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "ReviewListFragment";
     private static AppCompatActivity mainActivityRef = null;
     private ArrayList<Review> reviewList;
-    private Bundle bundle;
     private String coffeePlaceId;
+    private PlaceApiManager placesApiManager;
+    private GoogleApiClient mGoogleApiClient;
 
     @Bind(R.id.reviewsContainerListViewId)
     ListView listView;
     @Bind(R.id.swipeRefreshLayoutId)
     SwipeRefreshLayout swipeRefreshLayout;
-    private View addReviewFab;
     private ArrayList<CoffeePlace> coffeePlacesList;
 
     @Override
@@ -64,21 +66,24 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * @return
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View reviewListView = inflater.inflate(R.layout.fragment_review_list, container, false);
+        View reviewListView = getActivity().getLayoutInflater()
+                .inflate(R.layout.fragment_review_list, container, false);
         ButterKnife.bind(this, reviewListView);
+
         //TODO NOTHING - waiting for bus response :)
+        initView();
         return reviewListView;
     }
 
     @Override
     public void onResume() {
-        BusSingleton.getInstance().register(this);
+//        BusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        BusSingleton.getInstance().unregister(this);
+//        BusSingleton.getInstance().unregister(this);
         super.onPause();
     }
 
@@ -89,22 +94,48 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         if (BuildConfig.DEBUG) {
             reviewList = getReviewListTest();
             coffeePlacesList = getCoffeePlacesListTest();
+            CoffeePlace coffeePlace = coffeePlacesList.get(0);
+            initActionbar(coffeePlace.getName());
         }
+//        //TODO refactor
+//        initGooglePlaces();
+//        placesApiManager.getInfo(coffeePlaceId, true);
 
-        CoffeePlace coffeePlace = coffeePlacesList.get(Integer.parseInt(coffeePlaceId));
-        initActionbar(coffeePlace.getName());
-
-        addReviewFab = mainActivityRef.findViewById(R.id.addReviewFabId);
+        View addReviewFab = mainActivityRef.findViewById(R.id.addReviewFabId);
         addReviewFab.setOnClickListener(this);
         swipeRefreshLayout.setOnRefreshListener(this);
         initListView();
     }
 
     /**
+     * samplePlacesApi
+     */
+    private void initGooglePlaces() {
+        if (mGoogleApiClient != null) {
+            return;
+        }
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+
+        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
+                mGoogleApiClient);
+    }
+
+
+    /**
      *
      */
     private void initActionbar(String name) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(name);
+        ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setTitle(name);
+        }
     }
 
     /**
@@ -138,63 +169,10 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        if(((SetActionBarInterface) mainActivityRef).isItemSelected()) {
-            boolean isAllowToEdit = false;
-            menuInflater.inflate(isAllowToEdit ? R.menu.edit_review : R.menu.clipboard_review,
-                    menu);
-            return;
-        }
-        menuInflater.inflate(R.menu.review_list, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_coffee_machine_position:
-                    Toast.makeText(mainActivityRef, "get machine pos", Toast.LENGTH_SHORT).show();
-                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .changeFragment(new MapFragment(),
-                                bundle, MapFragment.MAP_FRAG_TAG);
-                break;
-
-            case R.id.action_edit_icon:
-                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
-                ((OnChangeFragmentWrapperInterface) mainActivityRef)
-                        .startActivityWrapper(EditReviewActivity.class,
-                                ReviewListActivity.ACTION_EDIT_REVIEW, bundle);
-                //deselect Item
-//                ((SetActionBarInterface) mainActivityRef)
-//                        .updateSelectedItem(this, listView, null, -1);
-                break;
-            case R.id.action_delete:
-                Toast.makeText(mainActivityRef, "change", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityRef)
-                        .setMessage("Sure to delete this review?")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                Review review = (Review) bundle.get(Review.REVIEW_OBJ_KEY);
-                                HttpIntentService.deleteReviewRequest(mainActivityRef, review.getId());
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-                Dialog dialog = builder.create();
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
-
-
-                //deselect Item
-//                ((SetActionBarInterface) mainActivityRef)
-//                        .updateSelectedItem(this, listView, null, -1);
-                break;
-
-        }
         return true;
     }
 
@@ -257,10 +235,35 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         return tmp;
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(Bundle bundle) {
-        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
-        initView();
+//    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+//    public void onEvent(Bundle bundle) {
+//        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
+//        initView();
+//    }
+
+    @Override
+    public void onSetCoffeePlaceInfoOnListCallback(Place place) {
+        initActionbar(place.getName().toString());
+    }
+
+    @Override
+    public void onUpdatePhotoOnListCallback() {
+        //handle picture
+        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(coffeePlaceId);
+        if (cachedPic != null) {
+            ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId))
+                    .setImageBitmap(cachedPic);
+        }
+    }
+
+    @Override
+    public void handleLatestItem() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }
 

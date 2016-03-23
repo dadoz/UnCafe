@@ -3,6 +3,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -16,10 +17,10 @@ public class CoffeePlacesActivity extends AppCompatActivity {
     public static String EXTRA_DATA = "EXTRA_DATA";
     public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
     public static final String ERROR_MESSAGE_KEY = "EMK";
+    private PermissionManager permissionManager;
 
     @Bind(R.id.coffeeToolbarId)
-    public android.support.v7.widget.Toolbar toolbar;
-    private PermissionManager permissionManager;
+    public Toolbar toolbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -48,7 +49,8 @@ public class CoffeePlacesActivity extends AppCompatActivity {
      */
     private void initView() {
         initActionBar();
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .replace(R.id.coffeeAppFragmentContainerId, new CoffeePlacesFragment(),
                         CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG)
                 .commit();

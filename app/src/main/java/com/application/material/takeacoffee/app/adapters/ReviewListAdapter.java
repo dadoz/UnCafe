@@ -30,8 +30,8 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     private ArrayList<User> userList = new ArrayList<User>();
     private View.OnClickListener onClickListenerRef;
 
-    public ReviewListAdapter(FragmentActivity activity, View.OnClickListener onClickListenerRef, int resource, ArrayList<Review> reviewList,
-                               String coffeeMachineId) {
+    public ReviewListAdapter(FragmentActivity activity, View.OnClickListener onClickListenerRef,
+                             int resource, ArrayList<Review> reviewList, String coffeeMachineId) {
         //this constructor to handle empty getView function
         super(activity.getApplicationContext(), resource, R.id.reviewCommentTextId, reviewList);
         this.mainActivityRef = activity;
@@ -43,9 +43,9 @@ public class ReviewListAdapter extends ArrayAdapter<Review> implements View.OnCl
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mainActivityRef
-                .getApplicationContext()).inflate(R.layout.review_template, parent, false);
-
+        //IMPORTANT TO GET FONT from PARENT (custom font)
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.review_template, parent, false);
         try {
             Review review = reviewList.get(position);
             boolean hasReviewPicture = review.getReviewPictureUrl() != null;

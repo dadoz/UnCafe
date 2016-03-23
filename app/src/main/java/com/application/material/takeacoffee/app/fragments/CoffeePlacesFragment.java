@@ -191,14 +191,19 @@ public class CoffeePlacesFragment extends Fragment implements
             return;
         }
 
+//        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
+//                new WeakReference<GoogleApiClient.OnConnectionFailedListener>(this),
+//                new WeakReference<Fragment>(this));
+
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
                 .build();
-        placesApiManager = PlaceApiManager.getInstance(mGoogleApiClient,
-                new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this));
+
+        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
+                mGoogleApiClient);
 
     }
 
