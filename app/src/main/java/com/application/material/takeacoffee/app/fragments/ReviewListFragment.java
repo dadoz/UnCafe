@@ -29,12 +29,19 @@ import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapt
 import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.FirebaseManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.CacheManager;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.gson.Gson;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
@@ -47,7 +54,7 @@ import static android.os.Build.VERSION_CODES.*;
  */
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
         ReviewRecyclerViewAdapter.CustomItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
-        PlaceApiManager.OnHandlePlaceApiResult, GoogleApiClient.OnConnectionFailedListener {
+        PlaceApiManager.OnHandlePlaceApiResult, GoogleApiClient.OnConnectionFailedListener, FirebaseManager.OnRetrieveFirebaseDataInterface {
     private static final String TAG = "ReviewListFragment";
     private static AppCompatActivity mainActivityRef = null;
     private ArrayList<Review> reviewList;
@@ -108,6 +115,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         mainActivityRef.findViewById(R.id.addReviewFabId)
                 .setOnClickListener(this);
         initListView();
+        FirebaseManager.getIstance().getReviewListAsync(this);
     }
 
     /**
@@ -272,6 +280,18 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void onItemClick(int pos, View v) {
         Log.e("TAG", "hey click -> " + pos);
+    }
+
+    @Override
+    public void retrieveFirebaseDataSuccessCallback(String type, ArrayList<Review> list) {
+        if (list.size() != 0) {
+            Log.e(TAG, "hey" + type + " --- " + list.get(0));
+        }
+    }
+
+    @Override
+    public void retrieveFirebaseDataErrorCallback(FirebaseError error) {
+        Log.e(TAG, "error" + error.getMessage());
     }
 }
 

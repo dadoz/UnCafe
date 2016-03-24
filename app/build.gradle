@@ -40,6 +40,11 @@ android {
             keyPassword "dadoxx86"
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
@@ -66,4 +71,6 @@ dependencies {
     compile 'com.parse:parse-android:1.13.0'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+    compile 'com.firebase:firebase-client-android:2.5.2'
+    compile 'com.google.code.gson:gson:2.6.2'
 }
