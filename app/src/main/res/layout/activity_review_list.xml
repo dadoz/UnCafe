@@ -49,7 +49,7 @@
             android:id="@+id/addReviewFabId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/edit_icon_ultra_small_b"
+            android:src="@drawable/add_review_icon"
             android:layout_marginRight="@dimen/small_padding"
             app:layout_anchor="@id/appbarLayoutId"
             app:layout_anchorGravity="bottom|right|end"

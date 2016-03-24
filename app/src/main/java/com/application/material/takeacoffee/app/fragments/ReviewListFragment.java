@@ -1,8 +1,14 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DimenRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -15,10 +21,12 @@ import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
+import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
@@ -33,7 +41,6 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.*;
-
 
 /**
  * Created by davide on 08/04/14.
@@ -71,8 +78,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         View reviewListView = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_review_list, container, false);
         ButterKnife.bind(this, reviewListView);
-
-        //TODO NOTHING - waiting for bus response :)
         initView();
         return reviewListView;
     }
@@ -145,6 +150,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         adapter.setOnItemClickListener(this);        //TODO booooo ????
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
 
+        reviewRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                LinearLayoutManager.VERTICAL));
         reviewRecyclerView.setAdapter(adapter);
         reviewRecyclerView.setLayoutManager(layoutManager);
     }
@@ -166,6 +173,13 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addReviewFabId:
+                Intent intent = new Intent(getActivity(), AddReviewActivity.class);
+                startActivity(intent);
+                break;
+
+        }
     }
 
     @Override
@@ -179,18 +193,18 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     public ArrayList<Review> getReviewListTest() {
         ArrayList<Review> list = new ArrayList<Review>();
-        list.add(new Review("0", "heheeheheheh", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("1", "blalallalll", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("2", "blalallalll2", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("3", "blalallall3", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("4", "blalallall4", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("5", "blalallall5", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("6", "blalallall6", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("7", "blalallall6", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("7", "blalallall7", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("8", "blalallall8", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("9", "blalallall9", "balal", 1111, "1", "1", null, null));
-        list.add(new Review("10", "blalallall10", "balal", 1111, "1", "1", null, null));
+        list.add(new Review("0", "heheeheheheh", "hadshfjefhsejkfhakejh", 1234342, "Davide", "1", null, null));
+        list.add(new Review("1", "blalallalll", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Bla", "1", null, null));
+        list.add(new Review("2", "blalallalll2", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Davide", "1", null, null));
+        list.add(new Review("3", "blalallall3", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Andrea", "1", null, null));
+        list.add(new Review("4", "blalallall4", "balal", 1234342, "Davide", "1", null, null));
+        list.add(new Review("5", "blalallall5", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Hey", "1", null, null));
+        list.add(new Review("6", "blalallall6", "balal", 1234342, "1", "1", null, null));
+        list.add(new Review("7", "blalallall6", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
+        list.add(new Review("7", "blalallall7", "balal", 1234342, "1", "1", null, null));
+        list.add(new Review("8", "blalallall8", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
+        list.add(new Review("9", "blalallall9", "balal", 1234342, "1", "1", null, null));
+        list.add(new Review("10", "blalallall10", "balal", 1234342, "1", "1", null, null));
         return list;
     }
 
