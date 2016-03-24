@@ -9,8 +9,7 @@
         android:layout_height="match_parent"
         android:padding="@dimen/medium_padding"
         android:orientation="vertical">
-
-        <np.EditText
+        <EditText
             android:id="@+id/commentTextId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -19,8 +18,7 @@
             android:hint="Write something..."
             android:textSize="@dimen/text_big_24"
             android:maxLines="6"
-            android:gravity="top"
-            />
+            android:gravity="top"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,8 +28,7 @@
             android:paddingRight="@dimen/small_padding"
             android:textColor="@color/light_red"
             android:textSize="@dimen/header_button_text"
-            android:text="SAVE"
-            />
+            android:text="SAVE"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>
 
