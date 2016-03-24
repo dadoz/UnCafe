@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -16,7 +18,7 @@ import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.adapters.ReviewListAdapter;
+import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
@@ -37,7 +39,7 @@ import static android.os.Build.VERSION_CODES.*;
  * Created by davide on 08/04/14.
  */
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
-        AdapterView.OnItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+        ReviewRecyclerViewAdapter.CustomItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         PlaceApiManager.OnHandlePlaceApiResult, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "ReviewListFragment";
     private static AppCompatActivity mainActivityRef = null;
@@ -46,8 +48,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private PlaceApiManager placesApiManager;
     private GoogleApiClient mGoogleApiClient;
 
-    @Bind(R.id.reviewsContainerListViewId)
-    ListView listView;
+    @Bind(R.id.reviewRecyclerViewId)
+    RecyclerView reviewRecyclerView;
     @Bind(R.id.swipeRefreshLayoutId)
     SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<CoffeePlace> coffeePlacesList;
@@ -97,13 +99,9 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
             CoffeePlace coffeePlace = coffeePlacesList.get(0);
             initActionbar(coffeePlace.getName());
         }
-//        //TODO refactor
-//        initGooglePlaces();
-//        placesApiManager.getInfo(coffeePlaceId, true);
-
-        View addReviewFab = mainActivityRef.findViewById(R.id.addReviewFabId);
-        addReviewFab.setOnClickListener(this);
         swipeRefreshLayout.setOnRefreshListener(this);
+        mainActivityRef.findViewById(R.id.addReviewFabId)
+                .setOnClickListener(this);
         initListView();
     }
 
@@ -142,23 +140,13 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * init list view
      */
     private void initListView() {
-        //        Collections.reverse(reviewList);
-        ReviewListAdapter reviewListenerAdapter = new ReviewListAdapter(mainActivityRef,
-                this, R.layout.review_template, reviewList, coffeePlaceId);
+        ReviewRecyclerViewAdapter adapter = new ReviewRecyclerViewAdapter(
+                new WeakReference<Context>(getActivity()), reviewList);
+        adapter.setOnItemClickListener(this);        //TODO booooo ????
+        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
 
-        //TODO replace with recyclerView :)
-//        listView.setEmptyView(emptyView);
-        listView.setAdapter(reviewListenerAdapter);
-
-        listView.setOnItemLongClickListener(this);
-        listView.setOnItemClickListener(this);
-        if (SDK_INT >= LOLLIPOP) {
-            listView.setNestedScrollingEnabled(true);
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        reviewRecyclerView.setAdapter(adapter);
+        reviewRecyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -238,7 +226,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 //    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
 //    public void onEvent(Bundle bundle) {
 //        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
-//        initView();
+//        initGooglePlaces();
+//        placesApiManager.getInfo(coffeePlaceId, true);
 //    }
 
     @Override
@@ -264,6 +253,11 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public void onItemClick(int pos, View v) {
+        Log.e("TAG", "hey click -> " + pos);
     }
 }
 

@@ -9,8 +9,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/swipeRefreshLayoutId"/>
 
-    <ListView
-        android:id="@+id/reviewsContainerListViewId"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/reviewRecyclerViewId"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:divider="@color/middle_grey"
