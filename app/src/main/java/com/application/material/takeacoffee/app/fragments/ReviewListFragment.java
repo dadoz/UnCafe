@@ -201,18 +201,18 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     public ArrayList<Review> getReviewListTest() {
         ArrayList<Review> list = new ArrayList<Review>();
-        list.add(new Review("0", "heheeheheheh", "hadshfjefhsejkfhakejh", 1234342, "Davide", "1", null, null));
-        list.add(new Review("1", "blalallalll", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Bla", "1", null, null));
-        list.add(new Review("2", "blalallalll2", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Davide", "1", null, null));
-        list.add(new Review("3", "blalallall3", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Andrea", "1", null, null));
-        list.add(new Review("4", "blalallall4", "balal", 1234342, "Davide", "1", null, null));
-        list.add(new Review("5", "blalallall5", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Hey", "1", null, null));
-        list.add(new Review("6", "blalallall6", "balal", 1234342, "1", "1", null, null));
-        list.add(new Review("7", "blalallall6", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
-        list.add(new Review("7", "blalallall7", "balal", 1234342, "1", "1", null, null));
-        list.add(new Review("8", "blalallall8", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
-        list.add(new Review("9", "blalallall9", "balal", 1234342, "1", "1", null, null));
-        list.add(new Review("10", "blalallall10", "balal", 1234342, "1", "1", null, null));
+        list.add(new Review("0", "1", "heheeheheheh", "hadshfjefhsejkfhakejh", 1234342, null));
+//        list.add(new Review("1", "blalallalll", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Bla", "1", null, null));
+//        list.add(new Review("2", "blalallalll2", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Davide", "1", null, null));
+//        list.add(new Review("3", "blalallall3", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Andrea", "1", null, null));
+//        list.add(new Review("4", "blalallall4", "balal", 1234342, "Davide", "1", null, null));
+//        list.add(new Review("5", "blalallall5", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Hey", "1", null, null));
+//        list.add(new Review("6", "blalallall6", "balal", 1234342, "1", "1", null, null));
+//        list.add(new Review("7", "blalallall6", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
+//        list.add(new Review("7", "blalallall7", "balal", 1234342, "1", "1", null, null));
+//        list.add(new Review("8", "blalallall8", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
+//        list.add(new Review("9", "blalallall9", "balal", 1234342, "1", "1", null, null));
+//        list.add(new Review("10", "blalallall10", "balal", 1234342, "1", "1", null, null));
         return list;
     }
 
@@ -284,9 +284,9 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void retrieveFirebaseDataSuccessCallback(String type, ArrayList<Review> list) {
-        if (list.size() != 0) {
-            Log.e(TAG, "hey" + type + " --- " + list.get(0));
-        }
+        reviewList.clear();
+        reviewList.addAll(list);
+        reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override

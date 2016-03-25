@@ -135,11 +135,12 @@ public class JSONParserToObject {
                     .getString("review_picture_name");
             String reviewPictureUrl = reviewJsonObj
                     .getString("review_picture_url");
-            return new Review(reviewId, reviewComment,
-                    reviewStatus, timestamp,
-                    reviewUserId, reviewCoffeeMachineId,
-                    reviewPictureName.equals("null") ? null : reviewPictureName,
-                    reviewPictureUrl.equals("null") ? null : reviewPictureUrl);
+            return new Review(reviewId,
+                    reviewCoffeeMachineId,
+                    reviewComment,
+                    reviewStatus,
+                    timestamp,
+                    null);
         } catch (JSONException e) {
             e.printStackTrace();
         }

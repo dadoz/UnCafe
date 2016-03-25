@@ -103,7 +103,7 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(UPDATE_REVIEW_REQUEST);
-        intent.putExtra(EXTRA_REVIEW, review);
+//        intent.putExtra(EXTRA_REVIEW, review);
         context.startService(intent);
     }
 
@@ -114,7 +114,7 @@ public class HttpIntentService extends IntentService {
         Intent intent = new Intent(context, HttpIntentService.class);
 
         intent.setAction(ADD_REVIEW_BY_PARAMS_REQUEST);
-        intent.putExtra(EXTRA_REVIEW, review);
+//        intent.putExtra(EXTRA_REVIEW, review);
         context.startService(intent);
     }
 
@@ -261,7 +261,6 @@ public class HttpIntentService extends IntentService {
 
                     String coffeeMachineId = intent.getExtras().getString(EXTRA_COFFEE_MACHINE_ID);
                     String fromReviewId = intent.getExtras().getString(EXTRA_REVIEW_ID);
-                    Review.MoreReviewsParams params = new Review.MoreReviewsParams(coffeeMachineId, fromReviewId);
 //                    BusSingleton.getInstance().post(service.listMoreReview(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());

@@ -184,8 +184,8 @@ public class AddReviewFragment extends Fragment implements
         ReviewStatus.ReviewStatusEnum status =  ReviewStatus.ReviewStatusEnum.GOOD;
 
         long timestamp = new DateTime().getMillis();
-        return new Review(null, comment, ReviewStatus.toString(status),
-                timestamp, meUserId, coffeeMachineId, null, null);
+        return new Review(null, comment, coffeeMachineId, ReviewStatus.toString(status),
+                timestamp, null);
     }
 
     private ParseFile saveFile(String url) {
@@ -208,24 +208,15 @@ public class AddReviewFragment extends Fragment implements
     }
 
     public void addReviewSuccessCallback(String reviewId) {
-        Review review = new Review(reviewId, reviewParams.getComment(),
-                reviewParams.getStatus(),
-                reviewParams.getTimestamp(),
-                meUserId,
-                coffeeMachineId,
-                reviewParams.getReviewPictureName(),
-                reviewParams.getReviewPictureUrl());
-
         Intent intent = new Intent();
-
-        intent.putExtra(Review.REVIEW_OBJ_KEY, review);
+//        intent.putExtra(Review.REVIEW_OBJ_KEY, review);
         addActivityRef.setResult(Activity.RESULT_OK, intent);
         addActivityRef.finish();
     }
 
     public void addReviewErrorCallback() {
         Intent intent = new Intent();
-        intent.putExtra(CoffeePlacesActivity.ERROR_MESSAGE_KEY, Review.ERROR_MESSAGE);
+        intent.putExtra(CoffeePlacesActivity.ERROR_MESSAGE_KEY, "ERROR_MESSAGE");
         addActivityRef.setResult(CoffeePlacesActivity.RESULT_FAILED, intent);
         addActivityRef.finish();
 

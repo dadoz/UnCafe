@@ -122,13 +122,13 @@ public class EditReviewFragment extends Fragment implements
             return;
         }
 
-        //retrieve pic from review
-        if(review.getReviewPictureUrl() != null) {
-            Bitmap pic = JSONParserToObject.
-                    getMockupPicture(editActivityRef, review.getReviewPictureUrl());
-            coffeePlacesApplication.setReviewPictureTemp(pic);
-            ((ImageView) imagePreviewView).setImageBitmap(pic);
-        }
+//        //retrieve pic from review
+//        if(review.getReviewPictureUrl() != null) {
+//            Bitmap pic = JSONParserToObject.
+//                    getMockupPicture(editActivityRef, review.getReviewPictureUrl());
+//            coffeePlacesApplication.setReviewPictureTemp(pic);
+//            ((ImageView) imagePreviewView).setImageBitmap(pic);
+//        }
     }
 
     public boolean updateReview() {
@@ -212,7 +212,7 @@ public class EditReviewFragment extends Fragment implements
 
         //on callback
         intent.putExtra(CoffeePlacesActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
-        intent.putExtra(Review.REVIEW_OBJ_KEY, review);
+//        intent.putExtra(Review.REVIEW_OBJ_KEY, review);
         editActivityRef.setResult(Activity.RESULT_OK, intent);
         editActivityRef.finish();
     }

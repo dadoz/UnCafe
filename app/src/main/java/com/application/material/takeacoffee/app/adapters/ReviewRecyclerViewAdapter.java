@@ -26,6 +26,7 @@ public class ReviewRecyclerViewAdapter extends
     private final ArrayList<Review> itemList;
     private CustomItemClickListener listener;
     private ReviewRecyclerViewAdapter.ViewHolder holder;
+    private String GUEST_USER = "Guest";
 
     public ReviewRecyclerViewAdapter(WeakReference<Context> context,
                                      ArrayList<Review> itemList) {
@@ -42,7 +43,9 @@ public class ReviewRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.usernameText.setText(itemList.get(position).getUserId());
+
+        holder.usernameText.setText(itemList.get(position).getUser() == null ? GUEST_USER :
+                itemList.get(position).getUser().getUsername());
         holder.dateText.setText("" + itemList.get(position).getTimestamp());
         holder.reviewText.setText(itemList.get(position).getComment());
     }
