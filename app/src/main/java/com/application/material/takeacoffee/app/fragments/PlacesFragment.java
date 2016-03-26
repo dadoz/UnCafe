@@ -133,10 +133,11 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onItemClick(int pos, View v) {
-        String placeId = coffeePlacesList.get(pos).getId();
+        CoffeePlace place = coffeePlacesList.get(pos);
         //TODO handle bundle
         Bundle bundle = new Bundle();
-        bundle.putString(CoffeePlace.COFFEE_PLACE_ID_KEY, placeId);
+        bundle.putString(CoffeePlace.COFFEE_PLACE_ID_KEY, place.getId());
+        bundle.putString(CoffeePlace.COFFEE_PLACE_NAME_KEY, place.getName());
         changeActivity(bundle);
     }
 
