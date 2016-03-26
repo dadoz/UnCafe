@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app.singletons;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.application.material.takeacoffee.app.models.Review;
@@ -21,23 +22,24 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.Iterator;
 
 
 /**
  * Created by davide on 24/03/16.
  */
-public class FirebaseManager implements ChildEventListener {
+public class FirebaseManager implements ChildEventListener, ValueEventListener {
     //TODO move out
     private static final String REVIEW_CLASS = "reviews";
     private static final String FIREBASE_URL = "https://torrid-heat-5131.firebaseio.com/";
     private static final String TAG = "FirebaseManager";
     private Firebase firebaseRef;
     private static FirebaseManager instance;
-    private OnRetrieveFirebaseDataInterface listener;
+    private WeakReference<OnRetrieveFirebaseDataInterface> listener;
     private ArrayList<Review> list = new ArrayList<>();
 
     public FirebaseManager() {
@@ -56,11 +58,22 @@ public class FirebaseManager implements ChildEventListener {
     /**
      *
      * @param listener
+     * @param placeId
      */
-    public void getReviewListAsync(final OnRetrieveFirebaseDataInterface listener) {
+    public void getReviewListAsync(final WeakReference<OnRetrieveFirebaseDataInterface> listener,
+                                   final String placeId) {
         this.listener = listener;
-        firebaseRef.child(REVIEW_CLASS).orderByChild("placeId")
-                .equalTo("kFFMaPaytU").addChildEventListener(this);
+        final FirebaseManager ref = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("RUN", "EUN");
+                firebaseRef.child(REVIEW_CLASS)
+                        .orderByChild("placeId")
+                        .equalTo(placeId)
+                        .addValueEventListener(ref);
+            }
+        }).run();
     }
 
     /**
@@ -75,40 +88,30 @@ public class FirebaseManager implements ChildEventListener {
         Gson gson = builder.create();
         return gson.fromJson(json, Review.class);
     }
-    /**
-     *
-     * @param json
-     * @return
-     */
-    public ArrayList<Review> getListFromJSON(String json) {
-        Type reviewType = new TypeToken<ArrayList<Review>>(){}.getType();
-        ReviewDeserializer deserializer = new ReviewDeserializer(User.class, new UserDeserializer());
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(reviewType, deserializer);
-        Gson gson = builder.create();
-        return gson.fromJson(json, reviewType);
-    }
 
     /**
      *
-     * @param snapshot
+     * @param iterator
      * @return
      */
-    public String getJSONFromSnapshot(DataSnapshot snapshot) {
-        Log.e(TAG, snapshot.getValue().toString());
-        HashMap<String, String> temp = (HashMap<String, String>) snapshot.getValue();
-        return new JSONObject(temp).toString();
+    public ArrayList<Review> getListFromIterable(Iterator<DataSnapshot> iterator) {
+        ArrayList<Review> listTmp = new ArrayList<>();
+        //TODO add observable
+        while (iterator.hasNext()) {
+            String jsonString = new JSONObject((HashMap<String, String>) iterator.next().getValue()).toString();
+            listTmp.add(getObjectFromJSON(jsonString));
+        }
+        return listTmp;
     }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Log.e("TAG", "hey");
         try {
             String type = REVIEW_CLASS;
-            list.add(getObjectFromJSON(getJSONFromSnapshot(dataSnapshot)));
-            listener.retrieveFirebaseDataSuccessCallback(type, list);
+            list = getListFromIterable(dataSnapshot.getChildren().iterator());
+            listener.get().retrieveFirebaseDataSuccessCallback(type, list);
         } catch (Exception e) {
-            listener.retrieveFirebaseDataErrorCallback(new FirebaseError(0, e.getMessage()));
+            listener.get().retrieveFirebaseDataErrorCallback(new FirebaseError(0, e.getMessage()));
         }
 
     }
@@ -129,10 +132,25 @@ public class FirebaseManager implements ChildEventListener {
     }
 
     @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        try {
+            if (!dataSnapshot.exists()) {
+                listener.get().emptyFirebaseDataCallback();
+                return;
+            }
+            String type = REVIEW_CLASS;
+            list = getListFromIterable(dataSnapshot.getChildren().iterator());
+            listener.get().retrieveFirebaseDataSuccessCallback(type, list);
+        } catch (Exception e) {
+            listener.get().retrieveFirebaseDataErrorCallback(new FirebaseError(0, e.getMessage()));
+        }
+
+    }
+
+    @Override
     public void onCancelled(FirebaseError firebaseError) {
         Log.e(TAG, firebaseError.getMessage());
-        listener.retrieveFirebaseDataErrorCallback(firebaseError);
-
+        listener.get().retrieveFirebaseDataErrorCallback(firebaseError);
     }
 
     /**
@@ -181,5 +199,6 @@ public class FirebaseManager implements ChildEventListener {
     public interface OnRetrieveFirebaseDataInterface {
         void retrieveFirebaseDataSuccessCallback(String type, ArrayList<Review> list);
         void retrieveFirebaseDataErrorCallback(FirebaseError error);
+        void emptyFirebaseDataCallback();
     }
 }

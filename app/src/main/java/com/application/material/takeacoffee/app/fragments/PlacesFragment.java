@@ -111,12 +111,12 @@ public class PlacesFragment extends Fragment implements
         setHasOptionsMenu(true);
         coffeePlaceFilterLayout.setOnClickListener(this);
         coffeePlaceSwipeRefreshLayout.setOnRefreshListener(this);
-        if (BuildConfig.DEBUG) {
-            coffeePlacesList = getCoffeePlacesListTest();
-        }
+//        if (BuildConfig.DEBUG) {
+//            coffeePlacesList = getCoffeePlacesListTest();
+//        }
         initGridViewAdapter();
-//        initGooglePlaces();
-//        initPermissionChainResponsibility();
+        initGooglePlaces();
+        initPermissionChainResponsibility();
     }
 
     /**

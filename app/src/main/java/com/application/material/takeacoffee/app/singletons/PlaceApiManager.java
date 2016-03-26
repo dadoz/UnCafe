@@ -67,10 +67,13 @@ public class PlaceApiManager {
     public void getInfo(final String placeId) {
         Places.GeoDataApi
                 .getPlaceById(mGoogleApiClient, placeId)
-                .setResultCallback(placeBuffer -> {
-                    listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
-                    listener.get().onUpdatePhotoOnListCallback();
-                    placeBuffer.release();
+                .setResultCallback(new ResultCallback<PlaceBuffer>() {
+                    @Override
+                    public void onResult(@NonNull PlaceBuffer placeBuffer) {
+                        listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
+                        listener.get().onUpdatePhotoOnListCallback();
+                        placeBuffer.release();
+                    }
                 });
     }
 
@@ -94,19 +97,25 @@ public class PlaceApiManager {
         //TODO refactor it
         Places.GeoDataApi
                 .getPlacePhotos(mGoogleApiClient, placeId)
-                .setResultCallback(placePhotoMetadataResult -> {
-                    PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
-                    if (photoMetadataBuffer.getCount() > 0) {
-                        photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
-                                MAX_WIDTH, MAX_HEIGHT)
-                                .setResultCallback(photo -> {
-                                    if (photo.getStatus().isSuccess()) {
-                                        CacheManager.getInstance().addBitmapToMemoryCache(placeId,
-                                                photo.getBitmap());
-                                        listener.get().onUpdatePhotoOnListCallback();
-                                    }
-                                });
-                        photoMetadataBuffer.release();
+                .setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
+                    @Override
+                    public void onResult(@NonNull PlacePhotoMetadataResult placePhotoMetadataResult) {
+                        PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
+                        if (photoMetadataBuffer.getCount() > 0) {
+                            photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
+                                    MAX_WIDTH, MAX_HEIGHT)
+                                    .setResultCallback(new ResultCallback<PlacePhotoResult>() {
+                                        @Override
+                                        public void onResult(@NonNull PlacePhotoResult photo) {
+                                            if (photo.getStatus().isSuccess()) {
+                                                CacheManager.getInstance().addBitmapToMemoryCache(placeId,
+                                                        photo.getBitmap());
+                                                listener.get().onUpdatePhotoOnListCallback();
+                                            }
+                                        }
+                                    });
+                            photoMetadataBuffer.release();
+                        }
                     }
                 });
 
@@ -122,22 +131,41 @@ public class PlaceApiManager {
             PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
             final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
                     .getCurrentPlace(mGoogleApiClient, filter);
-            result.setResultCallback(placeLikelihoods -> {
-                Observable
-                        .just(placeLikelihoods)
-                        .filter(placeLikelihoods1 -> {
-                            boolean isEmpty = placeLikelihoods1.getCount() != 0;
-                            if (isEmpty) {
-                                listener.get().handleEmptyList();
-                            }
-                            return isEmpty;
-                        })
-                        .flatMap(Observable::from)
-                        .flatMap(placeLikelihood -> Observable.just(placeLikelihood.getPlace()))
-                        .subscribe(place -> {
-                            getPhoto(place.getId());
-                            getInfo(place.getId());
-                        });
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
+                    Observable
+                            .just(placeLikelihoods)
+                            .filter(new Func1<PlaceLikelihoodBuffer, Boolean>() {
+                                @Override
+                                public Boolean call(PlaceLikelihoodBuffer placeLikelihoods1) {
+                                    boolean isEmpty = placeLikelihoods1.getCount() != 0;
+                                    if (isEmpty) {
+                                        listener.get().handleEmptyList();
+                                    }
+                                    return isEmpty;
+                                }
+                            })
+                            .flatMap(new Func1<PlaceLikelihoodBuffer, Observable<? extends PlaceLikelihood>>() {
+                                @Override
+                                public Observable<? extends PlaceLikelihood> call(PlaceLikelihoodBuffer iterable) {
+                                    return Observable.from(iterable);
+                                }
+                            })
+                            .flatMap(new Func1<PlaceLikelihood, Observable<? extends Place>>() {
+                                @Override
+                                public Observable<? extends Place> call(PlaceLikelihood placeLikelihood) {
+                                    return Observable.just(placeLikelihood.getPlace());
+                                }
+                            })
+                            .subscribe(new Action1<Place>() {
+                                @Override
+                                public void call(Place place) {
+                                    PlaceApiManager.this.getPhoto(place.getId());
+                                    PlaceApiManager.this.getInfo(place.getId());
+                                }
+                            });
+                }
             });
 
         } catch (SecurityException e) {

@@ -55,7 +55,8 @@ public class Review {
     }
 
     public long getTimestamp() {
-        return Long.parseLong(this.timestamp);
+        return 0;
+//        return Long.parseLong(this.timestamp);
     }
 
     public String getFormattedTimestamp() {

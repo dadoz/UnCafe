@@ -94,13 +94,13 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onResume() {
-//        BusSingleton.getInstance().register(this);
+        BusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onPause() {
-//        BusSingleton.getInstance().unregister(this);
+        BusSingleton.getInstance().unregister(this);
         super.onPause();
     }
 
@@ -114,11 +114,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 //            CoffeePlace coffeePlace = coffeePlacesList.get(0);
 //            initActionbar(coffeePlace.getName());
 //        }
-        //TODO move out
-        FirebaseManager.getIstance().getReviewListAsync(this);
         swipeRefreshLayout.setOnRefreshListener(this);
-        mainActivityRef.findViewById(R.id.addReviewFabId)
-                .setOnClickListener(this);
+        mainActivityRef.findViewById(R.id.addReviewFabId).setOnClickListener(this);
         initListView();
     }
 
@@ -137,7 +134,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 .enableAutoManage(getActivity(), this)
                 .build();
 
-        placesApiManager = PlaceApiManager.getInstance(new WeakReference<>(this),
+        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
                 mGoogleApiClient);
     }
 
@@ -248,18 +245,42 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         return tmp;
     }
 
-//    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-//    public void onEvent(Bundle bundle) {
-//        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
-//        initGooglePlaces();
-//        placesApiManager.getInfo(coffeePlaceId, true);
-//    }
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(Bundle bundle) {
+        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
 
+        //google places
+//        initGooglePlaces();
+//        placesApiManager.getInfo(coffeePlaceId);
+        onSetCoffeePlaceInfoOnListCallback("blalallallla");
+        onUpdatePhotoOnListCallback();
+
+        //review
+        reviewList.clear();
+        FirebaseManager.getIstance()
+                .getReviewListAsync(new WeakReference<FirebaseManager.OnRetrieveFirebaseDataInterface>(this), "kFFMaPaytU");
+    }
+
+    /**
+     *
+     * @param title
+     */
+    public void onSetCoffeePlaceInfoOnListCallback(String title) {
+        initActionbar(title);
+    }
+
+    /**
+     *
+     * @param place
+     */
     @Override
     public void onSetCoffeePlaceInfoOnListCallback(Place place) {
         initActionbar(place.getName().toString());
     }
 
+    /**
+     *
+     */
     @Override
     public void onUpdatePhotoOnListCallback() {
         //handle picture
@@ -272,7 +293,12 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void handleEmptyList() {
-        ((PlacesGridViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+    }
+
+    @Override
+    public void emptyFirebaseDataCallback() {
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
     }
 
     @Override
@@ -282,7 +308,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onItemClick(int pos, View v) {
-        Log.e("TAG", "hey click -> " + pos);
+        Intent intent = new Intent(getActivity(), AddReviewActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -295,6 +322,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void retrieveFirebaseDataErrorCallback(FirebaseError error) {
         Log.e(TAG, "error" + error.getMessage());
+        //TODO change view
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
     }
 }
 
