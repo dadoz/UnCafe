@@ -1,33 +1,16 @@
 package com.application.material.takeacoffee.app;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.*;
-import android.widget.ImageView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import com.application.material.takeacoffee.app.fragments.AddReviewFragment;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
-import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.io.IOException;
+import com.application.material.takeacoffee.app.fragments.AddViewReviewFragment;
 
 
 public class AddViewReviewActivity extends AppCompatActivity {
@@ -73,7 +56,7 @@ public class AddViewReviewActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.addReviewFragmentContainerId,
-                        new AddReviewFragment(), "AddViewTAG")
+                        new AddViewReviewFragment(), "AddViewTAG")
                 .commit();
     }
 
