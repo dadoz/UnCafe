@@ -25,6 +25,7 @@ import com.application.material.takeacoffee.app.AddReviewActivity;
 import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
 import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
@@ -53,11 +54,12 @@ import static android.os.Build.VERSION_CODES.*;
  * Created by davide on 08/04/14.
  */
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
-        ReviewRecyclerViewAdapter.CustomItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
-        PlaceApiManager.OnHandlePlaceApiResult, GoogleApiClient.OnConnectionFailedListener, FirebaseManager.OnRetrieveFirebaseDataInterface {
+        ReviewRecyclerViewAdapter.CustomItemClickListener, View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
+        GoogleApiClient.OnConnectionFailedListener, FirebaseManager.OnRetrieveFirebaseDataInterface {
     private static final String TAG = "ReviewListFragment";
     private static AppCompatActivity mainActivityRef = null;
-    private ArrayList<Review> reviewList;
+    private ArrayList<Review> reviewList = new ArrayList<>();
     private String coffeePlaceId;
     private PlaceApiManager placesApiManager;
     private GoogleApiClient mGoogleApiClient;
@@ -66,7 +68,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     RecyclerView reviewRecyclerView;
     @Bind(R.id.swipeRefreshLayoutId)
     SwipeRefreshLayout swipeRefreshLayout;
-    private ArrayList<CoffeePlace> coffeePlacesList;
+    @Bind(R.id.coffeePlacesProgressId)
+    ProgressBar coffeePlacesProgress;
 
     @Override
     public void onAttach(Context context) {
@@ -105,17 +108,18 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * init view to handle review data
      */
     public void initView() {
-        if (BuildConfig.DEBUG) {
-            reviewList = getReviewListTest();
-            coffeePlacesList = getCoffeePlacesListTest();
-            CoffeePlace coffeePlace = coffeePlacesList.get(0);
-            initActionbar(coffeePlace.getName());
-        }
+//        if (BuildConfig.DEBUG) {
+//            reviewList = getReviewListTest();
+//            coffeePlacesList = getCoffeePlacesListTest();
+//            CoffeePlace coffeePlace = coffeePlacesList.get(0);
+//            initActionbar(coffeePlace.getName());
+//        }
+        //TODO move out
+        FirebaseManager.getIstance().getReviewListAsync(this);
         swipeRefreshLayout.setOnRefreshListener(this);
         mainActivityRef.findViewById(R.id.addReviewFabId)
                 .setOnClickListener(this);
         initListView();
-        FirebaseManager.getIstance().getReviewListAsync(this);
     }
 
     /**
@@ -133,7 +137,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 .enableAutoManage(getActivity(), this)
                 .build();
 
-        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
+        placesApiManager = PlaceApiManager.getInstance(new WeakReference<>(this),
                 mGoogleApiClient);
     }
 
@@ -186,7 +190,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 Intent intent = new Intent(getActivity(), AddReviewActivity.class);
                 startActivity(intent);
                 break;
-
         }
     }
 
@@ -268,8 +271,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     }
 
     @Override
-    public void handleLatestItem() {
-
+    public void handleEmptyList() {
+        ((PlacesGridViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
     }
 
     @Override
@@ -284,7 +287,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void retrieveFirebaseDataSuccessCallback(String type, ArrayList<Review> list) {
-        reviewList.clear();
+        coffeePlacesProgress.setVisibility(View.GONE);
         reviewList.addAll(list);
         reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }

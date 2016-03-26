@@ -16,13 +16,13 @@
         android:divider="@color/middle_grey"
         android:dividerHeight="0.5dp"
         android:orientation="vertical"/>
-    <!--<ProgressBar-->
-        <!--android:id="@+id/coffeePlacesProgressId"-->
-        <!--style="@android:style/Widget.Material.Light.ProgressBar.Large"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:indeterminateTint="@color/material_brown600"-->
-        <!--android:indeterminateTintMode="src_in"/>-->
+    <ProgressBar
+        android:id="@+id/coffeePlacesProgressId"
+        style="@android:style/Widget.Material.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/material_brown600"
+        android:indeterminateTintMode="src_in"/>
 
 </RelativeLayout>

@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Created by davide on 3/13/14.
  */
-public class CoffeePlacesFragment extends Fragment implements
+public class PlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
         PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
@@ -310,10 +310,8 @@ public class CoffeePlacesFragment extends Fragment implements
     }
 
     @Override
-    public void handleLatestItem() {
-        //TODO move out
-        boolean isEmpty = coffeePlacesRecyclerview.getAdapter().getItemCount() == 0;
-        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(isEmpty);
+    public void handleEmptyList() {
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
     }
 
     /**

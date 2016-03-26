@@ -18,10 +18,10 @@ repositories {
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         minSdkVersion 16
@@ -73,4 +73,6 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.firebase:firebase-client-android:2.5.2'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
 }

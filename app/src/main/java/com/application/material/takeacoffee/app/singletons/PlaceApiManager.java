@@ -22,8 +22,13 @@ import com.google.android.gms.location.places.PlaceTypes;
 import com.google.android.gms.location.places.Places;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Set;
+
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by davide on 21/03/16.
@@ -58,22 +63,14 @@ public class PlaceApiManager {
     /**
      *
      * @param placeId
-     * @param isLatestItem
      */
-    public void getInfo(final String placeId, final boolean isLatestItem) {
+    public void getInfo(final String placeId) {
         Places.GeoDataApi
                 .getPlaceById(mGoogleApiClient, placeId)
-                .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(@NonNull PlaceBuffer placeBuffer) {
-                        listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
-                        listener.get().onUpdatePhotoOnListCallback();
-                        placeBuffer.release();
-                        //TODO handle better
-                        if (isLatestItem) {
-                            listener.get().handleLatestItem();
-                        }
-                    }
+                .setResultCallback(placeBuffer -> {
+                    listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
+                    listener.get().onUpdatePhotoOnListCallback();
+                    placeBuffer.release();
                 });
     }
 
@@ -82,8 +79,7 @@ public class PlaceApiManager {
      * @param placeId
      */
     public void getPhoto(final String placeId) {
-        Bitmap cachedBitmap = CacheManager.getInstance().getBitmapFromMemCache(placeId);
-        if (cachedBitmap == null) {
+        if (CacheManager.getInstance().getBitmapFromMemCache(placeId) == null) {
             retrievePhotoFromApi(placeId);
             return;
         }
@@ -95,30 +91,24 @@ public class PlaceApiManager {
      * @param placeId
      */
     public void retrievePhotoFromApi(final String placeId) {
-        //get photo
-        PendingResult<PlacePhotoMetadataResult> result1 = Places.GeoDataApi
-                .getPlacePhotos(mGoogleApiClient, placeId);
-        result1.setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
-            @Override
-            public void onResult(@NonNull PlacePhotoMetadataResult placePhotoMetadataResult) {
-                PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
-                if (photoMetadataBuffer.getCount() > 0) {
-                    photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
-                            MAX_WIDTH, MAX_HEIGHT)
-                            .setResultCallback(new ResultCallback<PlacePhotoResult>() {
-                                @Override
-                                public void onResult(@NonNull PlacePhotoResult photo) {
+        //TODO refactor it
+        Places.GeoDataApi
+                .getPlacePhotos(mGoogleApiClient, placeId)
+                .setResultCallback(placePhotoMetadataResult -> {
+                    PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
+                    if (photoMetadataBuffer.getCount() > 0) {
+                        photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
+                                MAX_WIDTH, MAX_HEIGHT)
+                                .setResultCallback(photo -> {
                                     if (photo.getStatus().isSuccess()) {
                                         CacheManager.getInstance().addBitmapToMemoryCache(placeId,
                                                 photo.getBitmap());
                                         listener.get().onUpdatePhotoOnListCallback();
                                     }
-                                }
-                            });
-                    photoMetadataBuffer.release();
-                }
-            }
-        });
+                                });
+                        photoMetadataBuffer.release();
+                    }
+                });
 
     }
 
@@ -132,20 +122,27 @@ public class PlaceApiManager {
             PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
             final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
                     .getCurrentPlace(mGoogleApiClient, filter);
-            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-                @Override
-                public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
-                    for (int i = 0; i < placeLikelihoods.getCount(); i ++) {
-                        boolean isLatest = placeLikelihoods.getCount() - 1 == i;
-                        String placeId = placeLikelihoods.get(i).getPlace().getId();
-                        getPhoto(placeId);
-                        getInfo(placeId, isLatest);
-                    }
-                }
+            result.setResultCallback(placeLikelihoods -> {
+                Observable
+                        .just(placeLikelihoods)
+                        .filter(placeLikelihoods1 -> {
+                            boolean isEmpty = placeLikelihoods1.getCount() != 0;
+                            if (isEmpty) {
+                                listener.get().handleEmptyList();
+                            }
+                            return isEmpty;
+                        })
+                        .flatMap(Observable::from)
+                        .flatMap(placeLikelihood -> Observable.just(placeLikelihood.getPlace()))
+                        .subscribe(place -> {
+                            getPhoto(place.getId());
+                            getInfo(place.getId());
+                        });
             });
 
         } catch (SecurityException e) {
             e.printStackTrace();
+            listener.get().handleEmptyList();
         }
     }
 
@@ -180,8 +177,6 @@ public class PlaceApiManager {
     public interface OnHandlePlaceApiResult {
         void onSetCoffeePlaceInfoOnListCallback(Place place);
         void onUpdatePhotoOnListCallback();
-        void handleLatestItem();
+        void handleEmptyList();
     }
-
-
 }

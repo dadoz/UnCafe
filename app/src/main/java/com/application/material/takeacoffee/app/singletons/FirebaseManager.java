@@ -4,9 +4,11 @@ import android.util.Log;
 
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,20 +23,22 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+
+
 
 /**
  * Created by davide on 24/03/16.
  */
-public class FirebaseManager {
+public class FirebaseManager implements ChildEventListener {
     //TODO move out
-    private static final String FIREBASE_URL = "https://torrid-heat-5131.firebaseio.com/";
     private static final String REVIEW_CLASS = "reviews";
+    private static final String FIREBASE_URL = "https://torrid-heat-5131.firebaseio.com/";
     private static final String TAG = "FirebaseManager";
     private Firebase firebaseRef;
     private static FirebaseManager instance;
+    private OnRetrieveFirebaseDataInterface listener;
+    private ArrayList<Review> list = new ArrayList<>();
 
     public FirebaseManager() {
         firebaseRef = new Firebase(FIREBASE_URL);
@@ -54,47 +58,85 @@ public class FirebaseManager {
      * @param listener
      */
     public void getReviewListAsync(final OnRetrieveFirebaseDataInterface listener) {
-        firebaseRef.child(REVIEW_CLASS).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                try {
-//                    ArrayList<HashMap<String, String>> list = (ArrayList<HashMap<String, String>>) snapshot.getValue();
-                    //get GSON data
-//                    Gson gson = new Gson();
-//                    ArrayList<Review> listTemp = new ArrayList<>();
-//                    for (HashMap<String, String> temp: list) {
-//                        JSONObject jsonObject = new JSONObject(temp);
-//                        Review reviewTemp = gson.fromJson(jsonObject.toString(), Review.class);
-//                        listTemp.add(reviewTemp);
-//                    }
-
-                    //TODO refactor it
-                    ArrayList<HashMap<String, String>> list = (ArrayList<HashMap<String, String>>) snapshot.getValue();
-                    Type reviewType = new TypeToken<ArrayList<Review>>(){}.getType();
-                    ReviewDeserializer deserializer = new ReviewDeserializer(User.class, new UserDeserializer());
-                    GsonBuilder builder = new GsonBuilder();
-                    builder.registerTypeAdapter(reviewType, deserializer);
-                    Gson gson = builder.create();
-                    ArrayList<Review> listTemp = gson.fromJson(new JSONArray(list).toString(), reviewType);
-
-                    String type = REVIEW_CLASS;
-                    listener.retrieveFirebaseDataSuccessCallback(type, listTemp);
-                } catch (Exception e) {
-                    listener.retrieveFirebaseDataErrorCallback(new FirebaseError(0, e.getMessage()));
-                }
-            }
-
-            @Override public void onCancelled(FirebaseError error) {
-                Log.e(TAG, error.getMessage());
-                listener.retrieveFirebaseDataErrorCallback(error);
-            }
-
-        });
-
+        this.listener = listener;
+        firebaseRef.child(REVIEW_CLASS).orderByChild("placeId")
+                .equalTo("kFFMaPaytU").addChildEventListener(this);
     }
 
     /**
      *
+     * @param json
+     * @return
+     */
+    public Review getObjectFromJSON(String json) {
+        ReviewDeserializer deserializer = new ReviewDeserializer(User.class, new UserDeserializer());
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Review.class, deserializer);
+        Gson gson = builder.create();
+        return gson.fromJson(json, Review.class);
+    }
+    /**
+     *
+     * @param json
+     * @return
+     */
+    public ArrayList<Review> getListFromJSON(String json) {
+        Type reviewType = new TypeToken<ArrayList<Review>>(){}.getType();
+        ReviewDeserializer deserializer = new ReviewDeserializer(User.class, new UserDeserializer());
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(reviewType, deserializer);
+        Gson gson = builder.create();
+        return gson.fromJson(json, reviewType);
+    }
+
+    /**
+     *
+     * @param snapshot
+     * @return
+     */
+    public String getJSONFromSnapshot(DataSnapshot snapshot) {
+        Log.e(TAG, snapshot.getValue().toString());
+        HashMap<String, String> temp = (HashMap<String, String>) snapshot.getValue();
+        return new JSONObject(temp).toString();
+    }
+
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Log.e("TAG", "hey");
+        try {
+            String type = REVIEW_CLASS;
+            list.add(getObjectFromJSON(getJSONFromSnapshot(dataSnapshot)));
+            listener.retrieveFirebaseDataSuccessCallback(type, list);
+        } catch (Exception e) {
+            listener.retrieveFirebaseDataErrorCallback(new FirebaseError(0, e.getMessage()));
+        }
+
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(FirebaseError firebaseError) {
+        Log.e(TAG, firebaseError.getMessage());
+        listener.retrieveFirebaseDataErrorCallback(firebaseError);
+
+    }
+
+    /**
+     * GSON
      * @param <T>
      */
     public class ReviewDeserializer<T> implements JsonDeserializer<T> {
@@ -114,20 +156,16 @@ public class FirebaseManager {
                     mNestedDeserializer != null) {
                 builder.registerTypeAdapter(mNestedClazz, mNestedDeserializer);
             }
-            return builder.create().fromJson(je.getAsJsonArray(), type);
+            return builder.create().fromJson(je.getAsJsonObject(), type);
 
         }
     }
 
     /**
-     *
+     * GSON
      * @param <T>
      */
     public class UserDeserializer<T> implements JsonDeserializer<T> {
-
-        public UserDeserializer() {
-        }
-
         @Override
         public T deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)
                 throws JsonParseException {
