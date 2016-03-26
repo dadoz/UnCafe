@@ -16,7 +16,7 @@ import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import com.application.material.takeacoffee.app.AddReviewActivity;
+import com.application.material.takeacoffee.app.AddViewReviewActivity;
 import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
@@ -171,7 +171,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addReviewFabId:
-                Intent intent = new Intent(getActivity(), AddReviewActivity.class);
+                Intent intent = new Intent(getActivity(), AddViewReviewActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -247,7 +247,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onItemClick(int pos, View v) {
-        Intent intent = new Intent(getActivity(), AddReviewActivity.class);
+        Intent intent = new Intent(getActivity(), AddViewReviewActivity.class);
         startActivity(intent);
     }
 

@@ -12,7 +12,7 @@ import android.widget.*;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.AddReviewActivity;
+import com.application.material.takeacoffee.app.AddViewReviewActivity;
 import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
@@ -38,7 +38,7 @@ import java.util.Timer;
 public class AddReviewFragment extends Fragment implements
         View.OnClickListener {
     private static final String TAG = "AddReviewFragment";
-    private AddReviewActivity addActivityRef;
+    private AddViewReviewActivity addActivityRef;
     private String meUserId;
     @Bind(R.id.commentTextId) View commentTextView;
 //    @Bind(R.id.statusRatingBarId) View statusRatingBarView;
@@ -62,7 +62,7 @@ public class AddReviewFragment extends Fragment implements
             throw new ClassCastException(activity.toString()
                     + " must implement OnLoadViewHandlerInterface");
         }
-        addActivityRef =  (AddReviewActivity) activity;
+        addActivityRef =  (AddViewReviewActivity) activity;
         coffeePlacesApplication = (CoffeePlacesApplication) addActivityRef.getApplication();
 
         meUserId = coffeePlacesApplication.getUserId();

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
+
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
 import com.firebase.client.Firebase;
 
@@ -31,6 +34,17 @@ public class ReviewListActivity extends AppCompatActivity {
 
         initActionBar();
         initView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
