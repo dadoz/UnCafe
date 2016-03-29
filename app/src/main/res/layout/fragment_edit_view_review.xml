@@ -6,37 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/reviewsButtonId"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical"-->
-        <!--android:gravity="center_horizontal">-->
-        <!--<EditText-->
-            <!--android:id="@+id/editReviewCommentTextId"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textColor="@color/dark_black"-->
-            <!--android:paddingLeft="@dimen/text_big_26"-->
-            <!--android:paddingRight="@dimen/text_big_26"-->
-            <!--android:textColorHint="@color/dark_grey"-->
-            <!--android:background="@color/material_light_yellow_200"-->
-            <!--android:hint="Write something..."-->
-            <!--android:textSize="@dimen/text_big_24"-->
-            <!--android:minLines="3"-->
-            <!--android:maxLines="6"-->
-            <!--android:gravity="top"/>-->
-        <!--<RatingBar-->
-            <!--android:id="@+id/editStatusRatingBarViewId"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="@dimen/text_big_26"-->
-            <!--android:layout_marginRight="@dimen/text_big_26"-->
-            <!--android:layout_gravity="left"-->
-            <!--android:stepSize="1"-->
-            <!--android:numStars="3"/>-->
-    <!--</LinearLayout>-->
-
+    <!--<include layout="@layout/review_edit_cardview_item"/>-->
     <include layout="@layout/review_cardview_item"/>
 
 </RelativeLayout>

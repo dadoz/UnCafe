@@ -10,14 +10,39 @@
         android:padding="@dimen/medium_padding"
         android:orientation="vertical">
         <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/material_red700"
+            android:textSize="@dimen/text_big_24"
+            android:text="title review ...."
+            android:maxLines="6"
+            android:gravity="top"/>
+        <TextView
             android:id="@+id/commentTextId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/dark_black"
-            android:textColorHint="@color/dark_grey"
-            android:hint="Write something..."
-            android:textSize="@dimen/text_big_24"
+            android:textColor="@color/material_brown800"
+            android:layout_marginBottom="@dimen/medium_padding"
+            android:textSize="@dimen/text_big_18"
             android:maxLines="6"
             android:gravity="top"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_huge_48"
+                android:textColor="@color/material_brown400"
+                android:text="4"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small_14"
+                android:textColor="@color/material_grey800"
+                android:layout_marginLeft="@dimen/small_padding"
+                android:text="rated by users..."/>
+        </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

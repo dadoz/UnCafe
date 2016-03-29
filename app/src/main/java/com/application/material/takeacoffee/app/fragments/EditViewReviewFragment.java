@@ -68,6 +68,7 @@ public class EditViewReviewFragment extends Fragment implements
     private void initView() {
         editStatusRatingbarView = (RatingBar) getActivity()
                 .findViewById(R.id.statusRatingBarId);
+        editStatusRatingbarView.setVisibility(View.GONE);
     }
 
     @Override
@@ -148,7 +149,6 @@ public class EditViewReviewFragment extends Fragment implements
         String reviewContent = bundle.getString(Review.REVIEW_CONTENT_KEY);
         int reviewRating = bundle.getInt(Review.REVIEW_RATING_KEY);
 
-        editStatusRatingbarView.setRating(reviewRating);
         commentTextView.setText(reviewContent);
     }
 }

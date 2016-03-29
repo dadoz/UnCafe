@@ -7,7 +7,7 @@
 
         android:layout_width="fill_parent"
         android:layout_height="@dimen/coffee_machine_status_header_size"
-        android:background="@color/material_grey_200">
+        android:background="@color/material_grey200">
         <ImageView
                 android:id="@+id/statusCoffeeIconId"
                 android:layout_centerVertical="true"
@@ -25,7 +25,7 @@
                         android:id="@+id/periodTextId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/material_text_brown"
+                        android:textColor="@color/material_brown400"
                         android:textSize="@dimen/title_text_size"
                         android:text=" - "
                         android:layout_marginBottom="@dimen/small_padding"
@@ -38,7 +38,7 @@
                     android:id="@+id/goodReviewPercentageTextId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/material_light_red"
+                    android:textColor="@color/material_red700"
                     android:textSize="@dimen/title_text_size"
                     android:text="- %"
 
@@ -48,7 +48,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/material_text_brown"
+                    android:textColor="@color/material_brown400"
                     android:textSize="@dimen/small_content_text_size"
                     android:text="of good review"
 

@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/small_padding"
             android:paddingBottom="@dimen/small_padding"
-            android:textColor="@color/light_black"
+            android:textColor="@color/material_black"
             android:textSize="@dimen/text_big_24"
             android:text="load more review ..."
 

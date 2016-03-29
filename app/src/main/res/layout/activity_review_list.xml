@@ -53,6 +53,6 @@
             android:layout_marginRight="@dimen/small_padding"
             app:layout_anchor="@id/appbarLayoutId"
             app:layout_anchorGravity="bottom|right|end"
-            app:backgroundTint="@color/material_light_red"/>
+            app:backgroundTint="@color/material_red700"/>
 
     </android.support.design.widget.CoordinatorLayout>

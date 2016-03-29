@@ -15,9 +15,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/medium_padding"
             android:text="Dadoz"
             android:textSize="@dimen/header_text_size"/>
         <RatingBar
+            android:visibility="gone"
             android:id="@+id/statusRatingBarId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -11,7 +11,7 @@
     <LinearLayout
             tools:ignore="MissingPrefix"
             android:id="@+id/editReviewFragmentContainerId"
-            android:background="@color/material_light_yellow_200"
+            android:background="@color/material_yellow400"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" />
