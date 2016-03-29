@@ -17,6 +17,8 @@ import com.application.material.takeacoffee.app.fragments.EditViewReviewFragment
 
 
 public class HandleReviewActivity extends AppCompatActivity {
+//    private static final String TYPE = "EDIT_VIEW"; //TODO change this
+    private static final String TYPE = "ADD"; //TODO change this
     @Bind(R.id.addReviewToolbarId)
     public Toolbar toolbar;
 
@@ -64,7 +66,7 @@ public class HandleReviewActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.addReviewFragmentContainerId,
-                        new EditViewReviewFragment(), "EDIT_VIEW_TAG")
+                        getFragmentByType(TYPE), TYPE + "_TAG")
                 .commit();
     }
 
@@ -79,4 +81,18 @@ public class HandleReviewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     * @param type
+     * @return
+     */
+    public Fragment getFragmentByType(String type) {
+        switch (type) {
+            case "ADD":
+                return new AddReviewFragment();
+            case "EDIT_VIEW":
+                return new EditViewReviewFragment();
+        }
+        return null;
+    }
 }
