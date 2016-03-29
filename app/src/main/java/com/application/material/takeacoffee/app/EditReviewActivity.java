@@ -188,8 +188,6 @@ public class EditReviewActivity extends AppCompatActivity implements
             Bitmap picture = ImagePickerSingleton.getInstance(this.getApplicationContext())
                     .onActivityResultWrapped(requestCode, resultCode, data);
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(getCurrentFragTag());
-            ((ImageView) fragment.getView().findViewById(R.id.imagePreviewViewId))
-                    .setImageBitmap(picture);
             coffeePlacesApplication.setReviewPictureTemp(picture);
             picture = null;
         } catch (IOException e) {

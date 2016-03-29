@@ -12,13 +12,11 @@
         android:paddingLeft="@dimen/small_padding"
         android:paddingRight="@dimen/small_padding"
         android:orientation="vertical">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dadoz"
-            android:textSize="@dimen/header_text_size"
-            />
+            android:textSize="@dimen/header_text_size"/>
         <RatingBar
             android:id="@+id/statusRatingBarId"
             android:layout_width="wrap_content"

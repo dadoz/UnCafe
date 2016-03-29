@@ -69,7 +69,7 @@ public class AddReviewFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.save_edit_review, menu);
+        menuInflater.inflate(R.menu.edit_view_review_menu, menu);
     }
 
     @Override

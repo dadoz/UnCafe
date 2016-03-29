@@ -252,8 +252,16 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onItemClick(int pos, View v) {
+        //TODO move
+        Bundle bundle = new Bundle();
+        bundle.putString(Review.REVIEW_ID_KEY, "000000");
+        bundle.putString(Review.REVIEW_CONTENT_KEY, "hey content");
+        bundle.putInt(Review.REVIEW_RATING_KEY, 4);
+        BusSingleton.getInstance().postSticky(bundle);
+
         Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
         startActivity(intent);
+
     }
 
     @Override
