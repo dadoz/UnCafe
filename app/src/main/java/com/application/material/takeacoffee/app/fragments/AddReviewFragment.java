@@ -24,22 +24,22 @@ public class AddReviewFragment extends Fragment implements
         View.OnClickListener {
     private static final String TAG = "AddReviewFragment";
     private String coffeePlaceId;
-    private HandleReviewActivity activityRef;
-    @Bind(R.id.commentTextId)
-    View commentTextView;
+    @Bind(R.id.commentReviewEditTextId)
+    View commentReviewEditText;
+    @Bind(R.id.reviewSaveButtonId)
+    View reviewSaveButton;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        activityRef =  (HandleReviewActivity) context;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View addReviewView = inflater.inflate(R.layout.fragment_add_review, container, false);
+        View addReviewView = inflater.inflate(R.layout.review_edit_cardview_item, container, false);
         ButterKnife.bind(this, addReviewView);
+        setHasOptionsMenu(true);
 
-//        setHasOptionsMenu(true);
         initView();
         return addReviewView;
     }
@@ -60,6 +60,9 @@ public class AddReviewFragment extends Fragment implements
      * init view
      */
     private void initView() {
+        getActivity().findViewById(R.id.statusRatingBarId)
+                .setVisibility(View.VISIBLE);
+        reviewSaveButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -69,7 +72,7 @@ public class AddReviewFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.edit_view_review_menu, menu);
+        menuInflater.inflate(R.menu.add_review_menu, menu);
     }
 
     @Override

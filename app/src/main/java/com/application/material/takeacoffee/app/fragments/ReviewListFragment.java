@@ -255,7 +255,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         //TODO move
         Bundle bundle = new Bundle();
         bundle.putString(Review.REVIEW_ID_KEY, "000000");
-        bundle.putString(Review.REVIEW_CONTENT_KEY, "hey content");
+        bundle.putString(Review.REVIEW_CONTENT_KEY, "Hey content review, you can handle this by bla");
         bundle.putInt(Review.REVIEW_RATING_KEY, 4);
         BusSingleton.getInstance().postSticky(bundle);
 

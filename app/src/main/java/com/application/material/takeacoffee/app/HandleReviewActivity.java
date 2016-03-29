@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -16,7 +17,6 @@ import com.application.material.takeacoffee.app.fragments.EditViewReviewFragment
 
 
 public class HandleReviewActivity extends AppCompatActivity {
-    private static final String TYPE = "EDIT_VIEW"; //TODO change this
     @Bind(R.id.addReviewToolbarId)
     public Toolbar toolbar;
 
@@ -40,6 +40,11 @@ public class HandleReviewActivity extends AppCompatActivity {
      */
     private void initActionbar() {
         setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setDisplayShowTitleEnabled(false);
+        }
     }
 
     @Override
@@ -59,7 +64,7 @@ public class HandleReviewActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.addReviewFragmentContainerId,
-                        getFragmentByType(TYPE), TYPE + "_TAG")
+                        new EditViewReviewFragment(), "EDIT_VIEW_TAG")
                 .commit();
     }
 
@@ -74,18 +79,4 @@ public class HandleReviewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     *
-     * @param type
-     * @return
-     */
-    public Fragment getFragmentByType(String type) {
-        switch (type) {
-            case "ADD":
-                return new AddReviewFragment();
-            case "EDIT_VIEW":
-                return new EditViewReviewFragment();
-        }
-        return null;
-    }
 }
