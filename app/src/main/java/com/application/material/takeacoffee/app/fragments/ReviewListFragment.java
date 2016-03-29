@@ -16,7 +16,7 @@ import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import com.application.material.takeacoffee.app.AddViewReviewActivity;
+import com.application.material.takeacoffee.app.HandleReviewActivity;
 import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
@@ -33,7 +33,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
@@ -172,7 +171,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 bundle.putString(Review.REVIEW_ID_KEY, "090Xg3rDmx");
                 bundle.putString(Review.REVIEW_CONTENT_KEY, "balsdlllasldlflalsl llsadf lalsll sdlfl lalsd");
                 BusSingleton.getInstance().postSticky(bundle);
-                Intent intent = new Intent(getActivity(), AddViewReviewActivity.class);
+                Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -253,7 +252,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onItemClick(int pos, View v) {
-        Intent intent = new Intent(getActivity(), AddViewReviewActivity.class);
+        Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
         startActivity(intent);
     }
 

@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
-import com.application.material.takeacoffee.app.fragments.EditReviewFragment;
+import com.application.material.takeacoffee.app.fragments.EditViewReviewFragment;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.fragments.interfaces.SetActionBarInterface;
@@ -68,7 +68,7 @@ public class EditReviewActivity extends AppCompatActivity implements
         }
 
         setCurrentFragTag(EditReviewActivity.EDIT_REVIEW_FRAG_TAG);
-        initView(new EditReviewFragment(), null);
+        initView(new EditViewReviewFragment(), null);
     }
 
     @Override

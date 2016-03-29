@@ -27,9 +27,9 @@ import org.greenrobot.eventbus.Subscribe;
 /**
  * Created by davide on 14/11/14.
  */
-public class EditReviewFragment extends Fragment implements
+public class EditViewReviewFragment extends Fragment implements
         View.OnClickListener {
-    private static final String TAG = "EditReviewFragment";
+    private static final String TAG = "EditViewReviewFragment";
     private EditReviewActivity editActivityRef;
     private Bundle bundle;
     private View addReviewView;

@@ -1,56 +1,37 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
-import android.widget.*;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.AddViewReviewActivity;
-import com.application.material.takeacoffee.app.CoffeePlacesActivity;
+import com.application.material.takeacoffee.app.HandleReviewActivity;
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
-import com.application.material.takeacoffee.app.models.CoffeePlace;
-import com.application.material.takeacoffee.app.singletons.FirebaseManager;
-import com.application.material.takeacoffee.app.utils.Utils;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
-import com.application.material.takeacoffee.app.services.HttpIntentService;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.parse.ParseFile;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.joda.time.DateTime;
-
-import java.io.ByteArrayOutputStream;
-import java.lang.ref.WeakReference;
-import java.util.Timer;
 
 
 /**
  * Created by davide on 14/11/14.
  */
-public class AddViewReviewFragment extends Fragment implements
+public class AddReviewFragment extends Fragment implements
         View.OnClickListener {
-    private static final String TAG = "AddViewReviewFragment";
+    private static final String TAG = "AddReviewFragment";
     private String coffeePlaceId;
-    private AddViewReviewActivity activityRef;
+    private HandleReviewActivity activityRef;
     @Bind(R.id.commentTextId)
     View commentTextView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        activityRef =  (AddViewReviewActivity) context;
+        activityRef =  (HandleReviewActivity) context;
     }
 
     @Override
