@@ -17,6 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.takeacoffee.app.AddViewReviewActivity;
+import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
@@ -32,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
@@ -95,12 +97,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * init view to handle review data
      */
     public void initView() {
-//        if (BuildConfig.DEBUG) {
-//            reviewList = getReviewListTest();
-//            coffeePlacesList = getCoffeePlacesListTest();
-//            CoffeePlace coffeePlace = coffeePlacesList.get(0);
-//            initActionbar(coffeePlace.getName());
-//        }
         swipeRefreshLayout.setOnRefreshListener(this);
         mainActivityRef.findViewById(R.id.addReviewFabId).setOnClickListener(this);
         initListView();
@@ -171,6 +167,11 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addReviewFabId:
+
+                Bundle bundle = new Bundle();
+                bundle.putString(Review.REVIEW_ID_KEY, "090Xg3rDmx");
+                bundle.putString(Review.REVIEW_CONTENT_KEY, "balsdlllasldlflalsl llsadf lalsll sdlfl lalsd");
+                BusSingleton.getInstance().postSticky(bundle);
                 Intent intent = new Intent(getActivity(), AddViewReviewActivity.class);
                 startActivity(intent);
                 break;
@@ -188,11 +189,16 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
         String placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
 
-        //google places
-//        initGooglePlaces();
-//        placesApiManager.getInfo(coffeePlaceId);
         onSetCoffeePlaceInfoOnListCallback(placeName);
         onUpdatePhotoOnListCallback();
+
+        if (BuildConfig.DEBUG) {
+            Log.e("TAG", "BLA");
+            reviewList = getReviewListTest();
+            ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).addAllItems(reviewList);
+//            reviewRecyclerView.getAdapter().notifyDataSetChanged();
+            return;
+        }
 
         //review
         reviewList.clear();
@@ -284,35 +290,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 //        list.add(new Review("9", "blalallall9", "balal", 1234342, "1", "1", null, null));
 //        list.add(new Review("10", "blalallall10", "balal", 1234342, "1", "1", null, null));
         return list;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public ArrayList<CoffeePlace> getCoffeePlacesListTest() {
-        ArrayList<CoffeePlace> tmp = new ArrayList<CoffeePlace>();
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        return tmp;
     }
 }
 

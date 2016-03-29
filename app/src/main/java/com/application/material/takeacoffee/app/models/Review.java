@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class Review {
     private static final String TAG = "Review";
+    public static final java.lang.String REVIEW_CONTENT_KEY = "0";
+    public static final java.lang.String REVIEW_ID_KEY = "1";
     public static String REVIEW_OBJ_KEY = "REVIEW_OBJ_KEY";
 
     private String id;

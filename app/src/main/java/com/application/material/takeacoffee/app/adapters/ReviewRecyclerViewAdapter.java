@@ -96,4 +96,10 @@ public class ReviewRecyclerViewAdapter extends
     public interface CustomItemClickListener {
         void onItemClick(int pos, View v);
     }
+
+    public void addAllItems(ArrayList<Review> list) {
+        itemList.clear();
+        itemList.addAll(list);
+        this.notifyDataSetChanged();
+    }
 }

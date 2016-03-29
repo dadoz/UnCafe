@@ -96,11 +96,25 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.reconnect();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     /**
@@ -111,12 +125,12 @@ public class PlacesFragment extends Fragment implements
         setHasOptionsMenu(true);
         coffeePlaceFilterLayout.setOnClickListener(this);
         coffeePlaceSwipeRefreshLayout.setOnRefreshListener(this);
-//        if (BuildConfig.DEBUG) {
-//            coffeePlacesList = getCoffeePlacesListTest();
-//        }
+        if (BuildConfig.DEBUG) {
+            coffeePlacesList = getCoffeePlacesListTest();
+        }
         initGridViewAdapter();
-        initGooglePlaces();
-        initPermissionChainResponsibility();
+//        initGooglePlaces();
+//        initPermissionChainResponsibility();
     }
 
     /**

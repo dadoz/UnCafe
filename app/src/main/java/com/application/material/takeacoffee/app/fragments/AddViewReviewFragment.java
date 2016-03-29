@@ -18,6 +18,7 @@ import com.application.material.takeacoffee.app.CoffeePlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
+import com.application.material.takeacoffee.app.singletons.FirebaseManager;
 import com.application.material.takeacoffee.app.utils.Utils;
 import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
 import com.application.material.takeacoffee.app.models.Review;
@@ -27,9 +28,11 @@ import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.parse.ParseFile;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.Timer;
 
 
@@ -95,5 +98,12 @@ public class AddViewReviewFragment extends Fragment implements
             case R.id.action_save:
         }
         return true;
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(Bundle bundle) {
+        String reviewId = bundle.getString(Review.REVIEW_ID_KEY);
+        String reviewContent = bundle.getString(Review.REVIEW_CONTENT_KEY);
+        Log.e(TAG, reviewId + " --- " + reviewContent);
     }
 }

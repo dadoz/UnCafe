@@ -100,8 +100,10 @@ public class PlaceApiManager {
                 .setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
                     @Override
                     public void onResult(@NonNull PlacePhotoMetadataResult placePhotoMetadataResult) {
+
                         PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
-                        if (photoMetadataBuffer.getCount() > 0) {
+                        if (photoMetadataBuffer != null &&
+                                photoMetadataBuffer.getCount() > 0) {
                             photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
                                     MAX_WIDTH, MAX_HEIGHT)
                                     .setResultCallback(new ResultCallback<PlacePhotoResult>() {
