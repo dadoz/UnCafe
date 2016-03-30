@@ -17,8 +17,8 @@ import com.application.material.takeacoffee.app.fragments.EditViewReviewFragment
 
 
 public class HandleReviewActivity extends AppCompatActivity {
-//    private static final String TYPE = "EDIT_VIEW"; //TODO change this
-    private static final String TYPE = "ADD"; //TODO change this
+    private static final String TYPE = "EDIT_VIEW"; //TODO change this
+//    private static final String TYPE = "ADD"; //TODO change this
     @Bind(R.id.addReviewToolbarId)
     public Toolbar toolbar;
 

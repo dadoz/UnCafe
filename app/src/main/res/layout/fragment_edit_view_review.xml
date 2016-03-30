@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!--<include layout="@layout/review_edit_cardview_item"/>-->
+    <include
+        android:visibility="gone"
+        layout="@layout/review_edit_cardview_item"/>
     <include layout="@layout/review_cardview_item"/>
 
 </RelativeLayout>

@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.*;
-import android.widget.*;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,12 +26,23 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by davide on 14/11/14.
  */
 public class EditViewReviewFragment extends Fragment implements
-        View.OnClickListener {
+        View.OnClickListener, Toolbar.OnMenuItemClickListener {
     private static final String TAG = "EditViewReviewFragment";
     private View addReviewView;
+    private RatingBar editStatusRatingbarView;
     @Bind(R.id.commentTextId)
     TextView commentTextView;
-    private RatingBar editStatusRatingbarView;
+    @Bind(R.id.reviewCardviewToolbarId)
+    Toolbar reviewCardviewToolbar;
+    @Bind(R.id.reviewEditCardviewLayoutId)
+    View reviewEditCardviewLayout;
+    @Bind(R.id.reviewCardviewLayoutId)
+    View reviewCardviewLayout;
+    @Bind(R.id.commentReviewEditTextId)
+    TextView commentReviewEditText;
+    private String reviewContent;
+    private int reviewRating;
+    private boolean editStatus = false;
 
     @Override
     public void onAttach(Context context) {
@@ -66,6 +80,8 @@ public class EditViewReviewFragment extends Fragment implements
      * init view
      */
     private void initView() {
+        reviewCardviewToolbar.inflateMenu(R.menu.edit_review_menu);
+        reviewCardviewToolbar.setOnMenuItemClickListener(this);
         editStatusRatingbarView = (RatingBar) getActivity()
                 .findViewById(R.id.statusRatingBarId);
         editStatusRatingbarView.setVisibility(View.GONE);
@@ -83,7 +99,9 @@ public class EditViewReviewFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.edit_view_review_menu, menu);
+        menuInflater.inflate(R.menu.save_review_menu, menu);
+        MenuItem saveItem = menu.getItem(0);
+        saveItem.setVisible(editStatus);
     }
 
     @Override
@@ -94,6 +112,55 @@ public class EditViewReviewFragment extends Fragment implements
                 break;
         }
         return true;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_icon:
+                editReview();
+                break;
+            case R.id.action_delete:
+                deleteReview();
+                break;
+        }
+        return true;
+    }
+
+
+    /**
+     *
+     */
+    private void editReview() {
+        editStatus = true;
+        showEditReview(true);
+        initEditReview();
+        getActivity().invalidateOptionsMenu();
+    }
+
+    /**
+     *
+     */
+    private void initEditReview() {
+        editStatusRatingbarView.setRating(reviewRating);
+        commentReviewEditText.setText(reviewContent);
+        commentReviewEditText.requestFocus();
+    }
+    
+    /**
+     * @param isVisible
+     */
+    private void showEditReview(boolean isVisible) {
+        reviewEditCardviewLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        editStatusRatingbarView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        reviewCardviewLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     *
+     */
+    private void deleteReview() {
+
     }
 
     /**
@@ -146,9 +213,11 @@ public class EditViewReviewFragment extends Fragment implements
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(Bundle bundle) {
 //        String reviewId = bundle.getString(Review.REVIEW_ID_KEY);
-        String reviewContent = bundle.getString(Review.REVIEW_CONTENT_KEY);
-        int reviewRating = bundle.getInt(Review.REVIEW_RATING_KEY);
+        reviewContent = bundle.getString(Review.REVIEW_CONTENT_KEY);
+        reviewRating = bundle.getInt(Review.REVIEW_RATING_KEY);
 
         commentTextView.setText(reviewContent);
     }
+
+
 }
