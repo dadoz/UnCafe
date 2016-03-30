@@ -146,7 +146,7 @@ public class EditViewReviewFragment extends Fragment implements
         commentReviewEditText.setText(reviewContent);
         commentReviewEditText.requestFocus();
     }
-    
+
     /**
      * @param isVisible
      */
