@@ -30,14 +30,12 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by davide on 14/11/14.
  */
 public class EditViewReviewFragment extends Fragment implements
-        View.OnClickListener, Toolbar.OnMenuItemClickListener {
+        View.OnClickListener {
     private static final String TAG = "EditViewReviewFragment";
     private View addReviewView;
     private RatingBar editStatusRatingbarView;
     @Bind(R.id.commentTextId)
     TextView commentTextView;
-    @Bind(R.id.reviewCardviewToolbarId)
-    Toolbar reviewCardviewToolbar;
     @Bind(R.id.reviewEditCardviewLayoutId)
     View reviewEditCardviewLayout;
     @Bind(R.id.reviewCardviewLayoutId)
@@ -54,7 +52,7 @@ public class EditViewReviewFragment extends Fragment implements
     private boolean mMovedUp;
     private float mOrigY;
     private Spring spring;
-    private float TRANSLATION_Y = 150f;
+    private float TRANSLATION_Y = 200f;
 
     @Override
     public void onAttach(Context context) {
@@ -92,8 +90,6 @@ public class EditViewReviewFragment extends Fragment implements
      * init view
      */
     private void initView() {
-        reviewCardviewToolbar.inflateMenu(R.menu.edit_review_menu);
-        reviewCardviewToolbar.setOnMenuItemClickListener(this);
         editStatusRatingbarView = (RatingBar) getActivity()
                 .findViewById(R.id.statusRatingBarId);
         editStatusRatingbarView.setVisibility(View.GONE);
@@ -129,20 +125,6 @@ public class EditViewReviewFragment extends Fragment implements
         }
         return true;
     }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-//            case R.id.action_edit_icon:
-//                editReview();
-//                break;
-            case R.id.action_delete:
-                deleteReview();
-                break;
-        }
-        return true;
-    }
-
 
     /**
      *
