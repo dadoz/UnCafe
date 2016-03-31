@@ -18,6 +18,10 @@ import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.utils.Utils;
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringConfig;
+import com.facebook.rebound.SpringSystem;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -43,6 +47,14 @@ public class EditViewReviewFragment extends Fragment implements
     private String reviewContent;
     private int reviewRating;
     private boolean editStatus = false;
+
+    //TODO move out
+    private static double TENSION = 800;
+    private static double DAMPER = 20; //friction
+    private boolean mMovedUp;
+    private float mOrigY;
+    private Spring spring;
+    private float TRANSLATION_Y = 150f;
 
     @Override
     public void onAttach(Context context) {
@@ -85,16 +97,20 @@ public class EditViewReviewFragment extends Fragment implements
         editStatusRatingbarView = (RatingBar) getActivity()
                 .findViewById(R.id.statusRatingBarId);
         editStatusRatingbarView.setVisibility(View.GONE);
+        handleMotion();
+        reviewCardviewLayout.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.saveReviewId:
-//                saveReview();
-//                break;
-//        }
+        switch (v.getId()) {
+            case R.id.reviewCardviewLayoutId:
+                moitionAction();
+                break;
+        }
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -117,9 +133,9 @@ public class EditViewReviewFragment extends Fragment implements
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_edit_icon:
-                editReview();
-                break;
+//            case R.id.action_edit_icon:
+//                editReview();
+//                break;
             case R.id.action_delete:
                 deleteReview();
                 break;
@@ -210,6 +226,39 @@ public class EditViewReviewFragment extends Fragment implements
 //        getActivity().finish();
     }
 
+
+    private void moitionAction() {
+        if (mMovedUp) {
+            spring.setEndValue(mOrigY);
+        } else {
+            mOrigY = reviewCardviewLayout.getY();
+            spring.setEndValue(mOrigY + TRANSLATION_Y);
+        }
+        mMovedUp = !mMovedUp;
+    }
+    /**
+     *
+     */
+    private void handleMotion() {
+        // Create a system to run the physics loop for a set of springs.
+        SpringSystem springSystem = SpringSystem.create();
+
+        // Add a spring to the system.
+        spring = springSystem.createSpring();
+
+        SpringConfig config = new SpringConfig(TENSION, DAMPER);
+        spring.setSpringConfig(config);
+        // Add a listener to observe the motion of the spring.
+        spring.addListener(new SimpleSpringListener() {
+            @Override
+            public void onSpringUpdate(Spring spring) {
+                // You can observe the updates in the spring
+                // state by asking its current value in onSpringUpdate.
+                float value = (float) spring.getCurrentValue();
+                reviewCardviewLayout.setY(value);
+            }
+        });
+    }
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(Bundle bundle) {
 //        String reviewId = bundle.getString(Review.REVIEW_ID_KEY);

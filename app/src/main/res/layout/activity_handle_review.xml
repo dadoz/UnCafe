@@ -18,7 +18,7 @@
             android:id="@+id/actionbarAddReviewLayoutId"
             layout="@layout/actionbar_add_review_layout"/>
         <FrameLayout
-            android:layout_marginTop="-40dp"
+            android:layout_marginTop="-60dp"
             android:id="@+id/addReviewFragmentContainerId"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
