@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
@@ -14,20 +15,26 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.FirebaseManager;
+import com.application.material.takeacoffee.app.singletons.FirebaseManager.OnUpdateFirebaseCallbackInterface;
 import com.application.material.takeacoffee.app.utils.RebounceMotionHandler;
 import com.application.material.takeacoffee.app.utils.RebounceMotionHandler.OnSpringMotionHandler;
+import com.application.material.takeacoffee.app.utils.Utils;
+import com.firebase.client.FirebaseError;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 /**
  * Created by davide on 14/11/14.
  */
 public class EditViewReviewFragment extends Fragment implements
-        View.OnClickListener, OnSpringMotionHandler, View.OnLongClickListener {
+        View.OnClickListener, OnSpringMotionHandler, View.OnLongClickListener, OnUpdateFirebaseCallbackInterface {
     private static final String TAG = "EditViewReviewFragment";
     private View addReviewView;
     private RatingBar editStatusRatingbarView;
@@ -43,11 +50,17 @@ public class EditViewReviewFragment extends Fragment implements
     TextView reviewEditButton;
     @Bind(R.id.reviewShareButtonId)
     TextView reviewShareButton;
+    @Bind(R.id.likeReviewEditIconId)
+    View likeReviewEditIcon;
+    @Bind(R.id.unlikeReviewEditIconId)
+    View unlikeReviewEditIcon;
 
     private String reviewContent;
     private int reviewRating;
     private boolean editStatus = false;
     private RebounceMotionHandler rebounceMotionHandler;
+    private String reviewId;
+    private boolean isLiking = false;
 
     @Override
     public void onAttach(Context context) {
@@ -92,6 +105,8 @@ public class EditViewReviewFragment extends Fragment implements
         reviewCardviewLayout.setOnLongClickListener(this);
         reviewEditButton.setOnClickListener(this);
         reviewShareButton.setOnClickListener(this);
+        likeReviewEditIcon.setOnClickListener(this);
+        unlikeReviewEditIcon.setOnClickListener(this);
     }
 
     @Override
@@ -99,6 +114,10 @@ public class EditViewReviewFragment extends Fragment implements
         switch (v.getId()) {
             case R.id.reviewEditButtonId:
                 editReview();
+                break;
+            case R.id.likeReviewEditIconId:
+            case R.id.unlikeReviewEditIconId:
+                toggleStatusOnEditMode();
                 break;
             case R.id.reviewShareButtonId:
                 Log.e(TAG, "still to be implemented - share");
@@ -128,7 +147,7 @@ public class EditViewReviewFragment extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                saveReview();
+                updateReview();
                 break;
         }
         return true;
@@ -170,7 +189,7 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     private void deleteReview() {
-
+        //TODO implement it
     }
 
     /**
@@ -179,56 +198,77 @@ public class EditViewReviewFragment extends Fragment implements
      */
     public boolean updateReview() {
         Log.e(TAG, "Update");
-//        String editComment = editReviewCommentText.getText().toString();
-//        String editStatus = ReviewStatus.parseStatus(editStatusRatingBar.getRating()).name();
-
-//        if (review.getComment().equals(editComment) &&
-//                review.getStatus().equals(editStatus)) {
-//            return false;
-//        }
-//
-//        review.setComment(editComment);
-//        review.setStatus(editStatus);
+//        FirebaseManager.getIstance()
+//                .updateObjectByType(getUpdateDataMapFromUI(), FirebaseManager.REVIEW_CLASS,
+//                        new WeakReference<OnUpdateFirebaseCallbackInterface>(this));
+        onUpdateFirebaseSuccessCallback();
         return true;
     }
 
     /**
-     * save review
+     *
+     * @return
      */
-    private void saveReview() {
-        Log.e(TAG, "Save");
-        if (!updateReview()) {
-            Toast.makeText(getActivity(), "No changes", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-//        Utils.hideKeyboard(getActivity(), editReviewCommentText);
-//        HttpIntentService.updateReviewRequest(getActivity(), review);
-//        saveReviewSuccessCallback();
+    public HashMap < String,String > getUpdateDataMapFromUI() {
+        HashMap < String,String > map = new HashMap<>();
+        map.put(Review.REVIEW_ID_KEY, reviewId);
+        map.put(Review.REVIEW_CONTENT_KEY, commentReviewEditText.getText().toString());
+        map.put(Review.REVIEW_RATING_KEY, "NO");
+        return map;
     }
 
     /**
-     * save review callback
+     *
      */
-    private void saveReviewSuccessCallback() {
-        Log.e(TAG, "Save review callback");
-        Intent intent = new Intent();
+    public void toggleStatusOnEditMode() {
+        //TODO animationBuilder
+        likeReviewEditIcon.setVisibility(isLiking ? View.VISIBLE : View.GONE);
+        unlikeReviewEditIcon.setVisibility(isLiking ? View.GONE : View.VISIBLE);
+        isLiking = !isLiking;
+    }
 
-        //on callback
-//        intent.putExtra(CoffeePlacesActivity.ACTION_EDIT_REVIEW_RESULT, "SAVE");
-//        getActivity().setResult(Activity.RESULT_OK, intent);
-//        getActivity().finish();
+    /**
+     *
+     */
+    private void updateCardviewData() {
+        HashMap<String, String> map = getUpdateDataMapFromUI();
+        reviewContent = map.get(Review.REVIEW_CONTENT_KEY);
+        initReview();
+        initEditReview();
+    }
+
+    /**
+     *
+     */
+    private void initReview() {
+        commentTextView.setText(reviewContent);
+    }
+
+    @Override
+    public void onUpdateFirebaseSuccessCallback() {
+        editStatus = false;
+        showEditReview(false);
+        updateCardviewData();
+        Utils.showSnackbar(addReviewView, "Review updated!");
+        getActivity().invalidateOptionsMenu();
+    }
+
+
+    @Override
+    public void onUpdateFirebaseErrorCallback(FirebaseError firebaseError) {
+        Log.e(TAG, firebaseError.getMessage());
+        editStatus = false;
+        showEditReview(false);
+        Utils.showSnackbar(addReviewView, "Error! Cannot update review!");
+        getActivity().invalidateOptionsMenu();
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(Bundle bundle) {
-//        String reviewId = bundle.getString(Review.REVIEW_ID_KEY);
+        reviewId = bundle.getString(Review.REVIEW_ID_KEY);
         reviewContent = bundle.getString(Review.REVIEW_CONTENT_KEY);
         reviewRating = bundle.getInt(Review.REVIEW_RATING_KEY);
-
-        commentTextView.setText(reviewContent);
+        initReview();
     }
-
-
 
 }

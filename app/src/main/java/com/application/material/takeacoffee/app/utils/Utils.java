@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Parcel;
+import android.support.design.widget.Snackbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -28,6 +30,15 @@ public class Utils {
                 .getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(editTextView.getWindowToken(), 0);
 
+    }
+
+    /**
+     *
+     * @param view
+     * @param message
+     */
+    public static void showSnackbar(View view , String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
 //    public static SpannableString getSpannableFromString(Activity activity, String text) {

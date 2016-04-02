@@ -11,6 +11,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+import com.firebase.client.annotations.NotNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -27,20 +28,23 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
 
 
 /**
  * Created by davide on 24/03/16.
  */
-public class FirebaseManager implements ChildEventListener, ValueEventListener {
+public class FirebaseManager implements ChildEventListener, ValueEventListener, Firebase.CompletionListener {
     //TODO move out
-    private static final String REVIEW_CLASS = "reviews";
+    public static final String REVIEW_CLASS = "reviews";
     private static final String FIREBASE_URL = "https://torrid-heat-5131.firebaseio.com/";
     private static final String TAG = "FirebaseManager";
     private Firebase firebaseRef;
     private static FirebaseManager instance;
     private WeakReference<OnRetrieveFirebaseDataInterface> listener;
     private ArrayList<Review> list = new ArrayList<>();
+    private WeakReference<OnUpdateFirebaseCallbackInterface> updateListener;
 
     public FirebaseManager() {
         firebaseRef = new Firebase(FIREBASE_URL);
@@ -60,7 +64,7 @@ public class FirebaseManager implements ChildEventListener, ValueEventListener {
      * @param listener
      * @param placeId
      */
-    public void getReviewListAsync(final WeakReference<OnRetrieveFirebaseDataInterface> listener,
+    public void getReviewListAsync(@NotNull final WeakReference<OnRetrieveFirebaseDataInterface> listener,
                                    final String placeId) {
         this.listener = listener;
         final FirebaseManager ref = this;
@@ -154,6 +158,32 @@ public class FirebaseManager implements ChildEventListener, ValueEventListener {
     }
 
     /**
+     *
+     * @param object
+     * @param type
+     * @param listener
+     */
+    public void updateObjectByType(Object object, String type,
+                                   WeakReference<OnUpdateFirebaseCallbackInterface> listener) {
+        this.updateListener = listener;
+        Map<String, Object > data = new HashMap<String, Object>();
+        data.put("status", ((Review) object).getStatus());
+        data.put("comment", ((Review) object).getComment());
+        firebaseRef.child(REVIEW_CLASS)
+                .child("0")
+                .updateChildren(data, this);
+    }
+
+    @Override
+    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+        if (firebaseError != null) {
+            updateListener.get().onUpdateFirebaseErrorCallback(firebaseError);
+            return;
+        }
+        updateListener.get().onUpdateFirebaseSuccessCallback();
+    }
+
+    /**
      * GSON
      * @param <T>
      */
@@ -200,5 +230,12 @@ public class FirebaseManager implements ChildEventListener, ValueEventListener {
         void retrieveFirebaseDataSuccessCallback(String type, ArrayList<Review> list);
         void retrieveFirebaseDataErrorCallback(FirebaseError error);
         void emptyFirebaseDataCallback();
+    }
+    /**
+     * interface callback
+     */
+    public interface OnUpdateFirebaseCallbackInterface {
+        void onUpdateFirebaseSuccessCallback();
+        void onUpdateFirebaseErrorCallback(FirebaseError firebaseError);
     }
 }
