@@ -149,6 +149,14 @@ public class EditViewReviewFragment extends Fragment implements
             case R.id.action_save:
                 updateReview();
                 break;
+            case android.R.id.home:
+                if (editStatus) {
+                    editStatus = false;
+                    showEditReview(false);
+                    return false;
+                }
+                getActivity().onBackPressed();
+                break;
         }
         return true;
     }
@@ -174,6 +182,13 @@ public class EditViewReviewFragment extends Fragment implements
     private void initEditReview() {
         commentReviewEditText.setText(reviewContent);
         commentReviewEditText.requestFocus();
+    }
+
+    /**
+     *
+     */
+    private void initReview() {
+        commentTextView.setText(reviewContent);
     }
 
     /**
@@ -205,6 +220,7 @@ public class EditViewReviewFragment extends Fragment implements
         return true;
     }
 
+    //TODO move in a presenter
     /**
      *
      * @return
@@ -237,12 +253,6 @@ public class EditViewReviewFragment extends Fragment implements
         initEditReview();
     }
 
-    /**
-     *
-     */
-    private void initReview() {
-        commentTextView.setText(reviewContent);
-    }
 
     @Override
     public void onUpdateFirebaseSuccessCallback() {
