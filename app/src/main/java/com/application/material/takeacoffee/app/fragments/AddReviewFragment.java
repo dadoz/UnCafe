@@ -26,8 +26,8 @@ public class AddReviewFragment extends Fragment implements
     private String coffeePlaceId;
     @Bind(R.id.commentReviewEditTextId)
     View commentReviewEditText;
-    @Bind(R.id.reviewSaveButtonId)
-    View reviewSaveButton;
+//    @Bind(R.id.reviewSaveButtonId)
+//    View reviewSaveButton;
 
     @Override
     public void onAttach(Context context) {
@@ -62,7 +62,7 @@ public class AddReviewFragment extends Fragment implements
     private void initView() {
         getActivity().findViewById(R.id.statusRatingBarId)
                 .setVisibility(View.VISIBLE);
-        reviewSaveButton.setVisibility(View.VISIBLE);
+//        reviewSaveButton.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -4,76 +4,79 @@
     android:layout_margin="@dimen/small_padding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/medium_padding"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/material_red700"
-            android:textSize="@dimen/text_big_24"
-            android:text="title review ...."
-            android:maxLines="6"
-            android:gravity="top"/>
-        <TextView
-            android:id="@+id/commentTextId"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/material_brown800"
-            android:layout_marginBottom="@dimen/medium_padding"
-            android:textSize="@dimen/text_big_18"
-            android:maxLines="6"
-            android:text="comment this is a comment fake"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="@dimen/medium_padding"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/material_red700"
+                android:textSize="@dimen/text_big_24"
+                android:text="title review ...."
+                android:maxLines="6"
+                android:gravity="top"/>
+            <TextView
+                android:id="@+id/commentTextId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/material_brown800"
+                android:layout_marginBottom="@dimen/medium_padding"
+                android:textSize="@dimen/text_big_18"
+                android:maxLines="6"
+                android:text="comment this is a comment fake"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_huge_48"
+                    android:textColor="@color/material_brown400"
+                    android:text="4"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_small_14"
+                    android:textColor="@color/material_grey800"
+                    android:layout_marginLeft="@dimen/small_padding"
+                    android:text="rated by users..."/>
+            </LinearLayout>
+        </LinearLayout>
+        <!--ACTION button-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/material_grey300"
+            android:orientation="horizontal"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:orientation="horizontal">
             <TextView
+                android:id="@+id/reviewShareButtonId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_huge_48"
-                android:textColor="@color/material_brown400"
-                android:text="4"/>
+                android:textColor="@color/material_brown800"
+                android:padding="@dimen/medium_padding"
+                android:textSize="@dimen/text_big_22"
+                android:text="SHARE"/>
             <TextView
+                android:id="@+id/reviewEditButtonId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_small_14"
-                android:textColor="@color/material_grey800"
-                android:layout_marginLeft="@dimen/small_padding"
-                android:text="rated by users..."/>
+                android:textColor="@color/material_red700"
+                android:padding="@dimen/medium_padding"
+                android:textSize="@dimen/text_big_22"
+                android:text="EDIT"/>
+
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/material_grey300"
-        android:orientation="horizontal"/>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/material_brown800"
-            android:padding="@dimen/medium_padding"
-            android:textSize="@dimen/text_big_22"
-            android:text="SHARE"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/material_red700"
-            android:padding="@dimen/medium_padding"
-            android:textSize="@dimen/text_big_22"
-            android:text="EDIT"/>
-
-    </LinearLayout>
-</LinearLayout>
 </android.support.v7.widget.CardView>

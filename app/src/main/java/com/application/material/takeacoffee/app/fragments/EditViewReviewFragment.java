@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.RatingBar;
@@ -15,22 +14,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.Review.ReviewStatus;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.application.material.takeacoffee.app.utils.Utils;
-import com.facebook.rebound.SimpleSpringListener;
-import com.facebook.rebound.Spring;
-import com.facebook.rebound.SpringConfig;
-import com.facebook.rebound.SpringSystem;
+import com.application.material.takeacoffee.app.utils.RebounceMotionHandler;
+import com.application.material.takeacoffee.app.utils.RebounceMotionHandler.OnSpringMotionHandler;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by davide on 14/11/14.
  */
 public class EditViewReviewFragment extends Fragment implements
-        View.OnClickListener {
+        View.OnClickListener, OnSpringMotionHandler, View.OnLongClickListener {
     private static final String TAG = "EditViewReviewFragment";
     private View addReviewView;
     private RatingBar editStatusRatingbarView;
@@ -42,17 +39,15 @@ public class EditViewReviewFragment extends Fragment implements
     View reviewCardviewLayout;
     @Bind(R.id.commentReviewEditTextId)
     TextView commentReviewEditText;
+    @Bind(R.id.reviewEditButtonId)
+    TextView reviewEditButton;
+    @Bind(R.id.reviewShareButtonId)
+    TextView reviewShareButton;
+
     private String reviewContent;
     private int reviewRating;
     private boolean editStatus = false;
-
-    //TODO move out
-    private static double TENSION = 800;
-    private static double DAMPER = 20; //friction
-    private boolean mMovedUp;
-    private float mOrigY;
-    private Spring spring;
-    private float TRANSLATION_Y = 200f;
+    private RebounceMotionHandler rebounceMotionHandler;
 
     @Override
     public void onAttach(Context context) {
@@ -70,6 +65,7 @@ public class EditViewReviewFragment extends Fragment implements
         ButterKnife.bind(this, addReviewView);
         setHasOptionsMenu(true);
 
+        rebounceMotionHandler = RebounceMotionHandler.getInstance(new WeakReference<OnSpringMotionHandler>(this));
         initView();
         return addReviewView;
     }
@@ -93,20 +89,32 @@ public class EditViewReviewFragment extends Fragment implements
         editStatusRatingbarView = (RatingBar) getActivity()
                 .findViewById(R.id.statusRatingBarId);
         editStatusRatingbarView.setVisibility(View.GONE);
-        handleMotion();
-        reviewCardviewLayout.setOnClickListener(this);
+        reviewCardviewLayout.setOnLongClickListener(this);
+        reviewEditButton.setOnClickListener(this);
+        reviewShareButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.reviewCardviewLayoutId:
-                moitionAction();
+            case R.id.reviewEditButtonId:
+                editReview();
+                break;
+            case R.id.reviewShareButtonId:
+                Log.e(TAG, "still to be implemented - share");
                 break;
         }
     }
 
-
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.reviewCardviewLayoutId:
+                rebounceMotionHandler.translateViewOnY(reviewCardviewLayout.getY());
+                break;
+        }
+        return true;
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -126,6 +134,11 @@ public class EditViewReviewFragment extends Fragment implements
         return true;
     }
 
+    @Override
+    public void handleSpringUpdate(float value) {
+        reviewCardviewLayout.setY(value);
+    }
+
     /**
      *
      */
@@ -140,7 +153,6 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     private void initEditReview() {
-        editStatusRatingbarView.setRating(reviewRating);
         commentReviewEditText.setText(reviewContent);
         commentReviewEditText.requestFocus();
     }
@@ -149,9 +161,9 @@ public class EditViewReviewFragment extends Fragment implements
      * @param isVisible
      */
     private void showEditReview(boolean isVisible) {
+        //TODO add animationBuilder :)
         reviewEditCardviewLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        editStatusRatingbarView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        reviewCardviewLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        reviewCardviewLayout.setVisibility(!isVisible ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -208,39 +220,6 @@ public class EditViewReviewFragment extends Fragment implements
 //        getActivity().finish();
     }
 
-
-    private void moitionAction() {
-        if (mMovedUp) {
-            spring.setEndValue(mOrigY);
-        } else {
-            mOrigY = reviewCardviewLayout.getY();
-            spring.setEndValue(mOrigY + TRANSLATION_Y);
-        }
-        mMovedUp = !mMovedUp;
-    }
-    /**
-     *
-     */
-    private void handleMotion() {
-        // Create a system to run the physics loop for a set of springs.
-        SpringSystem springSystem = SpringSystem.create();
-
-        // Add a spring to the system.
-        spring = springSystem.createSpring();
-
-        SpringConfig config = new SpringConfig(TENSION, DAMPER);
-        spring.setSpringConfig(config);
-        // Add a listener to observe the motion of the spring.
-        spring.addListener(new SimpleSpringListener() {
-            @Override
-            public void onSpringUpdate(Spring spring) {
-                // You can observe the updates in the spring
-                // state by asking its current value in onSpringUpdate.
-                float value = (float) spring.getCurrentValue();
-                reviewCardviewLayout.setY(value);
-            }
-        });
-    }
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(Bundle bundle) {
 //        String reviewId = bundle.getString(Review.REVIEW_ID_KEY);
@@ -249,6 +228,7 @@ public class EditViewReviewFragment extends Fragment implements
 
         commentTextView.setText(reviewContent);
     }
+
 
 
 }
