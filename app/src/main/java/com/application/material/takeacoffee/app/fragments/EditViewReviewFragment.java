@@ -56,11 +56,11 @@ public class EditViewReviewFragment extends Fragment implements
     View unlikeReviewEditIcon;
 
     private String reviewContent;
-    private int reviewRating;
+    private boolean reviewRating;
     private boolean editStatus = false;
     private RebounceMotionHandler rebounceMotionHandler;
     private String reviewId;
-    private boolean isLiking = false;
+    private boolean isLikingEdit;
 
     @Override
     public void onAttach(Context context) {
@@ -201,6 +201,8 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     private void initEditReview() {
+        isLikingEdit = reviewRating;
+        initStatusOnEditMode(isLikingEdit);
         commentReviewEditText.setText(reviewContent);
         commentReviewEditText.requestFocus();
     }
@@ -209,6 +211,7 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     private void initReview() {
+        initStatusOnEditMode(reviewRating);
         commentTextView.setText(reviewContent);
     }
 
@@ -250,7 +253,7 @@ public class EditViewReviewFragment extends Fragment implements
         HashMap < String,String > map = new HashMap<>();
         map.put(Review.REVIEW_ID_KEY, reviewId);
         map.put(Review.REVIEW_CONTENT_KEY, commentReviewEditText.getText().toString());
-        map.put(Review.REVIEW_RATING_KEY, "NO");
+        map.put(Review.REVIEW_RATING_KEY, Boolean.toString(likeReviewEditIcon.getVisibility() == View.VISIBLE));
         return map;
     }
 
@@ -258,10 +261,18 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     public void toggleStatusOnEditMode() {
+        isLikingEdit = !isLikingEdit;
+        initStatusOnEditMode(isLikingEdit);
+    }
+
+    /**
+     *
+     * @param isLiking
+     */
+    public void initStatusOnEditMode(boolean isLiking) {
         //TODO animationBuilder
         likeReviewEditIcon.setVisibility(isLiking ? View.VISIBLE : View.GONE);
         unlikeReviewEditIcon.setVisibility(isLiking ? View.GONE : View.VISIBLE);
-        isLiking = !isLiking;
     }
 
     /**
@@ -270,6 +281,7 @@ public class EditViewReviewFragment extends Fragment implements
     private void updateCardviewData() {
         HashMap<String, String> map = getUpdateDataMapFromUI();
         reviewContent = map.get(Review.REVIEW_CONTENT_KEY);
+        reviewRating = Boolean.getBoolean(map.get(Review.REVIEW_RATING_KEY));
         initReview();
         initEditReview();
     }
@@ -298,7 +310,7 @@ public class EditViewReviewFragment extends Fragment implements
     public void onEvent(Bundle bundle) {
         reviewId = bundle.getString(Review.REVIEW_ID_KEY);
         reviewContent = bundle.getString(Review.REVIEW_CONTENT_KEY);
-        reviewRating = bundle.getInt(Review.REVIEW_RATING_KEY);
+        reviewRating = bundle.getBoolean(Review.REVIEW_RATING_KEY);
         initReview();
     }
 

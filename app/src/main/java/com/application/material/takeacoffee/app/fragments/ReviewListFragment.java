@@ -256,7 +256,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         Bundle bundle = new Bundle();
         bundle.putString(Review.REVIEW_ID_KEY, "000000");
         bundle.putString(Review.REVIEW_CONTENT_KEY, "Hey content review, you can handle this by bla");
-        bundle.putInt(Review.REVIEW_RATING_KEY, 4);
+        bundle.putBoolean(Review.REVIEW_RATING_KEY, true);
         BusSingleton.getInstance().postSticky(bundle);
 
         Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
