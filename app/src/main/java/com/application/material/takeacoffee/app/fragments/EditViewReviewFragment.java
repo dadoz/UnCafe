@@ -46,10 +46,10 @@ public class EditViewReviewFragment extends Fragment implements
     View reviewCardviewLayout;
     @Bind(R.id.commentReviewEditTextId)
     TextView commentReviewEditText;
-    @Bind(R.id.reviewEditButtonId)
-    TextView reviewEditButton;
-    @Bind(R.id.reviewShareButtonId)
-    TextView reviewShareButton;
+//    @Bind(R.id.reviewEditButtonId)
+//    TextView reviewEditButton;
+//    @Bind(R.id.reviewShareButtonId)
+//    TextView reviewShareButton;
     @Bind(R.id.likeReviewEditIconId)
     View likeReviewEditIcon;
     @Bind(R.id.unlikeReviewEditIconId)
@@ -103,8 +103,8 @@ public class EditViewReviewFragment extends Fragment implements
                 .findViewById(R.id.statusRatingBarId);
         editStatusRatingbarView.setVisibility(View.GONE);
         reviewCardviewLayout.setOnLongClickListener(this);
-        reviewEditButton.setOnClickListener(this);
-        reviewShareButton.setOnClickListener(this);
+//        reviewEditButton.setOnClickListener(this);
+//        reviewShareButton.setOnClickListener(this);
         likeReviewEditIcon.setOnClickListener(this);
         unlikeReviewEditIcon.setOnClickListener(this);
     }
@@ -112,16 +112,16 @@ public class EditViewReviewFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.reviewEditButtonId:
-                editReview();
-                break;
+//            case R.id.reviewEditButtonId:
+//                editReview();
+//                break;
             case R.id.likeReviewEditIconId:
             case R.id.unlikeReviewEditIconId:
                 toggleStatusOnEditMode();
                 break;
-            case R.id.reviewShareButtonId:
-                Log.e(TAG, "still to be implemented - share");
-                break;
+//            case R.id.reviewShareButtonId:
+//                Log.e(TAG, "still to be implemented - share");
+//                break;
         }
     }
 
@@ -138,27 +138,48 @@ public class EditViewReviewFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.save_review_menu, menu);
-        MenuItem saveItem = menu.getItem(0);
-        saveItem.setVisible(editStatus);
+        menuInflater.inflate(R.menu.edit_view_review_menu, menu);
+        menu.getItem(0).setVisible(editStatus);
+        menu.getItem(1).setVisible(!editStatus);
+        menu.getItem(2).setVisible(!editStatus);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_share:
+                break;
+            case R.id.action_edit:
+                editReview();
+                break;
             case R.id.action_save:
                 updateReview();
                 break;
             case android.R.id.home:
-                if (editStatus) {
-                    editStatus = false;
-                    showEditReview(false);
-                    return false;
-                }
-                getActivity().onBackPressed();
+                handleBackPressed();
                 break;
         }
         return true;
+    }
+
+    /**
+     *
+     */
+    private void handleBackPressed() {
+        //edit
+        if (editStatus) {
+            editStatus = false;
+            getActivity().invalidateOptionsMenu();
+            showEditReview(false);
+            return;
+        }
+
+        //deleted
+        if (rebounceMotionHandler.isMovedUp()) {
+            rebounceMotionHandler.translateViewOnY(0);
+            return;
+        }
+        getActivity().onBackPressed();
     }
 
     @Override

@@ -88,6 +88,14 @@ public class RebounceMotionHandler implements SpringListener {
 
     }
 
+    public boolean isDown() {
+        return movedUp;
+    }
+
+    public boolean isMovedUp() {
+        return movedUp;
+    }
+
     /**
      * onMotionCallback interface
      */
