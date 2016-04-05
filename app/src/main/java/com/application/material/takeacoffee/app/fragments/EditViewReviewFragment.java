@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
+import com.application.material.takeacoffee.app.presenter.LikePresenter;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.FirebaseManager;
 import com.application.material.takeacoffee.app.singletons.FirebaseManager.OnUpdateFirebaseCallbackInterface;
@@ -36,7 +37,7 @@ import java.util.HashMap;
 public class EditViewReviewFragment extends Fragment implements
         View.OnClickListener, OnSpringMotionHandler, View.OnLongClickListener, OnUpdateFirebaseCallbackInterface {
     private static final String TAG = "EditViewReviewFragment";
-    private View addReviewView;
+    private View reviewView;
     private RatingBar editStatusRatingbarView;
     @Bind(R.id.commentTextId)
     TextView commentTextView;
@@ -46,21 +47,17 @@ public class EditViewReviewFragment extends Fragment implements
     View reviewCardviewLayout;
     @Bind(R.id.commentReviewEditTextId)
     TextView commentReviewEditText;
-//    @Bind(R.id.reviewEditButtonId)
-//    TextView reviewEditButton;
-//    @Bind(R.id.reviewShareButtonId)
-//    TextView reviewShareButton;
     @Bind(R.id.likeReviewEditIconId)
     View likeReviewEditIcon;
-    @Bind(R.id.unlikeReviewEditIconId)
-    View unlikeReviewEditIcon;
+    @Bind(R.id.likeReviewIconId)
+    View likeReviewIcon;
 
     private String reviewContent;
-    private boolean reviewRating;
+    private boolean reviewLikeStatus;
     private boolean editStatus = false;
     private RebounceMotionHandler rebounceMotionHandler;
     private String reviewId;
-    private boolean isLikingEdit;
+    private LikePresenter likePresenter;
 
     @Override
     public void onAttach(Context context) {
@@ -74,13 +71,14 @@ public class EditViewReviewFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        addReviewView = inflater.inflate(R.layout.fragment_edit_view_review, container, false);
-        ButterKnife.bind(this, addReviewView);
+        reviewView = inflater.inflate(R.layout.fragment_edit_view_review, container, false);
+        ButterKnife.bind(this, reviewView);
         setHasOptionsMenu(true);
 
         rebounceMotionHandler = RebounceMotionHandler.getInstance(new WeakReference<OnSpringMotionHandler>(this));
+        likePresenter = LikePresenter.getInstance(new WeakReference<Context>(getActivity()));
         initView();
-        return addReviewView;
+        return reviewView;
     }
 
     @Override
@@ -103,25 +101,16 @@ public class EditViewReviewFragment extends Fragment implements
                 .findViewById(R.id.statusRatingBarId);
         editStatusRatingbarView.setVisibility(View.GONE);
         reviewCardviewLayout.setOnLongClickListener(this);
-//        reviewEditButton.setOnClickListener(this);
-//        reviewShareButton.setOnClickListener(this);
         likeReviewEditIcon.setOnClickListener(this);
-        unlikeReviewEditIcon.setOnClickListener(this);
+        likePresenter.initPresenter(reviewLikeStatus);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.reviewEditButtonId:
-//                editReview();
-//                break;
             case R.id.likeReviewEditIconId:
-            case R.id.unlikeReviewEditIconId:
-                toggleStatusOnEditMode();
+                likePresenter.toggleLikeStatus(v);
                 break;
-//            case R.id.reviewShareButtonId:
-//                Log.e(TAG, "still to be implemented - share");
-//                break;
         }
     }
 
@@ -201,8 +190,7 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     private void initEditReview() {
-        isLikingEdit = reviewRating;
-        initStatusOnEditMode(isLikingEdit);
+        likePresenter.initLikeStatus(likeReviewEditIcon);
         commentReviewEditText.setText(reviewContent);
         commentReviewEditText.requestFocus();
     }
@@ -211,7 +199,7 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     private void initReview() {
-        initStatusOnEditMode(reviewRating);
+        likePresenter.initLikeStatus(likeReviewIcon);
         commentTextView.setText(reviewContent);
     }
 
@@ -250,30 +238,13 @@ public class EditViewReviewFragment extends Fragment implements
      * @return
      */
     public HashMap < String,String > getUpdateDataMapFromUI() {
-        HashMap < String,String > map = new HashMap<>();
+        HashMap <String,String> map = new HashMap<>();
         map.put(Review.REVIEW_ID_KEY, reviewId);
         map.put(Review.REVIEW_CONTENT_KEY, commentReviewEditText.getText().toString());
-        map.put(Review.REVIEW_RATING_KEY, Boolean.toString(likeReviewEditIcon.getVisibility() == View.VISIBLE));
+        map.put(Review.REVIEW_RATING_KEY, Boolean.toString(likePresenter.isLike()));
         return map;
     }
 
-    /**
-     *
-     */
-    public void toggleStatusOnEditMode() {
-        isLikingEdit = !isLikingEdit;
-        initStatusOnEditMode(isLikingEdit);
-    }
-
-    /**
-     *
-     * @param isLiking
-     */
-    public void initStatusOnEditMode(boolean isLiking) {
-        //TODO animationBuilder
-        likeReviewEditIcon.setVisibility(isLiking ? View.VISIBLE : View.GONE);
-        unlikeReviewEditIcon.setVisibility(isLiking ? View.GONE : View.VISIBLE);
-    }
 
     /**
      *
@@ -281,7 +252,7 @@ public class EditViewReviewFragment extends Fragment implements
     private void updateCardviewData() {
         HashMap<String, String> map = getUpdateDataMapFromUI();
         reviewContent = map.get(Review.REVIEW_CONTENT_KEY);
-        reviewRating = Boolean.getBoolean(map.get(Review.REVIEW_RATING_KEY));
+        reviewLikeStatus = Boolean.getBoolean(map.get(Review.REVIEW_RATING_KEY));
         initReview();
         initEditReview();
     }
@@ -292,7 +263,7 @@ public class EditViewReviewFragment extends Fragment implements
         editStatus = false;
         showEditReview(false);
         updateCardviewData();
-        Utils.showSnackbar(addReviewView, "Review updated!");
+        Utils.showSnackbar(reviewView, "Review updated!");
         getActivity().invalidateOptionsMenu();
     }
 
@@ -302,7 +273,7 @@ public class EditViewReviewFragment extends Fragment implements
         Log.e(TAG, firebaseError.getMessage());
         editStatus = false;
         showEditReview(false);
-        Utils.showSnackbar(addReviewView, "Error! Cannot update review!");
+        Utils.showSnackbar(reviewView, "Error! Cannot update review!");
         getActivity().invalidateOptionsMenu();
     }
 
@@ -310,7 +281,7 @@ public class EditViewReviewFragment extends Fragment implements
     public void onEvent(Bundle bundle) {
         reviewId = bundle.getString(Review.REVIEW_ID_KEY);
         reviewContent = bundle.getString(Review.REVIEW_CONTENT_KEY);
-        reviewRating = bundle.getBoolean(Review.REVIEW_RATING_KEY);
+        reviewLikeStatus = bundle.getBoolean(Review.REVIEW_RATING_KEY);
         initReview();
     }
 

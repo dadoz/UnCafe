@@ -34,14 +34,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <include layout="@layout/ratingbar_layout"/>
+                <ImageView
+                    android:id="@+id/likeReviewIconId"
+                    android:layout_width="@dimen/medium_icon_size"
+                    android:layout_height="@dimen/medium_icon_size"
+                    android:padding="@dimen/extra_small_padding"
+                    android:src="@drawable/heart_icon"/>
                 <TextView
-                    android:layout_gravity="bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_small_14"
-                    android:textColor="@color/material_grey800"
-                    android:layout_marginLeft="@dimen/small_padding"
+                    android:textColor="@color/material_grey600"
+                    android:layout_gravity="bottom"
+                    android:textSize="@dimen/text_big_18"
+                    android:layout_marginRight="3dp"
                     android:text="rated by you"/>
             </LinearLayout>
         </LinearLayout>

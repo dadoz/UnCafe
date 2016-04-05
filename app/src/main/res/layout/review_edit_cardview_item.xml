@@ -26,7 +26,12 @@
             android:layout_marginTop="@dimen/medium_padding"
             android:orientation="horizontal">
 
-            <include layout="@layout/ratingbar_layout"/>
+            <ImageView
+                android:id="@+id/likeReviewEditIconId"
+                android:layout_width="@dimen/medium_icon_size"
+                android:layout_height="@dimen/medium_icon_size"
+                android:padding="@dimen/extra_small_padding"
+                android:src="@drawable/heart_filled_icon"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,7 +39,7 @@
                 android:layout_gravity="bottom"
                 android:textSize="@dimen/text_big_18"
                 android:layout_marginRight="3dp"
-                android:text="like it"/>
+                android:text="tap to like!"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
