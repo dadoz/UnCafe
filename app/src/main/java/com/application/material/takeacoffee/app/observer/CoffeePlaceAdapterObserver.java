@@ -27,7 +27,6 @@ public class CoffeePlaceAdapterObserver extends RecyclerView.AdapterDataObserver
 
     @Override
     public void onChanged() {
-//        Log.e("OBSERVER", "change data " + adapterWeakRef.get().getItemCount());
         boolean isEmpty = adapterWeakRef.get().getItemCount() == 0 &&
                 !adapterWeakRef.get().isEmptyResult();
         progress.setVisibility(isEmpty ? View.VISIBLE : View.GONE);

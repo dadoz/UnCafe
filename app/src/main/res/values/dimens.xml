@@ -52,5 +52,6 @@
     <dimen name="medium_icon_size_margin">95dip</dimen>
     <dimen name="text_big_18">18sp</dimen>
     <dimen name="extra_small_padding">5dp</dimen>
+    <dimen name="text_big_20">20sp</dimen>
 
 </resources>

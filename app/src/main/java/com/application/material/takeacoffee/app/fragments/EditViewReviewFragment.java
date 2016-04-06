@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import android.widget.RatingBar;
@@ -29,6 +30,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+import java.text.CollationElementIterator;
 import java.util.HashMap;
 
 /**
@@ -47,6 +49,8 @@ public class EditViewReviewFragment extends Fragment implements
     View reviewCardviewLayout;
     @Bind(R.id.commentReviewEditTextId)
     TextView commentReviewEditText;
+    @Bind(R.id.titleReviewEditTextId)
+    TextView titleReviewEditText;
     @Bind(R.id.likeReviewEditIconId)
     View likeReviewEditIcon;
     @Bind(R.id.likeReviewIconId)
@@ -191,6 +195,8 @@ public class EditViewReviewFragment extends Fragment implements
      */
     private void initEditReview() {
         likePresenter.initLikeStatus(likeReviewEditIcon);
+        titleReviewEditText.setText(reviewContent.substring(0, Math.min(reviewContent.length(), 18)));
+        titleReviewEditText.setEllipsize(TextUtils.TruncateAt.END);
         commentReviewEditText.setText(reviewContent);
         commentReviewEditText.requestFocus();
     }

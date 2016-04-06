@@ -4,51 +4,36 @@
     android:layout_margin="@dimen/small_padding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/medium_padding"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/material_red700"
-                android:textSize="@dimen/text_big_24"
-                android:text="title review ...."
-                android:maxLines="6"
-                android:gravity="top"/>
-            <TextView
-                android:id="@+id/commentTextId"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/material_brown800"
-                android:layout_marginBottom="@dimen/medium_padding"
-                android:textSize="@dimen/text_big_18"
-                android:maxLines="6"
-                android:text="comment this is a comment fake"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/likeReviewIconId"
-                    android:layout_width="@dimen/medium_icon_size"
-                    android:layout_height="@dimen/medium_icon_size"
-                    android:padding="@dimen/extra_small_padding"
-                    android:src="@drawable/heart_icon"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/material_grey600"
-                    android:layout_gravity="bottom"
-                    android:textSize="@dimen/text_big_18"
-                    android:layout_marginRight="3dp"
-                    android:text="rated by you"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+        android:padding="@dimen/medium_padding">
+        <TextView
+            android:id="@+id/titleReviewEditTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/material_red700"
+            android:textSize="@dimen/text_big_24"
+            android:text="blalalal"
+            android:maxLines="1"
+            android:gravity="top"/>
+        <TextView
+            android:id="@+id/commentTextId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleReviewEditTextId"
+            android:textColor="@color/material_brown800"
+            android:textSize="@dimen/text_big_18"
+            android:maxLines="6"
+            android:ellipsize="end"
+            android:text="comment this is a comment fake"/>
+        <ImageView
+            android:id="@+id/likeReviewIconId"
+            android:layout_width="@dimen/medium_icon_size"
+            android:layout_height="@dimen/medium_icon_size"
+            android:padding="@dimen/extra_small_padding"
+            android:layout_below="@id/commentTextId"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/heart_icon"/>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>
