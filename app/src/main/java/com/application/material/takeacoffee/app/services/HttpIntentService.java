@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import com.application.material.takeacoffee.app.models.*;
-import com.application.material.takeacoffee.app.parsers.JSONParserToObject;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 
 import java.util.ArrayList;
@@ -229,11 +228,11 @@ public class HttpIntentService extends IntentService {
                 try {
                     if(! isConnected) {
                         //TODO MOCKUP
-                        ReviewDataContainer reviewDataContainer = JSONParserToObject
-                                .getReviewListParser(JSONParserToObject.
-                                        getMockupData(this.getApplicationContext().getAssets(),
-                                                "reviews.json"));
-                        BusSingleton.getInstance().post(reviewDataContainer);
+//                        ReviewDataContainer reviewDataContainer = JSONParserToObject
+//                                .getReviewListParser(JSONParserToObject.
+//                                        getMockupData(this.getApplicationContext().getAssets(),
+//                                                "reviews.json"));
+//                        BusSingleton.getInstance().post(reviewDataContainer);
                         return;
                     }
 
@@ -251,11 +250,11 @@ public class HttpIntentService extends IntentService {
                 try{
                     if(! isConnected) {
                         //TODO MOCKUP
-                        ReviewDataContainer reviewDataContainer = JSONParserToObject
-                                .getReviewListParser(JSONParserToObject.
-                                        getMockupData(this.getApplicationContext().getAssets(),
-                                                "prev_reviews.json"));
-                        BusSingleton.getInstance().post(reviewDataContainer);
+//                        ReviewDataContainer reviewDataContainer = JSONParserToObject
+//                                .getReviewListParser(JSONParserToObject.
+//                                        getMockupData(this.getApplicationContext().getAssets(),
+//                                                "prev_reviews.json"));
+//                        BusSingleton.getInstance().post(reviewDataContainer);
                         return;
                     }
 
@@ -271,11 +270,11 @@ public class HttpIntentService extends IntentService {
             if (USER_REQUEST.equals(action)) {
                 try {
                     if(! isConnected) {
-                        ArrayList<User> userList = JSONParserToObject
-                                .getUserListParser(JSONParserToObject.
-                                        getMockupData(this.getApplicationContext().getAssets(),
-                                                "user.json"));
-                        BusSingleton.getInstance().post(userList);
+//                        ArrayList<User> userList = JSONParserToObject
+//                                .getUserListParser(JSONParserToObject.
+//                                        getMockupData(this.getApplicationContext().getAssets(),
+//                                                "user.json"));
+//                        BusSingleton.getInstance().post(userList);
                         return;
                     }
 
@@ -293,11 +292,11 @@ public class HttpIntentService extends IntentService {
             if (COFFEE_MACHINE_REQUEST.equals(action)) {
                 try{
                     if(! isConnected) {
-                        ArrayList<CoffeePlace> coffeeMachineList = JSONParserToObject
-                                .coffeeMachineParser(JSONParserToObject.
-                                        getMockupData(this.getApplicationContext().getAssets(),
-                                                "coffee_machines.json"));
-                        BusSingleton.getInstance().post(coffeeMachineList);
+//                        ArrayList<CoffeePlace> coffeeMachineList = JSONParserToObject
+//                                .coffeeMachineParser(JSONParserToObject.
+//                                        getMockupData(this.getApplicationContext().getAssets(),
+//                                                "coffee_machines.json"));
+//                        BusSingleton.getInstance().post(coffeeMachineList);
                         return;
                     }
 
@@ -361,17 +360,17 @@ public class HttpIntentService extends IntentService {
             if (COFFEE_MACHINE_STATUS_REQUEST.equals(action)) {
                 try{
                     if(! isConnected) {
-                        CoffeeMachineStatus coffeeMachineStatus = JSONParserToObject
-                                .coffeeMachineStatusParser(JSONParserToObject.
-                                        getMockupData(this.getApplicationContext().getAssets(),
-                                                "review_status.json"));
-                        BusSingleton.getInstance().post(coffeeMachineStatus);
+//                        CoffeeMachineStatus coffeeMachineStatus = JSONParserToObject
+//                                .coffeeMachineStatusParser(JSONParserToObject.
+//                                        getMockupData(this.getApplicationContext().getAssets(),
+//                                                "review_status.json"));
+//                        BusSingleton.getInstance().post(coffeeMachineStatus);
                         return;
                     }
 
                     String coffeeMachineId = intent.getExtras().getString(EXTRA_COFFEE_MACHINE_ID);
                     long timestamp = intent.getExtras().getLong(EXTRA_TIMESTAMP);
-                    CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId, timestamp);
+//                    CoffeeMachineStatus.Params params = new CoffeeMachineStatus.Params(coffeeMachineId, timestamp);
 //                    BusSingleton.getInstance().post(service.getCoffeeMachineStatus(params));
                 } catch (Exception e) {
                     Log.d(TAG,e.toString());

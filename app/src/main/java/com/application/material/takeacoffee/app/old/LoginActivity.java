@@ -1,30 +1,8 @@
-package com.application.material.takeacoffee.app;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
-import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.facebookServices.FacebookLogin;
-import com.application.material.takeacoffee.app.fragments.LoginFragment;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.io.IOException;
+package com.application.material.takeacoffee.app.old;
 
 
-public class LoginActivity extends AppCompatActivity implements
-        OnChangeFragmentWrapperInterface, OnLoadViewHandlerInterface {
-    private static final String TAG = "LoginActivity";
+public class LoginActivity  {
+/*    private static final String TAG = "LoginActivity";
     private String currentFragTag;
     private String CURRENT_FRAGMENT_TAG;
 
@@ -251,6 +229,6 @@ public class LoginActivity extends AppCompatActivity implements
         finish();
     }
 
-
+*/
 
 }

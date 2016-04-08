@@ -1,4 +1,4 @@
-package com.application.material.takeacoffee.app.fragments;
+package com.application.material.takeacoffee.app.old;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -29,9 +29,8 @@ import org.greenrobot.eventbus.Subscribe;
 /**
  * Created by davide on 27/12/14.
  */
-public class LoggedUserFragment extends Fragment
-        implements View.OnClickListener {
-
+public class LoggedUserFragment {
+/*
     public static String LOGGED_USER_FRAG_TAG = "LOGGED_USER_FRAG_TAG";
 
     private static final String TAG = "LoggedUserFragment";
@@ -181,5 +180,5 @@ public class LoggedUserFragment extends Fragment
         //TODO handle this;
 
     }
-
+*/
 }

@@ -1,47 +1,10 @@
-package com.application.material.takeacoffee.app.fragments;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.*;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.CoffeePlacesActivity;
-import com.application.material.takeacoffee.app.LoginActivity;
-import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
-import com.application.material.takeacoffee.app.facebookServices.FacebookLogin;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnChangeFragmentWrapperInterface;
-import com.application.material.takeacoffee.app.fragments.interfaces.OnLoadViewHandlerInterface;
-import com.application.material.takeacoffee.app.models.User;
-import com.application.material.takeacoffee.app.services.HttpIntentService;
-import com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper;
-import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.application.material.takeacoffee.app.singletons.ImagePickerSingleton;
-
-import android.widget.ImageView;
-
-import com.parse.ParseFile;
-
-import org.greenrobot.eventbus.Subscribe;
-
-import java.io.ByteArrayOutputStream;
-
-import static com.application.material.takeacoffee.app.sharedPreferences.SharedPreferencesWrapper.LOGGED_USER_ID;
+package com.application.material.takeacoffee.app.old;
 
 /**
  * Created by davide on 25/12/14.
  */
-public class LoginFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = "LoginFragment";
+public class LoginFragment {
+/*    private static final String TAG = "LoginFragment";
     private static FragmentActivity loginActivityRef = null;
     public static final String LOGIN_FRAG_TAG = "LOGIN_FRAG_TAG";
 
@@ -266,5 +229,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         loginActivityRef.finish();
     }
-
+*/
 }
