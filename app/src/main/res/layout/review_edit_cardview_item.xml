@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/reviewEditCardviewLayoutId"
-    android:layout_margin="@dimen/small_padding"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <RelativeLayout
+    android:layout_height="fill_parent">
+    <android.support.v7.widget.CardView
+        android:id="@+id/reviewEditCardviewLayoutId"
+        android:layout_margin="@dimen/small_padding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/medium_padding">
-        <EditText
-            android:id="@+id/commentReviewEditTextId"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/material_brown800"
-            android:textColorHint="@color/material_brown200"
-            android:hint="Write something..."
-            android:textSize="@dimen/text_big_20"
-            android:maxLines="6"
-            android:gravity="top"/>
-        <ImageView
-            android:id="@+id/likeReviewEditIconId"
-            android:layout_width="@dimen/medium_icon_size"
-            android:layout_height="@dimen/medium_icon_size"
-            android:layout_alignParentRight="true"
-            android:padding="@dimen/extra_small_padding"
-            android:layout_marginTop="@dimen/medium_padding"
-            android:layout_below="@id/commentReviewEditTextId"
-            android:src="@drawable/heart_filled_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/likeReviewEditIconId"
-            android:textColor="@color/material_grey600"
-            android:textSize="@dimen/text_small_16"
-            android:text="Tap to like"/>
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/medium_padding"
+            android:layout_marginBottom="@dimen/medium_padding"
+            >
+            <EditText
+                android:id="@+id/commentReviewEditTextId"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/material_brown800"
+                android:textColorHint="@color/material_brown200"
+                android:hint="Write something..."
+                android:textSize="@dimen/text_big_20"
+                android:maxLines="10"
+                android:gravity="top"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/likeReviewEditIconId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/heart_filled_icon"
+        android:layout_marginTop="-40dp"
+        android:layout_marginRight="@dimen/medium_padding"
+        fab:backgroundTint="@color/material_red400"/>
+</LinearLayout>

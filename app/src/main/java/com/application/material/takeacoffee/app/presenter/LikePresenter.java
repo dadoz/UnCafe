@@ -54,13 +54,6 @@ public class LikePresenter {
      */
     public void toggleLikeStatus(View view) {
         isLike = !isLike;
-        Animator scaleXAnimator = animatorBuilder.getScaleXAnimator(view, isLike ? SCALE_EXPAND : SCALE_SHRINK);
-        Animator scaleYAnimator = animatorBuilder.getScaleYAnimator(view, isLike ? SCALE_EXPAND : SCALE_SHRINK);
-        Animator colorAnimator = animatorBuilder.initColorAnimator(((ImageView) view).getDrawable(), isLike);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(scaleXAnimator, scaleYAnimator, colorAnimator);
-        animatorSet.start();
     }
 
     /**
@@ -69,11 +62,6 @@ public class LikePresenter {
     public void initLikeStatus(View view) {
         setColorToDrawable((ImageView) view, isLike ?
                 R.color.material_red700 : R.color.material_grey400);
-        Animator scaleXAnimator = animatorBuilder.getScaleXAnimator(view, isLike ? SCALE_EXPAND : SCALE_SHRINK);
-        Animator scaleYAnimator = animatorBuilder.getScaleYAnimator(view, isLike ? SCALE_EXPAND : SCALE_SHRINK);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(scaleXAnimator, scaleYAnimator);
-        animatorSet.start();
     }
 
     /**

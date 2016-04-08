@@ -18,6 +18,7 @@ import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.presenter.LikePresenter;
+import com.application.material.takeacoffee.app.presenter.ReviewCardviewPresenter;
 import com.application.material.takeacoffee.app.singletons.BusSingleton;
 import com.application.material.takeacoffee.app.singletons.FirebaseManager;
 import com.application.material.takeacoffee.app.singletons.FirebaseManager.OnUpdateFirebaseCallbackInterface;
@@ -107,6 +108,9 @@ public class EditViewReviewFragment extends Fragment implements
         reviewCardviewLayout.setOnLongClickListener(this);
         likeReviewEditIcon.setOnClickListener(this);
         likePresenter.initPresenter(reviewLikeStatus);
+
+        //TODO move on presenter
+        ((View) reviewEditCardviewLayout.getParent()).setVisibility(View.GONE);
     }
 
     @Override
@@ -123,6 +127,7 @@ public class EditViewReviewFragment extends Fragment implements
         switch (v.getId()) {
             case R.id.reviewCardviewLayoutId:
                 rebounceMotionHandler.translateViewOnY(reviewCardviewLayout.getY());
+
                 break;
         }
         return true;
@@ -134,16 +139,12 @@ public class EditViewReviewFragment extends Fragment implements
         menuInflater.inflate(R.menu.edit_view_review_menu, menu);
         menu.getItem(0).setVisible(editStatus);
         menu.getItem(1).setVisible(!editStatus);
-        menu.getItem(2).setVisible(!editStatus);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                break;
-            case R.id.action_edit:
-                editReview();
                 break;
             case R.id.action_save:
                 updateReview();
@@ -195,7 +196,7 @@ public class EditViewReviewFragment extends Fragment implements
      */
     private void initEditReview() {
         likePresenter.initLikeStatus(likeReviewEditIcon);
-        titleReviewEditText.setText(reviewContent.substring(0, Math.min(reviewContent.length(), 18)));
+        titleReviewEditText.setText(reviewContent.substring(0, Math.min(reviewContent.length(), 18)) + "...");
         titleReviewEditText.setEllipsize(TextUtils.TruncateAt.END);
         commentReviewEditText.setText(reviewContent);
         commentReviewEditText.requestFocus();
@@ -205,6 +206,8 @@ public class EditViewReviewFragment extends Fragment implements
      *
      */
     private void initReview() {
+        ReviewCardviewPresenter.getInstance(new WeakReference<Context>(getActivity())).init(reviewView,
+                ReviewCardviewPresenter.REVIEW_VIEW_MODE);
         likePresenter.initLikeStatus(likeReviewIcon);
         commentTextView.setText(reviewContent);
     }
@@ -213,7 +216,7 @@ public class EditViewReviewFragment extends Fragment implements
      * @param isVisible
      */
     private void showEditReview(boolean isVisible) {
-        //TODO add animationBuilder :)
+        //TODO add animationBuilder :) - move on presenter
         reviewEditCardviewLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         reviewCardviewLayout.setVisibility(!isVisible ? View.VISIBLE : View.GONE);
     }

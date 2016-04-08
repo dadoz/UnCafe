@@ -16,7 +16,7 @@ public class RebounceMotionHandler implements SpringListener {
     private final static double DAMPER = 20; //friction
     private float FINAL_TRANSLATION_Y = 200f;
     private static WeakReference<OnSpringMotionHandler> listener;
-    private boolean movedUp;
+    private boolean movedUp = false;
     private float initialY;
     private Spring spring;
     private static RebounceMotionHandler instance;
@@ -54,7 +54,7 @@ public class RebounceMotionHandler implements SpringListener {
     public void translateViewOnY(float viewY) {
         //TODO refactor
         initialY = movedUp ? initialY : viewY;
-        spring.setEndValue(initialY + (movedUp ? 0 : FINAL_TRANSLATION_Y));
+        spring.setEndValue(initialY + (movedUp ? 0 : -FINAL_TRANSLATION_Y));
         movedUp = !movedUp;
     }
 
