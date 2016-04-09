@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,34 +18,27 @@ import com.application.material.takeacoffee.app.R;
  */
 public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";
-    private static FragmentActivity mainActivityRef = null;
     public static String MAP_FRAG_TAG = "MAP_FRAG_TAG";
-    private View mapView;
-    private Bundle bundle;
-//    private GoogleMap mMap;
+    //    private GoogleMap mMap;
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        mainActivityRef = getActivity();
-        mapView = inflater.inflate(R.layout.fragment_map, container, false);
+        View mapView = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, mapView);
 
         initView();
         return mapView;
     }
 
-
-    @Override
-    public void onActivityCreated(Bundle savedInstance) {
-        super.onActivityCreated(savedInstance);
-        bundle = getArguments();
-    }
-
+    /**
+     * init actionbar
+     */
     public void initActionBar() {
-        setHasOptionsMenu(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar()
-                .setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar()
-                .setTitle("Map");
+        ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setTitle(getString(R.string.map_name));
+        }
     }
 
     /**
@@ -95,9 +89,8 @@ public class MapFragment extends Fragment {
 //        }
     }
 
-    /**
-     * destroy view
-     */
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }

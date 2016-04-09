@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by davide on 3/13/14.
  */
-public class PlacesFragment extends Fragment implements
+public class CoffeePlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
         PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
@@ -429,9 +429,9 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onRefresh() {
-        handleRefreshInitCallback();
-        handleRefreshEndCallback();
-        placesApiManager.retrievePlaces();
+//        handleRefreshInitCallback();
+//        handleRefreshEndCallback();
+//        placesApiManager.retrievePlaces();
     }
 
     /**

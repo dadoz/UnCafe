@@ -18,5 +18,6 @@
     <string name="PLACES_API_KEY">AIzaSyAWf-vfZJNezNMeFMSXl7UJ8Glusipor5E</string>
     <string name="review_actionbar_title">Coffee reviews</string>
     <string name="coffee_place_actionbar">Places</string>
+    <string name="map_name">Map</string>
 
 </resources>

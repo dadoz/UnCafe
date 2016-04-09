@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import com.application.material.takeacoffee.app.fragments.PlacesFragment;
+import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 
 public class CoffeePlacesActivity extends AppCompatActivity {
@@ -51,9 +52,20 @@ public class CoffeePlacesActivity extends AppCompatActivity {
         initActionBar();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.coffeeAppFragmentContainerId, new PlacesFragment(),
-                        PlacesFragment.COFFEE_MACHINE_FRAG_TAG)
+                .replace(R.id.coffeeAppFragmentContainerId, new CoffeePlacesFragment(),
+                        CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG)
                 .commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

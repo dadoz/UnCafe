@@ -37,13 +37,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
+import static com.application.material.takeacoffee.app.singletons.FirebaseManager.*;
+
 /**
  * Created by davide on 08/04/14.
  */
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
         ReviewRecyclerViewAdapter.CustomItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
-        GoogleApiClient.OnConnectionFailedListener, FirebaseManager.OnRetrieveFirebaseDataInterface, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener, OnRetrieveFirebaseDataInterface, View.OnClickListener {
     private static final String TAG = "ReviewListFragment";
     private ArrayList<Review> reviewList = new ArrayList<>();
     private String coffeePlaceId;
@@ -62,13 +64,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         super.onAttach(context);
     }
 
-    /**
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstance
-     * @return
-     */
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         View reviewListView = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_review_list, container, false);
@@ -174,17 +170,15 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         onUpdatePhotoOnListCallback();
 
         if (BuildConfig.DEBUG) {
-            Log.e("TAG", "BLA");
-            reviewList = getReviewListTest();
-            ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).addAllItems(reviewList);
-//            reviewRecyclerView.getAdapter().notifyDataSetChanged();
+            ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
+                    .addAllItems(getReviewListTest());
             return;
         }
 
         //review
         reviewList.clear();
-        FirebaseManager.getIstance()
-                .getReviewListAsync(new WeakReference<FirebaseManager.OnRetrieveFirebaseDataInterface>(this), "kFFMaPaytU");
+        getIstance()
+                .getReviewListAsync(new WeakReference<OnRetrieveFirebaseDataInterface>(this), "kFFMaPaytU");
     }
 
     /**
