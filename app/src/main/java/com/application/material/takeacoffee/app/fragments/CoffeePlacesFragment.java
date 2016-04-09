@@ -48,7 +48,6 @@ public class CoffeePlacesFragment extends Fragment implements
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult {
     private static final String TAG = "coffeeMachineFragment";
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
-    private static final int CAFE_FILTER_ID = 9;
     private static FragmentActivity mainActivityRef;
     private ArrayList<CoffeePlace> coffeePlacesList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
@@ -441,7 +440,8 @@ public class CoffeePlacesFragment extends Fragment implements
      */
     public boolean isValidPlaceType(List<Integer> placeTypes) {
         for (int placeType : placeTypes) {
-            if (placeType == CAFE_FILTER_ID) {
+            if (placeType == Place.TYPE_CAFE ||
+                placeType == Place.TYPE_BAR) {
                 return true;
             }
         }

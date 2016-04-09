@@ -176,6 +176,16 @@ public class PlaceApiManager {
         }
     }
 
+    /**
+     * main function to retrieve reviews data by placeId from google api
+     * @param placeId
+     */
+    public void retrieveReviewByPlaceId(String placeId) {
+        //web url
+        //https://maps.googleapis.com/maps/api/place/details/json?placeid=
+
+    }
+
 
 //    public void setPlacesFromPlacesApi() {
     //        String query = "coffee";
