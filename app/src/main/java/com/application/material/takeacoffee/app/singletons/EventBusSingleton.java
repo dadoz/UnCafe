@@ -5,10 +5,10 @@ import org.greenrobot.eventbus.EventBus;
 /**
  * Created by davide on 24/12/14.
  */
-public class BusSingleton {
+public class EventBusSingleton {
     private static EventBus bus = new EventBus();
 
-    private BusSingleton() {
+    private EventBusSingleton() {
     }
 
     /**

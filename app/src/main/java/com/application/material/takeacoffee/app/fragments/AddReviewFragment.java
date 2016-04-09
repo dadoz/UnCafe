@@ -8,10 +8,10 @@ import android.view.*;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.application.material.takeacoffee.app.HandleReviewActivity;
+
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -46,13 +46,13 @@ public class AddReviewFragment extends Fragment implements
 
     @Override
     public void onResume(){
-        BusSingleton.getInstance().register(this);
+        EventBusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onPause(){
-        BusSingleton.getInstance().unregister(this);
+        EventBusSingleton.getInstance().unregister(this);
         super.onPause();
     }
 

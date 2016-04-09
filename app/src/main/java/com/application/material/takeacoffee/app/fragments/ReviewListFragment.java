@@ -23,7 +23,7 @@ import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
 import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
-import com.application.material.takeacoffee.app.singletons.BusSingleton;
+import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.FirebaseManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.CacheManager;
@@ -82,13 +82,13 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onResume() {
-        BusSingleton.getInstance().register(this);
+        EventBusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        BusSingleton.getInstance().unregister(this);
+        EventBusSingleton.getInstance().unregister(this);
         super.onPause();
     }
 
@@ -170,7 +170,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 Bundle bundle = new Bundle();
                 bundle.putString(Review.REVIEW_ID_KEY, "090Xg3rDmx");
                 bundle.putString(Review.REVIEW_CONTENT_KEY, "balsdlllasldlflalsl llsadf lalsll sdlfl lalsd");
-                BusSingleton.getInstance().postSticky(bundle);
+                EventBusSingleton.getInstance().postSticky(bundle);
                 Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
                 startActivity(intent);
                 break;
@@ -257,7 +257,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         bundle.putString(Review.REVIEW_ID_KEY, "000000");
         bundle.putString(Review.REVIEW_CONTENT_KEY, "Hey content review, you can handle this by bla");
         bundle.putBoolean(Review.REVIEW_RATING_KEY, true);
-        BusSingleton.getInstance().postSticky(bundle);
+        EventBusSingleton.getInstance().postSticky(bundle);
 
         Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
         startActivity(intent);

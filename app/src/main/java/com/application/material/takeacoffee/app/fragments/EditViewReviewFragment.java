@@ -1,26 +1,21 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.models.User;
 import com.application.material.takeacoffee.app.presenter.LikePresenter;
 import com.application.material.takeacoffee.app.presenter.ReviewCardviewPresenter;
-import com.application.material.takeacoffee.app.singletons.BusSingleton;
-import com.application.material.takeacoffee.app.singletons.FirebaseManager;
+import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.FirebaseManager.OnUpdateFirebaseCallbackInterface;
 import com.application.material.takeacoffee.app.utils.RebounceMotionHandler;
 import com.application.material.takeacoffee.app.utils.RebounceMotionHandler.OnSpringMotionHandler;
@@ -31,7 +26,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
-import java.text.CollationElementIterator;
 import java.util.HashMap;
 
 /**
@@ -88,13 +82,13 @@ public class EditViewReviewFragment extends Fragment implements
 
     @Override
     public void onResume(){
-        BusSingleton.getInstance().register(this);
+        EventBusSingleton.getInstance().register(this);
         super.onResume();
     }
 
     @Override
     public void onPause(){
-        BusSingleton.getInstance().unregister(this);
+        EventBusSingleton.getInstance().unregister(this);
         super.onPause();
     }
 
