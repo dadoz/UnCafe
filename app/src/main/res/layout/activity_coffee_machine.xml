@@ -1,21 +1,19 @@
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/material_grey200"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/coffeeToolbarId"
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/material_brown400"/>
+
+    <FrameLayout
+        android:id="@+id/coffeeAppFragmentContainerId"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.application.material.takeacoffee.app.CoffeeMachineActivity"
-        android:orientation="vertical">
+        android:layout_height="match_parent" />
 
-    <!--<include layout="@layout/action_bar"/>-->
-    <!--LOADING TPL -->
-    <include layout="@layout/on_load_template"/>
-    <!-- FRAGMENT CONTENT -->
-    <LinearLayout
-            tools:ignore="MissingPrefix"
-            android:id="@+id/coffeeAppFragmentContainerId"
-            android:background="@color/material_light_yellow_200"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" />
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

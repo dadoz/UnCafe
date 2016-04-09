@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/noLocationServiceLayoutId"
+    android:visibility="gone"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:id="@+id/moreReviewButtonId"
+        android:gravity="center_horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/small_padding"
+        android:paddingBottom="@dimen/small_padding"
+        android:textColor="@color/material_black"
+        android:textSize="@dimen/text_big_24"
+        android:text="No location services"/>
+
+    <Button
+        android:id="@+id/noLocationServiceButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ENABLE POSITION"
+        android:paddingLeft="@dimen/medium_padding"
+        android:paddingRight="@dimen/medium_padding"
+        android:textSize="@dimen/text_small_16"/>
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reviewCardviewLayoutId"
+    android:layout_margin="@dimen/small_padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/medium_padding">
+        <TextView
+            android:id="@+id/titleReviewEditTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/material_red700"
+            android:textSize="@dimen/text_big_24"
+            android:text="blalalal"
+            android:maxLines="1"
+            android:gravity="top"/>
+        <TextView
+            android:id="@+id/commentTextId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleReviewEditTextId"
+            android:textColor="@color/material_brown800"
+            android:textSize="@dimen/text_big_18"
+            android:maxLines="6"
+            android:ellipsize="end"
+            android:text="comment this is a comment fake"/>
+        <ImageView
+            android:id="@+id/likeReviewIconId"
+            android:layout_width="@dimen/medium_icon_size"
+            android:layout_height="@dimen/medium_icon_size"
+            android:layout_below="@id/commentTextId"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/heart_filled_icon"/>
+        <TextView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_below="@id/likeReviewIconId"
+            android:textColor="@color/material_grey400"
+            android:textSize="@dimen/text_big_18"
+            android:text="Tap to expand..."/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
