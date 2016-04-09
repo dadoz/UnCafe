@@ -30,7 +30,7 @@ public class CoffeePlacesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coffee_machine);
+        setContentView(R.layout.activity_coffee_places);
         ButterKnife.bind(this);
 
         permissionManager = PermissionManager.getInstance();

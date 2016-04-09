@@ -2,21 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.application.material.takeacoffee.app" >
 
-    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- The following two permissions are not required to use
          Google Maps Android API v2, but are recommended. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <!-- GOOGLE + api -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
-        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:name=".application.CoffeePlacesApplication" >
         <activity
@@ -34,23 +28,12 @@
             android:label="@string/app_name" >
         </activity>
 
-        <activity
-            android:name=".HandleReviewActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/PLACES_API_KEY" />
         <!--android:value="AIzaSyBaLh1U-o7YHhU__o7_MgVOCrFmL935Q-w" />-->
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/PLACES_API_KEY"/>
-        <service
-            android:name=".services.HttpIntentService"
-            android:exported="false" />
     </application>
 </manifest>

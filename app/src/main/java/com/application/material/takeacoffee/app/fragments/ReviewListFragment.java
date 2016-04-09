@@ -16,7 +16,6 @@ import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import com.application.material.takeacoffee.app.HandleReviewActivity;
 import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
@@ -42,11 +41,10 @@ import java.util.*;
  * Created by davide on 08/04/14.
  */
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
-        ReviewRecyclerViewAdapter.CustomItemClickListener, View.OnClickListener,
+        ReviewRecyclerViewAdapter.CustomItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
         GoogleApiClient.OnConnectionFailedListener, FirebaseManager.OnRetrieveFirebaseDataInterface {
     private static final String TAG = "ReviewListFragment";
-    private static AppCompatActivity mainActivityRef = null;
     private ArrayList<Review> reviewList = new ArrayList<>();
     private String coffeePlaceId;
     private PlaceApiManager placesApiManager;
@@ -62,7 +60,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mainActivityRef =  (ReviewListActivity) context;
     }
 
     /**
@@ -97,7 +94,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     public void initView() {
         swipeRefreshLayout.setOnRefreshListener(this);
-        mainActivityRef.findViewById(R.id.addReviewFabId).setOnClickListener(this);
+//        mainActivityRef.findViewById(R.id.addReviewFabId).setOnClickListener(this);
         initListView();
     }
 
@@ -160,21 +157,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return true;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.addReviewFabId:
-
-                Bundle bundle = new Bundle();
-                bundle.putString(Review.REVIEW_ID_KEY, "090Xg3rDmx");
-                bundle.putString(Review.REVIEW_CONTENT_KEY, "balsdlllasldlflalsl llsadf lalsll sdlfl lalsd");
-                EventBusSingleton.getInstance().postSticky(bundle);
-                Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
-                startActivity(intent);
-                break;
-        }
     }
 
     @Override
@@ -252,16 +234,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onItemClick(int pos, View v) {
-        //TODO move
-        Bundle bundle = new Bundle();
-        bundle.putString(Review.REVIEW_ID_KEY, "000000");
-        bundle.putString(Review.REVIEW_CONTENT_KEY, "Hey content review, you can handle this by bla");
-        bundle.putBoolean(Review.REVIEW_RATING_KEY, true);
-        EventBusSingleton.getInstance().postSticky(bundle);
-
-        Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
-        startActivity(intent);
-
+        //TODO smthing with this
     }
 
     @Override
