@@ -4,19 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
-import com.application.material.takeacoffee.app.models.CoffeePlace;
-import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.singletons.FirebaseManager;
 import com.firebase.client.Firebase;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.ref.WeakReference;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

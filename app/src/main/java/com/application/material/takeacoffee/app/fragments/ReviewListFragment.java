@@ -23,7 +23,6 @@ import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapt
 import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
-import com.application.material.takeacoffee.app.singletons.FirebaseManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.firebase.client.FirebaseError;
@@ -37,7 +36,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
-import static com.application.material.takeacoffee.app.singletons.FirebaseManager.*;
 
 /**
  * Created by davide on 08/04/14.
@@ -45,7 +43,7 @@ import static com.application.material.takeacoffee.app.singletons.FirebaseManage
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
         ReviewRecyclerViewAdapter.CustomItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
-        GoogleApiClient.OnConnectionFailedListener, OnRetrieveFirebaseDataInterface, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String TAG = "ReviewListFragment";
     private ArrayList<Review> reviewList = new ArrayList<>();
     private String coffeePlaceId;
@@ -177,8 +175,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
         //review
         reviewList.clear();
-        getIstance()
-                .getReviewListAsync(new WeakReference<OnRetrieveFirebaseDataInterface>(this), "kFFMaPaytU");
+        //retrieveCoffeePlaceByPlaceId(placeId)
     }
 
     /**
@@ -217,11 +214,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     }
 
     @Override
-    public void emptyFirebaseDataCallback() {
-        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
-    }
-
-    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
@@ -239,19 +231,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         Log.e(TAG, "HANDLE share review :)");
     }
 
-    @Override
-    public void retrieveFirebaseDataSuccessCallback(String type, ArrayList<Review> list) {
-        coffeePlacesProgress.setVisibility(View.GONE);
-        reviewList.addAll(list);
-        reviewRecyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void retrieveFirebaseDataErrorCallback(FirebaseError error) {
-        Log.e(TAG, "error" + error.getMessage());
-        //TODO change view
-        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
-    }
 
     /**
      *
