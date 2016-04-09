@@ -63,9 +63,9 @@ public class SettingListFragment extends Fragment
      */
     public ArrayList<Setting> getData() {
         ArrayList<Setting> settingList = new ArrayList<Setting>();
-        settingList.add(new Setting("ID", 0, R.drawable.monsieur_icon, "User"));
-        settingList.add(new Setting("ID", 1, R.drawable.drink_icon, "Enable auto save"));
-        settingList.add(new Setting("ID", 2, R.drawable.crown_icon, "Version 0.3"));
+        settingList.add(new Setting("ID", 0, R.drawable.ic_check_white_48dp, "User"));
+        settingList.add(new Setting("ID", 1, R.drawable.ic_check_white_48dp, "Enable auto save"));
+        settingList.add(new Setting("ID", 2, R.drawable.ic_check_white_48dp, "Version 0.3"));
         return settingList;
     }
 
