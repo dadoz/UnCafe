@@ -25,7 +25,6 @@ import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.CacheManager;
-import com.firebase.client.FirebaseError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
@@ -175,6 +174,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
         //review
         reviewList.clear();
+        placesApiManager.getReviewByPlaceId(coffeePlaceId);
         //retrieveCoffeePlaceByPlaceId(placeId)
     }
 

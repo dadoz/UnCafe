@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -24,6 +25,7 @@ import com.google.android.gms.location.places.Places;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 
 import rx.Observable;
@@ -180,10 +182,9 @@ public class PlaceApiManager {
      * main function to retrieve reviews data by placeId from google api
      * @param placeId
      */
-    public void retrieveReviewByPlaceId(String placeId) {
-        //web url
-        //https://maps.googleapis.com/maps/api/place/details/json?placeid=
-
+    public List<Review> getReviewByPlaceId(String placeId) {
+        return RetrofitManager.getInstance()
+                .listReviewByPlaceId(placeId);
     }
 
 

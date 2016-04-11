@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
-import com.firebase.client.Firebase;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,7 +28,6 @@ public class ReviewListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_list);
         ButterKnife.bind(this);
-        Firebase.setAndroidContext(this);
 
         initActionBar();
         initView();
