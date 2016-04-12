@@ -23,7 +23,11 @@ import com.google.android.gms.location.places.PlaceTypes;
 import com.google.android.gms.location.places.Places;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Set;
@@ -182,9 +186,9 @@ public class PlaceApiManager {
      * main function to retrieve reviews data by placeId from google api
      * @param placeId
      */
-    public List<Review> getReviewByPlaceId(String placeId) {
-        return RetrofitManager.getInstance()
-                .listReviewByPlaceId(placeId);
+    public ArrayList<Review> getReviewByPlaceId(String placeId) {
+        return new ArrayList<>(RetrofitManager.getInstance()
+                .listReviewByPlaceId(placeId));
     }
 
 

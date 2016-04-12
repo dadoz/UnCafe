@@ -13,8 +13,6 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ReviewListActivity extends AppCompatActivity {
-    public static int ACTION_EDIT_REVIEW = 0;
-
     @Bind(R.id.reviewsToolbarId)
     public Toolbar toolbar;
 

@@ -1,7 +1,6 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import com.application.material.takeacoffee.app.BuildConfig;
-import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
 import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
@@ -44,7 +42,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String TAG = "ReviewListFragment";
-    private ArrayList<Review> reviewList = new ArrayList<>();
     private String coffeePlaceId;
     private PlaceApiManager placesApiManager;
     private GoogleApiClient mGoogleApiClient;
@@ -127,7 +124,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     private void initListView() {
         ReviewRecyclerViewAdapter adapter = new ReviewRecyclerViewAdapter(
-                new WeakReference<Context>(getActivity()), reviewList);
+                new WeakReference<Context>(getActivity()), new ArrayList<Review>());
         adapter.setOnItemClickListener(this);        //TODO booooo ????
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
 
@@ -173,9 +170,9 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         }
 
         //review
-        reviewList.clear();
-        placesApiManager.getReviewByPlaceId(coffeePlaceId);
-        //retrieveCoffeePlaceByPlaceId(placeId)
+        ArrayList<Review> reviewList = placesApiManager.getReviewByPlaceId(coffeePlaceId);
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
+                .addAllItems(reviewList);
     }
 
     /**
