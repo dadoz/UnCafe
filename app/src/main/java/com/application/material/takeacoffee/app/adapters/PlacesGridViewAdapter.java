@@ -35,7 +35,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.coffee_place_template, parent, false);
+                .inflate(R.layout.item_coffee_place, parent, false);
         holder = new PlacesGridViewAdapter.ViewHolder(view);
         return holder;
     }

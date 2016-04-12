@@ -75,7 +75,7 @@ public class SettingListFragment extends Fragment
      */
     public void initListView(ArrayList<Setting> settingList) {
         SettingListAdapter settingListAdapter = new SettingListAdapter(mainActivityRef,
-                R.layout.review_template, settingList);
+                R.layout.item_review, settingList);
         listView.setAdapter(settingListAdapter);
         listView.setOnItemClickListener(this);
     }

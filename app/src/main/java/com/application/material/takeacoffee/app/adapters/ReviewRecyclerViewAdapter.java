@@ -1,20 +1,15 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.utils.CacheManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,7 +32,7 @@ public class ReviewRecyclerViewAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.review_template, parent, false);
+                .inflate(R.layout.item_review, parent, false);
         holder = new ReviewRecyclerViewAdapter.ViewHolder(view);
         return holder;
     }
