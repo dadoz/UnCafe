@@ -26,6 +26,7 @@ import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
+import com.application.material.takeacoffee.app.singletons.PlaceApiManager.OnHandlePlaceApiResult;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,8 +46,7 @@ public class CoffeePlacesFragment extends Fragment implements
         PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
         PermissionManager.OnEnablePositionCallbackInterface,
         PermissionManager.OnEnableNetworkCallbackInterface,
-        SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult {
-    private static final String TAG = "coffeeMachineFragment";
+        SwipeRefreshLayout.OnRefreshListener, OnHandlePlaceApiResult {
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
     private ArrayList<CoffeePlace> coffeePlacesList = new ArrayList<>();
@@ -122,12 +122,14 @@ public class CoffeePlacesFragment extends Fragment implements
         setHasOptionsMenu(true);
         coffeePlaceFilterLayout.setOnClickListener(this);
         coffeePlaceSwipeRefreshLayout.setOnRefreshListener(this);
-        if (BuildConfig.DEBUG) {
+        if (false && BuildConfig.DEBUG) {
             coffeePlacesList = getCoffeePlacesListTest();
+            initGridViewAdapter();
+            return;
         }
         initGridViewAdapter();
-//        initGooglePlaces();
-//        initPermissionChainResponsibility();
+        initGooglePlaces();
+        initPermissionChainResponsibility();
     }
 
     /**
@@ -203,10 +205,6 @@ public class CoffeePlacesFragment extends Fragment implements
             return;
         }
 
-//        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
-//                new WeakReference<GoogleApiClient.OnConnectionFailedListener>(this),
-//                new WeakReference<Fragment>(this));
-
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
@@ -214,8 +212,9 @@ public class CoffeePlacesFragment extends Fragment implements
                 .enableAutoManage(getActivity(), this)
                 .build();
 
-        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
-                mGoogleApiClient);
+        //TODO add weakref
+        placesApiManager = PlaceApiManager
+                .getInstance(new WeakReference<OnHandlePlaceApiResult>(this), mGoogleApiClient);
 
     }
 
@@ -258,8 +257,7 @@ public class CoffeePlacesFragment extends Fragment implements
         coffeePlacesRecyclerview.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         coffeePlacesRecyclerview.setAdapter(adapter);
-        coffeePlacesRecyclerview.addItemDecoration(new ItemOffsetDecoration(getContext(),
-                R.dimen.small_padding));
+        coffeePlacesRecyclerview.addItemDecoration(new ItemOffsetDecoration(getContext(), R.dimen.small_padding));
     }
 
     /**
@@ -280,25 +278,6 @@ public class CoffeePlacesFragment extends Fragment implements
     public ArrayList<CoffeePlace> getCoffeePlacesListTest() {
         ArrayList<CoffeePlace> tmp = new ArrayList<CoffeePlace>();
         tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
-        tmp.add(new CoffeePlace("1", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("2", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("3", "Caffe Vergnano Torino spa Bologna", "hey", null));
-        tmp.add(new CoffeePlace("4", "Caffe Vergnano Torino spa Bologna", "hey", null));
         return tmp;
     }
 
@@ -309,6 +288,7 @@ public class CoffeePlacesFragment extends Fragment implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        //TODO handle it
     }
 
     /**

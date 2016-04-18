@@ -19,5 +19,6 @@
     <string name="review_actionbar_title">Coffee reviews</string>
     <string name="coffee_place_actionbar">Places</string>
     <string name="map_name">Map</string>
+    <string name="pick_pos_name">Pick Position</string>
 
 </resources>

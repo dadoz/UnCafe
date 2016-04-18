@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_brown600">
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/pickIconId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher"/>
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/pickIconId"
+        android:id="@+id/pickDescriptionId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="choice your place"/>
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/pickDescriptionId"
+        android:id="@+id/pickLocationEdittextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="asdlkf"/>
+    <Button
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/pickLocationEdittextId"
+        android:id="@+id/pickFindLocationButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FIND POSITION"/>
+
+</RelativeLayout>

@@ -144,16 +144,16 @@ public class PlaceApiManager {
                 public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
                     Observable
                             .just(placeLikelihoods)
-                            .filter(new Func1<PlaceLikelihoodBuffer, Boolean>() {
-                                @Override
-                                public Boolean call(PlaceLikelihoodBuffer placeLikelihoods1) {
-                                    boolean isEmpty = placeLikelihoods1.getCount() != 0;
-                                    if (isEmpty) {
-                                        listener.get().handleEmptyList();
-                                    }
-                                    return isEmpty;
-                                }
-                            })
+//                            .filter(new Func1<PlaceLikelihoodBuffer, Boolean>() {
+//                                @Override
+//                                public Boolean call(PlaceLikelihoodBuffer placeLikelihoods1) {
+//                                    boolean isEmpty = placeLikelihoods1.getCount() != 0;
+//                                    if (isEmpty) {
+//                                        listener.get().handleEmptyList();
+//                                    }
+//                                    return isEmpty;
+//                                }
+//                            })
                             .flatMap(new Func1<PlaceLikelihoodBuffer, Observable<? extends PlaceLikelihood>>() {
                                 @Override
                                 public Observable<? extends PlaceLikelihood> call(PlaceLikelihoodBuffer iterable) {
