@@ -104,8 +104,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 .enableAutoManage(getActivity(), this)
                 .build();
 
-        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
-                mGoogleApiClient);
+        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this)
+        );
     }
 
 

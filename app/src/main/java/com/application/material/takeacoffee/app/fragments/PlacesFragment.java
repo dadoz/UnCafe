@@ -32,7 +32,6 @@ import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -51,7 +50,6 @@ public class PlacesFragment extends Fragment implements
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static FragmentActivity mainActivityRef;
     private ArrayList<CoffeePlace> coffeePlacesList = new ArrayList<>();
-    private GoogleApiClient mGoogleApiClient;
     private PermissionManager permissionManager;
     private PlaceApiManager placesApiManager;
 
@@ -94,25 +92,16 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.reconnect();
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.disconnect();
-        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.disconnect();
-        }
     }
 
     /**
@@ -202,21 +191,8 @@ public class PlacesFragment extends Fragment implements
      * samplePlacesApi
      */
     private void initGooglePlaces() {
-        if (mGoogleApiClient != null) {
-            return;
-        }
-
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
-        //TODO add weakref
         placesApiManager = PlaceApiManager
-                .getInstance(new WeakReference<OnHandlePlaceApiResult>(this), mGoogleApiClient);
-
+                .getInstance(new WeakReference<OnHandlePlaceApiResult>(this));
     }
 
     /**
@@ -314,7 +290,6 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onSetCoffeePlaceInfoOnListCallback(Place place) {
         if (isValidPlaceType(place.getPlaceTypes())) {
-            Log.e("------id", place.getId());
             coffeePlacesList.add(new CoffeePlace(place.getId(), place.getName().toString().toLowerCase(),
                     place.getAddress().toString().toLowerCase(), null));
         }

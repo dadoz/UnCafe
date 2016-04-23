@@ -59,8 +59,7 @@ public class PlaceApiManager {
      * @param placeApiListener
      * @return
      */
-    public static PlaceApiManager getInstance(WeakReference<OnHandlePlaceApiResult> placeApiListener,
-                                              GoogleApiClient mGoogleApiClient) {
+    public static PlaceApiManager getInstance(WeakReference<OnHandlePlaceApiResult> placeApiListener) {
         listener = placeApiListener;
         return instance == null ?
                 instance = new PlaceApiManager(mGoogleApiClient) : instance;
@@ -192,31 +191,6 @@ public class PlaceApiManager {
         return new ArrayList<>(RetrofitManager.getInstance()
                 .listReviewByPlaceId(placeId));
     }
-
-
-//    public void setPlacesFromPlacesApi() {
-    //        String query = "coffee";
-//        LatLngBounds bounds = new LatLngBounds(
-//                new LatLng(45.06, 7.68),
-//                new LatLng(45.10, 7.7));
-//        AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
-//                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
-//                .build();
-//        PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi
-//                .getAutocompletePredictions(mGoogleApiClient, query, bounds, autocompleteFilter);
-//            result.setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
-//                @Override
-//                public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
-//                    for (AutocompletePrediction item : autocompletePredictions) {
-//                        Log.e("INFO result", item.getFullText(null).toString());
-//                        String placeId = item.getPlaceId();
-//                        getPhoto(placeId);
-//                        getInfo(placeId);
-//                    }
-//                    autocompletePredictions.release();
-//                }
-//            });
-//    }
 
     /**
      * handle
