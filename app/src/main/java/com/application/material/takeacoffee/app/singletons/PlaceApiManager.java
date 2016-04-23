@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,13 +24,7 @@ import com.google.android.gms.location.places.PlaceTypes;
 import com.google.android.gms.location.places.Places;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Set;
 
 import rx.Observable;
@@ -132,62 +127,69 @@ public class PlaceApiManager {
     /**
      * main function to retrieve places data from google api
      */
-    public void retrievePlaces() {
-        try {
+    public ArrayList<CoffeePlace> retrievePlacesAsync(String location, String radius, String type) {
+        //TODO this run on MAIN_THREAD
+        return new ArrayList<>(RetrofitManager.getInstance()
+                .listPlacesByLocationAndType(location, radius, type));
+    }
+
+//    public void retrievePlaces() {
+//        try {
             //TODO filter place tipe
             //TODO run not in  UIthread
-            Set<Integer> restrictToPlaceTypes = PlaceTypes.ALL;
-            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
-            final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                    .getCurrentPlace(mGoogleApiClient, filter);
-            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-                @Override
-                public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
-                    Observable
-                            .just(placeLikelihoods)
-//                            .filter(new Func1<PlaceLikelihoodBuffer, Boolean>() {
+//            Set<Integer> restrictToPlaceTypes = PlaceTypes.ALL;
+//            PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
+//            final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+//                    .getCurrentPlace(mGoogleApiClient, filter);
+//            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+//                @Override
+//                public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
+//                    Observable
+//                            .just(placeLikelihoods)
+////                            .filter(new Func1<PlaceLikelihoodBuffer, Boolean>() {
+////                                @Override
+////                                public Boolean call(PlaceLikelihoodBuffer placeLikelihoods1) {
+////                                    boolean isEmpty = placeLikelihoods1.getCount() != 0;
+////                                    if (isEmpty) {
+////                                        listener.get().handleEmptyList();
+////                                    }
+////                                    return isEmpty;
+////                                }
+////                            })
+//                            .flatMap(new Func1<PlaceLikelihoodBuffer, Observable<? extends PlaceLikelihood>>() {
 //                                @Override
-//                                public Boolean call(PlaceLikelihoodBuffer placeLikelihoods1) {
-//                                    boolean isEmpty = placeLikelihoods1.getCount() != 0;
-//                                    if (isEmpty) {
-//                                        listener.get().handleEmptyList();
-//                                    }
-//                                    return isEmpty;
+//                                public Observable<? extends PlaceLikelihood> call(PlaceLikelihoodBuffer iterable) {
+//                                    return Observable.from(iterable);
 //                                }
 //                            })
-                            .flatMap(new Func1<PlaceLikelihoodBuffer, Observable<? extends PlaceLikelihood>>() {
-                                @Override
-                                public Observable<? extends PlaceLikelihood> call(PlaceLikelihoodBuffer iterable) {
-                                    return Observable.from(iterable);
-                                }
-                            })
-                            .flatMap(new Func1<PlaceLikelihood, Observable<? extends Place>>() {
-                                @Override
-                                public Observable<? extends Place> call(PlaceLikelihood placeLikelihood) {
-                                    return Observable.just(placeLikelihood.getPlace());
-                                }
-                            })
-                            .subscribe(new Action1<Place>() {
-                                @Override
-                                public void call(Place place) {
-//                                    PlaceApiManager.this.getPhoto(place.getId());
-                                    PlaceApiManager.this.getInfo(place.getId());
-                                }
-                            });
-                }
-            });
-
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            listener.get().handleEmptyList();
-        }
-    }
+//                            .flatMap(new Func1<PlaceLikelihood, Observable<? extends Place>>() {
+//                                @Override
+//                                public Observable<? extends Place> call(PlaceLikelihood placeLikelihood) {
+//                                    return Observable.just(placeLikelihood.getPlace());
+//                                }
+//                            })
+//                            .subscribe(new Action1<Place>() {
+//                                @Override
+//                                public void call(Place place) {
+////                                    PlaceApiManager.this.getPhoto(place.getId());
+//                                    PlaceApiManager.this.getInfo(place.getId());
+//                                }
+//                            });
+//                }
+//            });
+//
+//        } catch (SecurityException e) {
+//            e.printStackTrace();
+//            listener.get().handleEmptyList();
+//        }
+//    }
 
     /**
      * main function to retrieve reviews data by placeId from google api
      * @param placeId
      */
     public ArrayList<Review> getReviewByPlaceId(String placeId) {
+        //TODO this run on MAIN_THREAD
         return new ArrayList<>(RetrofitManager.getInstance()
                 .listReviewByPlaceId(placeId));
     }

@@ -308,7 +308,7 @@ public class PlacesFragment extends Fragment implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                placesApiManager.retrievePlaces();
+                placesApiManager.retrievePlacesAsync();
             }
         }, 2000);
     }
