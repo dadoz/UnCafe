@@ -157,4 +157,19 @@ public class Review {
             this.timestamp = timestamp;
         }
     }
+
+
+//            "aspects" : [
+//                {
+//                    "rating" : 3,
+//                        "type" : "overall"
+//                }
+//            ],
+//            "author_name" : "Stefano Gazzaniga",
+//            "author_url" : "https://plus.google.com/115292037166444373432",
+//            "language" : "it",
+//            "profile_photo_url" : "//lh6.googleusercontent.com/-_lsGronGo2o/AAAAAAAAAAI/AAAAAAAAABw/R7VFEyHwRJI/photo.jpg",
+//            "rating" : 5,
+//            "text" : "Fantastico, come tutti gli store nespresso. Gentilezza e disponibilità del personale senza pari. Opzione di ritiro pickup fantastica, con la possibilità di gustarsi un buon caffè. ",
+//            "time" : 1456059881
 }

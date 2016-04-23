@@ -76,6 +76,7 @@ public class PlaceApiManager {
                 .setResultCallback(new ResultCallback<PlaceBuffer>() {
                     @Override
                     public void onResult(@NonNull PlaceBuffer placeBuffer) {
+                        //TODO chrash due to listener.get() == null -.- leaked ref
                         listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
                         listener.get().onUpdatePhotoOnListCallback();
                         placeBuffer.release();
@@ -135,6 +136,7 @@ public class PlaceApiManager {
     public void retrievePlaces() {
         try {
             //TODO filter place tipe
+            //TODO run not in  UIthread
             Set<Integer> restrictToPlaceTypes = PlaceTypes.ALL;
             PlaceFilter filter = new PlaceFilter(restrictToPlaceTypes, false, null, null);
             final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
@@ -169,7 +171,7 @@ public class PlaceApiManager {
                             .subscribe(new Action1<Place>() {
                                 @Override
                                 public void call(Place place) {
-                                    PlaceApiManager.this.getPhoto(place.getId());
+//                                    PlaceApiManager.this.getPhoto(place.getId());
                                     PlaceApiManager.this.getInfo(place.getId());
                                 }
                             });

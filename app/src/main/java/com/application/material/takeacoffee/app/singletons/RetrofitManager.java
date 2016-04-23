@@ -1,5 +1,7 @@
 package com.application.material.takeacoffee.app.singletons;
 
+import android.util.Log;
+
 import com.application.material.takeacoffee.app.models.Review;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,7 +46,9 @@ public class RetrofitManager {
      */
     public List<Review> listReviewByPlaceId(String placeId) {
         try {
-            return service.listReviewByPlaceId(placeId).execute().body();
+            Log.e("TAG","asdfasd");
+            List<Review> temp = service.listReviewByPlaceId(placeId).execute().body();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
         }

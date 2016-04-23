@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
@@ -40,7 +41,7 @@ import java.util.List;
 /**
  * Created by davide on 3/13/14.
  */
-public class CoffeePlacesFragment extends Fragment implements
+public class PlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
         PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
@@ -76,7 +77,7 @@ public class CoffeePlacesFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mainActivityRef = (CoffeePlacesActivity) context;
+        mainActivityRef = (PlacesActivity) context;
     }
 
     @Override
@@ -313,6 +314,7 @@ public class CoffeePlacesFragment extends Fragment implements
     @Override
     public void onSetCoffeePlaceInfoOnListCallback(Place place) {
         if (isValidPlaceType(place.getPlaceTypes())) {
+            Log.e("------id", place.getId());
             coffeePlacesList.add(new CoffeePlace(place.getId(), place.getName().toString().toLowerCase(),
                     place.getAddress().toString().toLowerCase(), null));
         }
@@ -326,6 +328,7 @@ public class CoffeePlacesFragment extends Fragment implements
     @Override
     public void onEnablePositionCallback() {
         //TODO big issue over here - position still not available
+        //TODO handle this in a service :)
         showHideLocationServiceLayout(true);
         new Handler().postDelayed(new Runnable() {
             @Override

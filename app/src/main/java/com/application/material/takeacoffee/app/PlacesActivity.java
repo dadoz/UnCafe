@@ -10,10 +10,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import com.application.material.takeacoffee.app.fragments.CoffeePlacesFragment;
+import com.application.material.takeacoffee.app.fragments.PlacesFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 
-public class CoffeePlacesActivity extends AppCompatActivity {
+public class PlacesActivity extends AppCompatActivity {
     public static final int RESULT_FAILED = -1;
     public static String EXTRA_DATA = "EXTRA_DATA";
     public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
@@ -52,8 +52,8 @@ public class CoffeePlacesActivity extends AppCompatActivity {
         initActionBar();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.coffeeAppFragmentContainerId, new CoffeePlacesFragment(),
-                        CoffeePlacesFragment.COFFEE_MACHINE_FRAG_TAG)
+                .replace(R.id.coffeeAppFragmentContainerId, new PlacesFragment(),
+                        PlacesFragment.COFFEE_MACHINE_FRAG_TAG)
                 .commit();
     }
 

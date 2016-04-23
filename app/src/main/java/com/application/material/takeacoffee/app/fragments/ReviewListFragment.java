@@ -86,6 +86,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         swipeRefreshLayout.setOnRefreshListener(this);
         getActivity().findViewById(R.id.addReviewFabId).setOnClickListener(this);
         initListView();
+        initGooglePlaces();
     }
 
     /**
@@ -163,7 +164,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         onSetCoffeePlaceInfoOnListCallback(placeName);
         onUpdatePhotoOnListCallback();
 
-        if (BuildConfig.DEBUG) {
+        if (false && BuildConfig.DEBUG) {
             ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
                     .addAllItems(getReviewListTest());
             return;

@@ -4,31 +4,39 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_brown600">
+    android:background="@color/material_red700">
     <ImageView
         android:layout_centerHorizontal="true"
         android:id="@+id/pickIconId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher"/>
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_margin="@dimen/huge_padding"
+        android:src="@drawable/ic_satellite"/>
     <TextView
         android:layout_centerHorizontal="true"
         android:layout_below="@id/pickIconId"
         android:id="@+id/pickDescriptionId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="choice your place"/>
+        android:textSize="@dimen/text_big_24"
+        android:text="Choice place you want to track"/>
     <android.support.v7.widget.AppCompatEditText
         android:layout_centerHorizontal="true"
         android:layout_below="@id/pickDescriptionId"
         android:id="@+id/pickLocationEdittextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:maxWidth="350dp"
+        android:textSize="@dimen/text_big_24"
+        android:lines="1"
         android:hint="asdlkf"/>
     <Button
         android:layout_centerHorizontal="true"
         android:layout_below="@id/pickLocationEdittextId"
         android:id="@+id/pickFindLocationButtonId"
+        android:textSize="@dimen/text_big_18"
+        android:layout_margin="@dimen/big_padding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FIND POSITION"/>
