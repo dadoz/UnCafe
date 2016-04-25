@@ -1,26 +1,31 @@
 package com.application.material.takeacoffee.app.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CoffeePlace {
     public static String COFFEE_PLACE_ID_KEY = "PLACE_ID_KEY";
     public static String COFFEE_PLACE_NAME_KEY = "PLACE_NAME_KEY";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
+
+    @SerializedName("place_id")
     private String id;
     private String iconPath;
 	private String name;
+    @SerializedName("vicinity")
 	private String address;
 
     /**
      *
-     * @param id
+     * @param place_id
      * @param name
-     * @param address
+     * @param vicinity
      * @param iconPath
      */
-    public CoffeePlace(String id, final String name, String address, String iconPath) {
-        this.id = id;
+    public CoffeePlace(String place_id, final String name, String vicinity, String iconPath) {
+        this.id = place_id;
         this.iconPath = iconPath;
 		this.name = name;
-		this.address = address;
+		this.address = vicinity;
 	}
 
     /**

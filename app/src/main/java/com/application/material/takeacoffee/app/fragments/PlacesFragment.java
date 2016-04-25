@@ -285,14 +285,12 @@ public class PlacesFragment extends Fragment implements
 
     /**
      *
-     * @param place
+     * @param coffeePlacesList
      */
     @Override
-    public void onSetCoffeePlaceInfoOnListCallback(Place place) {
-        if (isValidPlaceType(place.getPlaceTypes())) {
-            coffeePlacesList.add(new CoffeePlace(place.getId(), place.getName().toString().toLowerCase(),
-                    place.getAddress().toString().toLowerCase(), null));
-        }
+    public void onSetCoffeePlaceInfoOnListCallback(ArrayList<CoffeePlace> coffeePlacesList) {
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).addAllItems(coffeePlacesList);
+        coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -308,7 +306,7 @@ public class PlacesFragment extends Fragment implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                placesApiManager.retrievePlacesAsync();
+                placesApiManager.retrievePlacesAsync("45.0712,7.68525", "217", "cafe");
             }
         }, 2000);
     }

@@ -186,11 +186,11 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     /**
      *
-     * @param place
+     * @param coffeePlaceList
      */
     @Override
-    public void onSetCoffeePlaceInfoOnListCallback(Place place) {
-        initActionbar(place.getName().toString());
+    public void onSetCoffeePlaceInfoOnListCallback(ArrayList<CoffeePlace> coffeePlaceList) {
+        initActionbar(coffeePlaceList.get(0).getName().toString());
     }
 
     /**

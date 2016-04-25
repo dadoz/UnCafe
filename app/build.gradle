@@ -63,7 +63,10 @@ dependencies {
     compile "com.android.support:recyclerview-v7:23.3.0"
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.facebook.rebound:rebound:0.3.8'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 }

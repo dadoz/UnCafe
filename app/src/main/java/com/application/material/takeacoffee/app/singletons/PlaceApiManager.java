@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app.singletons;
 
+import android.app.job.JobScheduler;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -28,8 +29,12 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by davide on 21/03/16.
@@ -58,24 +63,6 @@ public class PlaceApiManager {
         listener = placeApiListener;
         return instance == null ?
                 instance = new PlaceApiManager(mGoogleApiClient) : instance;
-    }
-
-    /**
-     *
-     * @param placeId
-     */
-    public void getInfo(final String placeId) {
-        Places.GeoDataApi
-                .getPlaceById(mGoogleApiClient, placeId)
-                .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(@NonNull PlaceBuffer placeBuffer) {
-                        //TODO chrash due to listener.get() == null -.- leaked ref
-                        listener.get().onSetCoffeePlaceInfoOnListCallback(placeBuffer.get(0));
-                        listener.get().onUpdatePhotoOnListCallback();
-                        placeBuffer.release();
-                    }
-                });
     }
 
     /**
@@ -127,10 +114,31 @@ public class PlaceApiManager {
     /**
      * main function to retrieve places data from google api
      */
-    public ArrayList<CoffeePlace> retrievePlacesAsync(String location, String radius, String type) {
+    public void retrievePlacesAsync(String location, String radius, String type) {
         //TODO this run on MAIN_THREAD
-        return new ArrayList<>(RetrofitManager.getInstance()
-                .listPlacesByLocationAndType(location, radius, type));
+        Observable<ArrayList<CoffeePlace>> temp = RetrofitManager.getInstance()
+                .listPlacesByLocationAndType(location, radius, type);
+
+                temp
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<ArrayList<CoffeePlace>>() {
+                            @Override
+                            public void onCompleted() {
+                                Log.e("TAG", "completed");
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("TAG", "error" + e.getMessage());
+
+                            }
+
+                            @Override
+                            public void onNext(ArrayList<CoffeePlace> coffeePlacesList) {
+                                listener.get().onSetCoffeePlaceInfoOnListCallback(coffeePlacesList);
+                            }
+                        });
     }
 
 //    public void retrievePlaces() {
@@ -190,15 +198,16 @@ public class PlaceApiManager {
      */
     public ArrayList<Review> getReviewByPlaceId(String placeId) {
         //TODO this run on MAIN_THREAD
-        return new ArrayList<>(RetrofitManager.getInstance()
-                .listReviewByPlaceId(placeId));
+        RetrofitManager.getInstance()
+                .listReviewByPlaceId(placeId);
+        return null;
     }
 
     /**
      * handle
      */
     public interface OnHandlePlaceApiResult {
-        void onSetCoffeePlaceInfoOnListCallback(Place place);
+        void onSetCoffeePlaceInfoOnListCallback(ArrayList<CoffeePlace> place);
         void onUpdatePhotoOnListCallback();
         void handleEmptyList();
     }
