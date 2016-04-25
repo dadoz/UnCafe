@@ -45,7 +45,6 @@ public class PlacesFragment extends Fragment implements
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static final String CAFE_PLACE_TYPE = "cafe";
     private static FragmentActivity mainActivityRef;
-    private ArrayList<CoffeePlace> coffeePlacesList = new ArrayList<>();
     private PermissionManager permissionManager;
     private PlaceApiManager placesApiManager;
 
@@ -108,11 +107,11 @@ public class PlacesFragment extends Fragment implements
         setHasOptionsMenu(true);
         coffeePlaceFilterLayout.setOnClickListener(this);
         coffeePlaceSwipeRefreshLayout.setOnRefreshListener(this);
-        if (false && BuildConfig.DEBUG) {
-            coffeePlacesList = getCoffeePlacesListTest();
-            initGridViewAdapter();
-            return;
-        }
+//        if (false && BuildConfig.DEBUG) {
+//            coffeePlacesList = getCoffeePlacesListTest();
+//            initGridViewAdapter();
+//            return;
+//        }
         initGridViewAdapter();
         initGooglePlaces();
         initPermissionChainResponsibility();
@@ -132,7 +131,8 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onItemClick(int pos, View v) {
-        CoffeePlace place = coffeePlacesList.get(pos);
+        CoffeePlace place = ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter())
+                .getItem(pos);
         //TODO handle bundle
         Bundle bundle = new Bundle();
         bundle.putString(CoffeePlace.COFFEE_PLACE_ID_KEY, place.getId());
@@ -223,7 +223,7 @@ public class PlacesFragment extends Fragment implements
      */
     private void initGridViewAdapter() {
         PlacesGridViewAdapter adapter = new PlacesGridViewAdapter(new WeakReference<>(getContext()),
-                coffeePlacesList);
+                new ArrayList<CoffeePlace>());
         adapter.registerAdapterDataObserver(new CoffeePlaceAdapterObserver(new WeakReference<>(adapter),
                 coffeePlacesProgress, coffeePlacesEmptyResult));
         adapter.setOnItemClickListener(this);
@@ -347,7 +347,7 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void handleRefreshInitCallback() {
-        coffeePlacesList.clear();
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).clearAllItems();
         synchronized (coffeePlacesRecyclerview.getAdapter()) {
             coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
         }

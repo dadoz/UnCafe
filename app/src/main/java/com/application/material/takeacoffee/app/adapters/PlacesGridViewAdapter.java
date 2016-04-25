@@ -88,6 +88,22 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
 
     /**
      *
+     * @param pos
+     * @return
+     */
+    public CoffeePlace getItem(int pos) {
+        return itemList.get(pos);
+    }
+
+    /**
+     *
+     */
+    public void clearAllItems() {
+        itemList.clear();
+    }
+
+    /**
+     *
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView iconImageView;
@@ -130,6 +146,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      * @param data
      */
     public void addAllItems(ArrayList<CoffeePlace> data) {
+        itemList.clear();
         itemList.addAll(data);
     }
 }
