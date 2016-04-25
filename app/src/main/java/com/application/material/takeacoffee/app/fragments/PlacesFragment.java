@@ -48,6 +48,7 @@ public class PlacesFragment extends Fragment implements
         PermissionManager.OnEnableNetworkCallbackInterface,
         SwipeRefreshLayout.OnRefreshListener, OnHandlePlaceApiResult {
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
+    private static final String CAFE_PLACE_TYPE = "cafe";
     private static FragmentActivity mainActivityRef;
     private ArrayList<CoffeePlace> coffeePlacesList = new ArrayList<>();
     private PermissionManager permissionManager;
@@ -301,12 +302,11 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onEnablePositionCallback() {
         //TODO big issue over here - position still not available
-        //TODO handle this in a service :)
         showHideLocationServiceLayout(true);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                placesApiManager.retrievePlacesAsync("45.0712,7.68525", "217", "cafe");
+                placesApiManager.retrievePlacesAsync("45.0712,7.68525", "217", CAFE_PLACE_TYPE);
             }
         }, 2000);
     }
@@ -387,21 +387,6 @@ public class PlacesFragment extends Fragment implements
 //        handleRefreshInitCallback();
 //        handleRefreshEndCallback();
 //        placesApiManager.retrievePlaces();
-    }
-
-    /**
-     *
-     * @param placeTypes
-     * @return
-     */
-    public boolean isValidPlaceType(List<Integer> placeTypes) {
-        for (int placeType : placeTypes) {
-            if (placeType == Place.TYPE_CAFE ||
-                placeType == Place.TYPE_BAR) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
