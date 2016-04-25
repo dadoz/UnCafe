@@ -17,12 +17,13 @@
         android:dividerHeight="0.5dp"
         android:orientation="vertical"/>
     <ProgressBar
-        android:visibility="gone"
         android:id="@+id/coffeePlacesProgressId"
         style="@android:style/Widget.Material.Light.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
         android:indeterminateTint="@color/material_brown600"
         android:indeterminateTintMode="src_in"/>
 

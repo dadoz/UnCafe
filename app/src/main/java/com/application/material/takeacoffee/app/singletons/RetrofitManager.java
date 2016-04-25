@@ -55,8 +55,7 @@ public class RetrofitManager {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(getPlaceConverter())
-                .addConverterFactory(getReviewConverter())
+                .addConverterFactory(getGsonConverter())
 //                .client(httpClient)
                 .build();
 
@@ -104,23 +103,15 @@ public class RetrofitManager {
      *
      * @return
      */
-    public Converter.Factory getPlaceConverter() {
+    public Converter.Factory getGsonConverter() {
         return GsonConverterFactory.create(new GsonBuilder()
                 .registerTypeAdapter(new TypeToken<ArrayList<CoffeePlace>>() {}.getType(),
                     new PlaceDeserializer())
+                .registerTypeAdapter(new TypeToken<ArrayList<Review>>() {}.getType(),
+                    new ReviewsDeserializer())
                         .create());
     }
 
-    /**
-     *
-     * @return
-     */
-    public Converter.Factory getReviewConverter() {
-        return GsonConverterFactory.create(new GsonBuilder()
-                .registerTypeAdapter(new TypeToken<ArrayList<Review>>() {}.getType(),
-                        new ReviewsDeserializer())
-                .create());
-    }
 
     /**
      * place deserializer
@@ -138,7 +129,7 @@ public class RetrofitManager {
     }
 
     /**
-     * place deserializer
+     * review deserializer
      */
     public class ReviewsDeserializer implements JsonDeserializer<ArrayList<Review>> {
 
@@ -146,7 +137,8 @@ public class RetrofitManager {
         public ArrayList<Review>  deserialize(final JsonElement json, final Type typeOfT,
                                                 final JsonDeserializationContext context)
                 throws JsonParseException {
-            JsonArray resultArray = json.getAsJsonObject().get("results").getAsJsonArray();
+            JsonArray resultArray = json.getAsJsonObject().get("result").getAsJsonObject()
+                    .get("reviews").getAsJsonArray();
             return new Gson().fromJson(resultArray,
                     new TypeToken<ArrayList<Review>>(){}.getType());
         }
@@ -156,8 +148,8 @@ public class RetrofitManager {
      *
      */
     public interface PlacesAPiWebService {
-        @GET("place/details/json?placeid={placeid}&key=" + API_KEY)
-        Observable<ArrayList<Review>> listReviewByPlaceId(@Path("placeid") String placeIs);
+        @GET("place/details/json?key=" + API_KEY)
+        Observable<ArrayList<Review>> listReviewByPlaceId(@Query("placeid") String placeid);
 
         @GET("place/nearbysearch/json?key=" + API_KEY)
         Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(@Query("location") String location,

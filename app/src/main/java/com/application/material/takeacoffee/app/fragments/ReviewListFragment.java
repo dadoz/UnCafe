@@ -168,6 +168,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * @param list
      */
     public void handleReviewOnListCallback(ArrayList<Review> list) {
+        coffeePlacesProgress.setVisibility(View.GONE);
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
                 .addAllItems(list);
     }
@@ -182,12 +183,14 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onEmptyResult() {
-        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        Log.e("ReviewsFrag", "empty");
+//        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
     }
 
     @Override
     public void onErrorResult() {
-        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        Log.e("ReviewsFrag", "error");
+//        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
     }
 
 
@@ -216,7 +219,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     public ArrayList<Review> getReviewListTest() {
         ArrayList<Review> list = new ArrayList<Review>();
-        list.add(new Review("0", "1", "heheeheheheh", "hadshfjefhsejkfhakejh", 1234342, null));
+//        list.add(new Review("0", "1", "heheeheheheh", "hadshfjefhsejkfhakejh", 1234342, null));
         return list;
     }
 

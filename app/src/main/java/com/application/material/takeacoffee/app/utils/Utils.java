@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.utils;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Parcel;
@@ -11,6 +12,12 @@ import android.text.style.TypefaceSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import org.joda.time.LocalTime;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by davide on 30/12/14.
@@ -39,6 +46,16 @@ public class Utils {
      */
     public static void showSnackbar(View view , String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * format date
+     * @return
+     */
+    public static String getFormattedTimestamp(long timestamp) {
+        //"dd-MM-yyyy HH:mm"
+        return SimpleDateFormat.getDateInstance(0, Locale.ITALIAN)
+                .format(new Date(timestamp));
     }
 
 //    public static SpannableString getSpannableFromString(Activity activity, String text) {

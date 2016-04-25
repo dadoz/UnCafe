@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -41,8 +42,8 @@ public class ReviewRecyclerViewAdapter extends
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.usernameText.setText(itemList.get(position).getUser() == null ? GUEST_USER :
-                itemList.get(position).getUser().getUsername());
-        holder.dateText.setText("" + itemList.get(position).getTimestamp());
+                itemList.get(position).getUser());
+        holder.dateText.setText(Utils.getFormattedTimestamp(itemList.get(position).getTimestamp()));
         holder.reviewText.setText(itemList.get(position).getComment());
     }
 
