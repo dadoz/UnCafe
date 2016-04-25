@@ -77,7 +77,7 @@ public class RetrofitManager {
      */
     public Observable<ArrayList<Review>> listReviewsByPlaceId(String placeId) {
         try {
-            return service.listReviewByPlaceId(placeId);//.execute().body();
+            return service.listReviewByPlaceId(placeId);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -44,7 +44,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private static final String TAG = "ReviewListFragment";
     private String coffeePlaceId;
     private PlaceApiManager placesApiManager;
-    private GoogleApiClient mGoogleApiClient;
 
     @Bind(R.id.reviewRecyclerViewId)
     RecyclerView reviewRecyclerView;
@@ -93,21 +92,10 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * samplePlacesApi
      */
     private void initGooglePlaces() {
-        if (mGoogleApiClient != null) {
-            return;
-        }
+        placesApiManager = PlaceApiManager
+                .getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this));
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
-        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this)
-        );
     }
-
 
     /**
      *
@@ -159,18 +147,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      *
      * @param title
      */
-    public void onSetCoffeePlaceInfoOnListCallback(String title) {
+    public void handlePlaceInfoOnListCallback(String title) {
         initActionbar(title);
-    }
-
-    /**
-     *
-     * @param coffeePlaceList
-     */
-    public void handlePlaceInfoOnListCallback(ArrayList<CoffeePlace> coffeePlaceList) {
-        if (coffeePlaceList.get(0) != null) {
-            initActionbar(coffeePlaceList.get(0).getName());
-        }
     }
 
     /**
@@ -249,8 +227,9 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
         String placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
 
-        onSetCoffeePlaceInfoOnListCallback(placeName);
+        handlePlaceInfoOnListCallback(placeName);
         handlePhotoOnListCallback();
+        //todo retrieve reviews
         placesApiManager.retrieveReviewsAsync(coffeePlaceId);
     }
 
