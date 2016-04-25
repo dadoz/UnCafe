@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app.singletons;
 
 import android.util.Log;
 
+import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
 import com.google.gson.Gson;
@@ -23,6 +24,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Converter;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
@@ -49,14 +51,12 @@ public class RetrofitManager {
 //                .addInterceptor(new HttpLoggingInterceptor())
 //                .build();
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.registerTypeAdapter(new TypeToken<ArrayList<CoffeePlace>>() {
-                }.getType(),
-                new PlaceDeserializer()).create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(getPlaceConverter())
+                .addConverterFactory(getReviewConverter())
 //                .client(httpClient)
                 .build();
 
@@ -75,7 +75,7 @@ public class RetrofitManager {
      *
      * @param placeId
      */
-    public Observable<List<Review>> listReviewByPlaceId(String placeId) {
+    public Observable<ArrayList<Review>> listReviewsByPlaceId(String placeId) {
         try {
             return service.listReviewByPlaceId(placeId);//.execute().body();
         } catch (Exception e) {
@@ -101,6 +101,28 @@ public class RetrofitManager {
     }
 
     /**
+     *
+     * @return
+     */
+    public Converter.Factory getPlaceConverter() {
+        return GsonConverterFactory.create(new GsonBuilder()
+                .registerTypeAdapter(new TypeToken<ArrayList<CoffeePlace>>() {}.getType(),
+                    new PlaceDeserializer())
+                        .create());
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Converter.Factory getReviewConverter() {
+        return GsonConverterFactory.create(new GsonBuilder()
+                .registerTypeAdapter(new TypeToken<ArrayList<Review>>() {}.getType(),
+                        new ReviewsDeserializer())
+                .create());
+    }
+
+    /**
      * place deserializer
      */
     public class PlaceDeserializer implements JsonDeserializer<List<CoffeePlace>> {
@@ -116,11 +138,26 @@ public class RetrofitManager {
     }
 
     /**
+     * place deserializer
+     */
+    public class ReviewsDeserializer implements JsonDeserializer<ArrayList<Review>> {
+
+        @Override
+        public ArrayList<Review>  deserialize(final JsonElement json, final Type typeOfT,
+                                                final JsonDeserializationContext context)
+                throws JsonParseException {
+            JsonArray resultArray = json.getAsJsonObject().get("results").getAsJsonArray();
+            return new Gson().fromJson(resultArray,
+                    new TypeToken<ArrayList<Review>>(){}.getType());
+        }
+    }
+
+    /**
      *
      */
     public interface PlacesAPiWebService {
         @GET("place/details/json?placeid={placeid}&key=" + API_KEY)
-        Observable<List<Review>> listReviewByPlaceId(@Path("placeid") String placeIs);
+        Observable<ArrayList<Review>> listReviewByPlaceId(@Path("placeid") String placeIs);
 
         @GET("place/nearbysearch/json?key=" + API_KEY)
         Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(@Query("location") String location,

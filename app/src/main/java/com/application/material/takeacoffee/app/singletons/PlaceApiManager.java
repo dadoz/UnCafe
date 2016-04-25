@@ -1,39 +1,20 @@
 package com.application.material.takeacoffee.app.singletons;
 
-import android.app.job.JobScheduler;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.PlaceFilter;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.PlacePhotoResult;
-import com.google.android.gms.location.places.PlaceTypes;
 import com.google.android.gms.location.places.Places;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Set;
-
-import rx.Observable;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -45,6 +26,7 @@ public class PlaceApiManager {
     private static GoogleApiClient mGoogleApiClient;
     private static WeakReference<OnHandlePlaceApiResult> listener;
     private static PlaceApiManager instance;
+    public enum RequestType {PLACE_INFO, PLACE_REVIEWS, PLACE_PHOTO};
 
     /**
      *
@@ -74,7 +56,7 @@ public class PlaceApiManager {
             retrievePhotoFromApi(placeId);
             return;
         }
-        listener.get().onUpdatePhotoOnListCallback();
+        listener.get().onPlaceApiSuccess(null, RequestType.PLACE_PHOTO);
     }
 
     /**
@@ -100,7 +82,7 @@ public class PlaceApiManager {
                                             if (photo.getStatus().isSuccess()) {
                                                 CacheManager.getInstance().addBitmapToMemoryCache(placeId,
                                                         photo.getBitmap());
-                                                listener.get().onUpdatePhotoOnListCallback();
+                                                listener.get().onPlaceApiSuccess(null, RequestType.PLACE_PHOTO);
                                             }
                                         }
                                     });
@@ -113,51 +95,76 @@ public class PlaceApiManager {
 
     /**
      * main function to retrieve places data from google api
+     * @param location
+     * @param radius
+     * @param type
      */
     public void retrievePlacesAsync(String location, String radius, String type) {
-        //TODO this run on MAIN_THREAD
-        Observable<ArrayList<CoffeePlace>> temp = RetrofitManager.getInstance()
-                .listPlacesByLocationAndType(location, radius, type);
+        RetrofitManager.getInstance()
+                .listPlacesByLocationAndType(location, radius, type)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ArrayList<CoffeePlace>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e("TAG", "completed");
+                    }
 
-                temp
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<ArrayList<CoffeePlace>>() {
-                            @Override
-                            public void onCompleted() {
-                                Log.e("TAG", "completed");
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("TAG", "error" + e.getMessage());
+                        listener.get().onErrorResult();
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("TAG", "error" + e.getMessage());
-
-                            }
-
-                            @Override
-                            public void onNext(ArrayList<CoffeePlace> coffeePlacesList) {
-                                listener.get().onSetCoffeePlaceInfoOnListCallback(coffeePlacesList);
-                            }
-                        });
+                    @Override
+                    public void onNext(ArrayList<CoffeePlace> coffeePlacesList) {
+                        if (coffeePlacesList.size() == 0) {
+                            listener.get().onEmptyResult();
+                            return;
+                        }
+                        listener.get().onPlaceApiSuccess(coffeePlacesList, RequestType.PLACE_INFO);
+                    }
+                });
     }
 
     /**
-     * main function to retrieve reviews data by placeId from google api
+     * main function to retrieve place reviews data from google api
      * @param placeId
      */
-    public ArrayList<Review> getReviewByPlaceId(String placeId) {
-        //TODO this run on MAIN_THREAD
+    public void retrieveReviewsAsync(String placeId) {
         RetrofitManager.getInstance()
-                .listReviewByPlaceId(placeId);
-        return null;
+                .listReviewsByPlaceId(placeId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ArrayList<Review>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e("TAG", "completed");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("TAG", "error" + e.getMessage());
+                        listener.get().onErrorResult();
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Review> reviewList) {
+                        if (reviewList.size() == 0) {
+                            listener.get().onEmptyResult();
+                            return;
+                        }
+                        listener.get().onPlaceApiSuccess(reviewList, RequestType.PLACE_REVIEWS);
+                    }
+                });
     }
 
     /**
      * handle
      */
     public interface OnHandlePlaceApiResult {
-        void onSetCoffeePlaceInfoOnListCallback(ArrayList<CoffeePlace> place);
-        void onUpdatePhotoOnListCallback();
-        void handleEmptyList();
+        void onPlaceApiSuccess(Object list, RequestType type);
+        void onEmptyResult();
+        void onErrorResult();
     }
 }

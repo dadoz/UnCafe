@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
@@ -25,6 +26,7 @@ import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObser
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager.OnHandlePlaceApiResult;
+import com.application.material.takeacoffee.app.singletons.PlaceApiManager.RequestType;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -268,26 +270,44 @@ public class PlacesFragment extends Fragment implements
      *
      */
     @Override
-    public void onUpdatePhotoOnListCallback() {
-        synchronized (coffeePlacesRecyclerview.getAdapter()) {
-            coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+    public void onPlaceApiSuccess(Object result, RequestType type) {
+        if (type == RequestType.PLACE_PHOTO) {
+            handlePhoto();
+        } else if (type == RequestType.PLACE_INFO) {
+            handleInfo((ArrayList<CoffeePlace>) result);
         }
     }
 
     @Override
-    public void handleEmptyList() {
+    public void onEmptyResult() {
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
+    }
+
+    @Override
+    public void onErrorResult() {
+        Log.e("TAG", "ERROR on retrieve result");
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
     }
 
     /**
      *
-     * @param coffeePlacesList
      */
-    @Override
-    public void onSetCoffeePlaceInfoOnListCallback(ArrayList<CoffeePlace> coffeePlacesList) {
-        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).addAllItems(coffeePlacesList);
+    public void handlePhoto() {
+        synchronized (coffeePlacesRecyclerview.getAdapter()) {
+            coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    /**
+     *
+     * @param placeList
+     */
+    public void handleInfo(ArrayList<CoffeePlace> placeList) {
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter())
+                .addAllItems(placeList);
         coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
     }
+
 
     @Override
     public void onHandleGrantPermissionCallback() {

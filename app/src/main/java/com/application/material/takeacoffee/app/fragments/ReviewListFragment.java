@@ -155,27 +155,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(Bundle bundle) {
-        //TODO refactor
-        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
-        String placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
-
-        onSetCoffeePlaceInfoOnListCallback(placeName);
-        onUpdatePhotoOnListCallback();
-
-        if (false && BuildConfig.DEBUG) {
-            ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
-                    .addAllItems(getReviewListTest());
-            return;
-        }
-
-        //review
-        ArrayList<Review> reviewList = placesApiManager.getReviewByPlaceId(coffeePlaceId);
-        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
-                .addAllItems(reviewList);
-    }
-
     /**
      *
      * @param title
@@ -188,16 +167,16 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      *
      * @param coffeePlaceList
      */
-    @Override
-    public void onSetCoffeePlaceInfoOnListCallback(ArrayList<CoffeePlace> coffeePlaceList) {
-        initActionbar(coffeePlaceList.get(0).getName().toString());
+    public void handlePlaceInfoOnListCallback(ArrayList<CoffeePlace> coffeePlaceList) {
+        if (coffeePlaceList.get(0) != null) {
+            initActionbar(coffeePlaceList.get(0).getName());
+        }
     }
 
     /**
      *
      */
-    @Override
-    public void onUpdatePhotoOnListCallback() {
+    public void handlePhotoOnListCallback() {
         //handle picture
         Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(coffeePlaceId);
         if (cachedPic != null) {
@@ -206,10 +185,33 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         }
     }
 
+    /**
+     *
+     * @param list
+     */
+    public void handleReviewOnListCallback(ArrayList<Review> list) {
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
+                .addAllItems(list);
+    }
+
+
     @Override
-    public void handleEmptyList() {
+    public void onPlaceApiSuccess(Object result, PlaceApiManager.RequestType type) {
+        if (type == PlaceApiManager.RequestType.PLACE_REVIEWS) {
+            handleReviewOnListCallback((ArrayList<Review>) result);
+        }
+    }
+
+    @Override
+    public void onEmptyResult() {
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
     }
+
+    @Override
+    public void onErrorResult() {
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+    }
+
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -240,6 +242,17 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         return list;
     }
 
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(Bundle bundle) {
+        //TODO refactor
+        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
+        String placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
+
+        onSetCoffeePlaceInfoOnListCallback(placeName);
+        handlePhotoOnListCallback();
+        placesApiManager.retrieveReviewsAsync(coffeePlaceId);
+    }
 
 }
 
