@@ -1,8 +1,5 @@
 package com.application.material.takeacoffee.app.singletons;
 
-import android.util.Log;
-
-import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
 import com.google.gson.Gson;
@@ -11,29 +8,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Notification;
 import rx.Observable;
-import rx.functions.Action1;
 
 /**
  * Created by davide on 24/12/14.
@@ -45,18 +31,10 @@ public class RetrofitManager {
     private final PlacesAPiWebService service;
 
     private RetrofitManager() {
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        OkHttpClient httpClient = new OkHttpClient.Builder()
-//                .addInterceptor(new HttpLoggingInterceptor())
-//                .build();
-
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(getGsonConverter())
-//                .client(httpClient)
                 .build();
 
         service = retrofit.create(PlacesAPiWebService.class);

@@ -1,16 +1,9 @@
 package com.application.material.takeacoffee.app.singletons;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
-import com.google.android.gms.location.places.PlacePhotoResult;
-import com.google.android.gms.location.places.Places;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import rx.Subscriber;
@@ -45,52 +38,6 @@ public class PlaceApiManager {
         listener = placeApiListener;
         return instance == null ?
                 instance = new PlaceApiManager(mGoogleApiClient) : instance;
-    }
-
-    /**
-     *
-     * @param placeId
-     */
-    public void getPhoto(final String placeId) {
-        if (CacheManager.getInstance().getBitmapFromMemCache(placeId) == null) {
-            retrievePhotoFromApi(placeId);
-            return;
-        }
-        listener.get().onPlaceApiSuccess(null, RequestType.PLACE_PHOTO);
-    }
-
-    /**
-     *
-     * @param placeId
-     */
-    public void retrievePhotoFromApi(final String placeId) {
-        //TODO refactor it
-        Places.GeoDataApi
-                .getPlacePhotos(mGoogleApiClient, placeId)
-                .setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
-                    @Override
-                    public void onResult(@NonNull PlacePhotoMetadataResult placePhotoMetadataResult) {
-
-                        PlacePhotoMetadataBuffer photoMetadataBuffer = placePhotoMetadataResult.getPhotoMetadata();
-                        if (photoMetadataBuffer != null &&
-                                photoMetadataBuffer.getCount() > 0) {
-                            photoMetadataBuffer.get(0).getScaledPhoto(mGoogleApiClient,
-                                    MAX_WIDTH, MAX_HEIGHT)
-                                    .setResultCallback(new ResultCallback<PlacePhotoResult>() {
-                                        @Override
-                                        public void onResult(@NonNull PlacePhotoResult photo) {
-                                            if (photo.getStatus().isSuccess()) {
-                                                CacheManager.getInstance().addBitmapToMemoryCache(placeId,
-                                                        photo.getBitmap());
-                                                listener.get().onPlaceApiSuccess(null, RequestType.PLACE_PHOTO);
-                                            }
-                                        }
-                                    });
-                            photoMetadataBuffer.release();
-                        }
-                    }
-                });
-
     }
 
     /**
