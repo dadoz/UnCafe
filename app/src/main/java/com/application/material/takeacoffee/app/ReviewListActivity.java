@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ public class ReviewListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_list);
         ButterKnife.bind(this);
+        ActivityCompat.postponeEnterTransition(this);
 
         initActionBar();
         initView();

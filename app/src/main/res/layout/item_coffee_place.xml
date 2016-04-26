@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/coffeeIconId"
+            android:transitionName="photoPlaceTransitionName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:maxHeight="@dimen/coffee_icon_size"

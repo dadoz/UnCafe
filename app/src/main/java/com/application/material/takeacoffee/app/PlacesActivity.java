@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -81,5 +82,19 @@ public class PlacesActivity extends AppCompatActivity {
                 permissionManager.onEnablePositionResult();
 //            }
         }
+    }
+
+    /**
+    * Don't forget to call setResult(Activity.RESULT_OK) in the returning
+    * activity or else this method won't be called!
+    */
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        ActivityCompat.postponeEnterTransition(this);
+
+        // TODO: Call the "scheduleStartPostponedTransition()" method
+        // above when you know for certain that the shared element is
+        // ready for the transition to begin.
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -134,7 +135,10 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onItemClick(int pos, View v) {
         Bundle bundle = createBundleByPlacePosition(pos);
-        changeActivity(bundle);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(getActivity(), v.findViewById(R.id.coffeeIconId),
+                        "photoPlaceTransitionName");
+        changeActivity(bundle, options);
     }
 
     /**
@@ -188,10 +192,11 @@ public class PlacesFragment extends Fragment implements
     /**
      * change activity on reviewList
      * @param bundle
+     * @param options
      */
-    private void changeActivity(Bundle bundle) {
+    private void changeActivity(Bundle bundle, ActivityOptionsCompat options) {
         EventBusSingleton.getInstance().postSticky(bundle);
-        startActivity(new Intent(getActivity(), ReviewListActivity.class));
+        startActivity(new Intent(getActivity(), ReviewListActivity.class), options.toBundle());
     }
 
     /**

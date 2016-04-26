@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app.fragments;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -28,6 +29,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -164,7 +166,17 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 .load(RetrofitManager.getInstance()
                         .getPlacePhotoUrlByReference(photoReference))
                 .placeholder(getResources().getDrawable(R.drawable.coffee_cup_icon))
-                .into(imageView);
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        ActivityCompat.startPostponedEnterTransition(getActivity());
+                    }
+
+                    @Override
+                    public void onError() {
+                        ActivityCompat.startPostponedEnterTransition(getActivity());
+                    }
+                });
     }
 
 
