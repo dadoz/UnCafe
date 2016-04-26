@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -58,6 +59,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
                 .with(contextWeakRef.get())
                 .load(RetrofitManager.getInstance()
                         .getPlacePhotoUrlByReference(itemList.get(position).getPhotoReference()))
+                .placeholder(contextWeakRef.get().getResources().getDrawable(R.drawable.coffee_cup_icon))
                 .into(holder.iconImageView);
     }
 

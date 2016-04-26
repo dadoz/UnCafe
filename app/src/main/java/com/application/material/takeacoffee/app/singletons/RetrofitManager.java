@@ -27,6 +27,7 @@ import rx.Observable;
 public class RetrofitManager {
     private static final String API_KEY = "AIzaSyAd3e75KuRKgMLj34I0AT-MEUKGmhErLls";
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/";
+    private static final int MAX_WIDTH_PIC = 600;
     private static RetrofitManager instance = new RetrofitManager();
     private final PlacesAPiWebService service;
 
@@ -53,7 +54,7 @@ public class RetrofitManager {
      * @param reference
      */
     public String getPlacePhotoUrlByReference(String reference) {
-        return BASE_URL + "place/photo?maxwidth=" + 400 +
+        return BASE_URL + "place/photo?maxwidth=" + MAX_WIDTH_PIC +
             "&key=" + API_KEY +
             "&photoreference=" + reference;
     }
