@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@drawable/position"/>
+        android:src="@drawable/ic_tune_white_48dp"/>
     <TextView
         android:layout_marginLeft="@dimen/small_padding"
         android:layout_width="wrap_content"

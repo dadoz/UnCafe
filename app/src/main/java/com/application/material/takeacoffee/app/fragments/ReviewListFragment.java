@@ -1,7 +1,6 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import com.application.material.takeacoffee.app.BuildConfig;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
 import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
@@ -24,11 +22,8 @@ import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.RetrofitManager;
-import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -165,7 +160,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                 .with(getContext())
                 .load(RetrofitManager.getInstance()
                         .getPlacePhotoUrlByReference(photoReference))
-                .placeholder(getResources().getDrawable(R.drawable.coffee_cup_icon))
+                .placeholder(getResources().getDrawable(R.drawable.ic_local_see_black_48dp))
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {

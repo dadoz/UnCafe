@@ -15,10 +15,6 @@ import com.application.material.takeacoffee.app.fragments.PlacesFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 
 public class PlacesActivity extends AppCompatActivity {
-    public static final int RESULT_FAILED = -1;
-    public static String EXTRA_DATA = "EXTRA_DATA";
-    public static String ACTION_EDIT_REVIEW_RESULT = "EDIT_RESULT";
-    public static final String ERROR_MESSAGE_KEY = "EMK";
     private PermissionManager permissionManager;
 
     @Bind(R.id.coffeeToolbarId)

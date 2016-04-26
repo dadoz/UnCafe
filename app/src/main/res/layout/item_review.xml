@@ -10,7 +10,7 @@
         android:id="@+id/profilePictureViewId"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/user_icon"/>
+        android:src="@drawable/ic_perm_identity_black_48dp"/>
     <LinearLayout
         android:id="@+id/contentLayoutId"
         android:layout_width="fill_parent"

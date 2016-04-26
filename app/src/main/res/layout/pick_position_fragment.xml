@@ -11,7 +11,7 @@
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_margin="@dimen/huge_padding"
-        android:src="@drawable/ic_satellite"/>
+        android:src="@drawable/ic_satellite_white_48"/>
     <TextView
         android:layout_centerHorizontal="true"
         android:layout_below="@id/pickIconId"
