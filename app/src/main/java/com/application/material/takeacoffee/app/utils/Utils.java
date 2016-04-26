@@ -9,12 +9,14 @@ import android.support.design.widget.Snackbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import org.joda.time.LocalTime;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -53,9 +55,8 @@ public class Utils {
      * @return
      */
     public static String getFormattedTimestamp(long timestamp) {
-        //"dd-MM-yyyy HH:mm"
-        return SimpleDateFormat.getDateInstance(0, Locale.ITALIAN)
-                .format(new Date(timestamp));
+        return SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ITALY)
+                .format(new Date(timestamp * 1000));
     }
 
 //    public static SpannableString getSpannableFromString(Activity activity, String text) {
