@@ -133,13 +133,22 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onItemClick(int pos, View v) {
+        Bundle bundle = createBundleByPlacePosition(pos);
+        changeActivity(bundle);
+    }
+
+    /**
+     *
+     * @param pos
+     */
+    private Bundle createBundleByPlacePosition(int pos) {
         CoffeePlace place = ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter())
                 .getItem(pos);
-        //TODO handle bundle
         Bundle bundle = new Bundle();
         bundle.putString(CoffeePlace.COFFEE_PLACE_ID_KEY, place.getId());
         bundle.putString(CoffeePlace.COFFEE_PLACE_NAME_KEY, place.getName());
-        changeActivity(bundle);
+        bundle.putString(CoffeePlace.COFFEE_PLACE_PHOTO_REFERENCE_KEY, place.getPhotoReference());
+        return bundle;
     }
 
     @Override

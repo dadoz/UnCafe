@@ -22,11 +22,13 @@ import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
+import com.application.material.takeacoffee.app.singletons.RetrofitManager;
 import com.application.material.takeacoffee.app.utils.CacheManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -43,7 +45,9 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String TAG = "ReviewListFragment";
     private String coffeePlaceId;
+    private String placeName;
     private PlaceApiManager placesApiManager;
+    private String photoReference;
 
     @Bind(R.id.reviewRecyclerViewId)
     RecyclerView reviewRecyclerView;
@@ -145,23 +149,24 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     /**
      *
-     * @param title
      */
-    public void handlePlaceInfoOnListCallback(String title) {
-        initActionbar(title);
+    private void setPlaceName() {
+        initActionbar(placeName);
     }
 
     /**
      *
      */
-    public void handlePhotoOnListCallback() {
-        //handle picture
-        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(coffeePlaceId);
-        if (cachedPic != null) {
-            ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId))
-                    .setImageBitmap(cachedPic);
-        }
+    private void setPlacePhotoByUrl() {
+        ImageView imageView = ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId));
+        Picasso
+                .with(getContext())
+                .load(RetrofitManager.getInstance()
+                        .getPlacePhotoUrlByReference(photoReference))
+                .placeholder(getResources().getDrawable(R.drawable.coffee_cup_icon))
+                .into(imageView);
     }
+
 
     /**
      *
@@ -223,18 +228,25 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         return list;
     }
 
+    /**
+     *
+     * @param bundle
+     */
+    private void parseBundle(Bundle bundle) {
+        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
+        placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
+        photoReference = bundle.getString(CoffeePlace.COFFEE_PLACE_PHOTO_REFERENCE_KEY);
+    }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(Bundle bundle) {
-        //TODO refactor
-        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
-        String placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
+        parseBundle(bundle);
 
-        handlePlaceInfoOnListCallback(placeName);
-        handlePhotoOnListCallback();
-        //todo retrieve reviews
+        setPlaceName();
+        setPlacePhotoByUrl();
         placesApiManager.retrieveReviewsAsync(coffeePlaceId);
     }
+
 
 }
 

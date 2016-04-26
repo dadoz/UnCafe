@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class CoffeePlace {
+    public static final String COFFEE_PLACE_PHOTO_REFERENCE_KEY = "PHOTO_REFERENCE_KEY";
     public static String COFFEE_PLACE_ID_KEY = "PLACE_ID_KEY";
     public static String COFFEE_PLACE_NAME_KEY = "PLACE_NAME_KEY";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
