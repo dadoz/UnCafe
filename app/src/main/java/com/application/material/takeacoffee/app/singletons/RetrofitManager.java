@@ -50,6 +50,15 @@ public class RetrofitManager {
 
     /**
      *
+     * @param reference
+     */
+    public String getPlacePhotoUrlByReference(String reference) {
+        return BASE_URL + "place/photo?maxwidth=" + 400 +
+            "&key=" + API_KEY +
+            "&photoreference=" + reference;
+    }
+    /**
+     *
      * @param placeId
      */
     public Observable<ArrayList<Review>> listReviewsByPlaceId(String placeId) {

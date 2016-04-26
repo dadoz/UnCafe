@@ -252,7 +252,7 @@ public class PlacesFragment extends Fragment implements
      */
     public ArrayList<CoffeePlace> getCoffeePlacesListTest() {
         ArrayList<CoffeePlace> tmp = new ArrayList<CoffeePlace>();
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
+//        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
         return tmp;
     }
 

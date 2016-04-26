@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
+import com.application.material.takeacoffee.app.singletons.RetrofitManager;
 import com.application.material.takeacoffee.app.utils.CacheManager;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -44,7 +46,19 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.nameTextView.setText(itemList.get(position).getName());
         holder.addressTextView.setText(itemList.get(position).getAddress());
-        holder.iconImageView.setImageBitmap(getPicture(itemList.get(position).getId()));
+        setPhotoByUrl(position);
+    }
+
+    /**
+     *
+     * @param position
+     */
+    private void setPhotoByUrl(int position) {
+        Picasso
+                .with(contextWeakRef.get())
+                .load(RetrofitManager.getInstance()
+                        .getPlacePhotoUrlByReference(itemList.get(position).getPhotoReference()))
+                .into(holder.iconImageView);
     }
 
     @Override
@@ -60,16 +74,16 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         return holder.itemView.getWidth();
     }
 
-    /**
-     *
-     * @param placeId
-     */
-    public Bitmap getPicture(String placeId) {
-        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(placeId);
-        return cachedPic == null ? BitmapFactory
-                .decodeResource(contextWeakRef.get().getResources(),R.drawable.coffee_cup_icon) :
-                cachedPic;
-    }
+//    /**
+//     *
+//     * @param placeId
+//     */
+//    public Bitmap getPicture(String placeId) {
+//        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(placeId);
+//        return cachedPic == null ? BitmapFactory
+//                .decodeResource(contextWeakRef.get().getResources(),R.drawable.coffee_cup_icon) :
+//                cachedPic;
+//    }
 
     /**
      *
