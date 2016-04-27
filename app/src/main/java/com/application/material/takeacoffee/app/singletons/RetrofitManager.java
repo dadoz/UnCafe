@@ -125,9 +125,9 @@ public class RetrofitManager {
         public ArrayList<Review>  deserialize(final JsonElement json, final Type typeOfT,
                                                 final JsonDeserializationContext context)
                 throws JsonParseException {
-            JsonArray resultArray = json.getAsJsonObject().get("result").getAsJsonObject()
-                    .get("reviews").getAsJsonArray();
-            return new Gson().fromJson(resultArray,
+            JsonElement reviewsObj = json.getAsJsonObject().get("result").getAsJsonObject()
+                    .get("reviews");
+            return new Gson().fromJson(reviewsObj == null ? null : reviewsObj.getAsJsonArray(),
                     new TypeToken<ArrayList<Review>>(){}.getType());
         }
     }

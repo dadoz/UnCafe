@@ -35,9 +35,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-/**
- * Created by davide on 3/13/14.
- */
 public class PlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,

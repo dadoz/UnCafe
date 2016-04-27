@@ -65,7 +65,8 @@ public class PlaceApiManager {
 
                     @Override
                     public void onNext(ArrayList<CoffeePlace> coffeePlacesList) {
-                        if (coffeePlacesList.size() == 0) {
+                        if (coffeePlacesList == null ||
+                                coffeePlacesList.size() == 0) {
                             listener.get().onEmptyResult();
                             return;
                         }
@@ -97,7 +98,8 @@ public class PlaceApiManager {
 
                     @Override
                     public void onNext(ArrayList<Review> reviewList) {
-                        if (reviewList.size() == 0) {
+                        if (reviewList == null ||
+                                reviewList.size() == 0) {
                             listener.get().onEmptyResult();
                             return;
                         }

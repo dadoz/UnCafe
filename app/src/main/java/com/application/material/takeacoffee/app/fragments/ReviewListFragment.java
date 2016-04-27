@@ -196,13 +196,15 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void onEmptyResult() {
         Log.e("ReviewsFrag", "empty");
-//        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        coffeePlacesProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void onErrorResult() {
         Log.e("ReviewsFrag", "error");
-//        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        coffeePlacesProgress.setVisibility(View.GONE);
     }
 
 

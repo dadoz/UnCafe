@@ -1,7 +1,9 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,20 +45,30 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.nameTextView.setText(itemList.get(position).getName());
         holder.addressTextView.setText(itemList.get(position).getAddress());
-        setPhotoByUrl(position);
+        setPhotoByUrl(position, holder.iconImageView);
     }
 
     /**
      *
      * @param position
      */
-    private void setPhotoByUrl(int position) {
+    private void setPhotoByUrl(int position, final ImageView imageView) {
+        String photoRef = itemList.get(position).getPhotoReference();
+        Drawable defaultIcon = contextWeakRef.get().getResources()
+                .getDrawable(R.drawable.ic_local_see_black_48dp);
+        if (photoRef == null) {
+            imageView.setImageDrawable(defaultIcon);
+            return;
+        }
+
         Picasso
                 .with(contextWeakRef.get())
                 .load(RetrofitManager.getInstance()
-                        .getPlacePhotoUrlByReference(itemList.get(position).getPhotoReference()))
-                .placeholder(contextWeakRef.get().getResources().getDrawable(R.drawable.ic_local_see_black_48dp))
-                .into(holder.iconImageView);
+                        .getPlacePhotoUrlByReference(photoRef))
+                .placeholder(defaultIcon)
+                .fit()
+                .centerCrop()
+                .into(imageView);
     }
 
     @Override
