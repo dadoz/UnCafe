@@ -47,6 +47,7 @@ public class PlacesFragment extends Fragment implements
         SwipeRefreshLayout.OnRefreshListener, OnHandlePlaceApiResult {
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
     private static final String CAFE_PLACE_TYPE = "cafe";
+    private static final String PLACE_RANKBY = "distance";
     private static FragmentActivity mainActivityRef;
     private PermissionManager permissionManager;
     private PlaceApiManager placesApiManager;
@@ -335,7 +336,7 @@ public class PlacesFragment extends Fragment implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                placesApiManager.retrievePlacesAsync("45.0712,7.68525", "217", CAFE_PLACE_TYPE);
+                placesApiManager.retrievePlacesAsync("45.0712,7.68525", PLACE_RANKBY, CAFE_PLACE_TYPE);
             }
         }, 2000);
     }

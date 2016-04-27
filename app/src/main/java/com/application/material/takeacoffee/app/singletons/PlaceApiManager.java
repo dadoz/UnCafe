@@ -43,12 +43,12 @@ public class PlaceApiManager {
     /**
      * main function to retrieve places data from google api
      * @param location
-     * @param radius
+     * @param rankBy
      * @param type
      */
-    public void retrievePlacesAsync(String location, String radius, String type) {
+    public void retrievePlacesAsync(String location, String rankBy, String type) {
         RetrofitManager.getInstance()
-                .listPlacesByLocationAndType(location, radius, type)
+                .listPlacesByLocationAndType(location, rankBy, type)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ArrayList<CoffeePlace>>() {

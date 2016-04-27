@@ -74,13 +74,13 @@ public class RetrofitManager {
     /**
      *
      * @param location
-     * @param radius
+     * @param rankby
      * @param type
      * @return
      */
-    public Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(String location, String radius, String type) {
+    public Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(String location, String rankby, String type) {
         try {
-            return service.listPlacesByLocationAndType(location, radius, type);
+            return service.listPlacesByLocationAndType(location, rankby, type);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,7 +141,7 @@ public class RetrofitManager {
 
         @GET("place/nearbysearch/json?key=" + API_KEY)
         Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(@Query("location") String location,
-                                                                  @Query("radius") String radius,
+                                                                  @Query("rankby") String rankby,
                                                                   @Query("type") String type);
     }
 }
