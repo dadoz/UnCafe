@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_red700">
+    android:background="@color/material_brown400">
     <ImageView
         android:layout_centerHorizontal="true"
         android:id="@+id/pickIconId"

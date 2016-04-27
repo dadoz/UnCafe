@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coffeePlaceFilterLayoutId"
-    android:background="@color/material_brown300"
+    android:background="@color/material_brown200"
     android:layout_alignParentTop="true"
     android:padding="@dimen/small_padding"
     android:layout_width="fill_parent"
@@ -10,13 +10,13 @@
     <ImageView
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@drawable/ic_tune_white_48dp"/>
+        android:src="@drawable/ic_place_white_48dp"/>
     <TextView
         android:layout_marginLeft="@dimen/small_padding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_medium_20"
-        android:textColor="@color/material_white"
+        android:textColor="@color/material_grey200"
         android:text="Current position"/>
 
 </LinearLayout>

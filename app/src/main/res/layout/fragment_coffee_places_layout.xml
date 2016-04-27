@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:indeterminateTint="@color/material_brown600"
+        android:indeterminateTint="@color/material_brown800"
         android:indeterminateTintMode="src_in"/>
     <include layout="@layout/no_location_service_layout" />
     <include layout="@layout/no_network_service_layout" />

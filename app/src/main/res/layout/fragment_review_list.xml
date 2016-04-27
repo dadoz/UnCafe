@@ -24,7 +24,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:indeterminateTint="@color/material_brown600"
+        android:indeterminateTint="@color/material_brown800"
         android:indeterminateTintMode="src_in"/>
 
 </RelativeLayout>

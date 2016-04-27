@@ -23,7 +23,7 @@
             android:id="@+id/coffeeMachineNameTextId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/material_red700"
+            android:textColor="@color/material_red400"
             android:layout_below="@+id/coffeeIconId"
             android:textSize="@dimen/header_button_text"
             android:layout_marginLeft="@dimen/small_padding"
