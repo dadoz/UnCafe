@@ -133,10 +133,7 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onItemClick(int pos, View v) {
         Bundle bundle = createBundleByPlacePosition(pos);
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(getActivity(), v.findViewById(R.id.coffeeIconId),
-                        "photoPlaceTransitionName");
-        changeActivity(bundle, options);
+        changeActivity(bundle);
     }
 
     /**
@@ -190,11 +187,11 @@ public class PlacesFragment extends Fragment implements
     /**
      * change activity on reviewList
      * @param bundle
-     * @param options
+     *
      */
-    private void changeActivity(Bundle bundle, ActivityOptionsCompat options) {
+    private void changeActivity(Bundle bundle) {
         EventBusSingleton.getInstance().postSticky(bundle);
-        startActivity(new Intent(getActivity(), ReviewListActivity.class), options.toBundle());
+        startActivity(new Intent(getActivity(), ReviewListActivity.class));
     }
 
     /**

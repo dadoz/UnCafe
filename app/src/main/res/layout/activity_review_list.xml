@@ -27,9 +27,9 @@
                     android:transitionName="photoPlaceTransitionName"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:maxHeight="@dimen/max_review_list_photo"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/coffee_cup_icon_old"
                     app:layout_collapseMode="parallax"/>
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/reviewsToolbarId"

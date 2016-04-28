@@ -1,14 +1,18 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -52,6 +56,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     SwipeRefreshLayout swipeRefreshLayout;
     @Bind(R.id.coffeePlacesProgressId)
     ProgressBar coffeePlacesProgress;
+    private ImageView coffeePlaceImageView;
+    private CollapsingToolbarLayout collapsingToolbar;
 
     @Override
     public void onAttach(Context context) {
@@ -83,6 +89,10 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * init view to handle review data
      */
     public void initView() {
+        collapsingToolbar = (CollapsingToolbarLayout) getActivity()
+                .findViewById(R.id.collapsingToolbarLayoutId);
+        coffeePlaceImageView = ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId));
+
         swipeRefreshLayout.setOnRefreshListener(this);
         getActivity().findViewById(R.id.addReviewFabId).setOnClickListener(this);
         initListView();
@@ -103,9 +113,42 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     private void initActionbar(String name) {
         ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionbar != null) {
+        if (getActivity() != null &&
+                actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setTitle(name);
+            setCoolapsingToolbarTitleFont();
+        }
+    }
+
+    /**
+     *
+     */
+    private void setCoolapsingToolbarTitleFont() {
+        final Typeface tf = Typeface
+                .createFromAsset(getActivity().getAssets(), "fonts/Amatic-Bold.ttf");
+        collapsingToolbar.setCollapsedTitleTypeface(tf);
+        collapsingToolbar.setExpandedTitleTypeface(tf);
+
+    }
+    /**
+     *
+     */
+    private void setCoolapsingToolbarTitleColor() {
+        try {
+            new Palette.Builder(((BitmapDrawable) coffeePlaceImageView.getDrawable()).getBitmap())
+                    .generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    int grey = getActivity().getResources().getColor(R.color.material_grey400);
+                    int brown = getActivity().getResources().getColor(R.color.material_brown800);
+                    collapsingToolbar.setContentScrimColor(palette.getMutedColor(brown));
+                    collapsingToolbar.setCollapsedTitleTextColor(palette.getLightVibrantColor(grey));
+                    collapsingToolbar.setExpandedTitleColor(palette.getLightVibrantColor(grey));
+                }
+            }).get();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -155,21 +198,25 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      *
      */
     private void setPlacePhotoByUrl() {
-        ImageView imageView = ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId));
         Picasso
                 .with(getContext())
                 .load(RetrofitManager.getInstance()
                         .getPlacePhotoUrlByReference(photoReference))
                 .placeholder(getResources().getDrawable(R.drawable.ic_local_see_black_48dp))
-                .into(imageView, new Callback() {
+                .fit()
+                .centerCrop()
+                .into(coffeePlaceImageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        ActivityCompat.startPostponedEnterTransition(getActivity());
+                        //TODO LEAK on activity!
+                        if (getActivity() != null) {
+                            setCoolapsingToolbarTitleFont();
+                            setCoolapsingToolbarTitleColor();
+                        }
                     }
 
                     @Override
                     public void onError() {
-                        ActivityCompat.startPostponedEnterTransition(getActivity());
                     }
                 });
     }

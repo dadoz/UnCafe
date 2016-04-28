@@ -16,8 +16,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:maxHeight="@dimen/coffee_icon_size"
-            android:layout_margin="@dimen/medium_padding"
             android:adjustViewBounds="true"
+            android:background="@color/material_brown800"
             android:scaleType="fitCenter" />
         <TextView
             android:id="@+id/coffeeMachineNameTextId"
@@ -26,6 +26,7 @@
             android:textColor="@color/material_red400"
             android:layout_below="@+id/coffeeIconId"
             android:textSize="@dimen/header_button_text"
+            android:layout_marginTop="@dimen/small_padding"
             android:layout_marginLeft="@dimen/small_padding"
             android:layout_marginRight="@dimen/small_padding"
             android:maxLines="2"

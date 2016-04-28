@@ -79,18 +79,4 @@ public class PlacesActivity extends AppCompatActivity {
 //            }
         }
     }
-
-    /**
-    * Don't forget to call setResult(Activity.RESULT_OK) in the returning
-    * activity or else this method won't be called!
-    */
-    @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
-        ActivityCompat.postponeEnterTransition(this);
-
-        // TODO: Call the "scheduleStartPostponedTransition()" method
-        // above when you know for certain that the shared element is
-        // ready for the transition to begin.
-    }
 }

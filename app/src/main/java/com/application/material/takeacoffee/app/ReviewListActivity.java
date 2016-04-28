@@ -27,7 +27,7 @@ public class ReviewListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_list);
         ButterKnife.bind(this);
-        ActivityCompat.postponeEnterTransition(this);
+//        ActivityCompat.postponeEnterTransition(this);
 
         initActionBar();
         initView();
