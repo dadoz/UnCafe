@@ -408,6 +408,7 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onRefresh() {
+        coffeePlaceSwipeRefreshLayout.setRefreshing(false);
 //        handleRefreshInitCallback();
 //        handleRefreshEndCallback();
 //        placesApiManager.retrievePlaces();

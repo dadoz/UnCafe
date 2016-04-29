@@ -24,6 +24,8 @@ import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapt
 import com.application.material.takeacoffee.app.decorators.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton.PicassoCallbacksInterface;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.RetrofitManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,7 +45,7 @@ import java.util.*;
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
         ReviewRecyclerViewAdapter.CustomItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, PicassoCallbacksInterface {
     private static final String TAG = "ReviewListFragment";
     private String coffeePlaceId;
     private String placeName;
@@ -204,28 +206,9 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
             coffeePlaceImageView.setImageDrawable(defaultIcon);
             return;
         }
-
-        Picasso
-                .with(getContext())
-                .load(RetrofitManager.getInstance()
-                        .getPlacePhotoUrlByReference(photoReference))
-                .placeholder(defaultIcon)
-                .fit()
-                .centerCrop()
-                .into(coffeePlaceImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        //TODO LEAK on activity!
-                        if (getActivity() != null) {
-                            setCoolapsingToolbarTitleFont();
-                            setCoolapsingToolbarTitleColor();
-                        }
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
+        PicassoSingleton.getInstance(new WeakReference<>(getContext()),
+                new WeakReference<PicassoCallbacksInterface>(this))
+                .setPhotoAsync(coffeePlaceImageView, photoReference, defaultIcon);
     }
 
 
@@ -311,5 +294,18 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     }
 
 
+    @Override
+    public void onPicassoSuccessCallback() {
+        if (getActivity() != null) {
+            setCoolapsingToolbarTitleFont();
+            setCoolapsingToolbarTitleColor();
+        }
+
+    }
+
+    @Override
+    public void onPicassoErrorCallback() {
+
+    }
 }
 

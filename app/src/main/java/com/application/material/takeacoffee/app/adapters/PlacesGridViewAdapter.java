@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
 import com.application.material.takeacoffee.app.singletons.RetrofitManager;
 import com.squareup.picasso.Picasso;
 
@@ -50,30 +51,23 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.nameTextView.setText(itemList.get(position).getName());
         holder.addressTextView.setText(itemList.get(position).getAddress());
-        setPhotoByUrl(position, holder.iconImageView);
+        String photoRef = itemList.get(position).getPhotoReference();
+        setPhotoByUrl(photoRef, holder.iconImageView);
     }
 
     /**
      *
-     * @param position
+     * @param photoRef
      */
-    private void setPhotoByUrl(int position, final ImageView imageView) {
-        String photoRef = itemList.get(position).getPhotoReference();
+    private void setPhotoByUrl(String photoRef, final ImageView imageView) {
         Drawable defaultIcon = contextWeakRef.get().getResources()
                 .getDrawable(R.drawable.ic_local_see_black_48dp);
         if (photoRef == null) {
             imageView.setImageDrawable(defaultIcon);
             return;
         }
-
-        Picasso
-                .with(contextWeakRef.get())
-                .load(RetrofitManager.getInstance()
-                        .getPlacePhotoUrlByReference(photoRef))
-                .placeholder(defaultIcon)
-                .fit()
-                .centerCrop()
-                .into(imageView);
+        PicassoSingleton.getInstance(contextWeakRef, null)
+                .setPhotoAsync(imageView, photoRef, defaultIcon);
     }
 
     @Override
