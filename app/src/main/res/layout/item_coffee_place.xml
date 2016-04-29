@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             android:maxHeight="@dimen/coffee_icon_size"
             android:adjustViewBounds="true"
-            android:background="@color/material_brown800"
-            android:scaleType="fitCenter" />
+            android:background="@color/material_brown400"
+            android:scaleType="center" />
         <TextView
             android:id="@+id/coffeeMachineNameTextId"
             android:layout_width="fill_parent"

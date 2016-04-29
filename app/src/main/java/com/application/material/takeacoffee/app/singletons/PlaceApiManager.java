@@ -93,6 +93,7 @@ public class PlaceApiManager {
                     @Override
                     public void onError(Throwable e) {
                         Log.e("TAG", "error" + e.getMessage());
+                        //TODO leak
                         listener.get().onErrorResult();
                     }
 
@@ -100,9 +101,11 @@ public class PlaceApiManager {
                     public void onNext(ArrayList<Review> reviewList) {
                         if (reviewList == null ||
                                 reviewList.size() == 0) {
+                            //TODO leak
                             listener.get().onEmptyResult();
                             return;
                         }
+                        //TODO leak
                         listener.get().onPlaceApiSuccess(reviewList, RequestType.PLACE_REVIEWS);
                     }
                 });

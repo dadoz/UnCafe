@@ -1,4 +1,4 @@
-package com.application.material.takeacoffee.app.decorator;
+package com.application.material.takeacoffee.app.decorators;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -1,9 +1,10 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.*;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
-import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
+import com.application.material.takeacoffee.app.decorators.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
@@ -198,11 +198,18 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      *
      */
     private void setPlacePhotoByUrl() {
+        Drawable defaultIcon = getResources()
+                .getDrawable(R.drawable.ic_local_see_black_48dp);
+        if (photoReference == null) {
+            coffeePlaceImageView.setImageDrawable(defaultIcon);
+            return;
+        }
+
         Picasso
                 .with(getContext())
                 .load(RetrofitManager.getInstance()
                         .getPlacePhotoUrlByReference(photoReference))
-                .placeholder(getResources().getDrawable(R.drawable.ic_local_see_black_48dp))
+                .placeholder(defaultIcon)
                 .fit()
                 .centerCrop()
                 .into(coffeePlaceImageView, new Callback() {
