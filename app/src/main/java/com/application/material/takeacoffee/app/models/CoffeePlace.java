@@ -15,10 +15,10 @@ public class CoffeePlace {
 
     @SerializedName("place_id")
     private String id;
-    private String iconPath;
 	private String name;
     @SerializedName("vicinity")
 	private String address;
+    private int rating;
     private ArrayList<PlacePhoto> photos;
 
     /**
@@ -26,12 +26,12 @@ public class CoffeePlace {
      * @param place_id
      * @param name
      * @param vicinity
-     * @param iconPath
+     * @param rating
      */
-    public CoffeePlace(String place_id, final String name, String vicinity, String iconPath,
+    public CoffeePlace(String place_id, final String name, String vicinity, int rating,
                        ArrayList<PlacePhoto> photos) {
         this.id = place_id;
-        this.iconPath = iconPath;
+        this.rating = rating;
 		this.name = name;
 		this.address = vicinity;
         this.photos = photos;
@@ -81,16 +81,16 @@ public class CoffeePlace {
      *
      * @return
      */
-    public String getIconPath() {
-        return iconPath;
-    }
-
-    /**
-     *
-     * @return
-     */
     public String getPhotoReference() {
         return photos != null ? photos.get(0).getPhotoReference() : null;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public static class PlacePhoto {

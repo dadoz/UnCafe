@@ -51,8 +51,19 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.nameTextView.setText(itemList.get(position).getName());
         holder.addressTextView.setText(itemList.get(position).getAddress());
+        holder.ratingTextView.setText(getRatingByPos(position));
         String photoRef = itemList.get(position).getPhotoReference();
         setPhotoByUrl(photoRef, holder.iconImageView);
+    }
+
+    /**
+     *
+     * @param position
+     * @return
+     */
+    private String getRatingByPos(int position) {
+        int rating = itemList.get(position).getRating();
+        return rating == 0 ? "-" : rating + ".0";
     }
 
     /**
@@ -60,8 +71,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      * @param photoRef
      */
     private void setPhotoByUrl(String photoRef, final ImageView imageView) {
-        Drawable defaultIcon = contextWeakRef.get().getResources()
-                .getDrawable(R.drawable.ic_local_see_black_48dp);
+        Drawable defaultIcon = getColoredDrawable();
         if (photoRef == null) {
             imageView.setImageDrawable(defaultIcon);
             return;
@@ -73,14 +83,6 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     @Override
     public int getItemCount() {
         return itemList.size();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getCardviewWidth() {
-        return holder.itemView.getWidth();
     }
 
 //    /**
@@ -126,6 +128,18 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     }
 
     /**
+     * TODO move out
+     * @return
+     */
+    public Drawable getColoredDrawable() {
+        Drawable defaultIcon = contextWeakRef.get().getResources()
+                .getDrawable(R.drawable.ic_local_see_black_48dp);
+        defaultIcon.setColorFilter(contextWeakRef.get().getResources().getColor(R.color.material_brown200),
+                PorterDuff.Mode.SRC_ATOP);
+        return defaultIcon;
+    }
+
+    /**
      *
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -133,12 +147,14 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         private final TextView nameTextView;
         private final TextView addressTextView;
         private final View itemView;
+        private final TextView ratingTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             nameTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineNameTextId));
             addressTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineAddressTextId));
             iconImageView = (ImageView) itemView.findViewById(R.id.coffeeIconId);
+            ratingTextView = (TextView) itemView.findViewById(R.id.coffeePlaceRatingId);
             this.itemView = itemView;
             itemView.setOnClickListener(this);
         }

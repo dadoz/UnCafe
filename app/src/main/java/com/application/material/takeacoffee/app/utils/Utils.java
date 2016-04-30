@@ -3,7 +3,9 @@ package com.application.material.takeacoffee.app.utils;
 import android.app.Activity;
 import android.app.Notification;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.support.design.widget.Snackbar;
 import android.text.Spannable;
@@ -13,6 +15,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import com.application.material.takeacoffee.app.R;
 
 import org.joda.time.LocalTime;
 

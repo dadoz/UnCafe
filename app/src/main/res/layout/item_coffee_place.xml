@@ -47,6 +47,29 @@
             android:ellipsize="end"
             android:text="dalksfalskdfj"/>
 
+        <TextView
+            android:id="@+id/coffeePlaceRatingId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/material_brown400"
+            android:layout_below="@+id/coffeeMachineAddressTextId"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/small_padding"
+            android:layout_marginRight="@dimen/small_padding"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:textSize="@dimen/text_big_30"
+            android:text="4.7"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/material_grey400"
+            android:layout_below="@+id/coffeeMachineAddressTextId"
+            android:layout_toLeftOf="@id/coffeePlaceRatingId"
+            android:textSize="@dimen/text_small_14"
+            android:layout_alignBaseline="@id/coffeePlaceRatingId"
+            android:text="rating"/>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
 
