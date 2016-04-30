@@ -40,11 +40,12 @@ public class ReviewRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        holder.usernameText.setText(itemList.get(position).getUser() == null ? GUEST_USER :
-                itemList.get(position).getUser());
-        holder.dateText.setText(Utils.getFormattedTimestamp(itemList.get(position).getTimestamp()));
-        holder.reviewText.setText(itemList.get(position).getComment());
+        Review item = itemList.get(position);
+        holder.usernameText.setText(item.getUser() == null ? GUEST_USER :
+                item.getUser());
+        holder.dateText.setText(Utils.getFormattedTimestamp(item.getTimestamp()));
+        holder.reviewText.setText(item.getComment());
+        holder.reviewRating.setText(item.getRating() + ".0");
     }
 
     @Override
@@ -63,12 +64,14 @@ public class ReviewRecyclerViewAdapter extends
         private final TextView usernameText;
         private final TextView dateText;
         private final TextView reviewText;
+        private final TextView reviewRating;
 
         public ViewHolder(View itemView) {
             super(itemView);
             usernameText = ((TextView) itemView.findViewById(R.id.usernameTextId));
             dateText = ((TextView) itemView.findViewById(R.id.dateTextId));
             reviewText = (TextView) itemView.findViewById(R.id.reviewTextId);
+            reviewRating = (TextView) itemView.findViewById(R.id.reviewRatingTextViewId);
             itemView.setOnClickListener(this);
         }
 

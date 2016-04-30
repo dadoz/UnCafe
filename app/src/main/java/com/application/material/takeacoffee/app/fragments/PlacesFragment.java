@@ -117,7 +117,7 @@ public class PlacesFragment extends Fragment implements
     }
 
     /**
-     * 
+     *
      */
     private void initFilters() {
         coffeePlaceFilterLayout.setOnClickListener(this);

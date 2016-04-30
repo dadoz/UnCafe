@@ -4,46 +4,62 @@
     android:id="@+id/reviewLayoutId"
     android:paddingTop="@dimen/small_padding"
     android:paddingBottom="@dimen/small_padding"
+    android:background="@color/material_grey50"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/profilePictureViewId"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/ic_perm_identity_black_48dp"/>
-    <LinearLayout
-        android:id="@+id/contentLayoutId"
-        android:layout_width="fill_parent"
+        android:layout_width="@dimen/medium_icon_size"
+        android:layout_height="@dimen/medium_icon_size"
+        android:src="@drawable/ic_perm_identity_black_48dp"
+        android:layout_marginLeft="@dimen/small_padding"
+        android:layout_marginRight="@dimen/small_padding"/>
+    <TextView
+        android:id="@+id/usernameTextId"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toRightOf="@id/profilePictureViewId">
-        <TextView
-            android:id="@+id/usernameTextId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Guest"
-            android:textColor="@color/material_red400"
-            android:textSize="@dimen/text_big_24"
-            android:maxLines="1"
-            android:ellipsize="end"/>
-        <TextView
-            android:id="@+id/dateTextId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/material_grey600"
-            android:text="date - "
-            android:textSize="@dimen/text_small_14"/>
+        android:layout_marginRight="@dimen/big_padding"
+        android:layout_toRightOf="@id/profilePictureViewId"
+        android:text="Guest"
+        android:textColor="@color/material_red400"
+        android:textSize="@dimen/text_big_24"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+    <TextView
+        android:id="@+id/dateTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/profilePictureViewId"
+        android:layout_below="@id/usernameTextId"
+        android:textColor="@color/material_grey600"
+        android:text="date - "
+        android:textSize="@dimen/text_small_14"/>
+    <TextView
+        android:id="@+id/reviewRatingTextViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="4.0"
+        android:layout_marginRight="@dimen/small_padding"
+        android:layout_marginLeft="@dimen/big_padding"
+        android:ellipsize="end"
+        android:textColor="@color/material_brown800"
+        android:textSize="@dimen/text_big_38"/>
 
-        <TextView
-            android:id="@+id/reviewTextId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_padding"
-            android:text="review content"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textColor="@color/material_brown800"
-            android:textSize="@dimen/text_small_16"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/reviewTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/profilePictureViewId"
+        android:layout_below="@id/dateTextId"
+        android:layout_toLeftOf="@id/reviewRatingTextViewId"
+
+        android:layout_marginTop="@dimen/small_padding"
+        android:text="review content sjdflk  laksdlkfj kj sadfk alskd kfsadk lkj askdfk aksdfl kklsad fklaòsl dkfjlksad òflkjasdò lkfjaòlksjd flkjasòdk "
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textColor="@color/material_brown800"
+        android:textSize="@dimen/text_small_16"/>
 
 </RelativeLayout>
