@@ -13,6 +13,7 @@
         android:layout_height="30dp"
         android:src="@drawable/ic_place_white_48dp"/>
     <TextView
+        android:id="@+id/palcePositionFilterTextViewId"
         android:layout_marginLeft="@dimen/small_padding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

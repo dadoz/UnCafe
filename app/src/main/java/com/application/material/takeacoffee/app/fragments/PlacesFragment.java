@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,6 +68,8 @@ public class PlacesFragment extends Fragment implements
     View noLocationServiceButton;
     @Bind(R.id.coffeePlaceSwipeRefreshLayoutId)
     SwipeRefreshLayout coffeePlaceSwipeRefreshLayout;
+    @Bind(R.id.palcePositionFilterTextViewId)
+    TextView palcePositionFilterTextView;
 
     @Override
     public void onAttach(Context context) {
@@ -106,16 +109,19 @@ public class PlacesFragment extends Fragment implements
     public void initView() {
         initActionBar();
         setHasOptionsMenu(true);
-        coffeePlaceFilterLayout.setOnClickListener(this);
         coffeePlaceSwipeRefreshLayout.setOnRefreshListener(this);
-//        if (false && BuildConfig.DEBUG) {
-//            coffeePlacesList = getCoffeePlacesListTest();
-//            initGridViewAdapter();
-//            return;
-//        }
+        initFilters();
         initGridViewAdapter();
         initGooglePlaces();
         initPermissionChainResponsibility();
+    }
+
+    /**
+     * 
+     */
+    private void initFilters() {
+        coffeePlaceFilterLayout.setOnClickListener(this);
+        palcePositionFilterTextView.setText("Torino (Beta)");
     }
 
     /**
