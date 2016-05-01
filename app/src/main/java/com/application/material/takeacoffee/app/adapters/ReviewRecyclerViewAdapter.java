@@ -1,15 +1,19 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.Review;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
 import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -21,13 +25,15 @@ import java.util.ArrayList;
 public class ReviewRecyclerViewAdapter extends
         RecyclerView.Adapter<ReviewRecyclerViewAdapter.ViewHolder> {
     private final ArrayList<Review> itemList;
+    private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
     private ReviewRecyclerViewAdapter.ViewHolder holder;
     private String GUEST_USER = "Guest";
 
-    public ReviewRecyclerViewAdapter(WeakReference<Context> context,
+    public ReviewRecyclerViewAdapter(WeakReference<Context> ctx,
                                      ArrayList<Review> itemList) {
         this.itemList = itemList;
+        this.contextWeakRef = ctx;
     }
 
     @Override
@@ -45,9 +51,25 @@ public class ReviewRecyclerViewAdapter extends
                 item.getUser());
         holder.dateText.setText(Utils.getFormattedTimestamp(item.getTimestamp()));
         holder.reviewText.setText(item.getComment());
-        holder.reviewRating.setText(item.getRating() + ".0");
+        holder.reviewRating.setText(item.getRating() + ".0"); //TODO change it
+        setProfilePicByUrl(item.getProfilePhotoUrl(), holder.profilePictureImageView);
     }
 
+    /**
+     *
+     * @param photoRef
+     */
+    private void setProfilePicByUrl(String photoRef, final ImageView imageView) {
+        Drawable defaultIcon = contextWeakRef.get().getResources()
+                .getDrawable(R.drawable.ic_perm_identity_black_48dp);
+        if (photoRef == null) {
+            imageView.setImageDrawable(defaultIcon);
+            return;
+        }
+        PicassoSingleton.getInstance(contextWeakRef, null)
+                .setProfilePictureAsync(imageView, photoRef, defaultIcon);
+    }
+    
     @Override
     public int getItemCount() {
         return itemList.size();
@@ -65,6 +87,7 @@ public class ReviewRecyclerViewAdapter extends
         private final TextView dateText;
         private final TextView reviewText;
         private final TextView reviewRating;
+        private final ImageView profilePictureImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -72,6 +95,7 @@ public class ReviewRecyclerViewAdapter extends
             dateText = ((TextView) itemView.findViewById(R.id.dateTextId));
             reviewText = (TextView) itemView.findViewById(R.id.reviewTextId);
             reviewRating = (TextView) itemView.findViewById(R.id.reviewRatingTextViewId);
+            profilePictureImageView = (ImageView) itemView.findViewById(R.id.profilePictureViewId);
             itemView.setOnClickListener(this);
         }
 

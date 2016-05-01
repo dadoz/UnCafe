@@ -63,7 +63,7 @@ public class Review {
      * @return
      */
     public String getProfilePhotoUrl() {
-        return profilePhotoUrl;
+        return "http:" + profilePhotoUrl;
     }
 
     /**

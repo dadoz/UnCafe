@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
@@ -19,6 +20,7 @@ import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
 import com.application.material.takeacoffee.app.singletons.RetrofitManager;
+import com.application.material.takeacoffee.app.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
@@ -71,7 +73,10 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      * @param photoRef
      */
     private void setPhotoByUrl(String photoRef, final ImageView imageView) {
-        Drawable defaultIcon = getColoredDrawable();
+        //TODO refactor
+        Resources res = contextWeakRef.get().getResources();
+        Drawable defaultIcon = Utils.getColoredDrawable(res
+                .getDrawable(R.drawable.ic_local_see_black_48dp), res.getColor(R.color.material_brown200));
         if (photoRef == null) {
             imageView.setImageDrawable(defaultIcon);
             return;
@@ -125,18 +130,6 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      */
     public void clearAllItems() {
         itemList.clear();
-    }
-
-    /**
-     * TODO move out
-     * @return
-     */
-    public Drawable getColoredDrawable() {
-        Drawable defaultIcon = contextWeakRef.get().getResources()
-                .getDrawable(R.drawable.ic_local_see_black_48dp);
-        defaultIcon.setColorFilter(contextWeakRef.get().getResources().getColor(R.color.material_brown200),
-                PorterDuff.Mode.SRC_ATOP);
-        return defaultIcon;
     }
 
     /**

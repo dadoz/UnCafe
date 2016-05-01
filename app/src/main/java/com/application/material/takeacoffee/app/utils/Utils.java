@@ -63,6 +63,16 @@ public class Utils {
                 .format(new Date(timestamp * 1000));
     }
 
+    /**
+     * TODO move out
+     * @return
+     */
+    public static Drawable getColoredDrawable(Drawable defaultIcon, int color) {
+        defaultIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        return defaultIcon;
+    }
+
+
 //    public static SpannableString getSpannableFromString(Activity activity, String text) {
 //        //TODO move on Utils
 //        Typeface font = Typeface.createFromAsset(activity.getAssets(), "chimphand-regular.ttf");
