@@ -72,7 +72,7 @@ public class RetrofitManager {
     }
 
     /**
-     *
+     * TODO maybe move out
      * @param reference
      */
     public String getPlacePhotoUrlByReference(String reference) {
@@ -175,8 +175,6 @@ public class RetrofitManager {
         public List<CoffeePlace>  deserialize(final JsonElement json, final Type typeOfT,
                                                 final JsonDeserializationContext context)
                 throws JsonParseException {
-
-
             JsonArray resultArray = json.getAsJsonObject().get("results").getAsJsonArray();
             ArrayList<CoffeePlace> tmp = new Gson().fromJson(resultArray,
                     new TypeToken<ArrayList<CoffeePlace>>() {

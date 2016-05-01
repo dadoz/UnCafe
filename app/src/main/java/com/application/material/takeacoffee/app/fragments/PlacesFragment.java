@@ -323,6 +323,7 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onErrorResult() {
         Log.e("TAG", "ERROR on retrieve result");
+        scrollListener.setLoadingEnabled(true);
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
     }
 

@@ -14,6 +14,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -158,7 +160,9 @@ public class PermissionManager {
      */
     public void checkNetworkServiceIsEnabled(WeakReference<Context> activityWeakRef,
                                               OnEnableNetworkCallbackInterface networkListener) {
-        if (ConnectivityUtils.checkConnectivity(activityWeakRef)) {
+
+        if (((CoffeePlacesApplication) activityWeakRef.get().getApplicationContext()).isCacheValid() ||
+            ConnectivityUtils.checkConnectivity(activityWeakRef)) {
             networkListener.onEnableNetworkCallback();
             return;
         }

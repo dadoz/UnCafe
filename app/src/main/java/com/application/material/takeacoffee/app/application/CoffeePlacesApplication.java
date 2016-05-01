@@ -59,4 +59,18 @@ public class CoffeePlacesApplication extends Application {
     public Cache getCache() {
         return cache;
     }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isCacheValid() {
+        try {
+            return cache.size() != 0 &&
+                    cache.urls().hasNext();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
