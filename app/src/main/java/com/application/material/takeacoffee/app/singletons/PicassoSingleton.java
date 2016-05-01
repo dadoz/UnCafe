@@ -42,7 +42,7 @@ public class PicassoSingleton implements Callback {
     public void setPhotoAsync(final ImageView coffeePlaceImageView, String photoReference, Drawable defaultIcon) {
         Picasso
                 .with(contextWeakRef.get())
-                .load(RetrofitManager.getInstance()
+                .load(RetrofitManager.getInstance(contextWeakRef)
                         .getPlacePhotoUrlByReference(photoReference))
                 .placeholder(defaultIcon)
                 .fit()

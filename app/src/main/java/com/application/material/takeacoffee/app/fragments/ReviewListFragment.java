@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.decorators.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
@@ -107,7 +108,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     private void initGooglePlaces() {
         placesApiManager = PlaceApiManager
-                .getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this));
+                .getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this), new WeakReference<>(getContext()));
 
     }
 
@@ -129,7 +130,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     private void setCoolapsingToolbarTitleFont() {
         final Typeface tf = Typeface
-                .createFromAsset(getActivity().getAssets(), "fonts/Amatic-Bold.ttf");
+                .createFromAsset(getActivity().getAssets(), CoffeePlacesApplication.FONT_BOLD_PATH);
         collapsingToolbar.setCollapsedTitleTypeface(tf);
         collapsingToolbar.setExpandedTitleTypeface(tf);
 
@@ -258,6 +259,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onClick(View v) {
+        //TODO handle it
         Toast.makeText(getContext(), "hey yu're clicking share content", Toast.LENGTH_LONG).show();
         Log.e(TAG, "HANDLE share review :)");
     }

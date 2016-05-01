@@ -156,13 +156,9 @@ public class PermissionManager {
      * @param activityWeakRef
      * @param networkListener
      */
-    public void checkNetworkServiceIsEnabled(WeakReference<AppCompatActivity> activityWeakRef,
+    public void checkNetworkServiceIsEnabled(WeakReference<Context> activityWeakRef,
                                               OnEnableNetworkCallbackInterface networkListener) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) activityWeakRef.get()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null &&
-                networkInfo.isConnectedOrConnecting()) {
+        if (ConnectivityUtils.checkConnectivity(activityWeakRef)) {
             networkListener.onEnableNetworkCallback();
             return;
         }

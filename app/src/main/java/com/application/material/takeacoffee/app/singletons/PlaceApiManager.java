@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app.singletons;
 
+import android.content.Context;
 import android.util.Log;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
@@ -21,6 +22,8 @@ public class PlaceApiManager {
     private static GoogleApiClient mGoogleApiClient;
     private static WeakReference<OnHandlePlaceApiResult> listener;
     private static PlaceApiManager instance;
+    private static WeakReference<Context> contextWeakRef;
+
     public enum RequestType {PLACE_INFO, MORE_PLACE_INFO, PLACE_REVIEWS, PLACE_PHOTO};
     public RequestType requestType;
 
@@ -37,8 +40,10 @@ public class PlaceApiManager {
      * @param placeApiListener
      * @return
      */
-    public static PlaceApiManager getInstance(WeakReference<OnHandlePlaceApiResult> placeApiListener) {
+    public static PlaceApiManager getInstance(WeakReference<OnHandlePlaceApiResult> placeApiListener,
+                                              WeakReference<Context> ctx) {
         listener = placeApiListener;
+        contextWeakRef = ctx;
         return instance == null ?
                 instance = new PlaceApiManager(mGoogleApiClient) : instance;
     }
@@ -51,7 +56,8 @@ public class PlaceApiManager {
      */
     public void retrievePlacesAsync(String location, String rankBy, String type) {
         requestType = RequestType.PLACE_INFO;
-        setObservable(RetrofitManager.getInstance()
+
+        setObservable(RetrofitManager.getInstance(contextWeakRef)
                 .listPlacesByLocationAndType(location, rankBy, type));
     }
 
@@ -61,7 +67,7 @@ public class PlaceApiManager {
      */
     public void retrieveReviewsAsync(String placeId) {
         requestType = RequestType.PLACE_REVIEWS;
-        setObservable(RetrofitManager.getInstance()
+        setObservable(RetrofitManager.getInstance(contextWeakRef)
                 .listReviewsByPlaceId(placeId));
     }
 
@@ -71,7 +77,7 @@ public class PlaceApiManager {
      */
     public void retrieveMorePlacesAsync(String pageToken) {
         requestType = RequestType.MORE_PLACE_INFO;
-        setObservable(RetrofitManager.getInstance()
+        setObservable(RetrofitManager.getInstance(contextWeakRef)
                 .listMorePlacesByPageToken(pageToken));
     }
 

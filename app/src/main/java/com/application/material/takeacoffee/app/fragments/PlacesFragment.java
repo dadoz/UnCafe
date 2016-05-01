@@ -206,15 +206,15 @@ public class PlacesFragment extends Fragment implements
      */
     private void initGooglePlaces() {
         placesApiManager = PlaceApiManager
-                .getInstance(new WeakReference<OnHandlePlaceApiResult>(this));
+                .getInstance(new WeakReference<OnHandlePlaceApiResult>(this), new WeakReference<>(getContext()));
     }
 
     /**
      * location permission
      */
     private void initNetworkPermission() {
-        WeakReference<AppCompatActivity> activityRef =
-                new WeakReference<>((AppCompatActivity) mainActivityRef);
+        WeakReference<Context> activityRef =
+                new WeakReference<>((Context) mainActivityRef);
         permissionManager.checkNetworkServiceIsEnabled(activityRef, this);
     }
 
