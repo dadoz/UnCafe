@@ -7,4 +7,7 @@
         <attr name="strokeWidth" format="float" />
         <attr name="value" format="integer" />
     </declare-styleable>
+    <declare-styleable name="ExpandableTextView">
+        <attr name="trimLength" format="integer"/>
+    </declare-styleable>
 </resources>

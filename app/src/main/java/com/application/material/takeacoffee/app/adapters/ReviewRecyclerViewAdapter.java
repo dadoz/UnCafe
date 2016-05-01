@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
+import com.application.material.takeacoffee.app.utils.ExpandableTextView;
 import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -85,7 +86,7 @@ public class ReviewRecyclerViewAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView usernameText;
         private final TextView dateText;
-        private final TextView reviewText;
+        private final ExpandableTextView reviewText;
         private final TextView reviewRating;
         private final ImageView profilePictureImageView;
 
@@ -93,7 +94,7 @@ public class ReviewRecyclerViewAdapter extends
             super(itemView);
             usernameText = ((TextView) itemView.findViewById(R.id.usernameTextId));
             dateText = ((TextView) itemView.findViewById(R.id.dateTextId));
-            reviewText = (TextView) itemView.findViewById(R.id.reviewTextId);
+            reviewText = (ExpandableTextView) itemView.findViewById(R.id.reviewTextId);
             reviewRating = (TextView) itemView.findViewById(R.id.reviewRatingTextViewId);
             profilePictureImageView = (ImageView) itemView.findViewById(R.id.profilePictureViewId);
             itemView.setOnClickListener(this);

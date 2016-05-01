@@ -47,7 +47,7 @@
         android:textColor="@color/material_brown800"
         android:textSize="@dimen/text_big_38"/>
 
-    <TextView
+    <com.application.material.takeacoffee.app.utils.ExpandableTextView
         android:id="@+id/reviewTextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,8 +57,6 @@
 
         android:layout_marginTop="@dimen/small_padding"
         android:text="review content sjdflk  laksdlkfj kj sadfk alskd kfsadk lkj askdfk aksdfl kklsad fklaòsl dkfjlksad òflkjasdò lkfjaòlksjd flkjasòdk "
-        android:maxLines="3"
-        android:ellipsize="end"
         android:textColor="@color/material_brown800"
         android:textSize="@dimen/text_small_16"/>
 

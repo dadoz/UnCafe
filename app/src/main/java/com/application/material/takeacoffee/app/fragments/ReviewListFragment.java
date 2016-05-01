@@ -28,6 +28,7 @@ import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton.PicassoCallbacksInterface;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.RetrofitManager;
+import com.application.material.takeacoffee.app.utils.ExpandableTextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Callback;
@@ -252,9 +253,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onItemClick(int pos, View v) {
-        //TODO smthing with this
-        Toast.makeText(getContext(), "hey yu're clicking review content", Toast.LENGTH_LONG).show();
-        Log.e(TAG, "HANDLE on click review");
+        ((ExpandableTextView) v.findViewById(R.id.reviewTextId)).toggleEllipsize();
     }
 
     @Override
