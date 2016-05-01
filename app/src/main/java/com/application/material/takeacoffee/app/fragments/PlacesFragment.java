@@ -3,9 +3,7 @@ package com.application.material.takeacoffee.app.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -256,7 +254,7 @@ public class PlacesFragment extends Fragment implements
     }
 
     /**
-     *
+     * TODO refactor
      * @param layoutManager
      */
     private void initScrollListener(StaggeredGridLayoutManager layoutManager) {
@@ -265,7 +263,6 @@ public class PlacesFragment extends Fragment implements
             public void onLoadMore(int currentPage) {
                 final String pageToken = ((PlacesGridViewAdapter) coffeePlacesRecyclerview
                         .getAdapter()).getPageToken();
-                Log.e("TAG", "Scroll more" + pageToken);
                 if (pageToken != null) {
                     placesApiManager.retrieveMorePlacesAsync(pageToken);
                 }
