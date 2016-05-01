@@ -141,6 +141,19 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
 
     /**
      *
+     * @return
+     */
+    public String getPageToken() {
+        if (itemList == null ||
+                itemList.size() == 0 ||
+                itemList.get(0) == null) {
+            return null;
+        }
+        return itemList.get(0).getPageToken().getToken();
+    }
+
+    /**
+     *
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView iconImageView;
@@ -188,4 +201,13 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         itemList.clear();
         itemList.addAll(data);
     }
+
+    /**
+     *
+     * @param data
+     */
+    public void appendAllItems(ArrayList<CoffeePlace> data) {
+        itemList.addAll(data);
+    }
+
 }

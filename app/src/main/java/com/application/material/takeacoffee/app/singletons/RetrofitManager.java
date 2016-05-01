@@ -1,6 +1,9 @@
 package com.application.material.takeacoffee.app.singletons;
 
+import android.util.Log;
+
 import com.application.material.takeacoffee.app.models.CoffeePlace;
+import com.application.material.takeacoffee.app.models.CoffeePlace.PageToken;
 import com.application.material.takeacoffee.app.models.Review;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,6 +13,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +26,7 @@ import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by davide on 24/12/14.
@@ -58,13 +65,37 @@ public class RetrofitManager {
             "&key=" + API_KEY +
             "&photoreference=" + reference;
     }
+
     /**
      *
      * @param placeId
      */
-    public Observable<ArrayList<Review>> listReviewsByPlaceId(String placeId) {
+    public Observable<ArrayList<Object>> listReviewsByPlaceId(String placeId) {
         try {
-            return service.listReviewByPlaceId(placeId);
+            return service.listReviewByPlaceId(placeId).map(new Func1<ArrayList<Review>, ArrayList<Object>>() {
+                @Override
+                public ArrayList<Object> call(ArrayList<Review> reviews) {
+                    return new ArrayList<Object>(reviews);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param pageToken
+     */
+    public Observable<ArrayList<Object>> listMorePlacesByPageToken(String pageToken) {
+        try {
+            return service.listMorePlacesByPageToken(pageToken).map(new Func1<ArrayList<CoffeePlace>, ArrayList<Object>>() {
+                @Override
+                public ArrayList<Object> call(ArrayList<CoffeePlace> list) {
+                    return new ArrayList<Object>(list);
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,9 +109,14 @@ public class RetrofitManager {
      * @param type
      * @return
      */
-    public Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(String location, String rankby, String type) {
+    public Observable<ArrayList<Object>> listPlacesByLocationAndType(String location, String rankby, String type) {
         try {
-            return service.listPlacesByLocationAndType(location, rankby, type);
+            return service.listPlacesByLocationAndType(location, rankby, type).map(new Func1<ArrayList<CoffeePlace>, ArrayList<Object>>() {
+                @Override
+                public ArrayList<Object> call(ArrayList<CoffeePlace> list) {
+                    return new ArrayList<Object>(list);
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,9 +146,22 @@ public class RetrofitManager {
         public List<CoffeePlace>  deserialize(final JsonElement json, final Type typeOfT,
                                                 final JsonDeserializationContext context)
                 throws JsonParseException {
+
+
             JsonArray resultArray = json.getAsJsonObject().get("results").getAsJsonArray();
-            return new Gson().fromJson(resultArray,
-                    new TypeToken<ArrayList<CoffeePlace>>(){}.getType());
+            ArrayList<CoffeePlace> tmp = new Gson().fromJson(resultArray,
+                    new TypeToken<ArrayList<CoffeePlace>>() {
+                    }.getType());
+
+            //TODO refactor
+            PageToken pageToken = PageToken.getInstance(json.getAsJsonObject()
+                    .get("next_page_token") == null ? null :
+                        json.getAsJsonObject().get("next_page_token").getAsString());
+            for (CoffeePlace coffeePlace: tmp) {
+                coffeePlace.setPageToken(pageToken);
+            }
+
+            return tmp;
         }
     }
 
@@ -143,5 +192,7 @@ public class RetrofitManager {
         Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(@Query("location") String location,
                                                                   @Query("rankby") String rankby,
                                                                   @Query("type") String type);
+        @GET("place/nearbysearch/json?key=" + API_KEY)
+        Observable<ArrayList<CoffeePlace>> listMorePlacesByPageToken(@Query("pagetoken") String pagetoken);
     }
 }

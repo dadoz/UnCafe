@@ -12,6 +12,7 @@ public class CoffeePlace {
     public static String COFFEE_PLACE_ID_KEY = "PLACE_ID_KEY";
     public static String COFFEE_PLACE_NAME_KEY = "PLACE_NAME_KEY";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
+    private PageToken pageTokenRef;
 
     @SerializedName("place_id")
     private String id;
@@ -29,12 +30,13 @@ public class CoffeePlace {
      * @param rating
      */
     public CoffeePlace(String place_id, final String name, String vicinity, int rating,
-                       ArrayList<PlacePhoto> photos) {
+                       ArrayList<PlacePhoto> photos, PageToken pageToken) {
         this.id = place_id;
         this.rating = rating;
 		this.name = name;
 		this.address = vicinity;
         this.photos = photos;
+        this.pageTokenRef = pageToken;
 	}
 
     /**
@@ -85,14 +87,72 @@ public class CoffeePlace {
         return photos != null ? photos.get(0).getPhotoReference() : null;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getRating() {
         return rating;
     }
 
+    /**
+     *
+     * @param rating
+     */
     public void setRating(int rating) {
         this.rating = rating;
     }
 
+    /**
+     *
+     * @return
+     */
+    public PageToken getPageToken() {
+        return pageTokenRef;
+    }
+
+    /**
+     *
+     * @param pageToken
+     */
+    public void setPageToken(PageToken pageToken) {
+        this.pageTokenRef = pageToken;
+    }
+
+    /**
+     * static class to handle photo
+     */
+    public static class PageToken {
+        private static String token;
+        private static PageToken instance;
+
+        private PageToken(String tkn) {
+            token = tkn;
+        }
+
+        /**
+         *
+         * @param tkn
+         * @return
+         */
+        public static PageToken getInstance(String tkn) {
+            token = tkn;
+            return instance == null ?
+                    instance = new PageToken(token) : instance;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public String getToken() {
+            return token;
+        }
+    }
+
+    /**
+     * static class to handle photo
+     */
     public static class PlacePhoto {
         private int height;
         private String photo_reference;

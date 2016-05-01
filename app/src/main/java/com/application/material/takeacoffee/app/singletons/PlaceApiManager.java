@@ -6,6 +6,8 @@ import com.application.material.takeacoffee.app.models.Review;
 import com.google.android.gms.common.api.GoogleApiClient;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -19,7 +21,8 @@ public class PlaceApiManager {
     private static GoogleApiClient mGoogleApiClient;
     private static WeakReference<OnHandlePlaceApiResult> listener;
     private static PlaceApiManager instance;
-    public enum RequestType {PLACE_INFO, PLACE_REVIEWS, PLACE_PHOTO};
+    public enum RequestType {PLACE_INFO, MORE_PLACE_INFO, PLACE_REVIEWS, PLACE_PHOTO};
+    public RequestType requestType;
 
     /**
      *
@@ -47,32 +50,9 @@ public class PlaceApiManager {
      * @param type
      */
     public void retrievePlacesAsync(String location, String rankBy, String type) {
-        RetrofitManager.getInstance()
-                .listPlacesByLocationAndType(location, rankBy, type)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ArrayList<CoffeePlace>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.e("TAG", "completed");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("TAG", "error" + e.getMessage());
-                        listener.get().onErrorResult();
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<CoffeePlace> coffeePlacesList) {
-                        if (coffeePlacesList == null ||
-                                coffeePlacesList.size() == 0) {
-                            listener.get().onEmptyResult();
-                            return;
-                        }
-                        listener.get().onPlaceApiSuccess(coffeePlacesList, RequestType.PLACE_INFO);
-                    }
-                });
+        requestType = RequestType.PLACE_INFO;
+        setObservable(RetrofitManager.getInstance()
+                .listPlacesByLocationAndType(location, rankBy, type));
     }
 
     /**
@@ -80,11 +60,31 @@ public class PlaceApiManager {
      * @param placeId
      */
     public void retrieveReviewsAsync(String placeId) {
-        RetrofitManager.getInstance()
-                .listReviewsByPlaceId(placeId)
+        requestType = RequestType.PLACE_REVIEWS;
+        setObservable(RetrofitManager.getInstance()
+                .listReviewsByPlaceId(placeId));
+    }
+
+    /**
+     * main function to retrieve place reviews data from google api
+     * @param pageToken
+     */
+    public void retrieveMorePlacesAsync(String pageToken) {
+        requestType = RequestType.MORE_PLACE_INFO;
+        setObservable(RetrofitManager.getInstance()
+                .listMorePlacesByPageToken(pageToken));
+    }
+
+    /**
+     *
+     * @param observable
+     */
+    private void setObservable(Observable<ArrayList<Object>> observable) {
+        observable
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ArrayList<Review>>() {
+                .subscribe(new Subscriber<ArrayList<Object>>() {
+
                     @Override
                     public void onCompleted() {
                         Log.e("TAG", "completed");
@@ -93,23 +93,27 @@ public class PlaceApiManager {
                     @Override
                     public void onError(Throwable e) {
                         Log.e("TAG", "error" + e.getMessage());
-                        //TODO leak
-                        listener.get().onErrorResult();
+                        if (listener.get() != null) {
+                            listener.get().onErrorResult();
+                        }
                     }
 
                     @Override
-                    public void onNext(ArrayList<Review> reviewList) {
-                        if (reviewList == null ||
-                                reviewList.size() == 0) {
-                            //TODO leak
-                            listener.get().onEmptyResult();
+                    public void onNext(ArrayList<Object> list) {
+                        if (list == null ||
+                                list.size() == 0) {
+                            if (listener.get() != null) {
+                                listener.get().onEmptyResult();
+                            }
                             return;
                         }
-                        //TODO leak
-                        listener.get().onPlaceApiSuccess(reviewList, RequestType.PLACE_REVIEWS);
+                        if (listener.get() != null) {
+                            listener.get().onPlaceApiSuccess(list, requestType);
+                        }
                     }
                 });
     }
+
 
     /**
      * handle

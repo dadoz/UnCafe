@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.decorators.ItemOffsetDecoration;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
+import com.application.material.takeacoffee.app.scrollListeners.EndlessRecyclerOnScrollListener;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager.OnHandlePlaceApiResult;
@@ -70,6 +72,7 @@ public class PlacesFragment extends Fragment implements
     SwipeRefreshLayout coffeePlaceSwipeRefreshLayout;
     @Bind(R.id.palcePositionFilterTextViewId)
     TextView palcePositionFilterTextView;
+    private EndlessRecyclerOnScrollListener scrollListener;
 
     @Override
     public void onAttach(Context context) {
@@ -244,10 +247,30 @@ public class PlacesFragment extends Fragment implements
         adapter.registerAdapterDataObserver(new CoffeePlaceAdapterObserver(new WeakReference<>(adapter),
                 coffeePlacesProgress, coffeePlacesEmptyResult));
         adapter.setOnItemClickListener(this);
-        coffeePlacesRecyclerview.setLayoutManager(new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.VERTICAL));
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        coffeePlacesRecyclerview.setLayoutManager(layoutManager);
         coffeePlacesRecyclerview.setAdapter(adapter);
         coffeePlacesRecyclerview.addItemDecoration(new ItemOffsetDecoration(getContext(), R.dimen.small_padding));
+        initScrollListener(layoutManager);
+        coffeePlacesRecyclerview.addOnScrollListener(scrollListener);
+    }
+
+    /**
+     *
+     * @param layoutManager
+     */
+    private void initScrollListener(StaggeredGridLayoutManager layoutManager) {
+        scrollListener = new EndlessRecyclerOnScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int currentPage) {
+                final String pageToken = ((PlacesGridViewAdapter) coffeePlacesRecyclerview
+                        .getAdapter()).getPageToken();
+                Log.e("TAG", "Scroll more" + pageToken);
+                if (pageToken != null) {
+                    placesApiManager.retrieveMorePlacesAsync(pageToken);
+                }
+            }
+        };
     }
 
     /**
@@ -267,7 +290,7 @@ public class PlacesFragment extends Fragment implements
      */
     public ArrayList<CoffeePlace> getCoffeePlacesListTest() {
         ArrayList<CoffeePlace> tmp = new ArrayList<CoffeePlace>();
-//        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", null));
+        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", 4, null, null));
         return tmp;
     }
 
@@ -286,12 +309,14 @@ public class PlacesFragment extends Fragment implements
      */
     @Override
     public void onPlaceApiSuccess(Object result, RequestType type) {
-        if (type == RequestType.PLACE_PHOTO) {
-            handlePhoto();
-        } else if (type == RequestType.PLACE_INFO) {
+        if (type == RequestType.PLACE_INFO) {
             handleInfo((ArrayList<CoffeePlace>) result);
+        } else if (type == RequestType.MORE_PLACE_INFO) {
+            scrollListener.setLoadingEnabled(true);
+            handleMoreInfo((ArrayList<CoffeePlace>) result);
         }
     }
+
 
     @Override
     public void onEmptyResult() {
@@ -306,11 +331,13 @@ public class PlacesFragment extends Fragment implements
 
     /**
      *
+     * @param placeList
      */
-    public void handlePhoto() {
-        synchronized (coffeePlacesRecyclerview.getAdapter()) {
-            coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
-        }
+    private void handleMoreInfo(ArrayList<CoffeePlace> placeList) {
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter())
+                .appendAllItems(placeList);
+        coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+
     }
 
     /**
