@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="list_of_countries">
+        <item>Milano</item>
+        <item>Roma</item>
+        <item>Venezia</item>
+        <item>Genova</item>
+        <item>Torino</item>
+        <item>Asti</item>
+    </string-array>
+</resources>

@@ -20,10 +20,10 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_big_24"
         android:text="Choice place you want to track"/>
-    <android.support.v7.widget.AppCompatEditText
+    <AutoCompleteTextView
         android:layout_centerHorizontal="true"
         android:layout_below="@id/pickDescriptionId"
-        android:id="@+id/pickLocationEdittextId"
+        android:id="@+id/locationAutocompleteTextViewId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="200dp"
@@ -33,12 +33,21 @@
         android:hint="asdlkf"/>
     <Button
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/pickLocationEdittextId"
-        android:id="@+id/pickFindLocationButtonId"
+        android:layout_below="@id/locationAutocompleteTextViewId"
+        android:id="@+id/findCurrentLocationButtonId"
         android:textSize="@dimen/text_big_18"
         android:layout_margin="@dimen/big_padding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FIND POSITION"/>
+    <Button
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/locationAutocompleteTextViewId"
+        android:id="@+id/locationDoneButtonId"
+        android:textSize="@dimen/text_big_18"
+        android:layout_margin="@dimen/big_padding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DONE"/>
 
 </RelativeLayout>

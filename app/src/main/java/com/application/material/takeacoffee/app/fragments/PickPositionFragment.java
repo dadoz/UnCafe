@@ -1,27 +1,37 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.application.material.takeacoffee.app.PlacesActivity;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.presenters.LocationAutocompletePresenter;
+import java.lang.ref.WeakReference;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * Created by davide on 19/11/14.
  */
-public class PickPositionFragment extends Fragment {
+public class PickPositionFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "PickPositionFragment";
+    @Bind(R.id.locationAutocompleteTextViewId)
+    AutoCompleteTextView locationAutocompleteTextView;
+    @Bind(R.id.findCurrentLocationButtonId)
+    Button findCurrentLocationButton;
+    @Bind(R.id.locationDoneButtonId)
+    Button locationDoneButton;
+    private LocationAutocompletePresenter autocompletePresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
@@ -29,6 +39,9 @@ public class PickPositionFragment extends Fragment {
         ButterKnife.bind(this, mapView);
         setHasOptionsMenu(true);
 
+        autocompletePresenter = LocationAutocompletePresenter
+                .getInstance(new WeakReference<>(getContext()), locationAutocompleteTextView,
+                        locationDoneButton);
         initView();
         return mapView;
     }
@@ -39,8 +52,8 @@ public class PickPositionFragment extends Fragment {
     public void initActionBar() {
         ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionbar != null) {
-            actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setTitle(getString(R.string.pick_pos_name));
+            actionbar.setDisplayHomeAsUpEnabled(false);
+            actionbar.setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -49,6 +62,8 @@ public class PickPositionFragment extends Fragment {
      */
     public void initView() {
         initActionBar();
+        findCurrentLocationButton.setOnClickListener(this);
+        autocompletePresenter.init();
     }
 
     @Override
@@ -61,17 +76,32 @@ public class PickPositionFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                startActivity(new Intent(getContext(), PlacesActivity.class));
-
-                getActivity().finish();
+                onActionDone();
                 break;
         }
         return true;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+        Log.e("TAG", "find current location");
+    }
+
+    /**
+     * action done
+     */
+    private void onActionDone() {
+        //                startActivity(new Intent(getContext(), PlacesActivity.class));
+//        getActivity().finish();
+        Log.e("PICK", "start activity location ->" + autocompletePresenter.getSelectedLocation());
     }
 
 }
