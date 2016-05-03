@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.application.material.takeacoffee.app.R;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.joda.time.LocalTime;
 
@@ -70,6 +71,15 @@ public class Utils {
     public static Drawable getColoredDrawable(Drawable defaultIcon, int color) {
         defaultIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         return defaultIcon;
+    }
+
+    /**
+     *
+     * @param latLng
+     * @return
+     */
+    public static String getLatLngString(LatLng latLng) {
+        return latLng.latitude + "," + latLng.longitude;
     }
 
 

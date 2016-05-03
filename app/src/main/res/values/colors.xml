@@ -278,8 +278,14 @@
     <!--<color name="material_black">#ff000000</color>-->
     <!--<color name="material_white">#ffffffff</color>-->
 
-    <color name="material_brown800">#ff312c27</color>
-    <color name="material_brown400">#ff3E3731</color>
-    <color name="material_brown200">#ff514840</color>
-
+    <color name="material_brown50">#ffefebe9</color>
+    <color name="material_brown100">#ffd7ccc8</color>
+    <color name="material_brown200">#ffbcaaa4</color>
+    <color name="material_brown300">#ff998879</color>
+    <color name="material_brown400">#ff807165</color>
+    <color name="material_brown500">#ff665b51</color>
+    <color name="material_brown600">#ff514840</color>
+    <color name="material_brown700">#ff3E3731</color>
+    <color name="material_brown800">#ff36302a</color>
+    <color name="material_brown900">#ff312c27</color>
 </resources>

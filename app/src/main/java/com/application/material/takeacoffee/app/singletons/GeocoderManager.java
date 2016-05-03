@@ -2,7 +2,11 @@ package com.application.material.takeacoffee.app.singletons;
 
 import android.content.Context;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -54,20 +58,48 @@ public class GeocoderManager {
      *
      * @param locationName
      */
-    public void getLatLongByLocationName(String locationName) {
-        try {
-            List<Address> addressList = geocoder.getFromLocationName(locationName, 5);
-            LatLng latLng = new LatLng(addressList.get(0).getLatitude(),addressList.get(0).getLongitude());
-            if (listener.get() != null) {
-                listener.get().onGeocoderSuccess(latLng);
+    public void getLatLongByLocationName(final String locationName) {
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<Address> addressList = geocoder.getFromLocationName(locationName, 5);
+                    final LatLng latLng = new LatLng(addressList.get(0).getLatitude(),addressList.get(0).getLongitude());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (listener.get() != null) {
+                                listener.get().onGeocoderSuccess(latLng);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (listener.get() != null) {
+                                listener.get().onGeocoderErrorResult();
+                            }
+                        }
+                    });
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (listener.get() != null) {
-                listener.get().onGeocoderErrorResult();
-            }
-        }
+        }).start();
     }
+
+    /**
+     *
+     */
+    public void getCurrentLatLong() {
+        LocationManager locationManager = (LocationManager) contextWeakRefer.get().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        listener.get().onGeocoderSuccess(new LatLng(location.getLatitude(), location.getLongitude()));
+    }
+
     /**
      * handle
      */

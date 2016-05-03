@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coffeePlaceFilterLayoutId"
-    android:background="@color/material_brown200"
+    android:background="@color/material_brown600"
     android:layout_alignParentTop="true"
     android:padding="@dimen/small_padding"
     android:layout_width="fill_parent"

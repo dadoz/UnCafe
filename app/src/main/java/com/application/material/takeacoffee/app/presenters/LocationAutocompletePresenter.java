@@ -8,40 +8,38 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.singletons.GeocoderManager;
-import com.google.android.gms.maps.model.LatLng;
-
 import java.lang.ref.WeakReference;
+
 
 /**
  * Created by davide on 02/05/16.
  */
-public class LocationAutocompletePresenter implements AdapterView.OnItemClickListener, GeocoderManager.OnHandleGeocoderResult, TextWatcher {
+public class LocationAutocompletePresenter implements AdapterView.OnItemClickListener,
+        TextWatcher {
     private static AutoCompleteTextView autoCompleteTextView;
     private static WeakReference<Context> contextWeakRefer;
     private static LocationAutocompletePresenter instance;
     private static String[] countries;
-    private static Button doneButton;
-    private LatLng selectLatLng;
+    private static WeakReference<PickLocationInterface> pickLocationListener;
+    private static View locationDoneButton;
 
     public LocationAutocompletePresenter() {
     }
 
     /**
      *
-     * @param textView
      * @param ctx
+     * @param textView
      * @return
      */
     public static LocationAutocompletePresenter getInstance(WeakReference<Context> ctx,
-                                                            AutoCompleteTextView textView,
-                                                            Button btn) {
+                                                            WeakReference<PickLocationInterface> listener,
+                                                            AutoCompleteTextView textView, View button) {
         autoCompleteTextView = textView;
         contextWeakRefer = ctx;
-        doneButton = btn;
+        pickLocationListener = listener;
+        locationDoneButton = button;
         countries = contextWeakRefer.get().getResources().getStringArray(R.array.list_of_countries);
         return instance == null ?
                 instance = new LocationAutocompletePresenter() :
@@ -68,10 +66,9 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.e("TAG", "trying to get position from place");
-        GeocoderManager geocoder = GeocoderManager.getInstance(new WeakReference<GeocoderManager.OnHandleGeocoderResult>(this),
-                contextWeakRefer);
-        geocoder.getLatLongByLocationName(countries[position]);
+        Log.e("TAG", "get Place -> " + parent.getItemAtPosition(position));
+        pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position) + " Italia");
+
     }
 
     @Override
@@ -92,34 +89,27 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     }
 
 
-    @Override
-    public void onGeocoderSuccess(LatLng latLng) {
-        Log.e("LAT LONG", latLng.toString());
-        selectLatLng = latLng;
-        //notify user location has been found
-        //enable continue button
-    }
-
-    @Override
-    public void onGeocoderErrorResult() {
-        //notify error on found location
-    }
-
-    /**
-     *
-     * @return
-     */
-    public LatLng getSelectedLocation() {
-        return selectLatLng;
-    }
+//    @Override
+//    public void onGeocoderSuccess(LatLng latLng) {
+//        //notify user location has been found
+//        //enable continue button
+////        pickLocationListener.get().pickLocationSuccess(latLng);
+//    }
+//
+//    @Override
+//    public void onGeocoderErrorResult() {
+//        //notify error on found location
+////        locationDoneButton.setVisibility(View.GONE);
+////        pickLocationListener.get().pickLocationError();
+//    }
 
     /**
      *
      */
     public void setEmptyLocation() {
         //show find current location button
-        selectLatLng = null;
-        doneButton.setVisibility(View.VISIBLE);
+        //TODO animate
+        locationDoneButton.setVisibility(View.GONE);
     }
 
     /**
@@ -127,6 +117,15 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      */
     public void setFilledLocation() {
         //hide find current location button
-        doneButton.setVisibility(View.GONE);
+        //TODO animate
+        locationDoneButton.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     *
+     */
+    public interface PickLocationInterface {
+        void pickLocationSuccess(String latLng);
+        void pickLocationError();
     }
 }

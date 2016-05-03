@@ -30,6 +30,8 @@ import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager.OnHandlePlaceApiResult;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager.RequestType;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
+import com.application.material.takeacoffee.app.utils.PermissionManager.OnEnablePositionCallbackInterface;
+import com.application.material.takeacoffee.app.utils.SharedPrefManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -40,7 +42,7 @@ public class PlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
         PermissionManager.OnHandleGrantPermissionCallbackInterface, View.OnClickListener,
-        PermissionManager.OnEnablePositionCallbackInterface,
+        OnEnablePositionCallbackInterface,
         PermissionManager.OnEnableNetworkCallbackInterface,
         SwipeRefreshLayout.OnRefreshListener, OnHandlePlaceApiResult {
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
@@ -233,7 +235,8 @@ public class PlacesFragment extends Fragment implements
     public void handleLocationServiceEnabled() {
         WeakReference<AppCompatActivity> activityRef =
                 new WeakReference<>((AppCompatActivity) mainActivityRef);
-        permissionManager.checkLocationServiceIsEnabled(activityRef, this);
+        permissionManager.checkLocationServiceIsEnabled(activityRef,
+                new WeakReference<OnEnablePositionCallbackInterface>(this));
     }
 
     /**
@@ -357,11 +360,14 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onEnablePositionCallback() {
         //TODO big issue over here - position still not available
+        final String latLngString = SharedPrefManager.getInstance(new WeakReference<>(getContext()))
+                .getValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY);
         showHideLocationServiceLayout(true);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                placesApiManager.retrievePlacesAsync("45.0712,7.68525", PLACE_RANKBY, CAFE_PLACE_TYPE);
+//                placesApiManager.retrievePlacesAsync("45.0712,7.68525", PLACE_RANKBY, CAFE_PLACE_TYPE);
+                placesApiManager.retrievePlacesAsync(latLngString, PLACE_RANKBY, CAFE_PLACE_TYPE);
             }
         }, 2000);
     }
