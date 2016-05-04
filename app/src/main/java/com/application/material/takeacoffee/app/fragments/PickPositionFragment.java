@@ -53,7 +53,6 @@ public class PickPositionFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO move out
         if (isLocationSet()) {
             startPlaceActivity();
             getActivity().finish();
@@ -118,7 +117,7 @@ public class PickPositionFragment extends Fragment implements
 //                setPositionByLocationName();
                 break;
             case R.id.findCurrentPositionButtonId:
-                checkPositionPermissionAndTriggerAction(LocationActionTypeEnum.LOCATION_DONE);
+                checkPositionPermissionAndTriggerAction(LocationActionTypeEnum.LOCATION_CURRENT);
 //                setCurrentPosition();
                 break;
         }

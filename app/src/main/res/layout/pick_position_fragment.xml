@@ -4,14 +4,31 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_brown400">
+    android:background="@color/material_brown800">
     <ImageView
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/errorPickIconId"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_margin="@dimen/huge_padding"
+        android:src="@drawable/ic_check_white_48dp"/>
+    <ImageView
+        android:visibility="visible"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/successPickIconId"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_margin="@dimen/huge_padding"
+        android:src="@drawable/ic_error_outline_white_48dp"/>
+    <ImageView
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"
         android:id="@+id/pickIconId"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_margin="@dimen/huge_padding"
-        android:src="@drawable/ic_satellite_white_48"/>
+        android:src="@drawable/ic_place_white_48dp"/>
     <ProgressBar
         android:id="@+id/pickLocationProgressId"
         style="@android:style/Widget.Material.Light.ProgressBar"
@@ -20,7 +37,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:indeterminateTint="@color/material_brown500"
+        android:indeterminateTint="@color/material_brown400"
         android:indeterminateTintMode="src_in"/>
     <TextView
         android:layout_centerHorizontal="true"
@@ -28,8 +45,9 @@
         android:id="@+id/pickDescriptionId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/material_brown400"
         android:textSize="@dimen/text_big_24"
-        android:text="Choice place you want to track"/>
+        android:text="Pick a city"/>
     <AutoCompleteTextView
         android:layout_centerHorizontal="true"
         android:layout_below="@id/pickDescriptionId"
@@ -38,10 +56,13 @@
         android:layout_height="wrap_content"
         android:minWidth="200dp"
         android:maxWidth="350dp"
+        android:textColor="@color/material_grey200"
         android:textSize="@dimen/text_big_24"
+        android:textColorHint="@color/material_brown600"
         android:lines="1"
         android:hint="city..."/>
     <TextView
+        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/locationAutocompleteTextViewId"
         android:id="@+id/findCurrentPositionButtonId"
@@ -52,12 +73,14 @@
         android:textColor="@color/material_brown600"
         android:text="find current"/>
     <TextView
+        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:id="@+id/locationDoneButtonId"
-        android:textSize="@dimen/text_big_22"
+        android:textSize="@dimen/text_big_18"
         android:padding="@dimen/medium_padding"
+        android:textColor="@color/material_grey200"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DONE"/>

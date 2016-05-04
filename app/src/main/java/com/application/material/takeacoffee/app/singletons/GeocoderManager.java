@@ -31,6 +31,7 @@ public class GeocoderManager {
     private static WeakReference<OnHandleGeocoderResult> listener;
     private static GeocoderManager instance;
     private final Geocoder geocoder;
+    private Object lastKnowLocationCustom;
 
     /**
      *
@@ -93,11 +94,32 @@ public class GeocoderManager {
      *
      */
     public void getCurrentLatLong() {
-        LocationManager locationManager = (LocationManager) contextWeakRefer.get().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
+        Location location = getLastKnowLocationCustom();
+        if (location == null) {
+            listener.get().onGeocoderErrorResult();
+            return;
+        }
         listener.get().onGeocoderSuccess(new LatLng(location.getLatitude(), location.getLongitude()));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Location getLastKnowLocationCustom() {
+        LocationManager locationManager = (LocationManager) contextWeakRefer.get()
+                .getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location != null &&
+                    (bestLocation == null ||
+                        location.getAccuracy() < bestLocation.getAccuracy())) {
+                    bestLocation = location;
+                }
+        }
+        return bestLocation;
     }
 
     /**

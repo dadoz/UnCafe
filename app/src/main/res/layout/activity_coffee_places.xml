@@ -8,7 +8,7 @@
         android:id="@+id/coffeeToolbarId"
         android:layout_width="fill_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/material_brown700"/>
+        android:background="@color/material_brown800"/>
 
     <FrameLayout
         android:id="@+id/coffeeAppFragmentContainerId"
