@@ -42,7 +42,13 @@ public class PickPositionFragment extends Fragment implements
     View findCurrentPositionButton;
     @Bind(R.id.pickLocationProgressId)
     ProgressBar pickLocationProgress;
-    private LocationAutocompletePresenter autocompletePresenter;
+    @Bind(R.id.pickDescriptionId)
+    View pickDescription;
+    @Bind(R.id.successPickIconId)
+    View successPickIcon;
+    @Bind(R.id.errorPickIconId)
+    View errorPickIcon;
+    private LocationAutocompletePresenter locaionAutocompletePres;
     private String selectedLocationName;
     private GeocoderManager geocoder;
 
@@ -65,11 +71,11 @@ public class PickPositionFragment extends Fragment implements
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
-        autocompletePresenter = LocationAutocompletePresenter
+        locaionAutocompletePres = LocationAutocompletePresenter
                 .getInstance(new WeakReference<>(getContext()),
                         new WeakReference<PickLocationInterface>(this),
                         locationAutocompleteTextView,
-                        locationDoneButton);
+                        new View[]{pickDescription, errorPickIcon, successPickIcon, locationDoneButton});
         geocoder = GeocoderManager
                 .getInstance(new WeakReference<OnHandleGeocoderResult>(this),
                         new WeakReference<>(getContext()));
@@ -96,7 +102,7 @@ public class PickPositionFragment extends Fragment implements
         initActionBar();
         locationDoneButton.setOnClickListener(this);
         findCurrentPositionButton.setOnClickListener(this);
-        autocompletePresenter.init();
+        locaionAutocompletePres.init();
     }
 
     @Override

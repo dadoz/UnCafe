@@ -8,7 +8,7 @@
     <ImageView
         android:visibility="gone"
         android:layout_centerHorizontal="true"
-        android:id="@+id/errorPickIconId"
+        android:id="@+id/successPickIconId"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_margin="@dimen/huge_padding"
@@ -16,7 +16,7 @@
     <ImageView
         android:visibility="visible"
         android:layout_centerHorizontal="true"
-        android:id="@+id/successPickIconId"
+        android:id="@+id/errorPickIconId"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_margin="@dimen/huge_padding"
