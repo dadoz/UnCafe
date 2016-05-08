@@ -10,4 +10,8 @@
         <item name="android:colorBackground">@color/material_grey200</item>
         <item name="android:textColor">@color/material_brown800</item>
     </style>
+    <style name="TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">20sp</item>
+        <!--<item name="android:textColor">@color/material_grey50</item>-->
+    </style>
 </resources>

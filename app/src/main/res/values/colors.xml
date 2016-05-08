@@ -122,20 +122,20 @@
     <!--<color name="material_cyanA400">#ff00e5ff</color>-->
     <!--<color name="material_cyanA700">#ff00b8d4</color>-->
 
-    <!--<color name="material_teal50">#ffe0f2f1</color>-->
-    <!--<color name="material_teal100">#ffb2dfdb</color>-->
-    <!--<color name="material_teal200">#ff80cbc4</color>-->
-    <!--<color name="material_teal300">#ff4db6ac</color>-->
-    <!--<color name="material_teal400">#ff26a69a</color>-->
-    <!--<color name="material_teal500">#ff009688</color>-->
-    <!--<color name="material_teal600">#ff00897b</color>-->
-    <!--<color name="material_teal700">#ff00796b</color>-->
-    <!--<color name="material_teal800">#ff00695c</color>-->
-    <!--<color name="material_teal900">#ff004d40</color>-->
-    <!--<color name="material_tealA100">#ffa7ffeb</color>-->
-    <!--<color name="material_tealA200">#ff64ffda</color>-->
-    <!--<color name="material_tealA400">#ff1de9b6</color>-->
-    <!--<color name="material_tealA700">#ff00bfa5</color>-->
+    <color name="material_teal50">#ffe0f2f1</color>
+    <color name="material_teal100">#ffb2dfdb</color>
+    <color name="material_teal200">#ff80cbc4</color>
+    <color name="material_teal300">#ff4db6ac</color>
+    <color name="material_teal400">#ff26a69a</color>
+    <color name="material_teal500">#ff009688</color>
+    <color name="material_teal600">#ff00897b</color>
+    <color name="material_teal700">#ff00796b</color>
+    <color name="material_teal800">#ff00695c</color>
+    <color name="material_teal900">#ff004d40</color>
+    <color name="material_tealA100">#ffa7ffeb</color>
+    <color name="material_tealA200">#ff64ffda</color>
+    <color name="material_tealA400">#ff1de9b6</color>
+    <color name="material_tealA700">#ff00bfa5</color>
 
     <!--<color name="material_green50">#ffe8f5e9</color>-->
     <!--<color name="material_green100">#ffc8e6c9</color>-->

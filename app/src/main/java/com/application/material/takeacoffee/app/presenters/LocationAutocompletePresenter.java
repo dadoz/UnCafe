@@ -3,9 +3,14 @@ package com.application.material.takeacoffee.app.presenters;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,6 +18,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.animator.AnimatorBuilder;
 
@@ -25,6 +33,7 @@ import java.lang.ref.WeakReference;
 public class LocationAutocompletePresenter implements AdapterView.OnItemClickListener,
         TextWatcher {
     private static AutoCompleteTextView autoCompleteTextView;
+    private static TextInputLayout locationTextInputLayout;
     private static WeakReference<Context> contextWeakRefer;
     private static LocationAutocompletePresenter instance;
     private static String[] countries;
@@ -34,6 +43,14 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     private static View errorPickIcon;
     private static View successPickIcon;
     private static AnimatorBuilder animatorBuilder;
+    private static View locationPickIcon;
+    private static View pickLocationProgress;
+    private static View findPositionButton;
+    private static View pickView;
+    private static View locationSelectedTextview;
+    private static final long MIN_DELAY = 1000;
+    private static final int MIN_OFFSET = 1000;
+    private static View locationDoneBorderLayout;
 
     public LocationAutocompletePresenter() {
     }
@@ -47,15 +64,25 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      */
     public static LocationAutocompletePresenter getInstance(WeakReference<Context> ctx,
                                                             WeakReference<PickLocationInterface> listener,
-                                                            @NonNull AutoCompleteTextView textView, @NonNull View[] viewArray) {
+                                                            @NonNull AutoCompleteTextView textView,
+                                                            @NonNull TextInputLayout textInputLayout,
+                                                            @NonNull View[] viewArray) {
         contextWeakRefer = ctx;
         pickLocationListener = listener;
         autoCompleteTextView = textView;
+        locationTextInputLayout = textInputLayout;
         pickDescription = viewArray[0];
         errorPickIcon = viewArray[1];
         successPickIcon = viewArray[2];
-        locationDoneButton = viewArray[3];
+        locationPickIcon = viewArray[3];
+        locationDoneButton = viewArray[4];
+        locationDoneBorderLayout = viewArray[5];
+        pickLocationProgress = viewArray[6];
+        findPositionButton = viewArray[7];
+        locationSelectedTextview = viewArray[8];
+        pickView = viewArray[8];
         countries = contextWeakRefer.get().getResources().getStringArray(R.array.list_of_countries);
+
         animatorBuilder = AnimatorBuilder.getInstance(ctx);
         return instance == null ?
                 instance = new LocationAutocompletePresenter() :
@@ -69,10 +96,59 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         autoCompleteTextView.setAdapter(getAutocompleteLocationAdapter());
         autoCompleteTextView.setOnItemClickListener(this);
         autoCompleteTextView.addTextChangedListener(this);
+        locationTextInputLayout.setY(MIN_OFFSET);
+        animateTranslateUpView(locationTextInputLayout, true, true);
+    }
 
-        Animator animator = animatorBuilder.buildTranslationAnimator(autoCompleteTextView, 0, 300);
-        Animator animator2 = animatorBuilder.buildTranslationAnimator(pickDescription, 0, 300);
-        new AnimatorSet().playSequentially(animator, animator2);
+    /**
+     * TODO refactor
+     * @param translateUp
+     * @param hasDelay
+     */
+    private AnimatorSet animateTranslateUpViews(View[] viewArray, boolean translateUp, boolean hasDelay) {
+        if (viewArray.length < 2) {
+            return null;
+        }
+        int initY = translateUp ? MIN_OFFSET : 0;
+        int finalY = translateUp ? 0 : MIN_OFFSET;
+        Animator animator = animatorBuilder.buildTranslationAnimator(viewArray[0], initY, finalY);
+        Animator animator2 = animatorBuilder.buildTranslationAnimator(viewArray[1], initY, finalY);
+        AnimatorSet animatorSetTmp = new AnimatorSet();
+        if (translateUp) {
+            animatorSetTmp.play(animator).after(animator2);
+        } else {
+            animatorSetTmp.play(animator2).after(animator);
+        }
+        animator.setStartDelay(hasDelay ? MIN_DELAY : 0);
+        animatorSetTmp.start();
+        return animatorSetTmp;
+    }
+
+    /**
+     *
+     * @param translateUp
+     * @param hasDelay
+     */
+    private AnimatorSet animateTranslateUpView(View view, boolean translateUp, boolean hasDelay) {
+        int initY = translateUp ? MIN_OFFSET : 0;
+        int finalY = translateUp ? 0 : MIN_OFFSET;
+        Animator animator = animatorBuilder.buildTranslationAnimator(view, initY, finalY);
+        AnimatorSet animatorSetTmp = new AnimatorSet();
+        animatorSetTmp.play(animator);
+        animator.setStartDelay(hasDelay ? MIN_DELAY : 0);
+        animatorSetTmp.start();
+        return animatorSetTmp;
+    }
+
+    /**
+     * ANIMATE 
+     */
+    private void animateTransactFromViewToView(View viewFrom, View viewTo) {
+        Animator animator = animatorBuilder.buildAlphaAnimator(viewFrom, 1, 0);
+        Animator animator2 = animatorBuilder.buildAlphaAnimator(viewTo, 0, 1);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playSequentially(animator, animator2);
+        animatorSet.start();
     }
 
     /**
@@ -84,11 +160,21 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
                 android.R.layout.simple_list_item_1, countries);
     }
 
+    /**
+     *
+     * @param showError
+     */
+    private void setErrorOnAutcompleteTextview(boolean showError) {
+        locationTextInputLayout.setErrorEnabled(showError);
+        locationTextInputLayout.setError(showError ? "Cannot find this city! Contact us" : null);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.e("TAG", "get Place -> " + parent.getItemAtPosition(position));
         pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position) + " Italia");
-
+        findPositionButton.setVisibility(View.VISIBLE);
+        updateUIOnFilledLocation();
     }
 
     @Override
@@ -101,38 +187,115 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (s.length() == 0) {
-            setEmptyLocation();
+        findPositionButton.setVisibility(View.GONE);
+        if (s.length() != 0) {
+            updateUIOnFilledLocation();
             return;
         }
-        setFilledLocation();
+        updateUIOnEmptyLocation();
+    }
+
+    /*******INTERFACE callback ***/
+    /**
+     * to interface
+     */
+    public void updateUIOnEmptyLocation() {
+        setErrorOnAutcompleteTextview(false);
     }
 
     /**
-     *
+     * to interface
      */
-    public void setEmptyLocation() {
-        //show find current location button
-        //TODO animate
-        locationDoneButton.setVisibility(View.GONE);
-    }
-
-    /**
-     *
-     */
-    public void setFilledLocation() {
-        //hide find current location button
-        //TODO animate
-        locationDoneButton.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     *
-     */
-    static class BuilderAnimator {
-        public Animator getTranslationAnimator() {
-            return new ObjectAnimator();
+    public void updateUIOnFilledLocation() {
+        if (errorPickIcon.getAlpha() != 0) {
+            animateTransactFromViewToView(errorPickIcon, locationPickIcon);
+            setErrorOnAutcompleteTextview(false);
         }
+    }
+
+    /**
+     * to interface
+     */
+    public void updateUIOnFindPosition() {
+        Toast.makeText(contextWeakRefer.get(), "updateUIDone", Toast.LENGTH_SHORT).show();
+        AnimatorSet animatorSet = animateTranslateUpViews(new View[]{findPositionButton,
+                locationTextInputLayout}, false, false);
+        setAnimatorListener(animatorSet);
+    }
+
+    /**
+     * TODO customize
+     * @param animatorSet
+     */
+    private void setAnimatorListener(AnimatorSet animatorSet) {
+        if (animatorSet == null) {
+            return;
+        }
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                pickLocationListener.get().onUpdateUIOnFindPositionCallback();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    /**
+     * to interface
+     */
+    public void updateUIOnFindPositionError() {
+        Toast.makeText(contextWeakRefer.get(), "updateUIOnDoneError", Toast.LENGTH_SHORT).show();
+
+        pickLocationProgress.setVisibility(View.GONE);
+        animateTransactFromViewToView(locationPickIcon, errorPickIcon);
+        setErrorOnAutcompleteTextview(true);
+        animateTranslateUpViews(new View[] {findPositionButton, locationTextInputLayout}, true, false);
+    }
+
+    /**
+     * to interface
+     */
+    public void updateUIOnFindPositionSuccess(String location) {
+        Toast.makeText(contextWeakRefer.get(), "updateUIOnDoneSuccess", Toast.LENGTH_SHORT).show();
+        //TODO refactor
+        pickLocationProgress.setVisibility(View.GONE);
+        View view = errorPickIcon.getAlpha() == 0 ? locationPickIcon : errorPickIcon;
+        animateTransactFromViewToView(view, successPickIcon);
+        setDoneButtonVisible(true);
+        setLocationSelected(location);
+    }
+
+    /**
+     *
+     */
+    private void setLocationSelected(String location) {
+        locationSelectedTextview.setVisibility(View.VISIBLE);
+        location = location.replace("Italia", "");
+        ((TextView) locationSelectedTextview).setText(location);
+    }
+
+    /**
+     *
+     * @param visible
+     */
+    public void setDoneButtonVisible(boolean visible) {
+        locationDoneButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+        locationDoneBorderLayout.setVisibility(visible? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -140,6 +303,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      */
     public interface PickLocationInterface {
         void pickLocationSuccess(String latLng);
-        void pickLocationError();
+        void onUpdateUIOnFindPositionCallback();
     }
 }

@@ -81,7 +81,7 @@ public class GeocoderManager {
                         @Override
                         public void run() {
                             if (listener.get() != null) {
-                                listener.get().onGeocoderErrorResult();
+                                listener.get().onGeocoderError();
                             }
                         }
                     });
@@ -96,7 +96,7 @@ public class GeocoderManager {
     public void getCurrentLatLong() {
         Location location = getLastKnowLocationCustom();
         if (location == null) {
-            listener.get().onGeocoderErrorResult();
+            listener.get().onGeocoderError();
             return;
         }
         listener.get().onGeocoderSuccess(new LatLng(location.getLatitude(), location.getLongitude()));
@@ -127,6 +127,6 @@ public class GeocoderManager {
      */
     public interface OnHandleGeocoderResult {
         void onGeocoderSuccess(LatLng latLng);
-        void onGeocoderErrorResult();
+        void onGeocoderError();
     }
 }

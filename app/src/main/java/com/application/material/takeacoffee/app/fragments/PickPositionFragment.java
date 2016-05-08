@@ -1,9 +1,11 @@
 package com.application.material.takeacoffee.app.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.application.material.takeacoffee.app.PlacesActivity;
 import com.application.material.takeacoffee.app.R;
@@ -36,21 +39,32 @@ public class PickPositionFragment extends Fragment implements
     private static final String TAG = "PickPositionFragment";
     @Bind(R.id.locationAutocompleteTextViewId)
     AutoCompleteTextView locationAutocompleteTextView;
+    @Bind(R.id.locationTextInputLayoutId)
+    TextInputLayout locationTextInputLayout;
     @Bind(R.id.locationDoneButtonId)
     View locationDoneButton;
-    @Bind(R.id.findCurrentPositionButtonId)
-    View findCurrentPositionButton;
+    @Bind(R.id.locationDoneBorderLayoutId)
+    View locationDoneBorderLayout;
+    @Bind(R.id.findPositionButtonId)
+    View findPositionButton;
     @Bind(R.id.pickLocationProgressId)
     ProgressBar pickLocationProgress;
+    @Bind(R.id.locationSelectedTextviewId)
+    View locationSelectedTextview;
     @Bind(R.id.pickDescriptionId)
     View pickDescription;
     @Bind(R.id.successPickIconId)
     View successPickIcon;
     @Bind(R.id.errorPickIconId)
     View errorPickIcon;
+    @Bind(R.id.pickIconId)
+    View locationPickIcon;
+    @Bind(R.id.pickViewId)
+    View pickView;
     private LocationAutocompletePresenter locaionAutocompletePres;
     private String selectedLocationName;
     private GeocoderManager geocoder;
+    private View view;
 
     private enum LocationActionTypeEnum {LOCATION_DONE, LOCATION_CURRENT}
     private LocationActionTypeEnum locationActionType;
@@ -59,15 +73,15 @@ public class PickPositionFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (isLocationSet()) {
-            startPlaceActivity();
-            getActivity().finish();
-        }
+//        if (isLocationSet()) {
+//            startPlaceActivity();
+//            getActivity().finish();
+//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View view = inflater.inflate(R.layout.pick_position_fragment, container, false);
+        view = inflater.inflate(R.layout.pick_position_fragment, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
@@ -75,7 +89,11 @@ public class PickPositionFragment extends Fragment implements
                 .getInstance(new WeakReference<>(getContext()),
                         new WeakReference<PickLocationInterface>(this),
                         locationAutocompleteTextView,
-                        new View[]{pickDescription, errorPickIcon, successPickIcon, locationDoneButton});
+                        locationTextInputLayout,
+                        new View[]{pickDescription, errorPickIcon, successPickIcon,
+                                locationPickIcon, locationDoneButton, locationDoneBorderLayout,
+                                pickLocationProgress, findPositionButton, locationSelectedTextview,
+                                pickView});
         geocoder = GeocoderManager
                 .getInstance(new WeakReference<OnHandleGeocoderResult>(this),
                         new WeakReference<>(getContext()));
@@ -101,7 +119,7 @@ public class PickPositionFragment extends Fragment implements
     public void initView() {
         initActionBar();
         locationDoneButton.setOnClickListener(this);
-        findCurrentPositionButton.setOnClickListener(this);
+        findPositionButton.setOnClickListener(this);
         locaionAutocompletePres.init();
     }
 
@@ -119,19 +137,22 @@ public class PickPositionFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationDoneButtonId:
-                checkPositionPermissionAndTriggerAction(LocationActionTypeEnum.LOCATION_DONE);
-//                setPositionByLocationName();
+                onActionDone();
                 break;
-            case R.id.findCurrentPositionButtonId:
-                checkPositionPermissionAndTriggerAction(LocationActionTypeEnum.LOCATION_CURRENT);
-//                setCurrentPosition();
+            case R.id.findPositionButtonId:
+                locaionAutocompletePres.updateUIOnFindPosition();
                 break;
         }
     }
 
+    /**
+     *
+     * @param actionType
+     */
     private void checkPositionPermissionAndTriggerAction(LocationActionTypeEnum actionType) {
         this.locationActionType = actionType;
-        PermissionManager.getInstance().checkLocationServiceIsEnabled(new WeakReference<>((AppCompatActivity) getActivity()),
+        PermissionManager.getInstance()
+                .checkLocationServiceIsEnabled(new WeakReference<>((AppCompatActivity) getActivity()),
                 new WeakReference<PermissionManager.OnEnablePositionCallbackInterface>(this));
     }
 
@@ -139,20 +160,10 @@ public class PickPositionFragment extends Fragment implements
     /**
      * on check position
      */
-    private void setPositionByLocationName() {
+    private void setPositionFromGeocoder() {
         pickLocationProgress.setVisibility(View.VISIBLE);
         geocoder.getLatLongByLocationName(selectedLocationName);
     }
-
-    /**
-     *
-     */
-    private void setCurrentPosition() {
-//        pickLocationProgress.setVisibility(View.VISIBLE);
-        geocoder.getCurrentLatLong();
-//        pickLocationProgress.setVisibility(View.GONE);
-    }
-
 
     /**
      * on action done
@@ -169,7 +180,6 @@ public class PickPositionFragment extends Fragment implements
      * on action done
      */
     private void onActionDone() {
-        locationDoneButton.setVisibility(View.VISIBLE);
         startPlaceActivity();
     }
 
@@ -190,54 +200,39 @@ public class PickPositionFragment extends Fragment implements
                 .getValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY) != null;
     }
 
-    /**
-     *
-     */
-    public void showMessageBySnackbar(String message) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
-//                .setAction("Undo", mOnClickListener)
-                .setActionTextColor(Color.RED)
-                .show();
-    }
-
     @Override
     public void pickLocationSuccess(String locationName) {
         selectedLocationName = locationName;
     }
 
     @Override
-    public void pickLocationError() {
-        //disable continue button
-        locationDoneButton.setVisibility(View.GONE);
-    }
-
-    @Override
     public void onGeocoderSuccess(LatLng latLng) {
-        //TODO only the original thread can touch its view
-        pickLocationProgress.setVisibility(View.GONE);
         saveLocationOnStorage(latLng);
-        onActionDone();
+        locaionAutocompletePres.updateUIOnFindPositionSuccess(selectedLocationName);
+    }
+
+
+    @Override
+    public void onGeocoderError() {
+        locaionAutocompletePres.updateUIOnFindPositionError();
     }
 
     @Override
-    public void onGeocoderErrorResult() {
-        //TODO only the original thread can touch its view
-        pickLocationProgress.setVisibility(View.GONE);
-        locationDoneButton.setVisibility(View.GONE);
+    public void onEnablePositionErrorCallback() {
+        locaionAutocompletePres.updateUIOnFindPositionError();
     }
 
     @Override
     public void onEnablePositionCallback() {
         if (locationActionType == LocationActionTypeEnum.LOCATION_DONE) {
-            setPositionByLocationName();
-        } else if (locationActionType == LocationActionTypeEnum.LOCATION_CURRENT) {
-            setCurrentPosition();
+            setPositionFromGeocoder();
         }
     }
 
     @Override
-    public void onEnablePositionErrorCallback() {
-        Log.e("TAG", "error on enable position");
-        showMessageBySnackbar("error on enable position");
+    public void onUpdateUIOnFindPositionCallback() {
+        Toast.makeText(getActivity(), "onUpdateUIOnFindPositionCallback", Toast.LENGTH_SHORT).show();
+        setPositionFromGeocoder();
+//        checkPositionPermissionAndTriggerAction(LocationActionTypeEnum.LOCATION_DONE);
     }
 }
