@@ -7,6 +7,7 @@ import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,7 +34,6 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     private final ArrayList<CoffeePlace> itemList;
     private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
-    private PlacesGridViewAdapter.ViewHolder holder;
     private boolean isEmptyResult;
 
 
@@ -45,7 +45,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_coffee_place, parent, false);
-        holder = new PlacesGridViewAdapter.ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
@@ -73,33 +73,18 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      * @param photoRef
      */
     private void setPhotoByUrl(String photoRef, final ImageView imageView) {
-        //TODO refactor
-        Resources res = contextWeakRef.get().getResources();
-        Drawable defaultIcon = Utils.getColoredDrawable(res
-                .getDrawable(R.drawable.ic_local_see_black_48dp), res.getColor(R.color.material_brown200));
         if (photoRef == null) {
-            imageView.setImageDrawable(defaultIcon);
+            imageView.setImageDrawable(getDefaultIcon());
             return;
         }
         PicassoSingleton.getInstance(contextWeakRef, null)
-                .setPhotoAsync(imageView, photoRef, defaultIcon);
+                .setPhotoAsync(imageView, photoRef, getDefaultIcon());
     }
 
     @Override
     public int getItemCount() {
         return itemList.size();
     }
-
-//    /**
-//     *
-//     * @param placeId
-//     */
-//    public Bitmap getPicture(String placeId) {
-//        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(placeId);
-//        return cachedPic == null ? BitmapFactory
-//                .decodeResource(contextWeakRef.get().getResources(),R.drawable.coffee_cup_icon) :
-//                cachedPic;
-//    }
 
     /**
      *
@@ -146,6 +131,16 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     }
 
     /**
+     * TODO move
+     * @return
+     */
+    public Drawable getDefaultIcon() {
+        return Utils.getColoredDrawable(ContextCompat.getDrawable(contextWeakRef.get(),
+                R.drawable.ic_local_see_black_48dp),
+                ContextCompat.getColor(contextWeakRef.get(), R.color.material_brown600));
+    }
+
+    /**
      *
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -155,13 +150,13 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         private final View itemView;
         private final TextView ratingTextView;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            nameTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineNameTextId));
-            addressTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineAddressTextId));
-            iconImageView = (ImageView) itemView.findViewById(R.id.coffeeIconId);
-            ratingTextView = (TextView) itemView.findViewById(R.id.coffeePlaceRatingId);
-            this.itemView = itemView;
+        public ViewHolder(View view) {
+            super(view);
+            nameTextView = ((TextView) view.findViewById(R.id.coffeeMachineNameTextId));
+            addressTextView = ((TextView) view.findViewById(R.id.coffeeMachineAddressTextId));
+            iconImageView = (ImageView) view.findViewById(R.id.coffeeIconId);
+            ratingTextView = (TextView) view.findViewById(R.id.coffeePlaceRatingId);
+            itemView = view;
             itemView.setOnClickListener(this);
         }
 
