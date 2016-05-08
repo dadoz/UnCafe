@@ -10,6 +10,7 @@ import java.lang.ref.WeakReference;
  */
 public class SharedPrefManager {
     private static SharedPrefManager instance;
+    public static final String LOCATION_NAME_SHAREDPREF_KEY = "LOCATION_NAME_SHAREDPREF_KEY";
     private static final String PREFS_NAME = "UNCOFFEE_SHAREDPREF_NAME";
     private String DEFAULT_VALUE = null;
     private static SharedPreferences sharedPref;

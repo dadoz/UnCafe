@@ -2,41 +2,25 @@ package com.application.material.takeacoffee.app.presenters;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Size;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.animator.AnimatorBuilder;
 import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
-
 
 /**
  * Created by davide on 02/05/16.
@@ -50,14 +34,12 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     private static String[] countries;
     private static WeakReference<PickLocationInterface> pickLocationListener;
     private static View locationDoneButton;
-    private static View pickDescription;
     private static View errorPickIcon;
     private static View successPickIcon;
     private static AnimatorBuilder animatorBuilder;
     private static View locationPickIcon;
     private static View pickLocationProgress;
     private static View findPositionButton;
-    private static View pickView;
     private static View locationSelectedTextview;
     private static final long MIN_DELAY = 500;
     private static final int MIN_OFFSET = 1000;
@@ -82,7 +64,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         pickLocationListener = listener;
         autoCompleteTextView = textView;
         locationTextInputLayout = textInputLayout;
-        pickDescription = viewArray[0];
+//        pickDescription = viewArray[0];
         errorPickIcon = viewArray[1];
         successPickIcon = viewArray[2];
         locationPickIcon = viewArray[3];
@@ -91,7 +73,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         pickLocationProgress = viewArray[6];
         findPositionButton = viewArray[7];
         locationSelectedTextview = viewArray[8];
-        pickView = viewArray[8];
+//        pickView = viewArray[8];
         countries = contextWeakRefer.get().getResources().getStringArray(R.array.list_of_countries);
 
         animatorBuilder = AnimatorBuilder.getInstance(ctx);
@@ -110,7 +92,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         autoCompleteTextView.addTextChangedListener(this);
         autoCompleteTextView
                 .setDropDownBackgroundDrawable(new ColorDrawable(darkColor));
-
         locationTextInputLayout.setY(MIN_OFFSET);
         findPositionButton.getBackground()
                 .setColorFilter(darkColor, PorterDuff.Mode.MULTIPLY);
@@ -189,7 +170,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.e("TAG", "get Place -> " + parent.getItemAtPosition(position));
         pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position) + " Italia");
         findPositionButton.setVisibility(View.VISIBLE);
         updateUIOnFilledLocation();
@@ -235,7 +215,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      * to interface
      */
     public void updateUIOnFindPosition() {
-        Toast.makeText(contextWeakRefer.get(), "updateUIDone", Toast.LENGTH_SHORT).show();
         AnimatorSet animatorSet = animateTranslateUpViews(new View[]{findPositionButton,
                 locationTextInputLayout}, false, false);
         setAnimatorListener(animatorSet);
@@ -253,7 +232,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         animatorSet.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
             }
 
             @Override
@@ -263,12 +241,10 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-
             }
         });
     }
@@ -277,8 +253,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      * to interface
      */
     public void updateUIOnFindPositionError() {
-        Toast.makeText(contextWeakRefer.get(), "updateUIOnDoneError", Toast.LENGTH_SHORT).show();
-
         pickLocationProgress.setVisibility(View.GONE);
         animateTransactFromViewToView(locationPickIcon, errorPickIcon);
         setErrorOnAutcompleteTextview(true);
@@ -289,8 +263,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      * to interface
      */
     public void updateUIOnFindPositionSuccess(String location) {
-        Toast.makeText(contextWeakRefer.get(), "updateUIOnDoneSuccess", Toast.LENGTH_SHORT).show();
-        //TODO refactor
         pickLocationProgress.setVisibility(View.GONE);
         View view = errorPickIcon.getAlpha() == 0 ? locationPickIcon : errorPickIcon;
         animateTransactFromViewToView(view, successPickIcon);

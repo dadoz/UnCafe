@@ -71,8 +71,8 @@ public class PlacesFragment extends Fragment implements
     View noLocationServiceButton;
     @Bind(R.id.coffeePlaceSwipeRefreshLayoutId)
     SwipeRefreshLayout coffeePlaceSwipeRefreshLayout;
-    @Bind(R.id.palcePositionFilterTextViewId)
-    TextView palcePositionFilterTextView;
+    @Bind(R.id.placePositionFilterTextViewId)
+    TextView placePositionFilterTextView;
     private EndlessRecyclerOnScrollListener scrollListener;
 
     @Override
@@ -125,7 +125,9 @@ public class PlacesFragment extends Fragment implements
      */
     private void initFilters() {
         coffeePlaceFilterLayout.setOnClickListener(this);
-        palcePositionFilterTextView.setText("Torino (Beta)");
+        placePositionFilterTextView.setText(SharedPrefManager
+                .getInstance(new WeakReference<>(getContext()))
+                .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
     }
 
     /**

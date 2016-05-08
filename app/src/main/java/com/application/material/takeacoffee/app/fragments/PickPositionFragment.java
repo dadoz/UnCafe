@@ -170,9 +170,11 @@ public class PickPositionFragment extends Fragment implements
      */
     private void saveLocationOnStorage(LatLng latLng) {
         Log.e("PICK", "start activity location ->" + Utils.getLatLngString(latLng));
-        SharedPrefManager.getInstance(new WeakReference<>(getContext()))
-                .setValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY,
+        SharedPrefManager sharedPref = SharedPrefManager.getInstance(new WeakReference<>(getContext()));
+        sharedPref.setValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY,
                         Utils.getLatLngString(latLng));
+        sharedPref.setValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY,
+                        selectedLocationName);
     }
 
 
