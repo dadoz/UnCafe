@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.support.design.widget.Snackbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.View;
@@ -21,10 +22,14 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.joda.time.LocalTime;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 /**
  * Created by davide on 30/12/14.
@@ -82,6 +87,19 @@ public class Utils {
         return latLng.latitude + "," + latLng.longitude;
     }
 
+    /**
+     *
+     * @param myText
+     * @param contextWeakRefer
+     * @return
+     */
+    public static Spannable wrapInCustomfont(String myText, WeakReference<Context> contextWeakRefer) {
+        Typeface typeface = Typeface.createFromAsset(contextWeakRefer.get().getAssets(), "fonts/chimphand-regular.ttf");
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(typeface);
+        SpannableString spannable = new SpannableString(myText);
+        spannable.setSpan(typefaceSpan, 0, myText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
 
 //    public static SpannableString getSpannableFromString(Activity activity, String text) {
 //        //TODO move on Utils

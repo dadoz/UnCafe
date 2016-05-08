@@ -5,6 +5,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
 import android.support.design.widget.Snackbar;
@@ -12,19 +15,27 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.animator.AnimatorBuilder;
+import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 
 /**
@@ -48,7 +59,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     private static View findPositionButton;
     private static View pickView;
     private static View locationSelectedTextview;
-    private static final long MIN_DELAY = 1000;
+    private static final long MIN_DELAY = 500;
     private static final int MIN_OFFSET = 1000;
     private static View locationDoneBorderLayout;
 
@@ -93,10 +104,16 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      * init
      */
     public void init() {
+        int darkColor = ContextCompat.getColor(contextWeakRefer.get(), R.color.material_brown900);
         autoCompleteTextView.setAdapter(getAutocompleteLocationAdapter());
         autoCompleteTextView.setOnItemClickListener(this);
         autoCompleteTextView.addTextChangedListener(this);
+        autoCompleteTextView
+                .setDropDownBackgroundDrawable(new ColorDrawable(darkColor));
+
         locationTextInputLayout.setY(MIN_OFFSET);
+        findPositionButton.getBackground()
+                .setColorFilter(darkColor, PorterDuff.Mode.MULTIPLY);
         animateTranslateUpView(locationTextInputLayout, true, true);
     }
 
@@ -166,7 +183,8 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      */
     private void setErrorOnAutcompleteTextview(boolean showError) {
         locationTextInputLayout.setErrorEnabled(showError);
-        locationTextInputLayout.setError(showError ? "Cannot find this city! Contact us" : null);
+        locationTextInputLayout.setError(showError ? Utils.wrapInCustomfont("Cannot find this city! Contact us",
+                contextWeakRefer) : null);
     }
 
     @Override
