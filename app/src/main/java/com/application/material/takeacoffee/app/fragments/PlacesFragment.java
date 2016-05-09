@@ -172,8 +172,9 @@ public class PlacesFragment extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_position:
-                changeFragment(new MapFragment(),
-                        MapFragment.MAP_FRAG_TAG);
+                startActivity(new Intent(getContext(), MapActivity.class));
+//                changeFragment(new MapFragment(),
+//                        MapFragment.MAP_FRAG_TAG);
                 break;
             case R.id.action_settings:
                 changeFragment(new SettingListFragment(),

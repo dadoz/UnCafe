@@ -73,10 +73,10 @@ public class PickPositionFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (isLocationSet()) {
-//            startPlaceActivity();
-//            getActivity().finish();
-//        }
+        if (isLocationSet()) {
+            startPlaceActivity();
+            getActivity().finish();
+        }
     }
 
     @Override
