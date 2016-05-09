@@ -170,6 +170,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Utils.hideKeyboard(contextWeakRefer, autoCompleteTextView);
         pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position) + " Italia");
         findPositionButton.setVisibility(View.VISIBLE);
         updateUIOnFilledLocation();

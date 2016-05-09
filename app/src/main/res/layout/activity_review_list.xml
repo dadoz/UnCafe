@@ -10,7 +10,8 @@
         android:id="@+id/appbarLayoutId"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:layout_behavior="com.application.material.takeacoffee.app.behaviors.FlingBehavior">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbarLayoutId"

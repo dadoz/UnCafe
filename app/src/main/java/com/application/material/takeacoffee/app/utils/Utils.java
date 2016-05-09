@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -101,6 +102,16 @@ public class Utils {
         return spannable;
     }
 
+    /**
+     *
+     * @param contextWeakRefer
+     * @return
+     */
+    public static void hideKeyboard(WeakReference<Context> contextWeakRefer, @NonNull View view) {
+        InputMethodManager imm = (InputMethodManager)contextWeakRefer.get()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 //    public static SpannableString getSpannableFromString(Activity activity, String text) {
 //        //TODO move on Utils
 //        Typeface font = Typeface.createFromAsset(activity.getAssets(), "chimphand-regular.ttf");

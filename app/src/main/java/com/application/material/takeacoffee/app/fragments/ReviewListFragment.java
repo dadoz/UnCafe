@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -62,6 +63,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     ProgressBar coffeePlacesProgress;
     private ImageView coffeePlaceImageView;
     private CollapsingToolbarLayout collapsingToolbar;
+    private AppBarLayout appbarLayout;
 
     @Override
     public void onAttach(Context context) {
@@ -95,6 +97,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     public void initView() {
         collapsingToolbar = (CollapsingToolbarLayout) getActivity()
                 .findViewById(R.id.collapsingToolbarLayoutId);
+        appbarLayout = (AppBarLayout) getActivity()
+                .findViewById(R.id.appbarLayoutId);
         coffeePlaceImageView = ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId));
 
         swipeRefreshLayout.setOnRefreshListener(this);
