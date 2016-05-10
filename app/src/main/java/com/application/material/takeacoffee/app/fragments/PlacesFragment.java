@@ -38,6 +38,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.BAR_PLACE_TYPE;
+import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.PLACE_RANKBY;
+
 public class PlacesFragment extends Fragment implements
         AdapterView.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener,
         PlacesGridViewAdapter.CustomItemClickListener,
@@ -46,9 +49,6 @@ public class PlacesFragment extends Fragment implements
         PermissionManager.OnEnableNetworkCallbackInterface,
         SwipeRefreshLayout.OnRefreshListener, OnHandlePlaceApiResult {
     public static final String COFFEE_MACHINE_FRAG_TAG = "COFFEE_MACHINE_FRAG_TAG";
-    private static final String CAFE_PLACE_TYPE = "cafe";
-    private static final String BAR_PLACE_TYPE = "bar";
-    private static final String PLACE_RANKBY = "distance";
     private static FragmentActivity mainActivityRef;
     private PermissionManager permissionManager;
     private PlaceApiManager placesApiManager;
@@ -294,7 +294,8 @@ public class PlacesFragment extends Fragment implements
      */
     public ArrayList<CoffeePlace> getCoffeePlacesListTest() {
         ArrayList<CoffeePlace> tmp = new ArrayList<CoffeePlace>();
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna", "Corso Gramsci 7 alesessanrdia", 4, null, null));
+        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna",
+                "Corso Gramsci 7 alesessanrdia", 4, null, null, null));
         return tmp;
     }
 
@@ -370,7 +371,6 @@ public class PlacesFragment extends Fragment implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                placesApiManager.retrievePlacesAsync("45.0712,7.68525", PLACE_RANKBY, CAFE_PLACE_TYPE);
                 placesApiManager.retrievePlacesAsync(latLngString, PLACE_RANKBY, BAR_PLACE_TYPE);
             }
         }, 2000);

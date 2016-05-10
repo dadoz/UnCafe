@@ -2,7 +2,6 @@ package com.application.material.takeacoffee.app.models;
 
 import android.util.Log;
 
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -21,6 +20,11 @@ public class CoffeePlace {
 	private String address;
     private int rating;
     private ArrayList<PlacePhoto> photos;
+    private Geometry geometry;
+
+    public Geometry getGeometry() {
+        return geometry;
+    }
 
     /**
      *
@@ -30,13 +34,14 @@ public class CoffeePlace {
      * @param rating
      */
     public CoffeePlace(String place_id, final String name, String vicinity, int rating,
-                       ArrayList<PlacePhoto> photos, PageToken pageToken) {
+                       ArrayList<PlacePhoto> photos, PageToken pageToken, Geometry geometry) {
         this.id = place_id;
         this.rating = rating;
 		this.name = name;
 		this.address = vicinity;
         this.photos = photos;
         this.pageTokenRef = pageToken;
+        this.geometry = geometry;
 	}
 
     /**
@@ -150,6 +155,64 @@ public class CoffeePlace {
         }
     }
 
+
+    /**
+     * static class to handle photo
+     */
+    public static class Geometry {
+        Location location;
+
+        /**
+         *
+         * @return
+         */
+        public Location getLocation() {
+            return location;
+        }
+
+        /**
+         *
+         * @param location
+         */
+        public Geometry(Location location) {
+            Log.e("TAG", location.toString());
+            this.location = location;
+        }
+
+        /**
+         *
+         */
+        public class Location {
+            private final float lat;
+            private final float lng;
+
+            /**
+             *
+             * @param lat
+             * @param lng
+             */
+            public Location(float lat, float lng) {
+                this.lat = lat;
+                this.lng = lng;
+            }
+
+            /**
+             *
+             * @return
+             */
+            public float getLat() {
+                return lat;
+            }
+
+            /**
+             *
+             * @return
+             */
+            public float getLng() {
+                return lng;
+            }
+        }
+    }
     /**
      * static class to handle photo
      */
