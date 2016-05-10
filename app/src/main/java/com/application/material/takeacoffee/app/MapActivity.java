@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
@@ -113,6 +114,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onPlaceApiSuccess(Object list, PlaceApiManager.RequestType type) {
+        if (type == PlaceApiManager.RequestType.PLACE_INFO) {
+            final String pageToken = ((ArrayList<CoffeePlace>) list).get(0).getPageToken().getToken();
+            if (pageToken != null) {
+                placesApiManager.retrieveMorePlacesAsync(pageToken);
+            }
+        }
         setMarkerByCoffeePlaceList((ArrayList<CoffeePlace>) list);
     }
 
