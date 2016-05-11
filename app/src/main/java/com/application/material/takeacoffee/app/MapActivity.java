@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
@@ -27,7 +27,7 @@ import static com.application.material.takeacoffee.app.singletons.PlaceApiManage
 import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.PLACE_RANKBY;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, PlaceApiManager.OnHandlePlaceApiResult {
-    private static final float ZOOM_LEVEL = 16;
+    private static final float ZOOM_LEVEL = 15;
     @Bind(R.id.mapToolbarId)
     public Toolbar toolbar;
     private PlaceApiManager placesApiManager;
@@ -45,6 +45,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         initView();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
     /**
      * init actionbar
      */
@@ -76,12 +87,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //TODO add marker
-        //getAsyncMarker();
+        map = googleMap;
         final String latLngString = SharedPrefManager.getInstance(new WeakReference<>(getApplicationContext()))
                 .getValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY);
+
         placesApiManager.retrievePlacesAsync(latLngString, PLACE_RANKBY, BAR_PLACE_TYPE);
-        map = googleMap;
+        centerMap(latLngString);
     }
 
     /**
@@ -125,19 +136,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     /**
      *
+     * @param latLngString
+     */
+    private void centerMap(String latLngString) {
+        String[] resultArray = latLngString.split(",");
+        centerCameraMapOnLatLng(Float.parseFloat(resultArray[0]), Float.parseFloat(resultArray[1]));
+    }
+    /**
+     *
      * @param list
      */
     private void setMarkerByCoffeePlaceList(ArrayList<CoffeePlace> list) {
         //TODO move to observer
-        int k = 0;
         for (CoffeePlace coffeePlace : list) {
             float lat = coffeePlace.getGeometry().getLocation().getLat();
             float lng = coffeePlace.getGeometry().getLocation().getLng();
             addMarkerOnMap(lat, lng, coffeePlace.getName());
-            if (k == 0) {
-                centerCameraMapOnLatLng(lat, lng);
-                k++;
-            }
         }
 
     }
