@@ -5,10 +5,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
@@ -19,14 +17,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-
 import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.BAR_PLACE_TYPE;
 import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.PLACE_RANKBY;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, PlaceApiManager.OnHandlePlaceApiResult {
+public class MapActivity extends AppCompatActivity implements
+        OnMapReadyCallback, PlaceApiManager.OnHandlePlaceApiResult {
     private static final float ZOOM_LEVEL = 15;
     @Bind(R.id.mapToolbarId)
     public Toolbar toolbar;
@@ -55,7 +52,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     /**
      * init actionbar
      */

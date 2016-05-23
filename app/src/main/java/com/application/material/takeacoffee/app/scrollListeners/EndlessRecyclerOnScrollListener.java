@@ -5,6 +5,8 @@ package com.application.material.takeacoffee.app.scrollListeners;
  */
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+import android.widget.Toast;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
     public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
@@ -14,6 +16,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     int visibleItemCount, totalItemCount;
     private int pastVisibleItems;
     private int currentPage = 1;
+    private boolean firstItemReached = false;
+    private boolean actionTriggerd;
 
     /**
      *
@@ -26,12 +30,27 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+        //TODO need a big refactor
         visibleItemCount = layoutManager.getChildCount();
         totalItemCount = layoutManager.getItemCount();
         int[] firstVisibleItems = layoutManager.findFirstVisibleItemPositions(null);
         if (firstVisibleItems != null &&
                 firstVisibleItems.length > 0) {
             pastVisibleItems = firstVisibleItems[0];
+
+            if (firstVisibleItems[0] == 0 &&
+                    !firstItemReached) {
+                isFirstItemVisible();
+                actionTriggerd = false;
+            }
+
+            if (firstVisibleItems[0] != 0 &&
+                    !actionTriggerd) {
+                isFirstItemNotVisible();
+                actionTriggerd = true;
+            }
+
+            firstItemReached = firstVisibleItems[0] == 0;
         }
 
         if (loading &&
@@ -41,6 +60,16 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             currentPage++;
         }
     }
+
+    /**
+     *
+     */
+    protected abstract void isFirstItemVisible();
+
+    /**
+     *
+     */
+    protected abstract void isFirstItemNotVisible();
 
     /**
      * 

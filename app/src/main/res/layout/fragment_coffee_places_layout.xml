@@ -4,22 +4,21 @@
     android:id="@+id/coffeeMachineFragmentLayoutId"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/coffee_place_filter_template"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/coffeePlaceSwipeRefreshLayoutId"
-        android:layout_below="@id/coffeePlaceFilterLayoutId"
+        android:layout_marginTop="@dimen/actionbar_filter_height"
+        android:paddingTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/coffeePlacesRecyclerViewId"
-            android:layout_below="@id/coffeePlaceFilterLayoutId"
             android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+    <include layout="@layout/coffee_place_filter_template"/>
 
     <ProgressBar
         android:visibility="gone"

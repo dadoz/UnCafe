@@ -77,6 +77,7 @@ public class ReviewRecyclerViewAdapter extends
     }
 
     public void setEmptyResult(boolean emptyResult) {
+
         Log.e("TAG", "empty result");
     }
 

@@ -65,7 +65,7 @@ public class GeocoderManager {
             @Override
             public void run() {
                 try {
-                    List<Address> addressList = geocoder.getFromLocationName(locationName, 5);
+                    List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
                     final LatLng latLng = new LatLng(addressList.get(0).getLatitude(),addressList.get(0).getLongitude());
                     handler.post(new Runnable() {
                         @Override

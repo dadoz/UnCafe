@@ -6,7 +6,11 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import java.lang.ref.WeakReference;
 
@@ -147,6 +151,4 @@ public class AnimatorBuilder {
                 initialViewHeight + marginTop;
         return buildResizeBottomAnimator(view, start);
     }
-
-
 }

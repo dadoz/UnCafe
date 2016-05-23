@@ -7,7 +7,7 @@
         android:title="Map"
         android:icon="@drawable/ic_map_white_48dp"
         android:orderInCategory="100"
-        app:showAsAction="always" />
+        app:showAsAction="withText" />
     <item
         android:id="@+id/action_settings"
         android:title="Settings"

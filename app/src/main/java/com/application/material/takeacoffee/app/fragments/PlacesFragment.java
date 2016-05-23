@@ -24,6 +24,7 @@ import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.decorators.ItemOffsetDecoration;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
+import com.application.material.takeacoffee.app.presenters.PlaceFilterPresenter;
 import com.application.material.takeacoffee.app.scrollListeners.EndlessRecyclerOnScrollListener;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
@@ -61,6 +62,8 @@ public class PlacesFragment extends Fragment implements
     View coffeePlacesEmptyResult;
     @Bind(R.id.coffeePlaceFilterLayoutId)
     View coffeePlaceFilterLayout;
+    @Bind(R.id.coffeePlaceFilterCardviewId)
+    View coffeePlaceFilterCardview;
     @Bind(R.id.noLocationServiceLayoutId)
     View noLocationServiceLayout;
     @Bind(R.id.noNetworkServiceLayoutId)
@@ -74,6 +77,7 @@ public class PlacesFragment extends Fragment implements
     @Bind(R.id.placePositionFilterTextViewId)
     TextView placePositionFilterTextView;
     private EndlessRecyclerOnScrollListener scrollListener;
+    private PlaceFilterPresenter placeFilterPresenter;
 
     @Override
     public void onAttach(Context context) {
@@ -128,6 +132,9 @@ public class PlacesFragment extends Fragment implements
         placePositionFilterTextView.setText(SharedPrefManager
                 .getInstance(new WeakReference<>(getContext()))
                 .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
+        placeFilterPresenter = PlaceFilterPresenter.getInstance(new WeakReference<>(getContext()),
+                new View[] {coffeePlaceFilterCardview, coffeePlaceFilterLayout, coffeePlaceSwipeRefreshLayout});
+        placeFilterPresenter.onCollapse();
     }
 
     /**
@@ -258,6 +265,7 @@ public class PlacesFragment extends Fragment implements
         coffeePlacesRecyclerview.addItemDecoration(new ItemOffsetDecoration(getContext(), R.dimen.small_padding));
         initScrollListener(layoutManager);
         coffeePlacesRecyclerview.addOnScrollListener(scrollListener);
+        //TODO add footer or header to handle more review spinner and also get map button!
     }
 
     /**
@@ -267,7 +275,22 @@ public class PlacesFragment extends Fragment implements
     private void initScrollListener(StaggeredGridLayoutManager layoutManager) {
         scrollListener = new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
+            protected void isFirstItemVisible() {
+                if (placeFilterPresenter.isCollapsed()) {
+                    placeFilterPresenter.onExpand();
+                }
+            }
+
+            @Override
+            protected void isFirstItemNotVisible() {
+                if (!placeFilterPresenter.isCollapsed()) {
+                    placeFilterPresenter.onCollapse();
+                }
+            }
+
+            @Override
             public void onLoadMore(int currentPage) {
+                Toast.makeText(getContext(), "retrieving more places...", Toast.LENGTH_LONG).show();
                 final String pageToken = ((PlacesGridViewAdapter) coffeePlacesRecyclerview
                         .getAdapter()).getPageToken();
                 if (pageToken != null) {
@@ -434,8 +457,9 @@ public class PlacesFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.coffeePlaceFilterLayoutId:
-                Toast.makeText(getContext(), "hey you call filter handlet", Toast.LENGTH_SHORT)
-                        .show();
+//                Toast.makeText(getContext(), "hey you call filter handlet", Toast.LENGTH_SHORT)
+//                        .show();
+                startActivity(new Intent(getContext(), MapActivity.class));
                 break;
             case R.id.noLocationServiceButtonId:
                 permissionManager
