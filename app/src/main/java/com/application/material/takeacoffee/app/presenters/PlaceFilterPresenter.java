@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.animator.AnimatorBuilder;
 
 import java.lang.ref.WeakReference;
@@ -54,6 +55,7 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
         animatorSet.addListener(this);
         animatorSet.playSequentially(anim1);
         animatorSet.start();
+        layout.setVisibility(View.VISIBLE);
 
     }
 
@@ -68,6 +70,7 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
         animatorSet.addListener(this);
         animatorSet.playSequentially(anim1);
         animatorSet.start();
+//        layout.setVisibility(View.GONE);
     }
 
     /**

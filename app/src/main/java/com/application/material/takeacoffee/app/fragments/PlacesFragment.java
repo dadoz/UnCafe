@@ -62,6 +62,8 @@ public class PlacesFragment extends Fragment implements
     View coffeePlacesEmptyResult;
     @Bind(R.id.coffeePlaceFilterLayoutId)
     View coffeePlaceFilterLayout;
+    @Bind(R.id.coffeePlaceFilterBackgroundId)
+    View coffeePlaceFilterBackground;
     @Bind(R.id.coffeePlaceFilterCardviewId)
     View coffeePlaceFilterCardview;
     @Bind(R.id.noLocationServiceLayoutId)
@@ -128,12 +130,12 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void initFilters() {
-        coffeePlaceFilterLayout.setOnClickListener(this);
+        coffeePlaceFilterCardview.setOnClickListener(this);
         placePositionFilterTextView.setText(SharedPrefManager
                 .getInstance(new WeakReference<>(getContext()))
                 .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
         placeFilterPresenter = PlaceFilterPresenter.getInstance(new WeakReference<>(getContext()),
-                new View[] {coffeePlaceFilterCardview, coffeePlaceFilterLayout, coffeePlaceSwipeRefreshLayout});
+                new View[] {coffeePlaceFilterCardview, coffeePlaceFilterBackground, coffeePlaceSwipeRefreshLayout});
         placeFilterPresenter.onCollapse();
     }
 
@@ -356,6 +358,7 @@ public class PlacesFragment extends Fragment implements
         Log.e("TAG", "ERROR on retrieve result");
         scrollListener.setLoadingEnabled(true);
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
+        coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
     }
 
     /**
@@ -456,7 +459,7 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.coffeePlaceFilterLayoutId:
+            case R.id.coffeePlaceFilterCardviewId:
 //                Toast.makeText(getContext(), "hey you call filter handlet", Toast.LENGTH_SHORT)
 //                        .show();
                 startActivity(new Intent(getContext(), MapActivity.class));
