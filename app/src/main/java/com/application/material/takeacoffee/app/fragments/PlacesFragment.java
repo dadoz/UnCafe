@@ -33,6 +33,7 @@ import com.application.material.takeacoffee.app.singletons.PlaceApiManager.Reque
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.application.material.takeacoffee.app.utils.PermissionManager.OnEnablePositionCallbackInterface;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
+import com.application.material.takeacoffee.app.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -62,6 +63,8 @@ public class PlacesFragment extends Fragment implements
     View coffeePlacesEmptyResult;
     @Bind(R.id.coffeePlaceFilterLayoutId)
     View coffeePlaceFilterLayout;
+    @Bind(R.id.coffeePlaceFilterLastUpdateTextviewId)
+    TextView coffeePlaceFilterLastUpdateTextview;
     @Bind(R.id.coffeePlaceFilterBackgroundId)
     View coffeePlaceFilterBackground;
     @Bind(R.id.coffeePlaceFilterCardviewId)
@@ -137,6 +140,16 @@ public class PlacesFragment extends Fragment implements
         placeFilterPresenter = PlaceFilterPresenter.getInstance(new WeakReference<>(getContext()),
                 new View[] {coffeePlaceFilterCardview, coffeePlaceFilterBackground, coffeePlaceSwipeRefreshLayout});
         placeFilterPresenter.onCollapse();
+        setLastUpdateOnFilter();
+    }
+
+    /**
+     *
+     */
+    private void setLastUpdateOnFilter() {
+        String timestamp = SharedPrefManager.getInstance(new WeakReference<>(getContext()))
+                .getValueByKey(SharedPrefManager.TIMESTAMP_REQUEST_KEY);
+        coffeePlaceFilterLastUpdateTextview.setText(Utils.convertLastUpdateFromTimestamp(timestamp));
     }
 
     /**
@@ -340,6 +353,7 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onPlaceApiSuccess(Object result, RequestType type) {
         if (type == RequestType.PLACE_INFO) {
+            setLastUpdateOnFilter();
             handleInfo((ArrayList<CoffeePlace>) result);
         } else if (type == RequestType.MORE_PLACE_INFO) {
             scrollListener.setLoadingEnabled(true);

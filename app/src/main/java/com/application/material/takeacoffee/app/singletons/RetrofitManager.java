@@ -8,6 +8,7 @@ import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.CoffeePlace.PageToken;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.utils.ConnectivityUtils;
+import com.application.material.takeacoffee.app.utils.SharedPrefManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Cache;
@@ -129,6 +131,7 @@ public class RetrofitManager {
             return service.listPlacesByLocationAndType(location, rankby, type).map(new Func1<ArrayList<CoffeePlace>, ArrayList<Object>>() {
                 @Override
                 public ArrayList<Object> call(ArrayList<CoffeePlace> list) {
+                    setTimestampRequest();
                     return new ArrayList<Object>(list);
                 }
             });
@@ -136,6 +139,14 @@ public class RetrofitManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     *
+     */
+    private void setTimestampRequest() {
+        SharedPrefManager.getInstance(contextWeakRef).setValueByKey(SharedPrefManager.TIMESTAMP_REQUEST_KEY,
+                Long.toString(new Date().getTime()));
     }
 
     /**

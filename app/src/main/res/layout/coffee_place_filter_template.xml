@@ -12,6 +12,7 @@
         android:layout_height="@dimen/actionbar_filter_height"
         android:background="@color/material_brown800" >
         <TextView
+            android:id="@+id/coffeePlaceFilterLastUpdateTextviewId"
             android:background="?attr/selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

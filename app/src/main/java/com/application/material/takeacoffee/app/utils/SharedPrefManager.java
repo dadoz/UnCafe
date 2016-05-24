@@ -15,6 +15,7 @@ public class SharedPrefManager {
     private String DEFAULT_VALUE = null;
     private static SharedPreferences sharedPref;
     public final static String LATLNG_SHAREDPREF_KEY = "LATLNG_SHAREDPREF_KEY";
+    public final static String TIMESTAMP_REQUEST_KEY = "TIMESTAMP_REQUEST_KEY";
 
     /**
      *

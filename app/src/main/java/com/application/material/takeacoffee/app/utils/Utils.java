@@ -21,7 +21,12 @@ import android.widget.EditText;
 import com.application.material.takeacoffee.app.R;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.joda.time.DateTime;
+import org.joda.time.JodaTimePermission;
 import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeParser;
 
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
@@ -36,6 +41,8 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils;
  * Created by davide on 30/12/14.
  */
 public class Utils {
+
+    private static String LAST_UPDATE_STRING = "Last Update: ";
 
     private Utils() {
     }
@@ -112,6 +119,21 @@ public class Utils {
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+    /**
+     *
+     * @param timestampStr
+     * @return
+     */
+    public static String convertLastUpdateFromTimestamp(String timestampStr) {
+        if (timestampStr == null) {
+            return LAST_UPDATE_STRING + " -";
+        }
+
+        return LAST_UPDATE_STRING + new DateTime(Long.parseLong(timestampStr))
+                .toString(DateTimeFormat.forPattern("dd MMM YYYY"));
+    }
+
 //    public static SpannableString getSpannableFromString(Activity activity, String text) {
 //        //TODO move on Utils
 //        Typeface font = Typeface.createFromAsset(activity.getAssets(), "chimphand-regular.ttf");
