@@ -18,8 +18,8 @@
     <dimen name="medium_padding">20dip</dimen>
     <dimen name="big_padding">40dip</dimen>
     <dimen name="huge_padding">60dip</dimen>
-    <dimen name="text_big_24">24dip</dimen>
-    <dimen name="text_big_22">22dip</dimen>
+    <dimen name="text_big_24">24sp</dimen>
+    <dimen name="text_big_22">22sp</dimen>
     <dimen name="small_padding_5">5dip</dimen>
     <dimen name="big_button_size">300dip</dimen>
     <dimen name="small_icon_size">15dp</dimen>

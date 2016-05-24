@@ -1,32 +1,20 @@
 package com.application.material.takeacoffee.app.utils;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.TypefaceSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
-import com.application.material.takeacoffee.app.R;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.joda.time.DateTime;
-import org.joda.time.JodaTimePermission;
-import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeParser;
 
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
@@ -35,37 +23,15 @@ import java.util.Date;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 /**
  * Created by davide on 30/12/14.
  */
 public class Utils {
 
-    private static String LAST_UPDATE_STRING = "Last Update: ";
+    private static String LAST_UPDATE_STRING = "Last sync: ";
 
     private Utils() {
-    }
-
-    /**
-     *
-     * @param activityRef
-     * @param editTextView
-     */
-    public static void hideKeyboard(Activity activityRef, EditText editTextView) {
-        ((InputMethodManager) activityRef
-                .getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(editTextView.getWindowToken(), 0);
-
-    }
-
-    /**
-     *
-     * @param view
-     * @param message
-     */
-    public static void showSnackbar(View view , String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     /**

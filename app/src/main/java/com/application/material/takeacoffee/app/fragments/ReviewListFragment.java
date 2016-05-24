@@ -25,6 +25,7 @@ import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapt
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.decorators.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
+import com.application.material.takeacoffee.app.observer.ReviewAdapterObserver;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton.PicassoCallbacksInterface;
@@ -60,7 +61,9 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Bind(R.id.swipeRefreshLayoutId)
     SwipeRefreshLayout swipeRefreshLayout;
     @Bind(R.id.coffeePlacesProgressId)
-    ProgressBar coffeePlacesProgress;
+    ProgressBar reviewProgress;
+    @Bind(R.id.coffeePlacesEmptyResultReviewId)
+    View coffeePlacesEmptyResultReview;
     private ImageView coffeePlaceImageView;
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appbarLayout;
@@ -166,8 +169,10 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private void initListView() {
         ReviewRecyclerViewAdapter adapter = new ReviewRecyclerViewAdapter(
                 new WeakReference<Context>(getActivity()), new ArrayList<Review>());
+        adapter.registerAdapterDataObserver(new ReviewAdapterObserver(new WeakReference<>(reviewRecyclerView),
+                reviewProgress, coffeePlacesEmptyResultReview));
         adapter.setOnItemClickListener(this);        //TODO booooo ????
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         reviewRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
                 LinearLayoutManager.VERTICAL));
@@ -223,7 +228,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * @param list
      */
     public void handleReviewOnListCallback(ArrayList<Review> list) {
-        coffeePlacesProgress.setVisibility(View.GONE);
+        reviewProgress.setVisibility(View.GONE);
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
                 .addAllItems(list);
     }
@@ -240,14 +245,14 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     public void onEmptyResult() {
         Log.e("ReviewsFrag", "empty");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
-        coffeePlacesProgress.setVisibility(View.GONE);
+        reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void onErrorResult() {
         Log.e("ReviewsFrag", "error");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
-        coffeePlacesProgress.setVisibility(View.GONE);
+        reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
 

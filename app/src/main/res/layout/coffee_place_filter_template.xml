@@ -10,7 +10,8 @@
         android:id="@+id/coffeePlaceFilterBackgroundId"
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_filter_height"
-        android:background="@color/material_brown800" >
+        android:background="@color/material_brown800"
+        android:elevation="2dp">
         <TextView
             android:id="@+id/coffeePlaceFilterLastUpdateTextviewId"
             android:background="?attr/selectableItemBackground"

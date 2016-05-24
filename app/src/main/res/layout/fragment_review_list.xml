@@ -26,5 +26,6 @@
         android:layout_marginTop="100dp"
         android:indeterminateTint="@color/material_brown900"
         android:indeterminateTintMode="src_in"/>
+    <include layout="@layout/no_result_review_layout"/>
 
 </RelativeLayout>

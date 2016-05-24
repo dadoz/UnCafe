@@ -20,5 +20,6 @@
     <string name="coffee_place_actionbar">Places</string>
     <string name="map_name">Map</string>
     <string name="pick_pos_name">Pick Position</string>
+    <string name="no_review_found_id">No reviews found</string>
 
 </resources>

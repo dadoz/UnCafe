@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -24,11 +26,9 @@ public class ReviewAdapterObserver extends RecyclerView.AdapterDataObserver {
 
     @Override
     public void onChanged() {
-        boolean isEmpty = true;
-//        boolean isEmpty = adapterWeakRef.get().getItemCount() == 0 &&
-//                !adapterWeakRef.get().isEmptyResult();
-        progressbar.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        noResultView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-
+        boolean isEmpty = ((ReviewRecyclerViewAdapter) adapterWeakRef.get().getAdapter()).isEmpty();
+        boolean hasError = ((ReviewRecyclerViewAdapter) adapterWeakRef.get().getAdapter()).getItemCount() == 0;
+        progressbar.setVisibility(View.GONE);
+        noResultView.setVisibility(isEmpty || hasError ? View.VISIBLE : View.GONE);
     }
 }

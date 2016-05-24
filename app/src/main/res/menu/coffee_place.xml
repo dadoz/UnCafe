@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PlacesActivity" >
     <item
+        android:visible="false"
         android:id="@+id/action_position"
         android:title="Map"
         android:icon="@drawable/ic_map_white_48dp"

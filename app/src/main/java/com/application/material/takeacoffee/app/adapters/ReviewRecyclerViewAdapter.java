@@ -30,6 +30,7 @@ public class ReviewRecyclerViewAdapter extends
     private CustomItemClickListener listener;
     private ReviewRecyclerViewAdapter.ViewHolder holder;
     private String GUEST_USER = "Guest";
+    private boolean empty;
 
     public ReviewRecyclerViewAdapter(WeakReference<Context> ctx,
                                      ArrayList<Review> itemList) {
@@ -76,9 +77,21 @@ public class ReviewRecyclerViewAdapter extends
         return itemList.size();
     }
 
+    /**
+     *
+     * @param emptyResult
+     */
     public void setEmptyResult(boolean emptyResult) {
-
+        this.empty = emptyResult;
         Log.e("TAG", "empty result");
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isEmpty() {
+        return empty;
     }
 
     /**
