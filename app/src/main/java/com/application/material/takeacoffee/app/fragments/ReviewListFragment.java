@@ -1,6 +1,7 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +33,9 @@ import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton.PicassoCallbacksInterface;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
-import com.application.material.takeacoffee.app.singletons.RetrofitManager;
 import com.application.material.takeacoffee.app.utils.ExpandableTextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -67,6 +67,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private ImageView coffeePlaceImageView;
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appbarLayout;
+    private String placeCoordinates;
 
     @Override
     public void onAttach(Context context) {
@@ -268,9 +269,24 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onClick(View v) {
-        //TODO handle it
-        Toast.makeText(getContext(), "hey yu're clicking share content", Toast.LENGTH_LONG).show();
-        Log.e(TAG, "HANDLE share review :)");
+        shareReview(placeName, placeCoordinates, getResources().getString(R.string.found_this_place_at));
+    }
+
+    /**
+     *
+     * @param placeName
+     * @param placeCoordinates
+     * @param customText
+     */
+    private void shareReview(String placeName, String placeCoordinates, String customText) {
+        String BASE_URL = "http://www.google.com/maps/place/";
+        String url = BASE_URL + placeCoordinates;
+        String text = placeName + "\n\n" + customText + "\n";
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text + url);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, "Share place info"));
     }
 
 
@@ -292,6 +308,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
         placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
         photoReference = bundle.getString(CoffeePlace.COFFEE_PLACE_PHOTO_REFERENCE_KEY);
+        placeCoordinates = bundle.getString(CoffeePlace.COFFEE_PLACE_LATLNG_REFERENCE_KEY);
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

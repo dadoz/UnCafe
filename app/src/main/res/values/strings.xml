@@ -21,5 +21,6 @@
     <string name="map_name">Map</string>
     <string name="pick_pos_name">Pick Position</string>
     <string name="no_review_found_id">No reviews found</string>
+    <string name="found_this_place_at" type="id">You can find this place at:</string>
 
 </resources>

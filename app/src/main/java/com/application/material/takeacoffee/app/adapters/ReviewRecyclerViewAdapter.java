@@ -3,6 +3,7 @@ package com.application.material.takeacoffee.app.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,8 +63,7 @@ public class ReviewRecyclerViewAdapter extends
      * @param photoRef
      */
     private void setProfilePicByUrl(String photoRef, final ImageView imageView) {
-        Drawable defaultIcon = contextWeakRef.get().getResources()
-                .getDrawable(R.drawable.ic_perm_identity_black_48dp);
+        Drawable defaultIcon = ContextCompat.getDrawable(contextWeakRef.get(), R.drawable.ic_perm_identity_black_48dp);
         if (photoRef == null) {
             imageView.setImageDrawable(defaultIcon);
             return;

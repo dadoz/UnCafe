@@ -11,6 +11,7 @@ public class CoffeePlace {
     public static String COFFEE_PLACE_ID_KEY = "PLACE_ID_KEY";
     public static String COFFEE_PLACE_NAME_KEY = "PLACE_NAME_KEY";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
+    public static String COFFEE_PLACE_LATLNG_REFERENCE_KEY = "COFFEE_PLACE_LATLNG_REFERENCE_KEY";
     private PageToken pageTokenRef;
 
     @SerializedName("place_id")
