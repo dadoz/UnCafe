@@ -198,8 +198,6 @@ public class PlacesFragment extends Fragment implements
         switch (item.getItemId()) {
             case R.id.action_position:
                 startActivity(new Intent(getContext(), MapActivity.class));
-//                changeFragment(new MapFragment(),
-//                        MapFragment.MAP_FRAG_TAG);
                 break;
             case R.id.action_settings:
                 changeFragment(new SettingListFragment(),
@@ -493,10 +491,18 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onRefresh() {
-        coffeePlaceSwipeRefreshLayout.setRefreshing(false);
+        //TODO need to be implemented
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                coffeePlaceSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1500);
 //        handleRefreshInitCallback();
 //        handleRefreshEndCallback();
-//        placesApiManager.retrievePlaces();
+//        final String latLngString = SharedPrefManager.getInstance(new WeakReference<>(getContext()))
+//                .getValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY);
+//        placesApiManager.retrievePlacesAsync(latLngString, PLACE_RANKBY, BAR_PLACE_TYPE);
     }
 
 }

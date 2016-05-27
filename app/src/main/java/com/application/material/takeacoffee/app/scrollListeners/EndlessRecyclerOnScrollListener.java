@@ -30,28 +30,12 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        //TODO need a big refactor
         visibleItemCount = layoutManager.getChildCount();
         totalItemCount = layoutManager.getItemCount();
         int[] firstVisibleItems = layoutManager.findFirstVisibleItemPositions(null);
-        if (firstVisibleItems != null &&
-                firstVisibleItems.length > 0) {
-            pastVisibleItems = firstVisibleItems[0];
-
-            if (firstVisibleItems[0] == 0 &&
-                    !firstItemReached) {
-                isFirstItemVisible();
-                actionTriggerd = false;
-            }
-
-            if (firstVisibleItems[0] != 0 &&
-                    !actionTriggerd) {
-                isFirstItemNotVisible();
-                actionTriggerd = true;
-            }
-
-            firstItemReached = firstVisibleItems[0] == 0;
-        }
+        pastVisibleItems = firstVisibleItems != null &&
+                firstVisibleItems.length > 0 ?
+                firstVisibleItems[0] : pastVisibleItems;
 
         if (loading &&
                 (visibleItemCount + pastVisibleItems) >= totalItemCount) {
@@ -59,6 +43,22 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             onLoadMore(currentPage);
             currentPage++;
         }
+
+        setEventOnScrollDownOrUp(dy);
+    }
+
+    /**
+     *
+     * @param dy
+     */
+    private void setEventOnScrollDownOrUp(int dy) {
+        if (dy > 0) {
+            //scroll down
+            isFirstItemNotVisible();
+            return;
+        }
+
+        isFirstItemVisible();
     }
 
     /**
