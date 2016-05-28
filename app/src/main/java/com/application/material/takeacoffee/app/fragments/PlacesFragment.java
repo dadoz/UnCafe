@@ -61,8 +61,6 @@ public class PlacesFragment extends Fragment implements
     ProgressBar coffeePlacesProgress;
     @Bind(R.id.coffeePlacesEmptyResultId)
     View coffeePlacesEmptyResult;
-    @Bind(R.id.coffeePlaceFilterLayoutId)
-    View coffeePlaceFilterLayout;
     @Bind(R.id.coffeePlaceFilterLastUpdateTextviewId)
     TextView coffeePlaceFilterLastUpdateTextview;
     @Bind(R.id.coffeePlaceFilterBackgroundId)
@@ -369,11 +367,13 @@ public class PlacesFragment extends Fragment implements
     }
 
     @Override
-    public void onErrorResult() {
+    public void onErrorResult(RequestType type) {
         Log.e("TAG", "ERROR on retrieve result");
         scrollListener.setLoadingEnabled(true);
-        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
-        coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+        if (type == RequestType.PLACE_INFO) {
+            ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
+            coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+        }
     }
 
     /**
@@ -475,8 +475,6 @@ public class PlacesFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.coffeePlaceFilterCardviewId:
-//                Toast.makeText(getContext(), "hey you call filter handlet", Toast.LENGTH_SHORT)
-//                        .show();
                 startActivity(new Intent(getContext(), MapActivity.class));
                 break;
             case R.id.noLocationServiceButtonId:

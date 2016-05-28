@@ -103,7 +103,7 @@ public class PlaceApiManager {
                     public void onError(Throwable e) {
                         Log.e("TAG", "error" + e.getMessage());
                         if (listener.get() != null) {
-                            listener.get().onErrorResult();
+                            listener.get().onErrorResult(requestType);
                         }
                     }
 
@@ -130,6 +130,6 @@ public class PlaceApiManager {
     public interface OnHandlePlaceApiResult {
         void onPlaceApiSuccess(Object list, RequestType type);
         void onEmptyResult();
-        void onErrorResult();
+        void onErrorResult(RequestType type);
     }
 }

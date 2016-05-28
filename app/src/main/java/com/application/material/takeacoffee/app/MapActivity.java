@@ -160,7 +160,6 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onErrorResult() {
-
+    public void onErrorResult(PlaceApiManager.RequestType type) {
     }
 }

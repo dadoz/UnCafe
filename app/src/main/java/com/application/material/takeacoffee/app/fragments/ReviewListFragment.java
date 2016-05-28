@@ -30,6 +30,7 @@ import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
 import com.application.material.takeacoffee.app.singletons.PicassoSingleton.PicassoCallbacksInterface;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
+import com.application.material.takeacoffee.app.singletons.PlaceApiManager.RequestType;
 import com.application.material.takeacoffee.app.utils.ExpandableTextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -233,8 +234,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
 
     @Override
-    public void onPlaceApiSuccess(Object result, PlaceApiManager.RequestType type) {
-        if (type == PlaceApiManager.RequestType.PLACE_REVIEWS) {
+    public void onPlaceApiSuccess(Object result, RequestType type) {
+        if (type == RequestType.PLACE_REVIEWS) {
             handleReviewOnListCallback((ArrayList<Review>) result);
         }
     }
@@ -247,7 +248,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     }
 
     @Override
-    public void onErrorResult() {
+    public void onErrorResult(RequestType type) {
         Log.e("ReviewsFrag", "error");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
         reviewRecyclerView.getAdapter().notifyDataSetChanged();
