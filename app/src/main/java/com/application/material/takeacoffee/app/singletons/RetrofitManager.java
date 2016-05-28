@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -172,7 +173,8 @@ public class RetrofitManager {
                 .getApplicationContext()).getCache();
         return new OkHttpClient.Builder()
                 .cache(cache)
-                .addInterceptor(new CachingControllInterceptor())
+                .addInterceptor(new CacheControlApplicationInterceptor()) //app
+                .addNetworkInterceptor(new CacheControlNetworkInterceptor()) //network
                 .build();
     }
 
@@ -222,22 +224,71 @@ public class RetrofitManager {
     /**
      * interceptor
      */
-    public class CachingControllInterceptor implements Interceptor {
+    public class CacheControlApplicationInterceptor implements Interceptor {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
+            Response originalResponse = chain.proceed(chain.request());
             String headerValue = ConnectivityUtils.checkConnectivity(contextWeakRef) ?
                     "only-if-cached" :
                     "public, max-stale=2419200";
 
-            request.newBuilder()
-                    .header("Cache-Control", headerValue)
-                    .build();
+            String cacheControl = originalResponse.header("Cache-Control");
+            if (cacheControl == null ||
+                    cacheControl.contains("no-store") ||
+                    cacheControl.contains("no-cache") ||
+                    cacheControl.contains("must-revalidate") ||
+                    cacheControl.contains("max-age=0")) {
 
-            return chain.proceed(request).newBuilder()
-                    .header("Cache-Control", "max-age=86400")
-                    .build();
+                Log.e("TAG", originalResponse.headers().toString() + " - " + originalResponse.code());
+                Response newResponse = originalResponse.newBuilder()
+                        .header("Cache-Control", headerValue)//"public, max-age=" + 5000)
+                        .build();
+
+                Log.e("TAG", newResponse.headers().toString() + " - " + newResponse.code());
+                return newResponse;
+            }
+
+            Log.e("TAG-original", originalResponse.headers().toString() + " - " + originalResponse.code());
+            return originalResponse;
+
+
+
+//            Request request = chain.request();
+//            String headerValue = ConnectivityUtils.checkConnectivity(contextWeakRef) ?
+//                    "only-if-cached" :
+//                    "public, max-stale=2419200";
+//
+//            Request cachedRequest = request.newBuilder()
+//                    .header("Cache-Control", headerValue)
+//                    .build();
+//            Log.e("TAG", cachedRequest.headers().toString() + " - " + cachedRequest.url().toString());
+//            Response response = chain.proceed(cachedRequest);
+//            Log.e("TAG", response.headers().toString() + " - " + response.code());
+////            Log.e("TAG", oldResponse.headers().toString() + " - " + oldResponse.code());
+//
+//            return response;
+        }
+    }
+
+    /**
+     * interceptor
+     */
+    public class CacheControlNetworkInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+
+            if (!ConnectivityUtils.checkConnectivity(contextWeakRef)) {
+                request = request.newBuilder()
+                        .header("Cache-Control", "public, max-stale=2419200")
+                        .build();
+            }
+            Response response = chain.proceed(request);
+            Log.e("TAG-network", response.headers().toString() + " - " + response.code());
+            return response;
+
         }
     }
 
@@ -245,16 +296,13 @@ public class RetrofitManager {
      *
      */
     public interface PlacesAPiWebService {
-        @Headers("Cache-Control: max-age=86400")
         @GET("place/details/json?key=" + API_KEY)
         Observable<ArrayList<Review>> listReviewByPlaceId(@Query("placeid") String placeid);
 
-        @Headers("Cache-Control: max-age=86400")
         @GET("place/nearbysearch/json?key=" + API_KEY)
         Observable<ArrayList<CoffeePlace>> listPlacesByLocationAndType(@Query("location") String location,
                                                                   @Query("rankby") String rankby,
                                                                   @Query("type") String type);
-        @Headers("Cache-Control: max-age=86400")
         @GET("place/nearbysearch/json?key=" + API_KEY)
         Observable<ArrayList<CoffeePlace>> listMorePlacesByPageToken(@Query("pagetoken") String pagetoken);
     }
