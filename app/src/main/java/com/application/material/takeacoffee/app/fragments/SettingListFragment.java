@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
@@ -15,6 +16,7 @@ import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.PlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
+import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Setting;
 
 import java.util.ArrayList;
@@ -26,14 +28,12 @@ import java.util.ArrayList;
 public class SettingListFragment extends Fragment
         implements AdapterView.OnItemClickListener {
     public static final String SETTING_LIST_FRAG_TAG = "SETTING_LIST_FRAG_TAG";
-    private static FragmentActivity mainActivityRef;
     @Bind(R.id.settingsContainerListViewId)
     ListView listView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mainActivityRef =  (PlacesActivity) context;
     }
 
     @Override
@@ -41,6 +41,7 @@ public class SettingListFragment extends Fragment
         View settingListView = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, settingListView);
 
+        ((PlacesActivity) getActivity()).setCurrentFragmentTag(SETTING_LIST_FRAG_TAG);
         initView();
         return settingListView;
     }
@@ -49,10 +50,11 @@ public class SettingListFragment extends Fragment
      *
      */
     public void initView() {
-        ((AppCompatActivity) getActivity()).getSupportActionBar()
-                .setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar()
-                .setTitle("Settings");
+        ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setTitle("Settings");
+        }
 
         ArrayList<Setting> settingList = getData();
         initListView(settingList);
@@ -74,7 +76,7 @@ public class SettingListFragment extends Fragment
      * @param settingList
      */
     public void initListView(ArrayList<Setting> settingList) {
-        SettingListAdapter settingListAdapter = new SettingListAdapter(mainActivityRef,
+        SettingListAdapter settingListAdapter = new SettingListAdapter(getActivity(),
                 R.layout.item_review, settingList);
         listView.setAdapter(settingListAdapter);
         listView.setOnItemClickListener(this);
@@ -84,5 +86,6 @@ public class SettingListFragment extends Fragment
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.e("SETTING", "hey click item");
     }
+
 }
 
