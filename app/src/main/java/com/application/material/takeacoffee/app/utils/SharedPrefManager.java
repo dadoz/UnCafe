@@ -44,4 +44,11 @@ public class SharedPrefManager {
     public String getValueByKey(String key) {
         return sharedPref.getString(key, DEFAULT_VALUE);
     }
+
+    /**
+     * clear all values on sharedPref
+     */
+    public void clearAll() {
+        sharedPref.edit().clear().apply();
+    }
 }

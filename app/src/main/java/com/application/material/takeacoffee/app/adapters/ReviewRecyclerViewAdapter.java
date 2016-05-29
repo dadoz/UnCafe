@@ -63,7 +63,8 @@ public class ReviewRecyclerViewAdapter extends
      * @param photoRef
      */
     private void setProfilePicByUrl(String photoRef, final ImageView imageView) {
-        Drawable defaultIcon = ContextCompat.getDrawable(contextWeakRef.get(), R.drawable.ic_perm_identity_black_48dp);
+        Drawable defaultIcon = ContextCompat.getDrawable(contextWeakRef.get(),
+                R.drawable.ic_perm_identity_black_48dp);
         if (photoRef == null) {
             imageView.setImageDrawable(defaultIcon);
             return;

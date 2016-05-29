@@ -21,6 +21,12 @@
     <string name="map_name">Map</string>
     <string name="pick_pos_name">Pick Position</string>
     <string name="no_review_found_id">No reviews found</string>
+    <string name="contact_email">tunnusandroid.dev@gmail.com</string>
     <string name="found_this_place_at" type="id">You can find this place at:</string>
+    <string name="info_description">This application is blalalallal........\n\nIts service is based on Google Places API,
+        \nunder its licence (free to use - https://developers.google.com/places).
+        \n\nCheck them out to get more info about or contact us by email.
+        \n\n\n@2016 Davide LM</string>
+    <string name="contact_subject">Info request</string>
 
 </resources>

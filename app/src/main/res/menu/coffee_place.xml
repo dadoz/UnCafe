@@ -14,4 +14,9 @@
         android:title="Settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_policy"
+        android:title="About UnCafe"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

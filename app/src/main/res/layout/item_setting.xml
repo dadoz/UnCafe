@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:padding="@dimen/small_padding"
     android:layout_width="match_parent"
@@ -10,11 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="settings"
-        android:layout_marginTop="@dimen/small_padding"
-        android:paddingLeft="@dimen/small_padding"
-        android:paddingRight="@dimen/small_padding"
         android:textColor="@color/material_brown800"
-        android:gravity="center"
-        android:textSize="@dimen/text_big_22"
-        />
-</LinearLayout>
+        android:textSize="@dimen/text_big_18"/>
+</RelativeLayout>

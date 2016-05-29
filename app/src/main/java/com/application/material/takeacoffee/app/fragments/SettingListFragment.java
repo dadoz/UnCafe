@@ -1,9 +1,18 @@
 package com.application.material.takeacoffee.app.fragments;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,20 +22,21 @@ import android.widget.ListView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import com.application.material.takeacoffee.app.PickPositionActivity;
 import com.application.material.takeacoffee.app.PlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Setting;
+import com.application.material.takeacoffee.app.utils.SharedPrefManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
-
-/**
- * Created by davide on 08/04/14.
- */
 public class SettingListFragment extends Fragment
-        implements AdapterView.OnItemClickListener {
+        implements AdapterView.OnItemClickListener, SettingListAdapter.CustomItemClickListener {
     public static final String SETTING_LIST_FRAG_TAG = "SETTING_LIST_FRAG_TAG";
     @Bind(R.id.settingsContainerListViewId)
     ListView listView;
@@ -64,10 +74,11 @@ public class SettingListFragment extends Fragment
      * init data
      */
     public ArrayList<Setting> getData() {
-        ArrayList<Setting> settingList = new ArrayList<Setting>();
-        settingList.add(new Setting("ID", 0, R.drawable.ic_check_white_48dp, "User"));
-        settingList.add(new Setting("ID", 1, R.drawable.ic_check_white_48dp, "Enable auto save"));
-        settingList.add(new Setting("ID", 2, R.drawable.ic_check_white_48dp, "Version 0.3"));
+        ArrayList<Setting> settingList = new ArrayList<>();
+        settingList.add(new Setting("ID", 0, R.drawable.ic_check_white_48dp, "Location:"));
+        settingList.add(new Setting("ID", 1, R.drawable.ic_check_white_48dp, "Rate now!"));
+        settingList.add(new Setting("ID", 2, R.drawable.ic_check_white_48dp, "Contact"));
+        settingList.add(new Setting("ID", 3, R.drawable.ic_check_white_48dp, "Version " + getVersionName()));
         return settingList;
     }
 
@@ -77,7 +88,10 @@ public class SettingListFragment extends Fragment
      */
     public void initListView(ArrayList<Setting> settingList) {
         SettingListAdapter settingListAdapter = new SettingListAdapter(getActivity(),
-                R.layout.item_review, settingList);
+                R.layout.item_review, settingList,
+                new WeakReference<SettingListAdapter.CustomItemClickListener>(this),
+                SharedPrefManager.getInstance(new WeakReference<>(getContext()))
+                        .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
         listView.setAdapter(settingListAdapter);
         listView.setOnItemClickListener(this);
     }
@@ -85,7 +99,93 @@ public class SettingListFragment extends Fragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.e("SETTING", "hey click item");
+        switch (position) {
+            case 1:
+                rateByIntent();
+                break;
+            case 2:
+                sendEmailByIntent();
+                break;
+        }
     }
 
+    /**
+     * rete on market by intent
+     */
+    private void rateByIntent() {
+        Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" +
+                getContext().getPackageName()));
+        boolean marketFound = false;
+
+        // find all applications able to handle our rateIntent
+        final List<ResolveInfo> otherApps =
+                getContext().getPackageManager().queryIntentActivities(rateIntent, 0);
+        for (ResolveInfo otherApp : otherApps) {
+            // look for Google Play application
+            if (otherApp.activityInfo.applicationInfo.packageName.equals("com.android.vending")) {
+
+                ActivityInfo otherAppActivity = otherApp.activityInfo;
+                ComponentName componentName = new ComponentName(
+                        otherAppActivity.applicationInfo.packageName,
+                        otherAppActivity.name
+                );
+                rateIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                rateIntent.setComponent(componentName);
+                getContext().startActivity(rateIntent);
+                marketFound = true;
+                break;
+
+            }
+        }
+
+        // if GP not present on device, open web browser
+        if (!marketFound) {
+            Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + getContext().getPackageName()));
+            getContext().startActivity(webIntent);
+        }
+    }
+    /**
+     * send email by intent
+     */
+    private void sendEmailByIntent() {
+        Intent send = new Intent(Intent.ACTION_SENDTO);
+        send.setType("text/plain");
+        send.putExtra(Intent.EXTRA_EMAIL, getResources().getString(R.string.contact_email));
+        send.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
+        send.putExtra(Intent.EXTRA_TEXT, "");
+
+        startActivity(Intent.createChooser(send, "Send mail..."));
+    }
+
+    @Override
+    public void onItemClick() {
+        clearStoredLocation();
+    }
+
+    /**
+     *
+     */
+    private void clearStoredLocation() {
+        SharedPrefManager.getInstance(new WeakReference<>(getContext())).clearAll();
+        startActivity(new Intent(getContext(), PickPositionActivity.class));
+        getActivity().finish();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getVersionName() {
+        try {
+            return getActivity().getPackageManager()
+                    .getPackageInfo(getActivity().getPackageName(), 0)
+                    .versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "-";
+    }
 }
 

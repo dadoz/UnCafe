@@ -1,13 +1,16 @@
 package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -194,8 +197,8 @@ public class PlacesFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_position:
-                startActivity(new Intent(getContext(), MapActivity.class));
+            case R.id.action_policy:
+                showInfoDialog();
                 break;
             case R.id.action_settings:
                 changeFragment(new SettingListFragment(),
@@ -503,4 +506,19 @@ public class PlacesFragment extends Fragment implements
 //        placesApiManager.retrievePlacesAsync(latLngString, PLACE_RANKBY, BAR_PLACE_TYPE);
     }
 
+    /**
+     *
+     */
+    public void showInfoDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Light_Dialog_NoActionBar)
+                .setView(R.layout.dialog_info_layout)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        dialog.show();
+    }
 }

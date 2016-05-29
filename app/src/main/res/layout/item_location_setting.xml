@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="@dimen/small_padding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/small_padding"
+    android:paddingRight="@dimen/small_padding"
+    android:paddingTop="@dimen/small_padding">
+    <TextView
+        android:id="@+id/settingLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textColor="@color/material_brown800"
+        android:gravity="center"
+        android:textSize="@dimen/text_big_18"/>
+    <TextView
+        android:id="@+id/settingLocationId"
+        android:layout_below="@id/settingLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_padding"
+        android:text="-"
+        android:textColor="@color/material_red400"
+        android:textSize="@dimen/text_big_26"/>
+    <Button
+        android:id="@+id/settingClearButtonId"
+        android:layout_below="@id/settingLocationId"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CLEAR"
+        android:textColor="@color/material_grey50"
+        android:gravity="center"/>
+</RelativeLayout>
