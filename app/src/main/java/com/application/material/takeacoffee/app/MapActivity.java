@@ -1,5 +1,7 @@
 package com.application.material.takeacoffee.app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +17,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -23,7 +27,7 @@ import static com.application.material.takeacoffee.app.singletons.PlaceApiManage
 import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.PLACE_RANKBY;
 
 public class MapActivity extends AppCompatActivity implements
-        OnMapReadyCallback, PlaceApiManager.OnHandlePlaceApiResult {
+        OnMapReadyCallback, PlaceApiManager.OnHandlePlaceApiResult, GoogleMap.OnMarkerClickListener {
     private static final float ZOOM_LEVEL = 15;
     @Bind(R.id.mapToolbarId)
     public Toolbar toolbar;
@@ -95,9 +99,14 @@ public class MapActivity extends AppCompatActivity implements
     /**
      *
      */
-    public void addMarkerOnMap(float lat, float lng, String title) {
+    public void addMarkerOnMap(float lat, float lng, String title, String descritpion) {
         if (map != null) {
-            map.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
+            map.setOnMarkerClickListener(this);
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(lat, lng))
+//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.coffee_cup_icon_old))
+                    .alpha(0.7f)
+                    .snippet(descritpion)
                     .title(title));
         }
     }
@@ -148,7 +157,7 @@ public class MapActivity extends AppCompatActivity implements
         for (CoffeePlace coffeePlace : list) {
             float lat = coffeePlace.getGeometry().getLocation().getLat();
             float lng = coffeePlace.getGeometry().getLocation().getLng();
-            addMarkerOnMap(lat, lng, coffeePlace.getName());
+            addMarkerOnMap(lat, lng, coffeePlace.getName(), coffeePlace.getAddress());
         }
 
     }
@@ -161,5 +170,10 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     public void onErrorResult(PlaceApiManager.RequestType type) {
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
     }
 }
