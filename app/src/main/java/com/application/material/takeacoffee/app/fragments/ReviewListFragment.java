@@ -19,8 +19,13 @@ import android.view.*;
 import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.*;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.ReviewListActivity;
+import com.application.material.takeacoffee.app.ReviewListActivity.OnHandleBackPressedInterface;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.decorators.DividerItemDecoration;
@@ -47,8 +52,10 @@ import java.util.*;
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
         ReviewRecyclerViewAdapter.CustomItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, PicassoCallbacksInterface {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, PicassoCallbacksInterface,
+        OnHandleBackPressedInterface {
     private static final String TAG = "ReviewListFragment";
+    public static String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
     private String coffeePlaceId;
     private String placeName;
     private PlaceApiManager placesApiManager;
@@ -66,6 +73,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appbarLayout;
     private String placeCoordinates;
+    private WeakReference<Observable> obsWeakRef;
 
     @Override
     public void onAttach(Context context) {
@@ -315,7 +323,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
         setPlaceName();
         setPlacePhotoByUrl();
-        placesApiManager.retrieveReviewsAsync(coffeePlaceId);
+        Observable observable = placesApiManager.retrieveReviewsAsync(coffeePlaceId);
+        obsWeakRef = new WeakReference<Observable>(observable);
     }
 
 
@@ -330,7 +339,13 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onPicassoErrorCallback() {
+    }
 
+    @Override
+    public void handleBackPressed() {
+        if (obsWeakRef.get() != null) {
+            obsWeakRef.get().unsubscribeOn(Schedulers.newThread());
+        }
     }
 }
 

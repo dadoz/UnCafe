@@ -57,21 +57,25 @@ public class PlaceApiManager {
      * @param rankBy
      * @param type
      */
-    public void retrievePlacesAsync(String location, String rankBy, String type) {
+    public Observable retrievePlacesAsync(String location, String rankBy, String type) {
         requestType = RequestType.PLACE_INFO;
 
-        setObservable(RetrofitManager.getInstance(contextWeakRef)
-                .listPlacesByLocationAndType(location, rankBy, type));
+        Observable observable = RetrofitManager.getInstance(contextWeakRef)
+                .listPlacesByLocationAndType(location, rankBy, type);
+        initObservable(observable);
+        return observable;
     }
 
     /**
      * main function to retrieve place reviews data from google api
      * @param placeId
      */
-    public void retrieveReviewsAsync(String placeId) {
+    public Observable retrieveReviewsAsync(String placeId) {
         requestType = RequestType.PLACE_REVIEWS;
-        setObservable(RetrofitManager.getInstance(contextWeakRef)
-                .listReviewsByPlaceId(placeId));
+        Observable observable = RetrofitManager.getInstance(contextWeakRef)
+                .listReviewsByPlaceId(placeId);
+        initObservable(observable);
+        return observable;
     }
 
     /**
@@ -80,7 +84,7 @@ public class PlaceApiManager {
      */
     public void retrieveMorePlacesAsync(String pageToken) {
         requestType = RequestType.MORE_PLACE_INFO;
-        setObservable(RetrofitManager.getInstance(contextWeakRef)
+        initObservable(RetrofitManager.getInstance(contextWeakRef)
                 .listMorePlacesByPageToken(pageToken));
     }
 
@@ -88,7 +92,7 @@ public class PlaceApiManager {
      *
      * @param observable
      */
-    private void setObservable(Observable<ArrayList<Object>> observable) {
+    private void initObservable(Observable<ArrayList<Object>> observable) {
         observable
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
