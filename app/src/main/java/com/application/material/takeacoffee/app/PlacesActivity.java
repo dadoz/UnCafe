@@ -2,7 +2,6 @@ package com.application.material.takeacoffee.app;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +14,6 @@ import icepick.State;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.application.material.takeacoffee.app.fragments.PlacesFragment;
-import com.application.material.takeacoffee.app.fragments.SettingListFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 
 public class PlacesActivity extends AppCompatActivity {

@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
     <ProgressBar
         android:id="@+id/coffeePlacesSmallProgressId"
-        style="@android:style/Widget.Material.Light.ProgressBar"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-50dp"
         android:layout_width="wrap_content"

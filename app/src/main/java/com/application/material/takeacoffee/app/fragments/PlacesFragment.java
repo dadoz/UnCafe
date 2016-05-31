@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -510,7 +509,8 @@ public class PlacesFragment extends Fragment implements
      *
      */
     public void showInfoDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Light_Dialog_NoActionBar)
+        AlertDialog dialog = new AlertDialog.Builder(getContext(),
+                R.style.CustomAlertDialogStyle)
                 .setView(R.layout.dialog_info_layout)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override

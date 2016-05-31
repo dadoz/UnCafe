@@ -288,4 +288,5 @@
     <color name="material_brown700">#ff3E3731</color>
     <color name="material_brown800">#ff36302a</color>
     <color name="material_brown900">#ff312c27</color>
+    <color name="material_brown_transparent800">#9936302a</color>
 </resources>

@@ -3,19 +3,11 @@ package com.application.material.takeacoffee.app.presenters;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.View;
-
-import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.animator.AnimatorBuilder;
-
 import java.lang.ref.WeakReference;
 
-
-/**
- * Created by davide on 22/05/16.
- */
 public class PlaceFilterPresenter implements Animator.AnimatorListener {
     private static final long MIN_DELAY = 100;
     private static PlaceFilterPresenter instance;

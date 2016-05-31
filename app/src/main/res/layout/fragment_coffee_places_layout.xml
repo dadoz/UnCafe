@@ -4,7 +4,6 @@
     android:id="@+id/coffeeMachineFragmentLayoutId"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/coffeePlaceSwipeRefreshLayoutId"
         android:layout_marginTop="@dimen/actionbar_filter_height"
@@ -19,14 +18,13 @@
             android:clipToPadding="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
     <include layout="@layout/coffee_place_filter_template"/>
-
     <ProgressBar
         android:visibility="gone"
         android:id="@+id/coffeePlacesProgressId"
-        style="@android:style/Widget.Material.Light.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
         android:indeterminateTint="@color/material_brown900"
         android:indeterminateTintMode="src_in"/>
     <include layout="@layout/no_location_service_layout" />

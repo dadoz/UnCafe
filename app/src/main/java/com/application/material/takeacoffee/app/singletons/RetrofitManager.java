@@ -233,13 +233,13 @@ public class RetrofitManager {
                     "only-if-cached" :
                     "public, max-stale=2419200";
 
-            String cacheControl = originalResponse.header("Cache-Control");
-            if (cacheControl == null ||
-                    cacheControl.contains("no-store") ||
-                    cacheControl.contains("no-cache") ||
-                    cacheControl.contains("must-revalidate") ||
-                    cacheControl.contains("max-age=0")) {
-
+//            String cacheControl = originalResponse.header("Cache-Control");
+//            if (cacheControl == null ||
+//                    cacheControl.contains("no-store") ||
+//                    cacheControl.contains("no-cache") ||
+//                    cacheControl.contains("must-revalidate") ||
+//                    cacheControl.contains("max-age=0")) {
+//
                 Log.e("TAG", originalResponse.headers().toString() + " - " + originalResponse.code());
                 Response newResponse = originalResponse.newBuilder()
                         .header("Cache-Control", headerValue)//"public, max-age=" + 5000)
@@ -247,10 +247,10 @@ public class RetrofitManager {
 
                 Log.e("TAG", newResponse.headers().toString() + " - " + newResponse.code());
                 return newResponse;
-            }
+//            }
 
-            Log.e("TAG-original", originalResponse.headers().toString() + " - " + originalResponse.code());
-            return originalResponse;
+//            Log.e("TAG-original", originalResponse.headers().toString() + " - " + originalResponse.code());
+//            return originalResponse;
 
 
 

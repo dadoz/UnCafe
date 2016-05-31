@@ -124,7 +124,7 @@
     <ProgressBar
         android:visibility="gone"
         android:id="@+id/pickLocationProgressId"
-        style="@android:style/Widget.Material.Light.ProgressBar"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
         android:layout_below="@id/pickIconId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 
 import java.lang.ref.WeakReference;
@@ -94,8 +96,9 @@ public class PermissionManager {
      * @param activityWeakRef
      */
     private void buildAlertMessageNoGps(final WeakReference<AppCompatActivity> activityWeakRef) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activityWeakRef.get());
-        builder.setMessage("Your GPS is not activated,\n do you want to enable it?")
+        final AlertDialog alert = new AlertDialog.Builder(activityWeakRef.get(),
+                   R.style.CustomAlertDialogStyle)
+                .setMessage("Your GPS is not activated,\n do you want to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog,  final int id) {
@@ -107,8 +110,8 @@ public class PermissionManager {
                         dialog.cancel();
                         locationListener.get().onEnablePositionErrorCallback();
                     }
-                });
-        final AlertDialog alert = builder.create();
+                })
+                .create();
         alert.show();
     }
 

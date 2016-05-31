@@ -6,6 +6,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
+
     <RelativeLayout
         android:id="@+id/coffeePlaceFilterBackgroundId"
         android:layout_width="match_parent"
@@ -28,10 +29,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@style/CardView.Light"
-        android:foreground="@drawable/card_foreground"
         android:layout_marginLeft="@dimen/small_padding"
         android:layout_marginRight="@dimen/small_padding"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="5dp"
+        android:foreground="@drawable/custom_foreground_selector">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
