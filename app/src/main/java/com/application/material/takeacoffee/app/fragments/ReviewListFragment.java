@@ -183,8 +183,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         adapter.setOnItemClickListener(this);        //TODO booooo ????
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        reviewRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                LinearLayoutManager.VERTICAL));
+//        reviewRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+//                LinearLayoutManager.VERTICAL));
         reviewRecyclerView.setAdapter(adapter);
         reviewRecyclerView.setLayoutManager(layoutManager);
     }

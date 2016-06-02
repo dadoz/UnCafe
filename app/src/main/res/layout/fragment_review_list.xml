@@ -12,9 +12,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reviewRecyclerViewId"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:divider="@color/material_grey400"
-        android:dividerHeight="0.5dp"
+        android:layout_height="match_parent"
+        android:divider="@color/material_brown800"
+        android:dividerHeight="1dp"
         android:orientation="vertical"/>
     <ProgressBar
         android:id="@+id/coffeePlacesProgressId"

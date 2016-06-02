@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/reviewLayoutId"
-    android:paddingTop="@dimen/small_padding"
-    android:paddingBottom="@dimen/small_padding"
-    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/material_grey50">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/small_padding"
+        android:paddingBottom="@dimen/small_padding"
+        android:background="?attr/selectableItemBackground">
+
     <ImageView
         android:id="@+id/profilePictureViewId"
         android:layout_width="@dimen/medium_icon_size"
@@ -58,5 +63,6 @@
         android:text="review content sjdflk  laksdlkfj kj sadfk alskd kfsadk lkj askdfk aksdfl kklsad fklaòsl dkfjlksad òflkjasdò lkfjaòlksjd flkjasòdk "
         android:textColor="@color/material_brown900"
         android:textSize="@dimen/text_small_16"/>
+    </RelativeLayout>
 
-</RelativeLayout>
+</FrameLayout>
