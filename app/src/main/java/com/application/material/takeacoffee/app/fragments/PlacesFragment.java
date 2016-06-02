@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
+
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.decorators.ItemOffsetDecoration;
@@ -73,6 +78,8 @@ public class PlacesFragment extends Fragment implements
     View noLocationServiceLayout;
     @Bind(R.id.noNetworkServiceLayoutId)
     View noNetworkServiceLayout;
+    @Bind(R.id.emptyResultButtonId)
+    View emptyResultButton;
     @Bind(R.id.noNetworkServiceButtonId)
     View noNetworkServiceButton;
     @Bind(R.id.noLocationServiceButtonId)
@@ -83,6 +90,10 @@ public class PlacesFragment extends Fragment implements
     TextView placePositionFilterTextView;
     private EndlessRecyclerOnScrollListener scrollListener;
     private PlaceFilterPresenter placeFilterPresenter;
+    private View coffeeMachineView;
+
+    @State
+    public ArrayList<CoffeePlace> placeList = new ArrayList<>();
 
     @Override
     public void onAttach(Context context) {
@@ -92,12 +103,13 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View coffeeMachineView = getActivity().getLayoutInflater()
+        Icepick.restoreInstanceState(this, savedInstance);
+        coffeeMachineView = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_coffee_places_layout, container, false);
         ButterKnife.bind(this, coffeeMachineView);
 
         permissionManager = PermissionManager.getInstance();
-        initView();
+        initView(savedInstance);
         return coffeeMachineView;
     }
 
@@ -118,15 +130,29 @@ public class PlacesFragment extends Fragment implements
 
     /**
      * init view
+     * @param savedInstance
      */
-    public void initView() {
+    public void initView(Bundle savedInstance) {
+        emptyResultButton.setOnClickListener(this);
         initActionBar();
         setHasOptionsMenu(true);
         coffeePlaceSwipeRefreshLayout.setOnRefreshListener(this);
         initFilters();
         initGridViewAdapter();
         initGooglePlaces();
-        initPermissionChainResponsibility();
+        if (savedInstance == null) {
+            initPermissionChainResponsibility();
+            return;
+        }
+        //init from saved instance
+        initViewFromSavedInstance();
+    }
+
+    /**
+     *
+     */
+    private void initViewFromSavedInstance() {
+        handleInfo(placeList);
     }
 
     /**
@@ -341,6 +367,7 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+        Icepick.saveInstanceState(this, savedInstanceState);
     }
 
     @Override
@@ -356,15 +383,18 @@ public class PlacesFragment extends Fragment implements
         if (type == RequestType.PLACE_INFO) {
             setLastUpdateOnFilter();
             handleInfo((ArrayList<CoffeePlace>) result);
+            placeList.addAll((ArrayList<CoffeePlace>) result);
         } else if (type == RequestType.MORE_PLACE_INFO) {
             scrollListener.setLoadingEnabled(true);
             handleMoreInfo((ArrayList<CoffeePlace>) result);
+            placeList.addAll((ArrayList<CoffeePlace>) result);
         }
     }
 
 
     @Override
     public void onEmptyResult() {
+        Snackbar.make(coffeeMachineView, R.string.no_place_found, Snackbar.LENGTH_LONG).show();
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
     }
 
@@ -373,6 +403,7 @@ public class PlacesFragment extends Fragment implements
         Log.e("TAG", "ERROR on retrieve result");
         scrollListener.setLoadingEnabled(true);
         if (type == RequestType.PLACE_INFO) {
+            Snackbar.make(coffeeMachineView, R.string.no_place_found, Snackbar.LENGTH_LONG).show();
             ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
             coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
         }
@@ -486,6 +517,10 @@ public class PlacesFragment extends Fragment implements
             case R.id.noNetworkServiceButtonId:
                 initPermissionChainResponsibility();
                 break;
+            case R.id.emptyResultButtonId:
+                coffeePlacesEmptyResult.setVisibility(View.GONE);
+                onEnablePositionCallback();
+                break;
         }
     }
 
@@ -521,4 +556,5 @@ public class PlacesFragment extends Fragment implements
                 .create();
         dialog.show();
     }
+
 }

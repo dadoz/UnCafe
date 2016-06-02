@@ -19,6 +19,7 @@
         android:text="No places found"/>
 
     <Button
+        android:id="@+id/emptyResultButtonId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SEARCH AGAIN"

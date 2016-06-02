@@ -85,7 +85,8 @@ public class PlacesActivity extends AppCompatActivity {
         }
     }
 
-    @Override public void onSaveInstanceState(Bundle outState) {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }

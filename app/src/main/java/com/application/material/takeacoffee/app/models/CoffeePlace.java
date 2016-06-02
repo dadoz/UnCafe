@@ -4,9 +4,10 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CoffeePlace {
+public class CoffeePlace implements Serializable {
     public static final String COFFEE_PLACE_PHOTO_REFERENCE_KEY = "PHOTO_REFERENCE_KEY";
     public static String COFFEE_PLACE_ID_KEY = "PLACE_ID_KEY";
     public static String COFFEE_PLACE_NAME_KEY = "PLACE_NAME_KEY";
@@ -128,7 +129,7 @@ public class CoffeePlace {
     /**
      * static class to handle photo
      */
-    public static class PageToken {
+    public static class PageToken implements Serializable {
         private static String token;
         private static PageToken instance;
 
@@ -160,7 +161,7 @@ public class CoffeePlace {
     /**
      * static class to handle photo
      */
-    public static class Geometry {
+    public static class Geometry implements Serializable {
         Location location;
 
         /**
@@ -183,7 +184,7 @@ public class CoffeePlace {
         /**
          *
          */
-        public class Location {
+        public class Location implements Serializable {
             private final float lat;
             private final float lng;
 
@@ -217,7 +218,7 @@ public class CoffeePlace {
     /**
      * static class to handle photo
      */
-    public static class PlacePhoto {
+    public static class PlacePhoto implements Serializable {
         private int height;
         private String photo_reference;
         private int width;

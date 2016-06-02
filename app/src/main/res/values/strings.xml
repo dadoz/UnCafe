@@ -28,5 +28,6 @@
         \n\nCheck them out to get more info about or contact us by email.
         \n\n\n@2016 Davide LM</string>
     <string name="contact_subject">Info request</string>
+    <string name="no_place_found">No Place found!</string>
 
 </resources>
