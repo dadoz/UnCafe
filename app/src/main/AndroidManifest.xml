@@ -11,7 +11,7 @@
     <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 
     <application
-        android:icon="@drawable/coffee_icon_temp"
+        android:icon="@drawable/ic_launcher_icon"
         android:theme="@style/AppTheme"
         android:name=".application.CoffeePlacesApplication" >
         <activity

@@ -11,5 +11,5 @@
         android:layout_height="wrap_content"
         android:text="settings"
         android:textColor="@color/material_brown800"
-        android:textSize="@dimen/text_big_18"/>
+        android:textSize="@dimen/text_big_22"/>
 </RelativeLayout>
