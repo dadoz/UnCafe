@@ -13,7 +13,7 @@ import com.application.material.takeacoffee.app.R;
 /**
  * Created by davide on 01/05/16.
  */
-public class ExpandableTextView extends TextView implements View.OnClickListener {
+public class ExpandableTextView extends TextView {
     private static final int DEFAULT_TRIM_LENGTH = 100;
     private static final String ELLIPSIS = ".....";
 
@@ -38,8 +38,6 @@ public class ExpandableTextView extends TextView implements View.OnClickListener
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);
         this.trimLength = typedArray.getInt(R.styleable.ExpandableTextView_trimLength, DEFAULT_TRIM_LENGTH);
         typedArray.recycle();
-
-        setOnClickListener(this);
     }
 
     /**
@@ -102,11 +100,6 @@ public class ExpandableTextView extends TextView implements View.OnClickListener
      */
     public int getTrimLength() {
         return trimLength;
-    }
-
-    @Override
-    public void onClick(View v) {
-        toggleEllipsize();
     }
 
     /**

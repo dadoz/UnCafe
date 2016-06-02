@@ -4,7 +4,7 @@
     android:id="@+id/reviewLayoutId"
     android:paddingTop="@dimen/small_padding"
     android:paddingBottom="@dimen/small_padding"
-    android:background="@color/material_grey50"
+    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ImageView
@@ -54,7 +54,6 @@
         android:layout_toRightOf="@id/profilePictureViewId"
         android:layout_below="@id/dateTextId"
         android:layout_toLeftOf="@id/reviewRatingTextViewId"
-
         android:layout_marginTop="@dimen/small_padding"
         android:text="review content sjdflk  laksdlkfj kj sadfk alskd kfsadk lkj askdfk aksdfl kklsad fklaòsl dkfjlksad òflkjasdò lkfjaòlksjd flkjasòdk "
         android:textColor="@color/material_brown900"
