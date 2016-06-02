@@ -38,7 +38,6 @@
             android:layout_height="match_parent"
             android:padding="@dimen/small_padding">
             <TextView
-                android:background="?attr/selectableItemBackground"
                 android:id="@+id/placePositionFilterTextViewId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +46,6 @@
                 android:text="Torino"/>
             <TextView
                 android:layout_below="@id/placePositionFilterTextViewId"
-                android:background="?attr/selectableItemBackground"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_small_14"

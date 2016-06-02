@@ -105,6 +105,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      * init view to handle review data
      */
     public void initView() {
+        setHasOptionsMenu(true);
+
         collapsingToolbar = (CollapsingToolbarLayout) getActivity()
                 .findViewById(R.id.collapsingToolbarLayoutId);
         appbarLayout = (AppBarLayout) getActivity()
@@ -195,11 +197,18 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.review, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_position:
+                Toast.makeText(getContext(), "Enabled soon!", Toast.LENGTH_SHORT).show();
+                break;
+        }
         return true;
+
     }
 
     @Override
