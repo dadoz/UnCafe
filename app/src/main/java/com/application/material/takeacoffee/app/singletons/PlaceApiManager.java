@@ -17,8 +17,6 @@ import rx.schedulers.Schedulers;
  * Created by davide on 21/03/16.
  */
 public class PlaceApiManager {
-    private static final int MAX_HEIGHT = 0;
-    private static final int MAX_WIDTH = 300;
     private static GoogleApiClient mGoogleApiClient;
     private static WeakReference<OnHandlePlaceApiResult> listener;
     private static PlaceApiManager instance;

@@ -353,17 +353,6 @@ public class PlacesFragment extends Fragment implements
         }
     }
 
-    /**
-     *
-     * @return
-     */
-    public ArrayList<CoffeePlace> getCoffeePlacesListTest() {
-        ArrayList<CoffeePlace> tmp = new ArrayList<CoffeePlace>();
-        tmp.add(new CoffeePlace("0", "Caffe Vergnano Torino spa Bologna",
-                "Corso Gramsci 7 alesessanrdia", 4, null, null, null));
-        return tmp;
-    }
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);

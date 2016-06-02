@@ -79,6 +79,7 @@ public class PlacesActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PermissionManager.ACTION_LOCATION_SOURCE_SETTINGS) {
+            //TODO handle ok or no from dialog
 //            if (resultCode == RESULT_OK) {
                 permissionManager.onEnablePositionResult();
 //            }
