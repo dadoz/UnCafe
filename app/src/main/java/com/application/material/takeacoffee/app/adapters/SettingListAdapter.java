@@ -69,8 +69,6 @@ public class SettingListAdapter extends ArrayAdapter<Setting> implements View.On
         ((TextView) convertView.findViewById(R.id.settingLocationId)).setText(location);
         Button clearButton = (Button) convertView.findViewById(R.id.settingClearButtonId);
         clearButton .setOnClickListener(this);
-        clearButton.getBackground().setColorFilter(ContextCompat.getColor(getContext(),
-                R.color.material_brown800), PorterDuff.Mode.MULTIPLY);
     }
 
     @Override

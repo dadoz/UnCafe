@@ -79,6 +79,7 @@
 
     </android.support.design.widget.TextInputLayout>
     <Button
+        style="@style/CustomButtonColored"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/locationTextInputLayoutId"

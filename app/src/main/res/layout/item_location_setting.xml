@@ -25,6 +25,7 @@
         android:textColor="@color/material_red400"
         android:textSize="@dimen/text_big_26"/>
     <Button
+        style="@style/CustomButtonColored"
         android:id="@+id/settingClearButtonId"
         android:layout_below="@id/settingLocationId"
         android:layout_alignParentRight="true"

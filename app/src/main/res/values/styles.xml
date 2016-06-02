@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimaryDark">@color/material_brown900</item>
         <item name="colorPrimary">@color/material_brown800</item>
-        <item name="colorAccent">@color/material_brown400</item>
+        <item name="colorAccent">@color/material_brown700</item>
         <item name="android:itemBackground">@color/material_brown700</item>
     </style>
     <style name="ReviewToolbarTheme" parent="Theme.AppCompat.NoActionBar">
@@ -23,5 +23,8 @@
         <item name="android:textColorPrimary">@color/material_brown800</item>
         <!-- Used for the background -->
         <!--<item name="android:background">#4CAF50</item>-->
+    </style>
+    <style name="CustomButtonColored" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/material_grey50</item>
     </style>
 </resources>

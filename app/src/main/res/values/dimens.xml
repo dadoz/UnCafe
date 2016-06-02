@@ -12,7 +12,7 @@
     <dimen name="text_big_26">26sp</dimen>
     <dimen name="text_medium_20">20dp</dimen>
     <dimen name="text_small">18dp</dimen>
-    <dimen name="text_small_16">16dp</dimen>
+    <dimen name="text_small_16">16sp</dimen>
     <dimen name="text_small_14">14dp</dimen>
     <dimen name="small_padding">10dip</dimen>
     <dimen name="medium_padding">20dip</dimen>

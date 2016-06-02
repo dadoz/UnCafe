@@ -18,6 +18,7 @@
         android:text="No location services"/>
 
     <Button
+        style="@style/CustomButtonColored"
         android:id="@+id/noLocationServiceButtonId"
         android:layout_below="@id/moreReviewButtonId"
         android:layout_centerHorizontal="true"

@@ -93,8 +93,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         autoCompleteTextView
                 .setDropDownBackgroundDrawable(new ColorDrawable(darkColor));
         locationTextInputLayout.setY(MIN_OFFSET);
-        findPositionButton.getBackground()
-                .setColorFilter(darkColor, PorterDuff.Mode.MULTIPLY);
         animateTranslateUpView(locationTextInputLayout, true, true);
     }
 
