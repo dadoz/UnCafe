@@ -5,12 +5,15 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.application.material.takeacoffee.app.R;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.joda.time.DateTime;
@@ -84,6 +87,19 @@ public class Utils {
         InputMethodManager imm = (InputMethodManager)contextWeakRefer.get()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     *
+     * @param view
+     * @param messageResourceId
+     * @return
+     */
+    public static void showSnackbar(WeakReference<Context> contextWeakRefer, View view, int messageResourceId) {
+        Snackbar snackbar = Snackbar.make(view, messageResourceId, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(contextWeakRefer.get(),
+                R.color.material_red400));
+        snackbar.show();
     }
 
     /**

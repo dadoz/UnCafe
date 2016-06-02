@@ -383,8 +383,16 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onEmptyResult() {
-        Snackbar.make(coffeeMachineView, R.string.no_place_found, Snackbar.LENGTH_LONG).show();
+        showErrorMessage();
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
+    }
+
+    /**
+     *
+     */
+    private void showErrorMessage() {
+        Utils.showSnackbar(new WeakReference<Context>(getContext()), coffeeMachineView,
+                R.string.no_place_found);
     }
 
     @Override
@@ -392,7 +400,7 @@ public class PlacesFragment extends Fragment implements
         Log.e("TAG", "ERROR on retrieve result");
         scrollListener.setLoadingEnabled(true);
         if (type == RequestType.PLACE_INFO) {
-            Snackbar.make(coffeeMachineView, R.string.no_place_found, Snackbar.LENGTH_LONG).show();
+            showErrorMessage();
             ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
             coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
         }
