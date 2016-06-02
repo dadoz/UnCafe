@@ -332,10 +332,10 @@ public class PlacesFragment extends Fragment implements
 
             @Override
             public void onLoadMore(int currentPage) {
-                Toast.makeText(getContext(), "retrieving more places...", Toast.LENGTH_LONG).show();
                 final String pageToken = ((PlacesGridViewAdapter) coffeePlacesRecyclerview
                         .getAdapter()).getPageToken();
                 if (pageToken != null) {
+                    Toast.makeText(getContext(), "retrieving more places...", Toast.LENGTH_LONG).show();
                     placesApiManager.retrieveMorePlacesAsync(pageToken);
                 }
             }

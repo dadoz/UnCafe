@@ -16,8 +16,6 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     int visibleItemCount, totalItemCount;
     private int pastVisibleItems;
     private int currentPage = 1;
-    private boolean firstItemReached = false;
-    private boolean actionTriggerd;
 
     /**
      *
@@ -40,8 +38,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         if (loading &&
                 (visibleItemCount + pastVisibleItems) >= totalItemCount) {
             loading = false;
-            onLoadMore(currentPage);
             currentPage++;
+            onLoadMore(currentPage);
         }
 
         setEventOnScrollDownOrUp(dy);

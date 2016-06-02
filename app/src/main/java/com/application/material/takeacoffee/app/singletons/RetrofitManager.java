@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
+import com.application.material.takeacoffee.app.cacheInterceptor.CacheControlApplicationInterceptor;
+import com.application.material.takeacoffee.app.cacheInterceptor.CacheControlNetworkInterceptor;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.CoffeePlace.PageToken;
 import com.application.material.takeacoffee.app.models.Review;
@@ -173,8 +175,8 @@ public class RetrofitManager {
                 .getApplicationContext()).getCache();
         return new OkHttpClient.Builder()
                 .cache(cache)
-                .addInterceptor(new CacheControlApplicationInterceptor()) //app
-                .addNetworkInterceptor(new CacheControlNetworkInterceptor()) //network
+                .addInterceptor(new CacheControlApplicationInterceptor(contextWeakRef)) //app
+//                .addNetworkInterceptor(new CacheControlNetworkInterceptor(contextWeakRef)) //network
                 .build();
     }
 
@@ -189,7 +191,7 @@ public class RetrofitManager {
                                                 final JsonDeserializationContext context)
                 throws JsonParseException {
             JsonArray resultArray = json.getAsJsonObject().get("results").getAsJsonArray();
-            ArrayList<CoffeePlace> tmp = new Gson().fromJson(resultArray,
+            ArrayList<CoffeePlace> list = new Gson().fromJson(resultArray,
                     new TypeToken<ArrayList<CoffeePlace>>() {
                     }.getType());
 
@@ -197,11 +199,10 @@ public class RetrofitManager {
             PageToken pageToken = PageToken.getInstance(json.getAsJsonObject()
                     .get("next_page_token") == null ? null :
                         json.getAsJsonObject().get("next_page_token").getAsString());
-            for (CoffeePlace coffeePlace: tmp) {
+            for (CoffeePlace coffeePlace: list) {
                 coffeePlace.setPageToken(pageToken);
             }
-
-            return tmp;
+            return list;
         }
     }
 
@@ -221,76 +222,7 @@ public class RetrofitManager {
         }
     }
 
-    /**
-     * interceptor
-     */
-    public class CacheControlApplicationInterceptor implements Interceptor {
 
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            String headerValue = ConnectivityUtils.checkConnectivity(contextWeakRef) ?
-                    "only-if-cached" :
-                    "public, max-stale=2419200";
-
-//            String cacheControl = originalResponse.header("Cache-Control");
-//            if (cacheControl == null ||
-//                    cacheControl.contains("no-store") ||
-//                    cacheControl.contains("no-cache") ||
-//                    cacheControl.contains("must-revalidate") ||
-//                    cacheControl.contains("max-age=0")) {
-//
-                Log.e("TAG", originalResponse.headers().toString() + " - " + originalResponse.code());
-                Response newResponse = originalResponse.newBuilder()
-                        .header("Cache-Control", headerValue)//"public, max-age=" + 5000)
-                        .build();
-
-                Log.e("TAG", newResponse.headers().toString() + " - " + newResponse.code());
-                return newResponse;
-//            }
-
-//            Log.e("TAG-original", originalResponse.headers().toString() + " - " + originalResponse.code());
-//            return originalResponse;
-
-
-
-//            Request request = chain.request();
-//            String headerValue = ConnectivityUtils.checkConnectivity(contextWeakRef) ?
-//                    "only-if-cached" :
-//                    "public, max-stale=2419200";
-//
-//            Request cachedRequest = request.newBuilder()
-//                    .header("Cache-Control", headerValue)
-//                    .build();
-//            Log.e("TAG", cachedRequest.headers().toString() + " - " + cachedRequest.url().toString());
-//            Response response = chain.proceed(cachedRequest);
-//            Log.e("TAG", response.headers().toString() + " - " + response.code());
-////            Log.e("TAG", oldResponse.headers().toString() + " - " + oldResponse.code());
-//
-//            return response;
-        }
-    }
-
-    /**
-     * interceptor
-     */
-    public class CacheControlNetworkInterceptor implements Interceptor {
-
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-
-            if (!ConnectivityUtils.checkConnectivity(contextWeakRef)) {
-                request = request.newBuilder()
-                        .header("Cache-Control", "public, max-stale=2419200")
-                        .build();
-            }
-            Response response = chain.proceed(request);
-            Log.e("TAG-network", response.headers().toString() + " - " + response.code());
-            return response;
-
-        }
-    }
 
     /**
      *
