@@ -97,7 +97,8 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      *
      */
     public boolean isEmptyResult() {
-        return this.isEmptyResult;
+        return isEmptyResult &&
+                itemList.size() == 0;
     }
 
     /**

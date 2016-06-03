@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.google.android.gms.maps.model.LatLng;
@@ -98,7 +99,9 @@ public class Utils {
     public static void showSnackbar(WeakReference<Context> contextWeakRefer, View view, int messageResourceId) {
         Snackbar snackbar = Snackbar.make(view, messageResourceId, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(contextWeakRefer.get(),
-                R.color.material_red400));
+                R.color.material_brown900));
+        ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+                .setTextColor(ContextCompat.getColor(contextWeakRefer.get(), R.color.material_red400));
         snackbar.show();
     }
 

@@ -511,8 +511,7 @@ public class PlacesFragment extends Fragment implements
                 permissionManager
                         .enablePosition(new WeakReference<>((AppCompatActivity) mainActivityRef));
                 break;
-            case R.id.noNetworkServiceButtonId:
-                initPermissionChainResponsibility();
+            case R.id.noNetworkServiceButtonId:initPermissionChainResponsibility();
                 break;
             case R.id.emptyResultButtonId:
                 coffeePlacesEmptyResult.setVisibility(View.GONE);

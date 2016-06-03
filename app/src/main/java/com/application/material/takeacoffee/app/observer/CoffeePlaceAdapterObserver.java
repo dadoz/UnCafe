@@ -30,6 +30,7 @@ public class CoffeePlaceAdapterObserver extends RecyclerView.AdapterDataObserver
         boolean isEmpty = adapterWeakRef.get().getItemCount() == 0 &&
                 !adapterWeakRef.get().isEmptyResult();
         progress.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        Log.e("TAG",adapterWeakRef.get().isEmptyResult() + " emptyRes" );
         noResultView.setVisibility(adapterWeakRef.get().isEmptyResult() ? View.VISIBLE : View.GONE);
     }
 }
