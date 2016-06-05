@@ -5,18 +5,18 @@
     <item
         android:visible="false"
         android:id="@+id/action_position"
-        android:title="Map"
+        android:title="@string/map_menu"
         android:icon="@drawable/ic_map_white_48dp"
         android:orderInCategory="100"
         app:showAsAction="withText" />
     <item
         android:id="@+id/action_settings"
-        android:title="Settings"
+        android:title="@string/setting_menu"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_policy"
-        android:title="About UnCafe"
+        android:title="@string/about_uncafe_menu"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

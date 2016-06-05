@@ -210,7 +210,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_position:
-                Toast.makeText(getContext(), "Enabled soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.available_soon), Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;
@@ -307,7 +307,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, text + url);
         sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, "Share place info"));
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share_place_info)));
     }
 
 

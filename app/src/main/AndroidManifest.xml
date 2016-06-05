@@ -38,6 +38,6 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/PLACES_API_KEY"/>
+            android:value="AIzaSyAWf-vfZJNezNMeFMSXl7UJ8Glusipor5E"/>
     </application>
 </manifest>

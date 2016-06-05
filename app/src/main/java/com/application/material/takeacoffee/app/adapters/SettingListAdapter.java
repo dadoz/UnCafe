@@ -92,7 +92,7 @@ public class SettingListAdapter extends ArrayAdapter<Setting> {
      */
     private void initLastLanguage(View convertView) {
         ((TextView) convertView.findViewById(R.id.settingDescriptionTextviewId))
-                .setText(Locale.getDefault().getDisplayLanguage());
+                .setText(!Locale.getDefault().getDisplayLanguage().equals("italiano") ? "English" : "Italiano");
     }
 
     /**

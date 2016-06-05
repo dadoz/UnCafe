@@ -17,7 +17,7 @@
         android:gravity="center"
         android:textSize="@dimen/text_big_24"
         android:textColor="@color/material_grey200"
-        android:text="Pick a city...\n(BETA on Italy)"/>
+        android:text="@string/pick_a_city_description"/>
 
     <ImageView
         android:layout_below="@id/mainDescriptionTextId"
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/material_brown400"
         android:textSize="@dimen/text_big_24"
-        android:text="city..."/>
+        android:text="@string/city"/>
     <android.support.design.widget.TextInputLayout
         android:id="@+id/locationTextInputLayoutId"
         android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_big_24"
             android:textColorHint="@color/material_brown600"
-            android:hint="city..."
+            android:hint="@string/city"
             android:minWidth="200dp"
             android:maxWidth="350dp" />
 
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_padding"
         android:textColor="@color/material_grey200"
-        android:text="find"/>
+        android:text="@string/find"/>
     <TextView
         android:visibility="gone"
         android:layout_centerHorizontal="true"
@@ -98,8 +98,7 @@
         android:textSize="@dimen/text_big_30"
         android:textColor="@color/material_grey200"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Torino"/>
+        android:layout_height="wrap_content"/>
     <TextView
         android:visibility="gone"
         android:layout_centerHorizontal="true"
@@ -113,7 +112,7 @@
         android:textColor="@color/material_grey200"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DONE"/>
+        android:text="@string/done"/>
     <View
         android:visibility="gone"
         android:id="@+id/locationDoneBorderLayoutId"

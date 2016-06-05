@@ -346,7 +346,7 @@ public class PlacesFragment extends Fragment implements
                 final String pageToken = ((PlacesGridViewAdapter) coffeePlacesRecyclerview
                         .getAdapter()).getPageToken();
                 if (pageToken != null) {
-                    Toast.makeText(getContext(), "retrieving more places...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.retrieving_more_place), Toast.LENGTH_LONG).show();
                     placesApiManager.retrieveMorePlacesAsync(pageToken);
                 }
             }

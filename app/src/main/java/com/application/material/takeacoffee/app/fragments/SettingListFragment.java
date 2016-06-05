@@ -4,37 +4,25 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.net.MailTo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-import com.application.material.takeacoffee.app.PickPositionActivity;
 import com.application.material.takeacoffee.app.PlacesActivity;
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
-import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Setting;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
-import com.application.material.takeacoffee.app.utils.Utils;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +55,7 @@ public class SettingListFragment extends Fragment
         ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setTitle("Settings");
+            actionbar.setTitle(getString(R.string.setting_menu));
         }
 
         ArrayList<Setting> settingList = getData();
@@ -79,12 +67,18 @@ public class SettingListFragment extends Fragment
      */
     public ArrayList<Setting> getData() {
         ArrayList<Setting> settingList = new ArrayList<>();
-        settingList.add(new Setting("ID", 0, R.drawable.ic_check_white_48dp, "Location:"));
-        settingList.add(new Setting("ID", 1, R.drawable.ic_check_white_48dp, "Last sync:"));
-        settingList.add(new Setting("ID", 2, R.drawable.ic_check_white_48dp, "Rate now!"));
-        settingList.add(new Setting("ID", 3, R.drawable.ic_check_white_48dp, "Contact"));
-        settingList.add(new Setting("ID", 4, R.drawable.ic_check_white_48dp, "Language"));
-        settingList.add(new Setting("ID", 5, R.drawable.ic_check_white_48dp, "Version " + getVersionName()));
+        settingList.add(new Setting("ID", 0, R.drawable.ic_check_white_48dp,
+                getString(R.string.location_settings)));
+        settingList.add(new Setting("ID", 1, R.drawable.ic_check_white_48dp,
+                getString(R.string.last_sync_settings)));
+        settingList.add(new Setting("ID", 2, R.drawable.ic_check_white_48dp,
+                getString(R.string.rate_now_settings)));
+        settingList.add(new Setting("ID", 3, R.drawable.ic_check_white_48dp,
+                getString(R.string.contact_settings)));
+        settingList.add(new Setting("ID", 4, R.drawable.ic_check_white_48dp,
+                getString(R.string.language_settings)));
+        settingList.add(new Setting("ID", 5, R.drawable.ic_check_white_48dp,
+                getString(R.string.version_settings) + " " +getVersionName()));
         return settingList;
     }
 
@@ -147,7 +141,8 @@ public class SettingListFragment extends Fragment
         // if GP not present on device, open web browser
         if (!marketFound) {
             Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=" + getContext().getPackageName()));
+                    Uri.parse("https://play.google.com/store/apps/details?id=" +
+                            getContext().getPackageName()));
             getContext().startActivity(webIntent);
         }
     }
@@ -159,7 +154,7 @@ public class SettingListFragment extends Fragment
                 .setType("message/rfc822")
                 .addEmailTo(getResources().getString(R.string.contact_email))
                 .setSubject(getResources().getString(R.string.contact_subject))
-                .setChooserTitle("Sending mail...")
+                .setChooserTitle(getString(R.string.sending_email))
                 .startChooser();
     }
 

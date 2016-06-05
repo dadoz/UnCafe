@@ -26,7 +26,7 @@
             android:layout_marginLeft="@dimen/medium_padding"
             android:textSize="@dimen/text_small_16"
             android:textColor="@color/material_grey50"
-            android:text="CHANGE PLACE"/>
+            android:text="@string/change_place_button"/>
 
     </RelativeLayout>
     <android.support.v7.widget.CardView
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_small_14"
                 android:textColor="@color/material_grey800"
-                android:text="Tap to get places Map"/>
+                android:text="@string/tap_to_get_place_map"/>
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

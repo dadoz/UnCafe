@@ -1,10 +1,7 @@
 package com.application.material.takeacoffee.app.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -17,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.application.material.takeacoffee.app.PlacesActivity;
 import com.application.material.takeacoffee.app.R;
@@ -233,7 +229,6 @@ public class PickPositionFragment extends Fragment implements
 
     @Override
     public void onUpdateUIOnFindPositionCallback() {
-        Toast.makeText(getActivity(), "onUpdateUIOnFindPositionCallback", Toast.LENGTH_SHORT).show();
         setPositionFromGeocoder();
 //        checkPositionPermissionAndTriggerAction(LocationActionTypeEnum.LOCATION_DONE);
     }

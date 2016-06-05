@@ -1,33 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="info_description">This application is blalalallal........\n\nIts service is based on Google Places API,
+        \nunder its licence (free to use - https://developers.google.com/places).
+        \n\nCheck them out to get more info about or contact us by email.
+        \n\n\n@2016 Davide LM</string>
+
+    <string name="contact_email">tunnusandroid.dev@gmail.com</string>
 
     <string name="app_name">Un Café</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="titleTakeACoffee">Take a coffee!</string>
-
-
     <string name="HTTP_generic_error">Hey! Smthing has gone wrong! Check your connection and try again!</string>
     <string name="generic_error">Hey! Smthing has gone wrong! Restart your application.</string>
-
-
-    <string name="parseApplicationId">61rFqlbDy0UWBfY56RcLdiJVB1EPe8ce1yUxdAEY</string>
-    <string name="parseClientKey">jHD6l2E72OG9Kul7ijtawZTkF9Zml0AwbeL0J7Ex</string>
-
-    <string name="facebook_app_id">269437213077030</string>
-    <string name="PLACES_API_KEY">AIzaSyAWf-vfZJNezNMeFMSXl7UJ8Glusipor5E</string>
     <string name="review_actionbar_title">Coffee reviews</string>
     <string name="coffee_place_actionbar">Places</string>
     <string name="map_name">Map</string>
     <string name="pick_pos_name">Pick Position</string>
     <string name="no_review_found_id">No reviews found</string>
-    <string name="contact_email">tunnusandroid.dev@gmail.com</string>
-    <string name="found_this_place_at" type="id">You can find this place at:</string>
-    <string name="info_description">This application is blalalallal........\n\nIts service is based on Google Places API,
-        \nunder its licence (free to use - https://developers.google.com/places).
-        \n\nCheck them out to get more info about or contact us by email.
-        \n\n\n@2016 Davide LM</string>
+    <string name="found_this_place_at">You can find this place at:</string>
     <string name="contact_subject">Info request</string>
     <string name="no_place_found">No Place found!</string>
+    <string name="change_place_button">CHANGE PLACE</string>
+    <string name="tap_to_get_place_map">Tap to get places Map</string>
+    <string name="setting_menu">Settings</string>
+    <string name="map_menu">Map</string>
+    <string name="about_uncafe_menu">About UnCafe</string>
+    <string name="retrieving_more_place">retrieving more places&#8230;&#8230;&#8230;</string>
+
+    <!-- SETTINGS -->
+    <string name="location_settings">Location:</string>
+    <string name="last_sync_settings">Last sync:</string>
+    <string name="rate_now_settings" >Rate now!</string>
+    <string name="contact_settings" >Contact </string>
+    <string name="language_settings">Language</string>
+    <string name="version_settings">Version</string>
+
+    <!--PLACES-->
+    <string name="rating">rate</string>
+
+    <!--REVIEWS-->
+    <string name="share_place_info">Share place info</string>
+    <string name="available_soon">Available soon!</string>
+    <string name="sending_email">Sending mail&#8230;&#8230;&#8230;</string>
+
+    <!--PICK POSITION-->
+    <string name="pick_a_city_description">Pick a city&#8230;&#8230;&#8230; (only ITALY)\nBETA version!</string>
+    <string name="city">city&#8230;&#8230;&#8230;</string>
+    <string name="find">find</string>
+    <string name="done">DONE</string>
 
 </resources>
