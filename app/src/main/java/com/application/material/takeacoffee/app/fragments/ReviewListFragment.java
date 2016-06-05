@@ -73,7 +73,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appbarLayout;
     private String placeCoordinates;
-    private Subscription obsSubscrition;
+    private Subscription obsSubscription;
 
     @Override
     public void onAttach(Context context) {
@@ -338,7 +338,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
         setPlaceName();
         setPlacePhotoByUrl();
-        obsSubscrition = placesApiManager.retrieveReviewsAsync(coffeePlaceId);
+        obsSubscription = placesApiManager.retrieveReviewsAsync(coffeePlaceId);
     }
 
 
@@ -361,8 +361,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     }
 
     public void unsubscribeObservable() {
-        if (obsSubscrition != null) {
-            obsSubscrition.unsubscribe();
+        if (obsSubscription != null) {
+            obsSubscription.unsubscribe();
         }
     }
 }
