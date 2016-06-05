@@ -68,11 +68,6 @@ public class PickPositionFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (isLocationSet()) {
-            startPlaceActivity();
-            getActivity().finish();
-        }
     }
 
     @Override
@@ -189,14 +184,6 @@ public class PickPositionFragment extends Fragment implements
         getActivity().finish();
     }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isLocationSet() {
-        return SharedPrefManager.getInstance(new WeakReference<>(getContext()))
-                .getValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY) != null;
-    }
 
     @Override
     public void pickLocationSuccess(String locationName) {
