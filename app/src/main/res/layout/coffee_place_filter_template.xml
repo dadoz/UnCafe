@@ -12,18 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_filter_height"
         android:background="@color/material_brown800"
+        android:paddingLeft="@dimen/small_padding"
+        android:paddingRight="@dimen/small_padding"
         android:elevation="2dp">
         <TextView
-            android:id="@+id/coffeePlaceFilterLastUpdateTextviewId"
+            android:layout_alignParentRight="true"
+            android:id="@+id/coffeePlaceFilterClearPositionButtonId"
             android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/small_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/medium_padding"
             android:textSize="@dimen/text_small_16"
-            android:textColor="@color/material_brown400"
-            android:text="Last update: -"/>
-        </RelativeLayout>
+            android:textColor="@color/material_grey50"
+            android:text="CHANGE PLACE"/>
+
+    </RelativeLayout>
     <android.support.v7.widget.CardView
         android:id="@+id/coffeePlaceFilterCardviewId"
         android:layout_width="fill_parent"

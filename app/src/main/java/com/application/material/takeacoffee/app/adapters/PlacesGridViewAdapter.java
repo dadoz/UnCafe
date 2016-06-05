@@ -50,6 +50,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        //TODO mv onBind function on vh
         holder.nameTextView.setText(itemList.get(position).getName());
         holder.addressTextView.setText(itemList.get(position).getAddress());
         holder.ratingTextView.setText(getRatingByPos(position));

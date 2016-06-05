@@ -15,6 +15,7 @@
     <dimen name="text_small_16">16sp</dimen>
     <dimen name="text_small_14">14dp</dimen>
     <dimen name="small_padding">10dip</dimen>
+    <dimen name="small_padding_setting">14dip</dimen>
     <dimen name="medium_padding">20dip</dimen>
     <dimen name="big_padding">40dip</dimen>
     <dimen name="huge_padding">60dip</dimen>

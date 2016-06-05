@@ -7,11 +7,14 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.MailTo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,13 +33,14 @@ import com.application.material.takeacoffee.app.adapters.SettingListAdapter;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Setting;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
+import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SettingListFragment extends Fragment
-        implements AdapterView.OnItemClickListener, SettingListAdapter.CustomItemClickListener {
+        implements AdapterView.OnItemClickListener {
     public static final String SETTING_LIST_FRAG_TAG = "SETTING_LIST_FRAG_TAG";
     @Bind(R.id.settingsContainerListViewId)
     ListView listView;
@@ -76,9 +80,11 @@ public class SettingListFragment extends Fragment
     public ArrayList<Setting> getData() {
         ArrayList<Setting> settingList = new ArrayList<>();
         settingList.add(new Setting("ID", 0, R.drawable.ic_check_white_48dp, "Location:"));
-        settingList.add(new Setting("ID", 1, R.drawable.ic_check_white_48dp, "Rate now!"));
-        settingList.add(new Setting("ID", 2, R.drawable.ic_check_white_48dp, "Contact"));
-        settingList.add(new Setting("ID", 3, R.drawable.ic_check_white_48dp, "Version " + getVersionName()));
+        settingList.add(new Setting("ID", 1, R.drawable.ic_check_white_48dp, "Last sync:"));
+        settingList.add(new Setting("ID", 2, R.drawable.ic_check_white_48dp, "Rate now!"));
+        settingList.add(new Setting("ID", 3, R.drawable.ic_check_white_48dp, "Contact"));
+        settingList.add(new Setting("ID", 4, R.drawable.ic_check_white_48dp, "Language"));
+        settingList.add(new Setting("ID", 5, R.drawable.ic_check_white_48dp, "Version " + getVersionName()));
         return settingList;
     }
 
@@ -89,7 +95,6 @@ public class SettingListFragment extends Fragment
     public void initListView(ArrayList<Setting> settingList) {
         SettingListAdapter settingListAdapter = new SettingListAdapter(getActivity(),
                 R.layout.item_review, settingList,
-                new WeakReference<SettingListAdapter.CustomItemClickListener>(this),
                 SharedPrefManager.getInstance(new WeakReference<>(getContext()))
                         .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
         listView.setAdapter(settingListAdapter);
@@ -100,10 +105,10 @@ public class SettingListFragment extends Fragment
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.e("SETTING", "hey click item");
         switch (position) {
-            case 1:
+            case 2:
                 rateByIntent();
                 break;
-            case 2:
+            case 3:
                 sendEmailByIntent();
                 break;
         }
@@ -150,27 +155,12 @@ public class SettingListFragment extends Fragment
      * send email by intent
      */
     private void sendEmailByIntent() {
-        Intent send = new Intent(Intent.ACTION_SENDTO);
-        send.setType("text/plain");
-        send.putExtra(Intent.EXTRA_EMAIL, getResources().getString(R.string.contact_email));
-        send.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
-        send.putExtra(Intent.EXTRA_TEXT, "");
-
-        startActivity(Intent.createChooser(send, "Send mail..."));
-    }
-
-    @Override
-    public void onItemClick() {
-        clearStoredLocation();
-    }
-
-    /**
-     *
-     */
-    private void clearStoredLocation() {
-        SharedPrefManager.getInstance(new WeakReference<>(getContext())).clearAll();
-        startActivity(new Intent(getContext(), PickPositionActivity.class));
-        getActivity().finish();
+        ShareCompat.IntentBuilder.from(getActivity())
+                .setType("message/rfc822")
+                .addEmailTo(getResources().getString(R.string.contact_email))
+                .setSubject(getResources().getString(R.string.contact_subject))
+                .setChooserTitle("Sending mail...")
+                .startChooser();
     }
 
     /**
@@ -187,5 +177,7 @@ public class SettingListFragment extends Fragment
         }
         return "-";
     }
+
+
 }
 

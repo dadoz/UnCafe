@@ -5,10 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -68,8 +66,6 @@ public class PlacesFragment extends Fragment implements
     ProgressBar coffeePlacesProgress;
     @Bind(R.id.coffeePlacesEmptyResultId)
     View coffeePlacesEmptyResult;
-    @Bind(R.id.coffeePlaceFilterLastUpdateTextviewId)
-    TextView coffeePlaceFilterLastUpdateTextview;
     @Bind(R.id.coffeePlaceFilterBackgroundId)
     View coffeePlaceFilterBackground;
     @Bind(R.id.coffeePlaceFilterCardviewId)
@@ -88,6 +84,8 @@ public class PlacesFragment extends Fragment implements
     SwipeRefreshLayout coffeePlaceSwipeRefreshLayout;
     @Bind(R.id.placePositionFilterTextViewId)
     TextView placePositionFilterTextView;
+    @Bind(R.id.coffeePlaceFilterClearPositionButtonId)
+    View coffeePlaceFilterClearPositionButton;
     private EndlessRecyclerOnScrollListener scrollListener;
     private PlaceFilterPresenter placeFilterPresenter;
     private View coffeeMachineView;
@@ -159,6 +157,7 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void initFilters() {
+        coffeePlaceFilterClearPositionButton.setOnClickListener(this);
         coffeePlaceFilterCardview.setOnClickListener(this);
         placePositionFilterTextView.setText(SharedPrefManager
                 .getInstance(new WeakReference<>(getContext()))
@@ -166,16 +165,6 @@ public class PlacesFragment extends Fragment implements
         placeFilterPresenter = PlaceFilterPresenter.getInstance(new WeakReference<>(getContext()),
                 new View[] {coffeePlaceFilterCardview, coffeePlaceFilterBackground, coffeePlaceSwipeRefreshLayout});
         placeFilterPresenter.onCollapse();
-        setLastUpdateOnFilter();
-    }
-
-    /**
-     *
-     */
-    private void setLastUpdateOnFilter() {
-        String timestamp = SharedPrefManager.getInstance(new WeakReference<>(getContext()))
-                .getValueByKey(SharedPrefManager.TIMESTAMP_REQUEST_KEY);
-        coffeePlaceFilterLastUpdateTextview.setText(Utils.convertLastUpdateFromTimestamp(timestamp));
     }
 
     /**
@@ -370,7 +359,6 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onPlaceApiSuccess(Object result, RequestType type) {
         if (type == RequestType.PLACE_INFO) {
-            setLastUpdateOnFilter();
             handleInfo((ArrayList<CoffeePlace>) result);
             placeList.addAll((ArrayList<CoffeePlace>) result);
         } else if (type == RequestType.MORE_PLACE_INFO) {
@@ -391,19 +379,24 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void showErrorMessage() {
-        Utils.showSnackbar(new WeakReference<Context>(getContext()), coffeeMachineView,
-                R.string.no_place_found);
+        try {
+            Utils.showSnackbar(new WeakReference<>(getContext()), coffeeMachineView,
+                    R.string.no_place_found);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onErrorResult(RequestType type) {
-        Log.e("TAG", "ERROR on retrieve result");
+        //TODO LEAK - if changing activity u must unsuscribe observer
         scrollListener.setLoadingEnabled(true);
         if (type == RequestType.PLACE_INFO) {
             showErrorMessage();
             ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
             coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
         }
+        Log.e("TAG", "ERROR on retrieve result");
     }
 
     /**
@@ -504,6 +497,9 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.coffeePlaceFilterClearPositionButtonId:
+                clearStoredLocation();
+                break;
             case R.id.coffeePlaceFilterCardviewId:
                 startActivity(new Intent(getContext(), MapActivity.class));
                 break;
@@ -553,4 +549,12 @@ public class PlacesFragment extends Fragment implements
         dialog.show();
     }
 
+    /**
+     *
+     */
+    private void clearStoredLocation() {
+        SharedPrefManager.getInstance(new WeakReference<>(getContext())).clearAll();
+        startActivity(new Intent(getContext(), PickPositionActivity.class));
+        getActivity().finish();
+    }
 }

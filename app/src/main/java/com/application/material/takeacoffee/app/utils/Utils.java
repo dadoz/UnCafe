@@ -32,9 +32,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
  * Created by davide on 30/12/14.
  */
 public class Utils {
-
-    private static String LAST_UPDATE_STRING = "Last sync: ";
-
     private Utils() {
     }
 
@@ -97,6 +94,9 @@ public class Utils {
      * @return
      */
     public static void showSnackbar(WeakReference<Context> contextWeakRefer, View view, int messageResourceId) {
+        if (contextWeakRefer.get() == null) {
+            return;
+        }
         Snackbar snackbar = Snackbar.make(view, messageResourceId, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(contextWeakRefer.get(),
                 R.color.material_brown900));
@@ -112,10 +112,10 @@ public class Utils {
      */
     public static String convertLastUpdateFromTimestamp(String timestampStr) {
         if (timestampStr == null) {
-            return LAST_UPDATE_STRING + " -";
+            return " -";
         }
 
-        return LAST_UPDATE_STRING + new DateTime(Long.parseLong(timestampStr))
+        return new DateTime(Long.parseLong(timestampStr))
                 .toString(DateTimeFormat.forPattern("dd MMM YYYY"));
     }
 
