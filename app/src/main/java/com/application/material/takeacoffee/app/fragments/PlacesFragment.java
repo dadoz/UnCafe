@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.MainThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,6 +24,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import icepick.Icepick;
 import icepick.State;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
@@ -92,6 +97,7 @@ public class PlacesFragment extends Fragment implements
 
     @State
     public ArrayList<CoffeePlace> placeList = new ArrayList<>();
+    private Subscription obsSubscription;
 
     @Override
     public void onAttach(Context context) {
@@ -124,6 +130,12 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        unsubscribeObservable();
+        super.onDestroy();
     }
 
     /**
@@ -215,11 +227,21 @@ public class PlacesFragment extends Fragment implements
                 showInfoDialog();
                 break;
             case R.id.action_settings:
+                unsubscribeObservable();
                 changeFragment(new SettingListFragment(),
                         SettingListFragment.SETTING_LIST_FRAG_TAG);
                 break;
         }
         return true;
+    }
+
+    /**
+     *
+     */
+    private void unsubscribeObservable() {
+        if (obsSubscription != null) {
+            obsSubscription.unsubscribe();
+        }
     }
 
     /**
@@ -435,7 +457,7 @@ public class PlacesFragment extends Fragment implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                placesApiManager.retrievePlacesAsync(latLngString, PLACE_RANKBY, BAR_PLACE_TYPE);
+                obsSubscription = placesApiManager.retrievePlacesAsync(latLngString, PLACE_RANKBY, BAR_PLACE_TYPE);
             }
         }, 2000);
     }

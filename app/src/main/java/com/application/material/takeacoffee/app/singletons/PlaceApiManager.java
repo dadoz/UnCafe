@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -55,25 +56,22 @@ public class PlaceApiManager {
      * @param rankBy
      * @param type
      */
-    public Observable retrievePlacesAsync(String location, String rankBy, String type) {
+    public Subscription retrievePlacesAsync(String location, String rankBy, String type) {
         requestType = RequestType.PLACE_INFO;
 
-        Observable observable = RetrofitManager.getInstance(contextWeakRef)
-                .listPlacesByLocationAndType(location, rankBy, type);
-        initObservable(observable);
-        return observable;
+        return initObservable(RetrofitManager.getInstance(contextWeakRef)
+                .listPlacesByLocationAndType(location, rankBy, type));
     }
+
 
     /**
      * main function to retrieve place reviews data from google api
      * @param placeId
      */
-    public Observable retrieveReviewsAsync(String placeId) {
+    public Subscription retrieveReviewsAsync(String placeId) {
         requestType = RequestType.PLACE_REVIEWS;
-        Observable observable = RetrofitManager.getInstance(contextWeakRef)
-                .listReviewsByPlaceId(placeId);
-        initObservable(observable);
-        return observable;
+        return initObservable(RetrofitManager.getInstance(contextWeakRef)
+                .listReviewsByPlaceId(placeId));
     }
 
     /**
@@ -90,8 +88,8 @@ public class PlaceApiManager {
      *
      * @param observable
      */
-    private void initObservable(Observable<ArrayList<Object>> observable) {
-        observable
+    private Subscription initObservable(Observable<ArrayList<Object>> observable) {
+        return observable
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ArrayList<Object>>() {

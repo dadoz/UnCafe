@@ -73,7 +73,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appbarLayout;
     private String placeCoordinates;
-    private WeakReference<Observable> obsWeakRef;
+    private Subscription obsSubscrition;
 
     @Override
     public void onAttach(Context context) {
@@ -99,6 +99,12 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     public void onPause() {
         EventBusSingleton.getInstance().unregister(this);
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        unsubscribeObservable();
+        super.onDestroy();
     }
 
     /**
@@ -332,8 +338,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
         setPlaceName();
         setPlacePhotoByUrl();
-        Observable observable = placesApiManager.retrieveReviewsAsync(coffeePlaceId);
-        obsWeakRef = new WeakReference<Observable>(observable);
+        obsSubscrition = placesApiManager.retrieveReviewsAsync(coffeePlaceId);
     }
 
 
@@ -352,8 +357,12 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void handleBackPressed() {
-        if (obsWeakRef.get() != null) {
-            obsWeakRef.get().unsubscribeOn(Schedulers.newThread());
+        unsubscribeObservable();
+    }
+
+    public void unsubscribeObservable() {
+        if (obsSubscrition != null) {
+            obsSubscrition.unsubscribe();
         }
     }
 }
