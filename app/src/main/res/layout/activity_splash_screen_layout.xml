@@ -7,9 +7,9 @@
     <ImageView
         android:id="@+id/splashScreenIconId"
         android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher_icon"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/ic_launcher"/>
 
     <TextView
         android:layout_below="@id/splashScreenIconId"

@@ -99,9 +99,9 @@ public class Utils {
         }
         Snackbar snackbar = Snackbar.make(view, messageResourceId, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(contextWeakRefer.get(),
-                R.color.material_brown900));
-        ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
-                .setTextColor(ContextCompat.getColor(contextWeakRefer.get(), R.color.material_red400));
+                R.color.material_red400));
+//        ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
+//                .setTextColor(ContextCompat.getColor(contextWeakRefer.get(), R.color.material_brown900));
         snackbar.show();
     }
 
