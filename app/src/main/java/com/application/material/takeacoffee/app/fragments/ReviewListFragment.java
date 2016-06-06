@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -233,8 +234,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      *
      */
     private void setPlacePhotoByUrl() {
-        Drawable defaultIcon = getResources()
-                .getDrawable(R.drawable.ic_local_see_black_48dp);
+        Drawable defaultIcon = ContextCompat.getDrawable(getContext(),
+                R.drawable.ic_local_see_black_24dp);
         if (photoReference == null) {
             coffeePlaceImageView.setImageDrawable(defaultIcon);
             return;

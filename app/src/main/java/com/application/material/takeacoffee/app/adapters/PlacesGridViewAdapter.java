@@ -137,7 +137,7 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      */
     public Drawable getDefaultIcon() {
         return Utils.getColoredDrawable(ContextCompat.getDrawable(contextWeakRef.get(),
-                R.drawable.ic_local_see_black_48dp),
+                R.drawable.ic_local_see_black_24dp),
                 ContextCompat.getColor(contextWeakRef.get(), R.color.material_brown600));
     }
 
