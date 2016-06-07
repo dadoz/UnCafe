@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="info_description">This application is blalalallal........\n\nIts service is based on Google Places API,
+    <string name="info_description">This application is not made up for commercial purpose, but only to help choice your best coffee!\n\nIts service is based on Google Places API,
         \nunder its licence (free to use - https://developers.google.com/places).
         \n\nCheck them out to get more info about or contact us by email.
         \n\n\n@2016 Davide LM</string>

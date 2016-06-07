@@ -102,11 +102,11 @@ public class MapActivity extends AppCompatActivity implements
     public void addMarkerOnMap(float lat, float lng, String title, String descritpion) {
         if (map != null) {
             map.setOnMarkerClickListener(this);
+            //TODO add check location enabled
             map.setMyLocationEnabled(true);
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng))
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                    .alpha(0.7f)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_brown_36dp))
                     .snippet(descritpion)
                     .title(title));
         }
