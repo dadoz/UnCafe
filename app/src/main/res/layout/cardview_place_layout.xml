@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coffeePlaceFilterCardviewId"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    style="@style/CardView.Light"
+    android:layout_marginLeft="@dimen/small_padding"
+    android:layout_marginRight="@dimen/small_padding"
+    android:layout_marginBottom="5dp"
+    android:foreground="@drawable/custom_foreground_selector">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/small_padding">
+        <TextView
+            android:id="@+id/placePositionFilterTextViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_big_22"
+            android:textColor="@color/material_red400"
+            android:text="Torino"/>
+        <TextView
+            android:layout_below="@id/placePositionFilterTextViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small_14"
+            android:textColor="@color/material_grey800"
+            android:text="@string/tap_to_get_place_map"/>
+
+        <ImageView
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/placePositionFilterEditButtonId"
+            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/medium_small_icon_size"
+            android:layout_height="@dimen/medium_small_icon_size"
+            android:src="@drawable/ic_edit_black_36dp"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

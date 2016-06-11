@@ -113,6 +113,18 @@ public class PlacesActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         this.currentFragmentTag = PlacesFragment.COFFEE_MACHINE_FRAG_TAG;
+        Fragment frag;
+        if ((frag = getSupportFragmentManager().findFragmentByTag(currentFragmentTag)) != null &&
+                ((OnHandleFilterBackPressedInterface) frag).handleFilterBackPressed()) {
+            return;
+        }
         super.onBackPressed();
+    }
+
+    /**
+     *
+     */
+    public interface OnHandleFilterBackPressedInterface {
+        boolean handleFilterBackPressed();
     }
 }

@@ -131,7 +131,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     private void initGooglePlaces() {
         placesApiManager = PlaceApiManager
-                .getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this), new WeakReference<>(getContext()));
+                .getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
+                        new WeakReference<>(getContext()));
 
     }
 

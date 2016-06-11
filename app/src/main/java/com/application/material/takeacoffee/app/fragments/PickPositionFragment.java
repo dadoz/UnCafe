@@ -31,7 +31,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class PickPositionFragment extends Fragment implements
-        View.OnClickListener, PickLocationInterface, OnHandleGeocoderResult, PermissionManager.OnEnablePositionCallbackInterface {
+        View.OnClickListener, PickLocationInterface, OnHandleGeocoderResult,
+        PermissionManager.OnEnablePositionCallbackInterface {
     private static final String TAG = "PickPositionFragment";
     @Bind(R.id.locationAutocompleteTextViewId)
     AutoCompleteTextView locationAutocompleteTextView;
