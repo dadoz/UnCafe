@@ -20,8 +20,7 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
     private static View swipeRefreshLayout;
     private static View changePlaceCardview;
 
-
-    private enum  PlaceFilterEnum {COLLAPSED, EDIT, IDLE};
+    private enum  PlaceFilterEnum {COLLAPSED, EDIT, LOADING_EDIT, IDLE};
     private PlaceFilterEnum state;
 
     /**
@@ -81,6 +80,25 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
         collapseEdit(cardview, changePlaceCardview);
     }
 
+    public void onLoadEditPlace() {
+        state = PlaceFilterEnum.LOADING_EDIT;
+        onOnlyHideEditPlace();
+    }
+
+    /**
+     *
+     */
+    public void onOnlyHideEditPlace() {
+        collapseEdit(null, changePlaceCardview);
+    }
+    /**
+     *
+     */
+    public void onOnlyShowEditPlace() {
+        state = PlaceFilterEnum.EDIT;
+        expandEdit(null, changePlaceCardview);
+    }
+
     /**
      *
      * @param view
@@ -112,11 +130,16 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      */
     private void collapseEdit(View mainView, View editView) {
         //TODO calculate height
-        int MIN_TRANSLATION_Y = -(mainView.getHeight() + MIN_OFFSET);
         int MIN_TRANSLATION_EDIT_Y = -(editView.getHeight() + MIN_OFFSET);
         Animator anim1 = animatorBuilder.buildTranslationAnimator(editView, 0, MIN_TRANSLATION_EDIT_Y);
-        Animator anim2 = animatorBuilder.buildTranslationAnimator(mainView, MIN_TRANSLATION_Y, 0);
-        initAndStartAnimatorSet(new Animator[] {anim1, anim2});
+        if (mainView != null) {
+            int MIN_TRANSLATION_Y = -(mainView.getHeight() + MIN_OFFSET);
+            Animator anim2 = animatorBuilder.buildTranslationAnimator(mainView, MIN_TRANSLATION_Y, 0);
+            initAndStartAnimatorSet(new Animator[] {anim1, anim2});
+            return;
+        }
+
+        initAndStartAnimatorSet(new Animator[] {anim1});
     }
 
     /**
@@ -126,11 +149,15 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      */
     private void expandEdit(View mainView, View editView) {
         //TODO calculate height
-        int MIN_TRANSLATION_Y = -(mainView.getHeight() + MIN_OFFSET);
         int MIN_TRANSLATION_EDIT_Y = -(editView.getHeight() + MIN_OFFSET);
-        Animator anim1 = animatorBuilder.buildTranslationAnimator(mainView, 0, MIN_TRANSLATION_Y);
         Animator anim2 = animatorBuilder.buildTranslationAnimator(editView, MIN_TRANSLATION_EDIT_Y, 0);
-        initAndStartAnimatorSet(new Animator[] {anim1, anim2});
+        if (mainView != null) {
+            int MIN_TRANSLATION_Y = -(mainView.getHeight() + MIN_OFFSET);
+            Animator anim1 = animatorBuilder.buildTranslationAnimator(mainView, 0, MIN_TRANSLATION_Y);
+            initAndStartAnimatorSet(new Animator[] {anim1, anim2});
+            return;
+        }
+        initAndStartAnimatorSet(new Animator[] {anim2});
     }
 
     /**
@@ -158,6 +185,14 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      */
     public boolean isEdit() {
         return state == PlaceFilterEnum.EDIT;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isLoadingEdit() {
+        return state == PlaceFilterEnum.LOADING_EDIT;
     }
 
     @Override

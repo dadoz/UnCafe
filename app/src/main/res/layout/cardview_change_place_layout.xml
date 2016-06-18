@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/material_grey200"
+            android:textColorHint="@color/material_brown800"
             app:hintTextAppearance="@style/TextLabel"
             android:lines="1">
             <android.support.v7.widget.AppCompatEditText
@@ -30,9 +30,7 @@
                 android:textColor="@color/material_grey800"
                 android:textColorHint="@color/material_brown800"
                 android:lines="1"
-                android:hint="@string/city">
-                <requestFocus/>
-                </android.support.v7.widget.AppCompatEditText>
+                android:hint="@string/city" />
         </android.support.design.widget.TextInputLayout>
         <TextView
             android:id="@+id/changePlaceConfirmButtonId"

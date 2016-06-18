@@ -15,6 +15,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -197,7 +199,34 @@ public class PlacesFragment extends Fragment implements
                 new View[] {coffeePlaceFilterCardview, changePlaceFilterCardview, coffeePlaceFilterBackground,
                         coffeePlaceSwipeRefreshLayout});
         placeFilterPresenter.init();
+        changePlaceTextInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                changePlaceTextInputLayout.setErrorEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
+
+    /**
+     *
+     */
+    private void clearEditText() {
+        if (changePlaceTextInputLayout.getEditText() == null) {
+            return;
+        }
+
+        changePlaceTextInputLayout.getEditText().setText("");
+    }
+
 
     /**
      *
@@ -548,6 +577,10 @@ public class PlacesFragment extends Fragment implements
             case R.id.changePlaceConfirmButtonId:
                 if (placeFilterPresenter.isEdit()) {
                     saveChangePlace();
+                    placeFilterPresenter.onLoadEditPlace();
+                    placeFilterPresenter.onOnlyHideEditPlace();
+                    Utils.hideKeyboard(new WeakReference<>(getContext()),
+                            changePlaceEditText);
                 }
                 break;
             case R.id.placePositionFilterEditButtonId:
@@ -584,11 +617,14 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void setActionbarHomeButtonEnabled(boolean isEnabled) {
+        if (getActivity() == null) {
+            return;
+        }
+
         ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(isEnabled);
         }
-
     }
 
     @Override
@@ -638,6 +674,14 @@ public class PlacesFragment extends Fragment implements
         if (placeFilterPresenter.isEdit()) {
             placeFilterPresenter.onHideEditPlace();
             setActionbarHomeButtonEnabled(false);
+            clearEditText();
+            Utils.hideKeyboard(new WeakReference<>(getContext()),
+                    changePlaceEditText);
+            return true;
+        }
+
+        //TODO HANDLE IT (maybe return to prev status)
+        if (placeFilterPresenter.isLoadingEdit()) {
             return true;
         }
         return false;
@@ -645,15 +689,27 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onGeocoderSuccess(LatLng latLng) {
-        placeFilterPresenter.onHideEditPlace();
+        placeFilterPresenter.onExpand();
         setActionbarHomeButtonEnabled(false);
+        clearEditText();
         saveLocationOnStorage(latLng);
+    }
+
+    @Override
+    public void onGeocoderError() {
+        changePlaceTextInputLayout.setErrorEnabled(true);
+        changePlaceTextInputLayout.setError(getString(R.string.no_place_from_geocode_found));
+        placeFilterPresenter.onOnlyShowEditPlace();
+
     }
 
     /**
      * on action done
      */
     private void saveLocationOnStorage(LatLng latLng) {
+        if (getActivity() == null) {
+            return;
+        }
         Log.e("PICK", "start activity location ->" + Utils.getLatLngString(latLng));
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(new WeakReference<>(getContext()));
         sharedPref.setValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY,
@@ -662,8 +718,4 @@ public class PlacesFragment extends Fragment implements
                 selectedLocationName);
     }
 
-    @Override
-    public void onGeocoderError() {
-        changePlaceTextInputLayout.setError(getString(R.string.no_place_from_geocode_found));
-    }
 }
