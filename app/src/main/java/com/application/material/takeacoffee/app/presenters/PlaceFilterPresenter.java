@@ -48,6 +48,7 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
     public void init() {
         changePlaceCardview.setY(-1000);
         cardview.setY(-1000);
+        state = PlaceFilterEnum.COLLAPSED;
 //        onExpand();
     }
 

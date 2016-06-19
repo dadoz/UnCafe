@@ -39,6 +39,7 @@ import com.application.material.takeacoffee.app.singletons.PicassoSingleton.Pica
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager.RequestType;
 import com.application.material.takeacoffee.app.utils.ExpandableTextView;
+import com.application.material.takeacoffee.app.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -147,23 +148,8 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setTitle(name);
             setCoolapsingToolbarTitleFont();
-            setStatusBarColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
-        }
-    }
-
-    /**
-     *
-     * @param color
-     */
-    private void setStatusBarColor(int color) {
-        if (Build.VERSION.SDK_INT >= 22) {
-            Window window = getActivity().getWindow();
-            // clear FLAG_TRANSLUCENT_STATUS flag:
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            // finally change the color
-            window.setStatusBarColor(color);
+            Utils.setStatusBarColor(getActivity().getWindow(),
+                    ContextCompat.getColor(getContext(), android.R.color.transparent));
         }
     }
 
@@ -186,11 +172,15 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
                     .generate(new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
-                    int grey = getActivity().getResources().getColor(R.color.material_grey400);
-                    int brown = getActivity().getResources().getColor(R.color.material_brown800);
-                    collapsingToolbar.setContentScrimColor(palette.getMutedColor(brown));
-                    collapsingToolbar.setCollapsedTitleTextColor(palette.getLightVibrantColor(grey));
+                    int grey = ContextCompat.getColor(getActivity().getApplicationContext(),
+                            R.color.material_grey400);
+                    int brown = ContextCompat.getColor(getActivity().getApplicationContext(),
+                            R.color.material_brown800);
+//                    collapsingToolbar.setContentScrimColor(palette.getMutedColor(brown));
+//                    collapsingToolbar.setCollapsedTitleTextColor(palette.getLightVibrantColor(grey));
                     collapsingToolbar.setExpandedTitleColor(palette.getLightVibrantColor(grey));
+//                    Utils.setStatusBarColor(getActivity().getWindow(), palette.getDarkMutedColor(brown));
+
                 }
             }).get();
         } catch (Exception e) {

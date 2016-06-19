@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +12,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -101,8 +104,6 @@ public class Utils {
         Snackbar snackbar = Snackbar.make(view, messageResourceId, Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(contextWeakRefer.get(),
                 R.color.material_red400));
-//        ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text))
-//                .setTextColor(ContextCompat.getColor(contextWeakRefer.get(), R.color.material_brown900));
         snackbar.show();
     }
 
@@ -120,12 +121,21 @@ public class Utils {
                 .toString(DateTimeFormat.forPattern("dd MMM YYYY"));
     }
 
-//    public static SpannableString getSpannableFromString(Activity activity, String text) {
-//        //TODO move on Utils
-//        Typeface font = Typeface.createFromAsset(activity.getAssets(), "chimphand-regular.ttf");
-//        SpannableString spannableString = new SpannableString(text);
-//        spannableString.setSpan(new TypefaceSpan("", font), 0,
-//                spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        return spannableString;
-//    }
+    /**
+     *
+     * @param color
+     * @param window
+     */
+    public static void setStatusBarColor(Window window, int color) {
+        if (Build.VERSION.SDK_INT >= 22) {
+            // clear FLAG_TRANSLUCENT_STATUS flag:
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            // finally change the color
+            window.setStatusBarColor(color);
+        }
+    }
+
+
 }
