@@ -227,6 +227,8 @@ public class PlacesFragment extends Fragment implements
         placePositionFilterTextView.setText(SharedPrefManager
                 .getInstance(new WeakReference<>(getContext()))
                 .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
+        changePlaceEditText.clearFocus();
+        Utils.hideKeyboard(new WeakReference<Context>(getActivity().getApplicationContext()), changePlaceEditText);
     }
     /**
      *

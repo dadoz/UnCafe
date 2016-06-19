@@ -225,6 +225,9 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
 
     @Override
     public void onAnimationEnd(Animator animation) {
+        if (state == PlaceFilterEnum.IDLE) {
+            backgroundFrameLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
