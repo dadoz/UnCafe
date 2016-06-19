@@ -47,7 +47,8 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      */
     public void init() {
         changePlaceCardview.setY(-1000);
-        onExpand();
+        cardview.setY(-1000);
+//        onExpand();
     }
 
     /**
@@ -55,7 +56,15 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      */
     public void onExpand() {
         state = PlaceFilterEnum.IDLE;
-        expand(cardview);
+        expand(cardview, null);
+    }
+
+    /**
+     *
+     */
+    public void onExpandEdit() {
+        state = PlaceFilterEnum.IDLE;
+        expand(cardview, backgroundFrameLayout);
     }
 
     /**
@@ -107,13 +116,17 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      *
      * @param view
      */
-    private void expand(View view) {
+    private void expand(View view, View backgroundView) {
         //TODO calculate height
         int MIN_TRANSLATION_Y = -(view.getHeight() + MIN_OFFSET);
         Animator anim1 = animatorBuilder.buildTranslationAnimator(view, MIN_TRANSLATION_Y, 0);
         anim1.setStartDelay(MIN_DELAY);
+        if (backgroundView != null) {
+            Animator anim3 = animatorBuilder.buildAlphaAnimator(backgroundView, 1, 0);
+            initAndStartAnimatorSet(new Animator[] {anim3, anim1});
+            return;
+        }
         initAndStartAnimatorSet(new Animator[] {anim1});
-//        layout.setVisibility(View.VISIBLE);
     }
 
     /**

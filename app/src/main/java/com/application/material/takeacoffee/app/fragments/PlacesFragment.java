@@ -45,6 +45,7 @@ import com.application.material.takeacoffee.app.singletons.GeocoderManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager.OnHandlePlaceApiResult;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager.RequestType;
+import com.application.material.takeacoffee.app.utils.ConnectivityUtils;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.application.material.takeacoffee.app.utils.PermissionManager.OnEnablePositionCallbackInterface;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
@@ -110,8 +111,6 @@ public class PlacesFragment extends Fragment implements
     SwipeRefreshLayout coffeePlaceSwipeRefreshLayout;
     @Bind(R.id.placePositionFilterTextViewId)
     TextView placePositionFilterTextView;
-    @Bind(R.id.coffeePlaceFilterClearPositionButtonId)
-    View coffeePlaceFilterClearPositionButton;
     private EndlessRecyclerOnScrollListener scrollListener;
     private PlaceFilterPresenter placeFilterPresenter;
     private View coffeeMachineView;
@@ -193,11 +192,8 @@ public class PlacesFragment extends Fragment implements
     private void initFilters() {
         placePositionFilterEditButton.setOnClickListener(this);
         changePlaceConfirmButton.setOnClickListener(this);
-        coffeePlaceFilterClearPositionButton.setOnClickListener(this);
         coffeePlaceFilterCardview.setOnClickListener(this);
-        placePositionFilterTextView.setText(SharedPrefManager
-                .getInstance(new WeakReference<>(getContext()))
-                .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
+        updateFiltersPlaceLocation();
         //init presenter
         placeFilterPresenter = PlaceFilterPresenter.getInstance(new WeakReference<>(getContext()),
                 new View[] {coffeePlaceFilterCardview, changePlaceFilterCardview, coffeePlaceFilterBackground,
@@ -220,6 +216,14 @@ public class PlacesFragment extends Fragment implements
         });
     }
 
+    /**
+     *
+     */
+    private void updateFiltersPlaceLocation() {
+        placePositionFilterTextView.setText(SharedPrefManager
+                .getInstance(new WeakReference<>(getContext()))
+                .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
+    }
     /**
      *
      */
@@ -329,7 +333,7 @@ public class PlacesFragment extends Fragment implements
     private void initGooglePlaces() {
         placesApiManager = PlaceApiManager
                 .getInstance(new WeakReference<OnHandlePlaceApiResult>(this),
-                        new WeakReference<>(getContext()));
+                        new WeakReference<>(getActivity().getApplicationContext()));
     }
 
     /**
@@ -453,6 +457,7 @@ public class PlacesFragment extends Fragment implements
     public void onEmptyResult() {
         showErrorMessage();
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
+        placeList.clear();
     }
 
     /**
@@ -508,7 +513,15 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onEnablePositionCallback() {
+        retrievePlacesAndUpdateUI();
+    }
+
+    /**
+     *
+     */
+    private void retrievePlacesAndUpdateUI() {
         //TODO big issue over here - position still not available
+        cleanRecyclerViewData();
         final String latLngString = SharedPrefManager.getInstance(new WeakReference<>(getContext()))
                 .getValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY);
         showHideLocationServiceLayout(true);
@@ -519,6 +532,16 @@ public class PlacesFragment extends Fragment implements
                         PLACE_RANKBY, BAR_PLACE_TYPE);
             }
         }, 2000);
+
+    }
+
+    /**
+     *
+     */
+    private void cleanRecyclerViewData() {
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).clearAllItems();
+        coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+        placeList.clear();
     }
 
     @Override
@@ -578,9 +601,6 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.coffeePlaceFilterClearPositionButtonId:
-                clearStoredLocation();
-                break;
             case R.id.changePlaceConfirmButtonId:
                 if (placeFilterPresenter.isEdit()) {
                     changingPlace();
@@ -705,10 +725,12 @@ public class PlacesFragment extends Fragment implements
     public void onGeocoderSuccess(LatLng latLng) {
         if (placeFilterPresenter.isLoadingEdit()) {
             coffeePlaceFilterBackgroundProgressbar.setVisibility(View.GONE);
-            placeFilterPresenter.onExpand();
+            placeFilterPresenter.onExpandEdit();
             setActionbarHomeButtonEnabled(false);
             clearEditText();
             saveLocationOnStorage(latLng);
+            retrievePlacesAndUpdateUI();
+            updateFiltersPlaceLocation();
         }
     }
 

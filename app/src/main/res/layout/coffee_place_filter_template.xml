@@ -16,18 +16,14 @@
         android:paddingRight="@dimen/small_padding"
         android:elevation="2dp">
         <TextView
-            android:visibility="gone"
-            android:layout_alignParentRight="true"
-            android:id="@+id/coffeePlaceFilterClearPositionButtonId"
             android:background="?attr/selectableItemBackground"
             android:padding="@dimen/small_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/medium_padding"
             android:textSize="@dimen/text_small_16"
-            android:textColor="@color/material_grey50"
-            android:text="@string/change_place_button"/>
+            android:textColor="@color/material_brown400"
+            android:text="@string/main_app_description"/>
     </RelativeLayout>
     <include layout="@layout/cardview_change_place_layout"/>
     <include layout="@layout/cardview_place_layout"/>

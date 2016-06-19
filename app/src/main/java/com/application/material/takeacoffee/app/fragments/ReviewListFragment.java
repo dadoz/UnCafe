@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -146,6 +147,23 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setTitle(name);
             setCoolapsingToolbarTitleFont();
+            setStatusBarColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
+        }
+    }
+
+    /**
+     *
+     * @param color
+     */
+    private void setStatusBarColor(int color) {
+        if (Build.VERSION.SDK_INT >= 22) {
+            Window window = getActivity().getWindow();
+            // clear FLAG_TRANSLUCENT_STATUS flag:
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            // finally change the color
+            window.setStatusBarColor(color);
         }
     }
 
