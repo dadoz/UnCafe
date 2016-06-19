@@ -47,6 +47,8 @@
     <string name="city">città&#8230;&#8230;&#8230;</string>
     <string name="find">TROVA</string>
     <string name="done">FATTO</string>
+    <string name="no_place_from_geocode_found">Città non trovata</string>
+    <string name="main_app_description">Caffè, bars and reviews nella tua città</string>
 
     <string name="contact_email">tunnusandroid.dev@gmail.com</string>
 
