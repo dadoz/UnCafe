@@ -12,13 +12,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/small_padding">
+        android:layout_margin="@dimen/cardview_small_margin">
         <TextView
             android:id="@+id/placePositionFilterTextViewId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_big_22"
             android:textColor="@color/material_red400"
+            android:layout_marginBottom="@dimen/extra_small_padding"
             android:text="Torino"/>
         <TextView
             android:layout_below="@id/placePositionFilterTextViewId"
@@ -32,6 +33,7 @@
             android:background="?attr/selectableItemBackground"
             android:id="@+id/placePositionFilterEditButtonId"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_width="@dimen/medium_small_icon_size"
             android:layout_height="@dimen/medium_small_icon_size"
             android:src="@drawable/ic_edit_black_36dp"/>

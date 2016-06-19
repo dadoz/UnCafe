@@ -52,9 +52,13 @@
     <dimen name="small_content_text_size">14sp</dimen>
     <dimen name="medium_icon_size_margin">95dip</dimen>
     <dimen name="text_big_18">18sp</dimen>
-    <dimen name="extra_small_padding">5dp</dimen>
+    <dimen name="extra_small_padding">4dp</dimen>
     <dimen name="text_big_20">20sp</dimen>
     <dimen name="max_review_list_photo">300dp</dimen>
     <dimen name="actionbar_filter_height">40dp</dimen>
+    <dimen name="cardview_medium_margin">24dp</dimen>
+    <dimen name="cardview_small_margin">16dp</dimen>
+    <dimen name="cardview_extrasmall_margin">8dp</dimen>
+    <dimen name="cardview_medium_margin_12">12dp</dimen>
 
 </resources>

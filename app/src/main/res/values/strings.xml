@@ -48,5 +48,6 @@
     <string name="find">find</string>
     <string name="done">DONE</string>
     <string name="no_place_from_geocode_found">City not found</string>
+    <string name="change_place_title">Change Place</string>
 
 </resources>
