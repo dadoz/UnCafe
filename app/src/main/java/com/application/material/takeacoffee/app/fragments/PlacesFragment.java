@@ -196,6 +196,7 @@ public class PlacesFragment extends Fragment implements
         placePositionFilterEditButton.setOnClickListener(this);
         changePlaceConfirmButton.setOnClickListener(this);
         coffeePlaceFilterCardview.setOnClickListener(this);
+        coffeePlaceFilterBackgroundFrameLayout.setOnClickListener(this);
         updateFiltersPlaceLocation();
         //init presenter
         placeFilterPresenter = PlaceFilterPresenter.getInstance(new WeakReference<>(getContext()),
@@ -608,6 +609,9 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.coffeePlaceFilterCardviewId:
+                startActivity(new Intent(getActivity().getApplicationContext(), MapActivity.class));
+                break;
             case R.id.changePlaceConfirmButtonId:
                 if (placeFilterPresenter.isEdit()) {
                     changingPlace();
