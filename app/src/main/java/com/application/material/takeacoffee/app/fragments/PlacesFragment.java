@@ -281,6 +281,7 @@ public class PlacesFragment extends Fragment implements
                 break;
             case R.id.action_settings:
                 unsubscribeObservable();
+                handleFilterBackPressed();
                 changeFragment(new SettingListFragment(),
                         SettingListFragment.SETTING_LIST_FRAG_TAG);
                 break;
