@@ -193,6 +193,10 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
         return state == PlaceFilterEnum.EDIT;
     }
 
+    public void setEditMode() {
+        state = PlaceFilterEnum.EDIT;
+    }
+
     /**
      *
      * @return

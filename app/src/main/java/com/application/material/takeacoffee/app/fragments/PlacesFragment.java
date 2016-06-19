@@ -281,6 +281,8 @@ public class PlacesFragment extends Fragment implements
                 break;
             case R.id.action_settings:
                 unsubscribeObservable();
+                //force to edit mode
+                placeFilterPresenter.setEditMode();
                 handleFilterBackPressed();
                 changeFragment(new SettingListFragment(),
                         SettingListFragment.SETTING_LIST_FRAG_TAG);
@@ -701,20 +703,23 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onGeocoderSuccess(LatLng latLng) {
-        coffeePlaceFilterBackgroundProgressbar.setVisibility(View.GONE);
-        placeFilterPresenter.onExpand();
-        setActionbarHomeButtonEnabled(false);
-        clearEditText();
-        saveLocationOnStorage(latLng);
+        if (placeFilterPresenter.isLoadingEdit()) {
+            coffeePlaceFilterBackgroundProgressbar.setVisibility(View.GONE);
+            placeFilterPresenter.onExpand();
+            setActionbarHomeButtonEnabled(false);
+            clearEditText();
+            saveLocationOnStorage(latLng);
+        }
     }
 
     @Override
     public void onGeocoderError() {
-        coffeePlaceFilterBackgroundProgressbar.setVisibility(View.GONE);
-        changePlaceTextInputLayout.setErrorEnabled(true);
-        changePlaceTextInputLayout.setError(getString(R.string.no_place_from_geocode_found));
-        placeFilterPresenter.onOnlyShowEditPlace();
-
+        if (placeFilterPresenter.isLoadingEdit()) {
+            coffeePlaceFilterBackgroundProgressbar.setVisibility(View.GONE);
+            changePlaceTextInputLayout.setErrorEnabled(true);
+            changePlaceTextInputLayout.setError(getString(R.string.no_place_from_geocode_found));
+            placeFilterPresenter.onOnlyShowEditPlace();
+        }
     }
 
     /**
