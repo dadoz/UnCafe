@@ -92,6 +92,10 @@ public class PlacesFragment extends Fragment implements
     View placePositionFilterEditButton;
     @Bind(R.id.changePlaceFilterCardviewId)
     View changePlaceFilterCardview;
+    @Bind(R.id.coffeePlaceFilterBackgroundFrameLayoutId)
+    View coffeePlaceFilterBackgroundFrameLayout;
+    @Bind(R.id.coffeePlaceFilterBackgroundProgressbarId)
+    View coffeePlaceFilterBackgroundProgressbar;
     @Bind(R.id.noLocationServiceLayoutId)
     View noLocationServiceLayout;
     @Bind(R.id.noNetworkServiceLayoutId)
@@ -197,7 +201,7 @@ public class PlacesFragment extends Fragment implements
         //init presenter
         placeFilterPresenter = PlaceFilterPresenter.getInstance(new WeakReference<>(getContext()),
                 new View[] {coffeePlaceFilterCardview, changePlaceFilterCardview, coffeePlaceFilterBackground,
-                        coffeePlaceSwipeRefreshLayout});
+                        coffeePlaceSwipeRefreshLayout, coffeePlaceFilterBackgroundFrameLayout});
         placeFilterPresenter.init();
         changePlaceTextInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -576,11 +580,8 @@ public class PlacesFragment extends Fragment implements
                 break;
             case R.id.changePlaceConfirmButtonId:
                 if (placeFilterPresenter.isEdit()) {
-                    saveChangePlace();
-                    placeFilterPresenter.onLoadEditPlace();
-                    placeFilterPresenter.onOnlyHideEditPlace();
-                    Utils.hideKeyboard(new WeakReference<>(getContext()),
-                            changePlaceEditText);
+                    changingPlace();
+                    changingPlaceUI();
                 }
                 break;
             case R.id.placePositionFilterEditButtonId:
@@ -603,9 +604,19 @@ public class PlacesFragment extends Fragment implements
     }
 
     /**
+     * 
+     */
+    private void changingPlaceUI() {
+        placeFilterPresenter.onLoadEditPlace();
+        coffeePlaceFilterBackgroundProgressbar.setVisibility(View.VISIBLE);
+        Utils.hideKeyboard(new WeakReference<>(getContext()),
+                changePlaceEditText);
+    }
+
+    /**
      * TODO move on presenter
      */
-    private void saveChangePlace() {
+    private void changingPlace() {
         selectedLocationName = changePlaceEditText.getText().toString() + " Italia";
         GeocoderManager.getInstance(new WeakReference<GeocoderManager.OnHandleGeocoderResult>(this),
                 new WeakReference<>(getContext()))
@@ -689,6 +700,7 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onGeocoderSuccess(LatLng latLng) {
+        coffeePlaceFilterBackgroundProgressbar.setVisibility(View.GONE);
         placeFilterPresenter.onExpand();
         setActionbarHomeButtonEnabled(false);
         clearEditText();
@@ -697,6 +709,7 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public void onGeocoderError() {
+        coffeePlaceFilterBackgroundProgressbar.setVisibility(View.GONE);
         changePlaceTextInputLayout.setErrorEnabled(true);
         changePlaceTextInputLayout.setError(getString(R.string.no_place_from_geocode_found));
         placeFilterPresenter.onOnlyShowEditPlace();

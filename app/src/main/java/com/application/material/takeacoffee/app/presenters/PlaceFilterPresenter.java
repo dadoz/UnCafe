@@ -19,6 +19,7 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
     private static View cardview;
     private static View swipeRefreshLayout;
     private static View changePlaceCardview;
+    private static View backgroundFrameLayout;
 
     private enum  PlaceFilterEnum {COLLAPSED, EDIT, LOADING_EDIT, IDLE};
     private PlaceFilterEnum state;
@@ -36,6 +37,7 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
         changePlaceCardview = viewArray[1];
         layout = viewArray[2];
         swipeRefreshLayout = viewArray[3];
+        backgroundFrameLayout = viewArray[4];
         animatorBuilder = AnimatorBuilder.getInstance(ctx);
         return instance == null ? instance = new PlaceFilterPresenter() : instance;
     }
@@ -69,7 +71,8 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      */
     public void onShowEditPlace() {
         state = PlaceFilterEnum.EDIT;
-        expandEdit(cardview, changePlaceCardview);
+        backgroundFrameLayout.setVisibility(View.VISIBLE);
+        expandEdit(cardview, changePlaceCardview, backgroundFrameLayout);
     }
 
     /**
@@ -77,7 +80,8 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      */
     public void onHideEditPlace() {
         state = PlaceFilterEnum.IDLE;
-        collapseEdit(cardview, changePlaceCardview);
+//        backgroundFrameLayout.setVisibility(View.GONE);
+        collapseEdit(cardview, changePlaceCardview, backgroundFrameLayout);
     }
 
     public void onLoadEditPlace() {
@@ -89,14 +93,14 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      *
      */
     public void onOnlyHideEditPlace() {
-        collapseEdit(null, changePlaceCardview);
+        collapseEdit(null, changePlaceCardview, null);
     }
     /**
      *
      */
     public void onOnlyShowEditPlace() {
         state = PlaceFilterEnum.EDIT;
-        expandEdit(null, changePlaceCardview);
+        expandEdit(null, changePlaceCardview, null);
     }
 
     /**
@@ -128,14 +132,15 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      * @param mainView
      * @param editView
      */
-    private void collapseEdit(View mainView, View editView) {
+    private void collapseEdit(View mainView, View editView, View backgroundView) {
         //TODO calculate height
         int MIN_TRANSLATION_EDIT_Y = -(editView.getHeight() + MIN_OFFSET);
         Animator anim1 = animatorBuilder.buildTranslationAnimator(editView, 0, MIN_TRANSLATION_EDIT_Y);
         if (mainView != null) {
             int MIN_TRANSLATION_Y = -(mainView.getHeight() + MIN_OFFSET);
             Animator anim2 = animatorBuilder.buildTranslationAnimator(mainView, MIN_TRANSLATION_Y, 0);
-            initAndStartAnimatorSet(new Animator[] {anim1, anim2});
+            Animator anim3 = animatorBuilder.buildAlphaAnimator(backgroundView, 1, 0);
+            initAndStartAnimatorSet(new Animator[] {anim3, anim1, anim2});
             return;
         }
 
@@ -147,14 +152,15 @@ public class PlaceFilterPresenter implements Animator.AnimatorListener {
      * @param mainView
      * @param editView
      */
-    private void expandEdit(View mainView, View editView) {
+    private void expandEdit(View mainView, View editView, View backgroundView) {
         //TODO calculate height
         int MIN_TRANSLATION_EDIT_Y = -(editView.getHeight() + MIN_OFFSET);
         Animator anim2 = animatorBuilder.buildTranslationAnimator(editView, MIN_TRANSLATION_EDIT_Y, 0);
         if (mainView != null) {
             int MIN_TRANSLATION_Y = -(mainView.getHeight() + MIN_OFFSET);
             Animator anim1 = animatorBuilder.buildTranslationAnimator(mainView, 0, MIN_TRANSLATION_Y);
-            initAndStartAnimatorSet(new Animator[] {anim1, anim2});
+            Animator anim3 = animatorBuilder.buildAlphaAnimator(backgroundView, 0, 1);
+            initAndStartAnimatorSet(new Animator[] {anim3, anim1, anim2});
             return;
         }
         initAndStartAnimatorSet(new Animator[] {anim2});

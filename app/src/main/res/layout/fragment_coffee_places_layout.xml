@@ -17,13 +17,6 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-    <FrameLayout
-        android:id="@+id/coffeePlaceFilterBackgroundFrameLayoutId"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/material_brown800"/>
-    <include layout="@layout/coffee_place_filter_template"/>
     <ProgressBar
         android:visibility="gone"
         android:id="@+id/coffeePlacesProgressId"
@@ -36,4 +29,24 @@
     <include layout="@layout/no_location_service_layout" />
     <include layout="@layout/no_network_service_layout" />
     <include layout="@layout/no_result_layout" />
+
+    <!--filter layout-->
+    <FrameLayout
+        android:id="@+id/coffeePlaceFilterBackgroundFrameLayoutId"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/material_brown800">
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/coffeePlaceFilterBackgroundProgressbarId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:indeterminateTint="@color/material_grey50"
+            android:indeterminateTintMode="src_in"/>
+
+    </FrameLayout>
+    <include layout="@layout/coffee_place_filter_template"/>
 </RelativeLayout>
