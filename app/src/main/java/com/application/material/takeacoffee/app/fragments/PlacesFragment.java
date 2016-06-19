@@ -141,6 +141,9 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        //handle listener (since it still equal to the one on review activity)
+        placesApiManager = PlaceApiManager.getInstance(new WeakReference<OnHandlePlaceApiResult>(this),
+                new WeakReference<Context>(getActivity().getApplicationContext()));
     }
 
     @Override
@@ -442,6 +445,7 @@ public class PlacesFragment extends Fragment implements
      */
     @Override
     public void onPlaceApiSuccess(Object result, RequestType type) {
+        Log.e("TAG", type.toString());
         if (type == RequestType.PLACE_INFO) {
             handleInfo((ArrayList<CoffeePlace>) result);
             placeList.addAll((ArrayList<CoffeePlace>) result);
@@ -500,6 +504,9 @@ public class PlacesFragment extends Fragment implements
      * @param placeList
      */
     public void handleInfo(ArrayList<CoffeePlace> placeList) {
+        if (placeFilterPresenter.isCollapsed()) {
+            placeFilterPresenter.onExpand();
+        }
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter())
                 .addAllItems(placeList);
         coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();

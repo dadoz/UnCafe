@@ -96,7 +96,7 @@ public class PlaceApiManager {
 
                     @Override
                     public void onCompleted() {
-                        Log.e("TAG", "completed");
+                        Log.e("TAG", "completed observable");
                     }
 
                     @Override
@@ -109,8 +109,7 @@ public class PlaceApiManager {
 
                     @Override
                     public void onNext(ArrayList<Object> list) {
-                        if (list == null ||
-                                list.size() == 0) {
+                        if (list == null || list.size() == 0) {
                             if (listener.get() != null) {
                                 listener.get().onEmptyResult();
                             }

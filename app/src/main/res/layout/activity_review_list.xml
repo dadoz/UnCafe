@@ -24,6 +24,7 @@
             android:fitsSystemWindows="true">
 
             <ImageView
+                android:fitsSystemWindows="true"
                 android:id="@+id/coffeePlaceImageViewId"
                 android:transitionName="photoPlaceTransitionName"
                 android:layout_width="fill_parent"
