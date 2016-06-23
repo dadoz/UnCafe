@@ -26,7 +26,7 @@ public class PlaceApiManager {
     public static final String BAR_PLACE_TYPE = "bar";
     public static final String PLACE_RANKBY = "distance";
 
-    public enum RequestType {PLACE_INFO, MORE_PLACE_INFO, PLACE_REVIEWS, PLACE_PHOTO};
+    public enum RequestType {PLACE_INFO, MORE_PLACE_INFO, PLACE_REVIEWS, PLACE_CITES, PLACE_PHOTO};
     public RequestType requestType;
 
     /**
@@ -85,6 +85,16 @@ public class PlaceApiManager {
     }
 
     /**
+     * main function to retrieve places data from google api
+     * @param find
+     */
+    public Subscription retrieveCitiesAsync(String find) {
+        requestType = RequestType.PLACE_CITES;
+        return initObservable(RetrofitManager.getInstance(contextWeakRef)
+                .listCitiesByFind(find));
+    }
+
+    /**
      *
      * @param observable
      */
@@ -101,7 +111,7 @@ public class PlaceApiManager {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("TAG", "error" + e.getMessage());
+                        Log.e("BLA", "error" + e.getMessage());
                         if (listener.get() != null) {
                             listener.get().onErrorResult(requestType);
                         }
@@ -121,6 +131,7 @@ public class PlaceApiManager {
                     }
                 });
     }
+
 
 
     /**

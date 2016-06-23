@@ -58,7 +58,7 @@ public class PickPositionFragment extends Fragment implements
     View locationPickIcon;
     @Bind(R.id.pickViewId)
     View pickView;
-    private LocationAutocompletePresenter locaionAutocompletePres;
+    private LocationAutocompletePresenter locationAutocompletePres;
     private String selectedLocationName;
     private GeocoderManager geocoder;
     private View view;
@@ -77,7 +77,7 @@ public class PickPositionFragment extends Fragment implements
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
-        locaionAutocompletePres = LocationAutocompletePresenter
+        locationAutocompletePres = LocationAutocompletePresenter
                 .getInstance(new WeakReference<>(getContext()),
                         new WeakReference<PickLocationInterface>(this),
                         locationAutocompleteTextView,
@@ -112,7 +112,7 @@ public class PickPositionFragment extends Fragment implements
         initActionBar();
         locationDoneButton.setOnClickListener(this);
         findPositionButton.setOnClickListener(this);
-        locaionAutocompletePres.init();
+        locationAutocompletePres.init();
     }
 
     @Override
@@ -132,7 +132,7 @@ public class PickPositionFragment extends Fragment implements
                 onActionDone();
                 break;
             case R.id.findPositionButtonId:
-                locaionAutocompletePres.updateUIOnFindPosition();
+                locationAutocompletePres.updateUIOnFindPosition();
                 break;
         }
     }
@@ -194,18 +194,18 @@ public class PickPositionFragment extends Fragment implements
     @Override
     public void onGeocoderSuccess(LatLng latLng) {
         saveLocationOnStorage(latLng);
-        locaionAutocompletePres.updateUIOnFindPositionSuccess(selectedLocationName);
+        locationAutocompletePres.updateUIOnFindPositionSuccess(selectedLocationName);
     }
 
 
     @Override
     public void onGeocoderError() {
-        locaionAutocompletePres.updateUIOnFindPositionError();
+        locationAutocompletePres.updateUIOnFindPositionError();
     }
 
     @Override
     public void onEnablePositionErrorCallback() {
-        locaionAutocompletePres.updateUIOnFindPositionError();
+        locationAutocompletePres.updateUIOnFindPositionError();
     }
 
     @Override

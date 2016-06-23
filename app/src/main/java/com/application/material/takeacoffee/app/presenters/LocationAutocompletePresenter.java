@@ -3,13 +3,13 @@ package com.application.material.takeacoffee.app.presenters;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,15 +18,18 @@ import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.animator.AnimatorBuilder;
+import com.application.material.takeacoffee.app.models.City;
+import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Created by davide on 02/05/16.
  */
 public class LocationAutocompletePresenter implements AdapterView.OnItemClickListener,
-        TextWatcher {
+        TextWatcher, PlaceApiManager.OnHandlePlaceApiResult {
     private static AutoCompleteTextView autoCompleteTextView;
     private static TextInputLayout locationTextInputLayout;
     private static WeakReference<Context> contextWeakRefer;
@@ -44,6 +47,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     private static final long MIN_DELAY = 500;
     private static final int MIN_OFFSET = 1000;
     private static View locationDoneBorderLayout;
+    private static PlaceApiManager placeApiManager;
 
     public LocationAutocompletePresenter() {
     }
@@ -56,10 +60,10 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      * @return
      */
     public static LocationAutocompletePresenter getInstance(WeakReference<Context> ctx,
-                                                            WeakReference<PickLocationInterface> listener,
-                                                            @NonNull AutoCompleteTextView textView,
-                                                            @NonNull TextInputLayout textInputLayout,
-                                                            @NonNull View[] viewArray) {
+                                                     WeakReference<PickLocationInterface> listener,
+                                                     @NonNull AutoCompleteTextView textView,
+                                                     @NonNull TextInputLayout textInputLayout,
+                                                     @NonNull View[] viewArray) {
         contextWeakRefer = ctx;
         pickLocationListener = listener;
         autoCompleteTextView = textView;
@@ -75,7 +79,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         locationSelectedTextview = viewArray[8];
 //        pickView = viewArray[8];
         countries = contextWeakRefer.get().getResources().getStringArray(R.array.list_of_countries);
-
         animatorBuilder = AnimatorBuilder.getInstance(ctx);
         return instance == null ?
                 instance = new LocationAutocompletePresenter() :
@@ -86,8 +89,13 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      * init
      */
     public void init() {
+        //TODO due to context
+        placeApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
+                contextWeakRefer);
+
         int darkColor = ContextCompat.getColor(contextWeakRefer.get(), R.color.material_brown900);
-        autoCompleteTextView.setAdapter(getAutocompleteLocationAdapter());
+//        autoCompleteTextView.setAdapter(getAutocompleteLocationAdapter());
+        //String find = "Bo";
         autoCompleteTextView.setOnItemClickListener(this);
         autoCompleteTextView.addTextChangedListener(this);
         autoCompleteTextView
@@ -169,7 +177,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Utils.hideKeyboard(contextWeakRefer, autoCompleteTextView);
-        pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position) + " Italia");
+        pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position) + "");
         findPositionButton.setVisibility(View.VISIBLE);
         updateUIOnFilledLocation();
     }
@@ -180,6 +188,9 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.length() != 0) {
+            setAutocompleteLocationAdapterAsync(s.toString());
+        }
     }
 
     @Override
@@ -274,7 +285,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      */
     private void setLocationSelected(String location) {
         locationSelectedTextview.setVisibility(View.VISIBLE);
-        location = location.replace("Italia", "");
+//        location = location.replace("Italia", "");
         ((TextView) locationSelectedTextview).setText(location);
     }
 
@@ -285,6 +296,33 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     public void setDoneButtonVisible(boolean visible) {
         locationDoneButton.setVisibility(visible ? View.VISIBLE : View.GONE);
         locationDoneBorderLayout.setVisibility(visible? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     *
+     */
+    private void setAutocompleteLocationAdapterAsync(String find) {
+        placeApiManager.retrieveCitiesAsync(find);
+    }
+
+    @Override
+    public void onPlaceApiSuccess(Object list, PlaceApiManager.RequestType type) {
+        ArrayList<City> parsedList = (ArrayList<City>) list;
+        Log.e("TAG", "tag - " + parsedList.get(0).getDescription() + parsedList.get(0).getTypes().toString());
+        Log.e("TAG", "size - " +  parsedList.size());
+        autoCompleteTextView.setAdapter(new ArrayAdapter<>(contextWeakRefer.get(),
+                android.R.layout.simple_list_item_1,  City.getArrayFromList(parsedList)));
+
+    }
+
+    @Override
+    public void onEmptyResult() {
+
+    }
+
+    @Override
+    public void onErrorResult(PlaceApiManager.RequestType type) {
+
     }
 
     /**

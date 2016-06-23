@@ -5,12 +5,12 @@ import android.util.Log;
 
 import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 import com.application.material.takeacoffee.app.cacheInterceptor.CacheControlApplicationInterceptor;
-import com.application.material.takeacoffee.app.cacheInterceptor.CacheControlNetworkInterceptor;
+import com.application.material.takeacoffee.app.models.City;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.CoffeePlace.PageToken;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.utils.ConnectivityUtils;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -20,9 +20,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,17 +27,12 @@ import java.util.Date;
 import java.util.List;
 
 import okhttp3.Cache;
-import okhttp3.CacheControl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Query;
 import rx.Observable;
 import rx.functions.Func1;
@@ -55,6 +47,7 @@ public class RetrofitManager {
     private static RetrofitManager instance;
     private final PlacesAPiWebService service;
     private static WeakReference<Context> contextWeakRef;
+    private String CITIES_TYPE = "(cities)";
 
     private RetrofitManager() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -162,6 +155,8 @@ public class RetrofitManager {
                     new PlaceDeserializer())
                 .registerTypeAdapter(new TypeToken<ArrayList<Review>>() {}.getType(),
                     new ReviewsDeserializer())
+                .registerTypeAdapter(new TypeToken<ArrayList<City>>() {}.getType(),
+                    new CitiesDeserializer())
                         .create());
     }
 
@@ -178,6 +173,20 @@ public class RetrofitManager {
                 .addInterceptor(new CacheControlApplicationInterceptor(contextWeakRef)) //app
 //                .addNetworkInterceptor(new CacheControlNetworkInterceptor(contextWeakRef)) //network
                 .build();
+    }
+
+    /**
+     *
+     * @param find
+     * @return
+     */
+    public Observable<ArrayList<Object>> listCitiesByFind(String find) {
+        return service.listCitiesByFind(find, CITIES_TYPE).map(new Func1<ArrayList<City>, ArrayList<Object>>() {
+            @Override
+            public ArrayList<Object> call(ArrayList<City> cities) {
+                return new ArrayList<Object>(cities);
+            }
+        });
     }
 
 
@@ -221,6 +230,21 @@ public class RetrofitManager {
                     new TypeToken<ArrayList<Review>>(){}.getType());
         }
     }
+    /**
+     * review deserializer
+     */
+    public class CitiesDeserializer implements JsonDeserializer<ArrayList<City>> {
+
+        @Override
+        public ArrayList<City>  deserialize(final JsonElement json, final Type typeOfT,
+                                                final JsonDeserializationContext context)
+                throws JsonParseException {
+            Log.e("TAG", json.toString());
+            JsonArray citiesArray = json.getAsJsonObject().get("predictions").getAsJsonArray();
+            return new Gson().fromJson(citiesArray,
+                    new TypeToken<ArrayList<City>>(){}.getType());
+        }
+    }
 
 
 
@@ -237,5 +261,9 @@ public class RetrofitManager {
                                                                   @Query("type") String type);
         @GET("place/nearbysearch/json?key=" + API_KEY)
         Observable<ArrayList<CoffeePlace>> listMorePlacesByPageToken(@Query("pagetoken") String pagetoken);
+
+        @GET("place/autocomplete/json?key=" + API_KEY)
+        Observable<ArrayList<City>> listCitiesByFind(@Query("input") String input,
+                                                                  @Query("type") String type);
     }
 }
