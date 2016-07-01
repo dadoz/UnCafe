@@ -47,7 +47,6 @@ public class RetrofitManager {
     private static RetrofitManager instance;
     private final PlacesAPiWebService service;
     private static WeakReference<Context> contextWeakRef;
-    private String CITIES_TYPE = "(cities)";
 
     private RetrofitManager() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -181,7 +180,7 @@ public class RetrofitManager {
      * @return
      */
     public Observable<ArrayList<Object>> listCitiesByFind(String find) {
-        return service.listCitiesByFind(find, CITIES_TYPE).map(new Func1<ArrayList<City>, ArrayList<Object>>() {
+        return service.listCitiesByFind(find, City.CITIES_TYPE, City.CITIES_LANGUAGE).map(new Func1<ArrayList<City>, ArrayList<Object>>() {
             @Override
             public ArrayList<Object> call(ArrayList<City> cities) {
                 return new ArrayList<Object>(cities);
@@ -264,6 +263,7 @@ public class RetrofitManager {
 
         @GET("place/autocomplete/json?key=" + API_KEY)
         Observable<ArrayList<City>> listCitiesByFind(@Query("input") String input,
-                                                                  @Query("type") String type);
+                                                     @Query("types") String types,
+                                                     @Query("language") String language);
     }
 }

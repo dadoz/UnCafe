@@ -3,7 +3,15 @@ package com.application.material.takeacoffee.app.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import rx.Observable;
+import rx.functions.Action0;
+import rx.functions.Action1;
+
 public class City implements Serializable {
+    public static String CITIES_TYPE = "(cities)";
+    public static String CITIES_LANGUAGE = "it";
+    private static String SELECTED_COUNTRY = "Italy";
+
     private String description;
     private String reference;
     private Term[] terms;
@@ -143,10 +151,13 @@ public class City implements Serializable {
      * @return
      */
     public static String[] getArrayFromList(ArrayList<City> list) {
-        String[] stringArray = new String[list.size()];
+        final String[] stringArray = new String[list.size()];
         int i = 0;
         for (City temp : list) {
-            stringArray[i++] = temp.getTerms()[0].getValue();
+//            if (temp.getTerms().length >= 3 &&
+//                    temp.getTerms()[2].getValue().equals(SELECTED_COUNTRY)) {
+                stringArray[i++] = temp.getTerms()[0].getValue();
+//            }
         }
         return stringArray;
     }

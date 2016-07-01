@@ -1,7 +1,11 @@
 package com.application.material.takeacoffee.app.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -21,6 +25,7 @@ import com.application.material.takeacoffee.app.presenters.LocationAutocompleteP
 import com.application.material.takeacoffee.app.presenters.LocationAutocompletePresenter.PickLocationInterface;
 import com.application.material.takeacoffee.app.singletons.GeocoderManager;
 import com.application.material.takeacoffee.app.singletons.GeocoderManager.OnHandleGeocoderResult;
+import com.application.material.takeacoffee.app.utils.ConnectivityUtils;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
 import com.application.material.takeacoffee.app.utils.Utils;
@@ -61,7 +66,6 @@ public class PickPositionFragment extends Fragment implements
     private LocationAutocompletePresenter locationAutocompletePres;
     private String selectedLocationName;
     private GeocoderManager geocoder;
-    private View view;
 
     private enum LocationActionTypeEnum {LOCATION_DONE, LOCATION_CURRENT}
     private LocationActionTypeEnum locationActionType;
@@ -73,7 +77,11 @@ public class PickPositionFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        view = inflater.inflate(R.layout.pick_position_fragment, container, false);
+        return inflater.inflate(R.layout.pick_position_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
@@ -91,9 +99,11 @@ public class PickPositionFragment extends Fragment implements
                         new WeakReference<>(getContext()));
 
         initView();
-        return view;
-    }
 
+        if (!ConnectivityUtils.checkConnectivity(new WeakReference<>(getActivity().getApplicationContext()))) {
+            handleNoConnectivity(view);
+        }
+    }
     /**
      * init actionbar
      */
@@ -114,6 +124,7 @@ public class PickPositionFragment extends Fragment implements
         findPositionButton.setOnClickListener(this);
         locationAutocompletePres.init();
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -219,5 +230,20 @@ public class PickPositionFragment extends Fragment implements
     public void onUpdateUIOnFindPositionCallback() {
         setPositionFromGeocoder();
 //        checkPositionPermissionAndTriggerAction(LocationActionTypeEnum.LOCATION_DONE);
+    }
+
+    /**
+     *
+     */
+    private void handleNoConnectivity(final View view) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (getActivity() != null) {
+                    Utils.showSnackbar(new WeakReference<>(getActivity().getApplicationContext()),
+                            view, R.string.no_internet_connection);
+                }
+            }
+        }, 2000);
     }
 }

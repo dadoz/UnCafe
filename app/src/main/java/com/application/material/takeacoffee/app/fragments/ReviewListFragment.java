@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -74,7 +75,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     View coffeePlacesEmptyResultReview;
     private ImageView coffeePlaceImageView;
     private CollapsingToolbarLayout collapsingToolbar;
-    private AppBarLayout appbarLayout;
     private String placeCoordinates;
     private Subscription obsSubscription;
 
@@ -85,11 +85,14 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View reviewListView = getActivity().getLayoutInflater()
+        return getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_review_list, container, false);
-        ButterKnife.bind(this, reviewListView);
+    }
+
+    @Override
+    public void onViewCreated(View view, @NonNull Bundle savedInstance) {
+        ButterKnife.bind(this, view);
         initView();
-        return reviewListView;
     }
 
     @Override
@@ -118,8 +121,6 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
         collapsingToolbar = (CollapsingToolbarLayout) getActivity()
                 .findViewById(R.id.collapsingToolbarLayoutId);
-        appbarLayout = (AppBarLayout) getActivity()
-                .findViewById(R.id.appbarLayoutId);
         coffeePlaceImageView = ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId));
 
         swipeRefreshLayout.setOnRefreshListener(this);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +21,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.decorators.ItemOffsetDecoration;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
+import com.application.material.takeacoffee.app.presenters.ChangeLocationAutocompleteFilterPresenter;
 import com.application.material.takeacoffee.app.presenters.PlaceFilterPresenter;
 import com.application.material.takeacoffee.app.scrollListeners.EndlessRecyclerOnScrollListener;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
@@ -85,8 +88,8 @@ public class PlacesFragment extends Fragment implements
     View coffeePlaceFilterCardview;
     @Bind(R.id.changePlaceConfirmButtonId)
     View changePlaceConfirmButton;
-    @Bind(R.id.changePlaceEditTextId)
-    EditText changePlaceEditText;
+    @Bind(R.id.changePlaceFilterAutocompleteTextviewId)
+    AutoCompleteTextView changePlaceFilterAutocompleteTextview;
     @Bind(R.id.changePlaceTextInputLayoutId)
     TextInputLayout changePlaceTextInputLayout;
     @Bind(R.id.placePositionFilterEditButtonId)
@@ -113,12 +116,13 @@ public class PlacesFragment extends Fragment implements
     TextView placePositionFilterTextView;
     private EndlessRecyclerOnScrollListener scrollListener;
     private PlaceFilterPresenter placeFilterPresenter;
-    private View coffeeMachineView;
 
     @State
     public ArrayList<CoffeePlace> placeList = new ArrayList<>();
     private Subscription obsSubscription;
     private String selectedLocationName;
+    private ChangeLocationAutocompleteFilterPresenter changePlaceAutocompletePresenter;
+    private View mainView;
 
     @Override
     public void onAttach(Context context) {
@@ -128,14 +132,18 @@ public class PlacesFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        Icepick.restoreInstanceState(this, savedInstance);
-        coffeeMachineView = getActivity().getLayoutInflater()
+        return getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_coffee_places_layout, container, false);
-        ButterKnife.bind(this, coffeeMachineView);
+    }
+
+    @Override
+    public void onViewCreated(View view, @NonNull Bundle savedInstance) {
+        ButterKnife.bind(this, view);
 
         permissionManager = PermissionManager.getInstance();
         initView(savedInstance);
-        return coffeeMachineView;
+        Icepick.restoreInstanceState(this, savedInstance);
+        mainView = view;
     }
 
     @Override
@@ -203,21 +211,7 @@ public class PlacesFragment extends Fragment implements
                 new View[] {coffeePlaceFilterCardview, changePlaceFilterCardview, coffeePlaceFilterBackground,
                         coffeePlaceSwipeRefreshLayout, coffeePlaceFilterBackgroundFrameLayout});
         placeFilterPresenter.init();
-        changePlaceTextInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                changePlaceTextInputLayout.setErrorEnabled(false);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        changePlaceAutocompletePresenter.init();
     }
 
     /**
@@ -227,18 +221,15 @@ public class PlacesFragment extends Fragment implements
         placePositionFilterTextView.setText(SharedPrefManager
                 .getInstance(new WeakReference<>(getContext()))
                 .getValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY));
-        changePlaceEditText.clearFocus();
-        Utils.hideKeyboard(new WeakReference<Context>(getActivity().getApplicationContext()), changePlaceEditText);
+        changePlaceFilterAutocompleteTextview.clearFocus();
+        Utils.hideKeyboard(new WeakReference<>(getActivity().getApplicationContext()),
+                changePlaceFilterAutocompleteTextview);
     }
     /**
      *
      */
     private void clearEditText() {
-        if (changePlaceTextInputLayout.getEditText() == null) {
-            return;
-        }
-
-        changePlaceTextInputLayout.getEditText().setText("");
+        changePlaceFilterAutocompleteTextview.setText("");
     }
 
 
@@ -472,7 +463,7 @@ public class PlacesFragment extends Fragment implements
      */
     private void showErrorMessage() {
         try {
-            Utils.showSnackbar(new WeakReference<>(getContext()), coffeeMachineView,
+            Utils.showSnackbar(new WeakReference<>(getContext()), mainView,
                     R.string.no_place_found);
         } catch (Exception e) {
             e.printStackTrace();
@@ -646,14 +637,14 @@ public class PlacesFragment extends Fragment implements
         placeFilterPresenter.onLoadEditPlace();
         coffeePlaceFilterBackgroundProgressbar.setVisibility(View.VISIBLE);
         Utils.hideKeyboard(new WeakReference<>(getContext()),
-                changePlaceEditText);
+                changePlaceFilterAutocompleteTextview);
     }
 
     /**
      * TODO move on presenter
      */
     private void changingPlace() {
-        selectedLocationName = changePlaceEditText.getText().toString() + " Italia";
+        selectedLocationName = changePlaceFilterAutocompleteTextview.getText().toString() + " Italia";
         GeocoderManager.getInstance(new WeakReference<GeocoderManager.OnHandleGeocoderResult>(this),
                 new WeakReference<>(getContext()))
                 .getLatLongByLocationName(selectedLocationName);
@@ -723,7 +714,7 @@ public class PlacesFragment extends Fragment implements
             setActionbarHomeButtonEnabled(false);
             clearEditText();
             Utils.hideKeyboard(new WeakReference<>(getContext()),
-                    changePlaceEditText);
+                    changePlaceFilterAutocompleteTextview);
             return true;
         }
 

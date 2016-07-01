@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
@@ -40,12 +41,15 @@ public class SettingListFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View settingListView = inflater.inflate(R.layout.fragment_settings, container, false);
-        ButterKnife.bind(this, settingListView);
+        return inflater.inflate(R.layout.fragment_settings, container, false);
+    }
+    
+    @Override
+    public void onViewCreated(View view, @NonNull Bundle savedInstance) {
+        ButterKnife.bind(this, view);
 
         ((PlacesActivity) getActivity()).setCurrentFragmentTag(SETTING_LIST_FRAG_TAG);
         initView();
-        return settingListView;
     }
 
     /**

@@ -49,5 +49,6 @@
     <string name="done">DONE</string>
     <string name="no_place_from_geocode_found">City not found</string>
     <string name="main_app_description">Coffees, places and reviews in your place</string>
+    <string name="no_internet_connection">No Data Connection!</string>
 
 </resources>

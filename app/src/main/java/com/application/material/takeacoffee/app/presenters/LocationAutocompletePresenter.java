@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -15,11 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.animator.AnimatorBuilder;
 import com.application.material.takeacoffee.app.models.City;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
+import com.application.material.takeacoffee.app.utils.ConnectivityUtils;
 import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -85,6 +88,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
                 instance;
 
     }
+
     /**
      * init
      */
@@ -103,6 +107,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         locationTextInputLayout.setY(MIN_OFFSET);
         animateTranslateUpView(locationTextInputLayout, true, true);
     }
+
 
     /**
      * TODO refactor
@@ -188,15 +193,14 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.length() != 0) {
-            setAutocompleteLocationAdapterAsync(s.toString());
-        }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
         findPositionButton.setVisibility(View.GONE);
         if (s.length() != 0) {
+            findPositionButton.setVisibility(View.VISIBLE);
+            setAutocompleteLocationAdapterAsync(s.toString());
             updateUIOnFilledLocation();
             return;
         }
@@ -302,7 +306,9 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      *
      */
     private void setAutocompleteLocationAdapterAsync(String find) {
-        placeApiManager.retrieveCitiesAsync(find);
+        if (ConnectivityUtils.checkConnectivity(contextWeakRefer)) {
+            placeApiManager.retrieveCitiesAsync(find);
+        }
     }
 
     @Override
