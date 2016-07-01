@@ -21,6 +21,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -38,6 +39,7 @@ import rx.schedulers.Schedulers;
 import com.application.material.takeacoffee.app.*;
 import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
 import com.application.material.takeacoffee.app.decorators.ItemOffsetDecoration;
+import com.application.material.takeacoffee.app.models.City;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.observer.CoffeePlaceAdapterObserver;
 import com.application.material.takeacoffee.app.presenters.ChangeLocationAutocompleteFilterPresenter;
@@ -141,6 +143,10 @@ public class PlacesFragment extends Fragment implements
         ButterKnife.bind(this, view);
 
         permissionManager = PermissionManager.getInstance();
+        changePlaceAutocompletePresenter = ChangeLocationAutocompleteFilterPresenter
+                .getInstance(new WeakReference<>(getActivity().getApplicationContext()),
+                        new WeakReference<OnHandlePlaceApiResult>(this),
+                        changePlaceFilterAutocompleteTextview);
         initView(savedInstance);
         Icepick.restoreInstanceState(this, savedInstance);
         mainView = view;
@@ -447,12 +453,15 @@ public class PlacesFragment extends Fragment implements
             scrollListener.setLoadingEnabled(true);
             handleMoreInfo((ArrayList<CoffeePlace>) result);
             placeList.addAll((ArrayList<CoffeePlace>) result);
+        } else if (type == RequestType.PLACE_CITES) {
+            changePlaceAutocompletePresenter.onCitiesRetrieveSuccess(result, type);
         }
     }
 
 
     @Override
     public void onEmptyResult() {
+        //add type
         showErrorMessage();
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
         placeList.clear();

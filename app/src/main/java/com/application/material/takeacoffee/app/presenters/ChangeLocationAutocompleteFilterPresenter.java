@@ -17,21 +17,23 @@ import java.util.ArrayList;
 /**
  * Created by davide on 23/06/16.
  */
-public class ChangeLocationAutocompleteFilterPresenter implements PlaceApiManager.OnHandlePlaceApiResult, TextWatcher {
+public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher {
 
     private static WeakReference<Context> contextWeakRefer;
     private static ChangeLocationAutocompleteFilterPresenter instance;
     private static AutoCompleteTextView autoCompleteTextView;
     private PlaceApiManager placeApiManager;
+    private static WeakReference<PlaceApiManager.OnHandlePlaceApiResult> listener;
 
     public static ChangeLocationAutocompleteFilterPresenter getInstance(WeakReference<Context> ctx,
+                                                                        WeakReference<PlaceApiManager.OnHandlePlaceApiResult> lst,
                                                                         @NonNull AutoCompleteTextView autocompleteTv) {
         contextWeakRefer = ctx;
+        listener = lst;
         autoCompleteTextView = autocompleteTv;
         return instance == null ?
                 instance = new ChangeLocationAutocompleteFilterPresenter() :
                 instance;
-
     }
 
     /**
@@ -45,29 +47,28 @@ public class ChangeLocationAutocompleteFilterPresenter implements PlaceApiManage
      * init
      */
     public void init() {
-        //TODO due to context
-        placeApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
-                contextWeakRefer);
+        placeApiManager = PlaceApiManager.getInstance(listener, contextWeakRefer);
         autoCompleteTextView.addTextChangedListener(this);
     }
 
-    @Override
-    public void onPlaceApiSuccess(Object list, PlaceApiManager.RequestType type) {
+    /**
+     *
+     * @param list
+     * @param type
+     */
+    public void onCitiesRetrieveSuccess(Object list, PlaceApiManager.RequestType type) {
         ArrayList<City> parsedList = (ArrayList<City>) list;
         Log.e("TAG", "tag - " + parsedList.get(0).getDescription() + parsedList.get(0).getTypes().toString());
         Log.e("TAG", "size - " + parsedList.size());
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(contextWeakRefer.get(),
-                android.R.layout.simple_list_item_1, City.getArrayFromList(parsedList)));
-
+                android.R.layout.simple_dropdown_item_1line, City.getArrayFromList(parsedList)));
     }
 
-    @Override
-    public void onEmptyResult() {
-
-    }
-
-    @Override
-    public void onErrorResult(PlaceApiManager.RequestType type) {
+    /**
+     *
+     * @param type
+     */
+    public void onCitiesRetrieveError(PlaceApiManager.RequestType type) {
 
     }
 
@@ -78,7 +79,7 @@ public class ChangeLocationAutocompleteFilterPresenter implements PlaceApiManage
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                changePlaceTextInputLayout.setErrorEnabled(false);
+//        autoCompleteTextView.setErrorEnabled(false);
     }
 
     @Override

@@ -166,7 +166,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      */
     private ArrayAdapter<String> getAutocompleteLocationAdapter() {
         return new ArrayAdapter<>(contextWeakRefer.get(),
-                android.R.layout.simple_list_item_1, countries);
+                android.R.layout.simple_dropdown_item_1line, countries);
     }
 
     /**
