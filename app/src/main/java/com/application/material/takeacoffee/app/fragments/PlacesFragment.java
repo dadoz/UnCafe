@@ -146,7 +146,7 @@ public class PlacesFragment extends Fragment implements
         changePlaceAutocompletePresenter = ChangeLocationAutocompleteFilterPresenter
                 .getInstance(new WeakReference<>(getActivity().getApplicationContext()),
                         new WeakReference<OnHandlePlaceApiResult>(this),
-                        changePlaceFilterAutocompleteTextview);
+                        new View[] {changePlaceFilterAutocompleteTextview, changePlaceTextInputLayout});
         initView(savedInstance);
         Icepick.restoreInstanceState(this, savedInstance);
         mainView = view;
@@ -460,7 +460,7 @@ public class PlacesFragment extends Fragment implements
 
 
     @Override
-    public void onEmptyResult() {
+    public void onPlaceApiEmptyResult() {
         //add type
         showErrorMessage();
         ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
@@ -480,13 +480,15 @@ public class PlacesFragment extends Fragment implements
     }
 
     @Override
-    public void onErrorResult(RequestType type) {
+    public void onPlaceApiError(RequestType type) {
         //TODO LEAK - if changing activity u must unsuscribe observer
         scrollListener.setLoadingEnabled(true);
         if (type == RequestType.PLACE_INFO) {
             showErrorMessage();
             ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
             coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
+        } else if (type == RequestType.PLACE_CITES) {
+            changePlaceAutocompletePresenter.onCitiesRetrieveError(type);
         }
         Log.e("TAG", "ERROR on retrieve result");
     }
@@ -747,6 +749,7 @@ public class PlacesFragment extends Fragment implements
         }
     }
 
+    //TODO move on presenter
     @Override
     public void onGeocoderError() {
         if (placeFilterPresenter.isLoadingEdit()) {

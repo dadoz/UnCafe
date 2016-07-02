@@ -322,13 +322,11 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     }
 
     @Override
-    public void onEmptyResult() {
-
+    public void onPlaceApiEmptyResult() {
     }
 
     @Override
-    public void onErrorResult(PlaceApiManager.RequestType type) {
-
+    public void onPlaceApiError(PlaceApiManager.RequestType type) {
     }
 
     /**

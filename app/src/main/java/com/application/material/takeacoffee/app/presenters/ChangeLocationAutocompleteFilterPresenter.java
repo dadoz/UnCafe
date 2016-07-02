@@ -2,9 +2,12 @@ package com.application.material.takeacoffee.app.presenters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -17,20 +20,23 @@ import java.util.ArrayList;
 /**
  * Created by davide on 23/06/16.
  */
-public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher {
+public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher, AdapterView.OnItemClickListener {
 
     private static WeakReference<Context> contextWeakRefer;
     private static ChangeLocationAutocompleteFilterPresenter instance;
     private static AutoCompleteTextView autoCompleteTextView;
+    private static TextInputLayout autoCompleteTextInputView;
     private PlaceApiManager placeApiManager;
     private static WeakReference<PlaceApiManager.OnHandlePlaceApiResult> listener;
+    private boolean dropdownForceToBeShown;
 
     public static ChangeLocationAutocompleteFilterPresenter getInstance(WeakReference<Context> ctx,
                                                                         WeakReference<PlaceApiManager.OnHandlePlaceApiResult> lst,
-                                                                        @NonNull AutoCompleteTextView autocompleteTv) {
+                                                                        @NonNull View[] viewArray) {
         contextWeakRefer = ctx;
         listener = lst;
-        autoCompleteTextView = autocompleteTv;
+        autoCompleteTextView = (AutoCompleteTextView) viewArray[0];
+        autoCompleteTextInputView = (TextInputLayout) viewArray[1];
         return instance == null ?
                 instance = new ChangeLocationAutocompleteFilterPresenter() :
                 instance;
@@ -49,6 +55,7 @@ public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher {
     public void init() {
         placeApiManager = PlaceApiManager.getInstance(listener, contextWeakRefer);
         autoCompleteTextView.addTextChangedListener(this);
+        autoCompleteTextView.setOnItemClickListener(this);
     }
 
     /**
@@ -62,6 +69,10 @@ public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher {
         Log.e("TAG", "size - " + parsedList.size());
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(contextWeakRefer.get(),
                 android.R.layout.simple_dropdown_item_1line, City.getArrayFromList(parsedList)));
+        if (!autoCompleteTextView.isPopupShowing() &&
+                dropdownForceToBeShown) {
+            autoCompleteTextView.showDropDown();
+        }
     }
 
     /**
@@ -69,7 +80,7 @@ public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher {
      * @param type
      */
     public void onCitiesRetrieveError(PlaceApiManager.RequestType type) {
-
+        //TODO implement it
     }
 
     @Override
@@ -79,15 +90,21 @@ public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-//        autoCompleteTextView.setErrorEnabled(false);
+        autoCompleteTextInputView.setErrorEnabled(false);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (s.length() != 0) {
+        Log.e("TAG CHANGE", s.toString());
+        dropdownForceToBeShown = s.length() == 2;
+        if (s.length() > 1) {
             setAutocompleteLocationAdapterAsync(s.toString());
         }
+
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    }
 }

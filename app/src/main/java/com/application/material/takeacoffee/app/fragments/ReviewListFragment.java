@@ -276,14 +276,14 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     }
 
     @Override
-    public void onEmptyResult() {
+    public void onPlaceApiEmptyResult() {
         Log.e("ReviewsFrag", "empty");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
         reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
-    public void onErrorResult(RequestType type) {
+    public void onPlaceApiError(RequestType type) {
         Log.e("ReviewsFrag", "error");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
         reviewRecyclerView.getAdapter().notifyDataSetChanged();

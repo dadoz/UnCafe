@@ -113,7 +113,7 @@ public class PlaceApiManager {
                     public void onError(Throwable e) {
                         Log.e("BLA", "error" + e.getMessage());
                         if (listener.get() != null) {
-                            listener.get().onErrorResult(requestType);
+                            listener.get().onPlaceApiError(requestType);
                         }
                     }
 
@@ -121,7 +121,7 @@ public class PlaceApiManager {
                     public void onNext(ArrayList<Object> list) {
                         if (list == null || list.size() == 0) {
                             if (listener.get() != null) {
-                                listener.get().onEmptyResult();
+                                listener.get().onPlaceApiEmptyResult();
                             }
                             return;
                         }
@@ -139,7 +139,7 @@ public class PlaceApiManager {
      */
     public interface OnHandlePlaceApiResult {
         void onPlaceApiSuccess(Object list, RequestType type);
-        void onEmptyResult();
-        void onErrorResult(RequestType type);
+        void onPlaceApiEmptyResult();
+        void onPlaceApiError(RequestType type);
     }
 }
