@@ -23,8 +23,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.BAR_PLACE_TYPE;
-import static com.application.material.takeacoffee.app.singletons.PlaceApiManager.PLACE_RANKBY;
+import static com.application.material.takeacoffee.app.models.CoffeePlace.BAR_PLACE_TYPE;
+import static com.application.material.takeacoffee.app.models.CoffeePlace.PLACE_RANKBY;
 
 public class MapActivity extends AppCompatActivity implements
         OnMapReadyCallback, PlaceApiManager.OnHandlePlaceApiResult, GoogleMap.OnMarkerClickListener {

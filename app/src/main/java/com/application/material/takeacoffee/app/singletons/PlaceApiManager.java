@@ -22,9 +22,6 @@ public class PlaceApiManager {
     private static WeakReference<OnHandlePlaceApiResult> listener;
     private static PlaceApiManager instance;
     private static WeakReference<Context> contextWeakRef;
-    private static final String CAFE_PLACE_TYPE = "cafe";
-    public static final String BAR_PLACE_TYPE = "bar";
-    public static final String PLACE_RANKBY = "distance";
 
     public enum RequestType {PLACE_INFO, MORE_PLACE_INFO, PLACE_REVIEWS, PLACE_CITES, PLACE_PHOTO};
     public RequestType requestType;

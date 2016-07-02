@@ -13,6 +13,11 @@ public class CoffeePlace implements Serializable {
     public static String COFFEE_PLACE_NAME_KEY = "PLACE_NAME_KEY";
     public static String COFFEE_MACHINE_OBJ_KEY = "COFFEE_MACHINE_OBJ";
     public static String COFFEE_PLACE_LATLNG_REFERENCE_KEY = "COFFEE_PLACE_LATLNG_REFERENCE_KEY";
+
+    public static final String CAFE_PLACE_TYPE = "cafe";
+    public static final String BAR_PLACE_TYPE = "bar";
+    public static final String PLACE_RANKBY = "distance";
+
     private PageToken pageTokenRef;
 
     @SerializedName("place_id")
