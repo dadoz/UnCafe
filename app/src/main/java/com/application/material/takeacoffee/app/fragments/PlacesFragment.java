@@ -188,6 +188,7 @@ public class PlacesFragment extends Fragment implements
         initFilters();
         initGridViewAdapter();
         initGooglePlaces();
+
         if (savedInstance == null) {
             initPermissionChainResponsibility();
             return;
@@ -636,7 +637,8 @@ public class PlacesFragment extends Fragment implements
                 break;
             case R.id.emptyResultButtonId:
                 coffeePlacesEmptyResult.setVisibility(View.GONE);
-                onEnablePositionCallback();
+                ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(false);
+                retrievePlacesAndUpdateUI();
                 break;
         }
     }

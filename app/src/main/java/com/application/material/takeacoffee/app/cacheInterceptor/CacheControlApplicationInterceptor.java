@@ -24,41 +24,9 @@ public class CacheControlApplicationInterceptor implements Interceptor {
                 "no-cache" :
                 "public, max-stale=2419200";
 
-//            String cacheControl = originalResponse.header("Cache-Control");
-//            if (cacheControl == null ||
-//                    cacheControl.contains("no-store") ||
-//                    cacheControl.contains("no-cache") ||
-//                    cacheControl.contains("must-revalidate") ||
-//                    cacheControl.contains("max-age=0")) {
-//
-//                Log.e("TAG", originalResponse.headers().toString() + " - " + originalResponse.code());
-        Response newResponse = originalResponse.newBuilder()
+        return originalResponse.newBuilder()
                 .header("Cache-Control", headerValue)//"public, max-age=" + 5000)
                 .build();
-
-//                Log.e("TAG", newResponse.headers().toString() + " - " + newResponse.code());
-        return newResponse;
-//            }
-
-//            Log.e("TAG-original", originalResponse.headers().toString() + " - " + originalResponse.code());
-//            return originalResponse;
-
-
-
-//            Request request = chain.request();
-//            String headerValue = ConnectivityUtils.checkConnectivity(contextWeakRef) ?
-//                    "only-if-cached" :
-//                    "public, max-stale=2419200";
-//
-//            Request cachedRequest = request.newBuilder()
-//                    .header("Cache-Control", headerValue)
-//                    .build();
-//            Log.e("TAG", cachedRequest.headers().toString() + " - " + cachedRequest.url().toString());
-//            Response response = chain.proceed(cachedRequest);
-//            Log.e("TAG", response.headers().toString() + " - " + response.code());
-////            Log.e("TAG", oldResponse.headers().toString() + " - " + oldResponse.code());
-//
-//            return response;
     }
 }
 
