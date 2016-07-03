@@ -20,7 +20,7 @@
     <string name="contact_subject">Info request</string>
     <string name="no_place_found">No Place found!</string>
     <string name="change_place_button">CHANGE PLACE</string>
-    <string name="tap_to_get_place_map">Tap to get places Map</string>
+    <string name="tap_to_get_place_map">Tap to open the Map</string>
     <string name="setting_menu">Settings</string>
     <string name="map_menu">Map</string>
     <string name="about_uncafe_menu">About UnCafe</string>

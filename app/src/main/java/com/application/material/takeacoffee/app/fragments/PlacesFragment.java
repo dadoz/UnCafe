@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,7 +98,7 @@ public class PlacesFragment extends Fragment implements
     @Bind(R.id.changePlaceTextInputLayoutId)
     TextInputLayout changePlaceTextInputLayout;
     @Bind(R.id.placePositionFilterEditButtonId)
-    View placePositionFilterEditButton;
+    ImageView placePositionFilterEditButton;
     @Bind(R.id.changePlaceFilterCardviewId)
     View changePlaceFilterCardview;
     @Bind(R.id.coffeePlaceFilterBackgroundFrameLayoutId)
@@ -210,6 +212,9 @@ public class PlacesFragment extends Fragment implements
      */
     private void initFilters() {
         placePositionFilterEditButton.setOnClickListener(this);
+        placePositionFilterEditButton.setImageDrawable(Utils
+                .getColoredDrawable(placePositionFilterEditButton.getDrawable(),
+                        ContextCompat.getColor(getContext(),R.color.material_brown800)));
         changePlaceConfirmButton.setOnClickListener(this);
         coffeePlaceFilterCardview.setOnClickListener(this);
         coffeePlaceFilterBackgroundFrameLayout.setOnClickListener(this);
