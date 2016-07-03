@@ -144,6 +144,7 @@ public class PlacesFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, @NonNull Bundle savedInstance) {
         ButterKnife.bind(this, view);
+        Icepick.restoreInstanceState(this, savedInstance);
 
         permissionManager = PermissionManager.getInstance();
         changePlaceAutocompletePresenter = ChangeLocationAutocompleteFilterPresenter
@@ -151,7 +152,6 @@ public class PlacesFragment extends Fragment implements
                         new WeakReference<OnHandlePlaceApiResult>(this),
                         new View[] {changePlaceFilterAutocompleteTextview, changePlaceTextInputLayout});
         initView(savedInstance);
-        Icepick.restoreInstanceState(this, savedInstance);
         mainView = view;
     }
 
@@ -204,6 +204,7 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void initViewFromSavedInstance() {
+        Log.e("placelist size ", "" + placeList.size());
         if (placeList.size() != 0) {
             handleInfo(placeList);
             return;
@@ -460,17 +461,18 @@ public class PlacesFragment extends Fragment implements
     public void onPlaceApiSuccess(Object result, RequestType type) {
         Log.e("TAG", type.toString());
         if (type == RequestType.PLACE_INFO) {
-            handleInfo((ArrayList<CoffeePlace>) result);
-            placeList.addAll((ArrayList<CoffeePlace>) result);
+            ArrayList<CoffeePlace> list = (ArrayList<CoffeePlace>) result;
+            handleInfo(list);
+            placeList.addAll(list);
         } else if (type == RequestType.MORE_PLACE_INFO) {
             scrollListener.setLoadingEnabled(true);
-            handleMoreInfo((ArrayList<CoffeePlace>) result);
-            placeList.addAll((ArrayList<CoffeePlace>) result);
+            ArrayList<CoffeePlace> list = (ArrayList<CoffeePlace>) result;
+            handleMoreInfo(list);
+            placeList.addAll(list);
         } else if (type == RequestType.PLACE_CITES) {
             changePlaceAutocompletePresenter.onCitiesRetrieveSuccess(result, type);
         }
     }
-
 
     @Override
     public void onPlaceApiEmptyResult() {
