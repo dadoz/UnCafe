@@ -100,7 +100,7 @@ public class PickPositionFragment extends Fragment implements
 
         initView();
 
-        if (!ConnectivityUtils.checkConnectivity(new WeakReference<>(getActivity().getApplicationContext()))) {
+        if (!ConnectivityUtils.isConnected(new WeakReference<>(getActivity().getApplicationContext()))) {
             handleNoConnectivity(view);
         }
     }

@@ -204,7 +204,13 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void initViewFromSavedInstance() {
-        handleInfo(placeList);
+        if (placeList.size() != 0) {
+            handleInfo(placeList);
+            return;
+        }
+
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(true);
+        coffeePlacesRecyclerview.getAdapter().notifyDataSetChanged();
     }
 
     /**

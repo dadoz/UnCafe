@@ -23,7 +23,7 @@ public class CacheControlNetworkInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
-        if (!ConnectivityUtils.checkConnectivity(contextWeakRef)) {
+        if (!ConnectivityUtils.isConnected(contextWeakRef)) {
             request = request.newBuilder()
                     .header("Cache-Control", "public, max-stale=2419200")
                     .build();

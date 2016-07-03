@@ -308,7 +308,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      *
      */
     private void setAutocompleteLocationAdapterAsync(String find) {
-        if (ConnectivityUtils.checkConnectivity(contextWeakRefer)) {
+        if (ConnectivityUtils.isConnected(contextWeakRefer)) {
             placeApiManager.retrieveCitiesAsync(find);
         }
     }

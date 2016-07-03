@@ -15,7 +15,7 @@ public class ConnectivityUtils {
      * @param contextWeakReference
      * @return
      */
-    public static boolean checkConnectivity(WeakReference<Context> contextWeakReference) {
+    public static boolean isConnected(WeakReference<Context> contextWeakReference) {
         ConnectivityManager connectivityManager = (ConnectivityManager) contextWeakReference.get()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

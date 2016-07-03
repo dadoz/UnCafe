@@ -133,7 +133,7 @@ public class PermissionManager {
     public void checkNetworkServiceIsEnabled(WeakReference<Context> activityWeakRef,
                                              OnEnableNetworkCallbackInterface networkListener) {
         if (((CoffeePlacesApplication) activityWeakRef.get().getApplicationContext()).isCacheValid() ||
-                ConnectivityUtils.checkConnectivity(activityWeakRef)) {
+                ConnectivityUtils.isConnected(activityWeakRef)) {
             networkListener.onEnableNetworkCallback();
             return;
         }

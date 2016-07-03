@@ -20,7 +20,7 @@ public class CacheControlApplicationInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
-        String headerValue = ConnectivityUtils.checkConnectivity(contextWeakRef) ?
+        String headerValue = ConnectivityUtils.isConnected(contextWeakRef) ?
                 "no-cache" :
                 "public, max-stale=2419200";
 
