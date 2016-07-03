@@ -68,7 +68,7 @@ public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher, A
         Log.e("TAG", "tag - " + parsedList.get(0).getDescription() + parsedList.get(0).getTypes().toString());
         Log.e("TAG", "size - " + parsedList.size());
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(contextWeakRefer.get(),
-                android.R.layout.simple_dropdown_item_1line, City.getArrayFromList(parsedList)));
+                android.R.layout.simple_list_item_1, City.getArrayFromList(parsedList)));
         if (!autoCompleteTextView.isPopupShowing() &&
                 dropdownForceToBeShown) {
             autoCompleteTextView.showDropDown();

@@ -144,7 +144,7 @@ public class PlacesFragment extends Fragment implements
 
         permissionManager = PermissionManager.getInstance();
         changePlaceAutocompletePresenter = ChangeLocationAutocompleteFilterPresenter
-                .getInstance(new WeakReference<>(getActivity().getApplicationContext()),
+                .getInstance(new WeakReference<>(getContext()),
                         new WeakReference<OnHandlePlaceApiResult>(this),
                         new View[] {changePlaceFilterAutocompleteTextview, changePlaceTextInputLayout});
         initView(savedInstance);
@@ -534,6 +534,7 @@ public class PlacesFragment extends Fragment implements
      */
     private void retrievePlacesAndUpdateUI() {
         //TODO big issue over here - position still not available
+        ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(false);
         cleanRecyclerViewData();
         final String latLngString = SharedPrefManager.getInstance(new WeakReference<>(getContext()))
                 .getValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY);
@@ -637,7 +638,6 @@ public class PlacesFragment extends Fragment implements
                 break;
             case R.id.emptyResultButtonId:
                 coffeePlacesEmptyResult.setVisibility(View.GONE);
-                ((PlacesGridViewAdapter) coffeePlacesRecyclerview.getAdapter()).setEmptyResult(false);
                 retrievePlacesAndUpdateUI();
                 break;
         }

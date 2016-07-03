@@ -2,6 +2,8 @@ package com.application.material.takeacoffee.app.singletons;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.application.material.takeacoffee.app.models.City;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,7 +57,6 @@ public class PlaceApiManager {
      */
     public Subscription retrievePlacesAsync(String location, String rankBy, String type) {
         requestType = RequestType.PLACE_INFO;
-
         return initObservable(RetrofitManager.getInstance(contextWeakRef)
                 .listPlacesByLocationAndType(location, rankBy, type));
     }
@@ -116,19 +117,27 @@ public class PlaceApiManager {
 
                     @Override
                     public void onNext(ArrayList<Object> list) {
-                        if (list == null || list.size() == 0) {
-                            if (listener.get() != null) {
-                                listener.get().onPlaceApiEmptyResult();
-                            }
-                            return;
-                        }
-                        if (listener.get() != null) {
+                        if ((list == null || list.size() == 0) &&
+                                listener.get() != null) {
+                            listener.get().onPlaceApiEmptyResult();
+                        } else if (listener.get() != null) {
+                            requestType = updateRequestType(list.get(0));
                             listener.get().onPlaceApiSuccess(list, requestType);
                         }
                     }
                 });
     }
 
+    private RequestType updateRequestType(Object o) {
+        if (o.getClass() == City.class) {
+            return RequestType.PLACE_CITES;
+        } else if (o.getClass() == CoffeePlace.class) {
+                return requestType == RequestType.MORE_PLACE_INFO ? RequestType.MORE_PLACE_INFO : RequestType.PLACE_INFO;
+        } else if (o.getClass() == Review.class) {
+            return RequestType.PLACE_REVIEWS;
+        }
+        return null;
+    }
 
 
     /**
