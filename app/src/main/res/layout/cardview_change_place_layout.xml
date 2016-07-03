@@ -24,6 +24,7 @@
             android:layout_margin="@dimen/cardview_small_margin">
             <android.support.v7.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/changePlaceFilterAutocompleteTextviewId"
+                android:theme="@style/EditTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_big_22"
