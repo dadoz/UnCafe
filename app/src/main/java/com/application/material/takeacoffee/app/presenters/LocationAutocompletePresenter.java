@@ -51,6 +51,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     private static final int MIN_OFFSET = 1000;
     private static View locationDoneBorderLayout;
     private static PlaceApiManager placeApiManager;
+    private boolean dropdownForceToBeShown;
 
     public LocationAutocompletePresenter() {
     }
@@ -182,7 +183,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Utils.hideKeyboard(contextWeakRefer, autoCompleteTextView);
-        pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position) + "");
+        pickLocationListener.get().pickLocationSuccess(parent.getItemAtPosition(position).toString());
         findPositionButton.setVisibility(View.VISIBLE);
         updateUIOnFilledLocation();
     }
@@ -197,6 +198,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
 
     @Override
     public void afterTextChanged(Editable s) {
+        dropdownForceToBeShown = s.length() == 2;
         findPositionButton.setVisibility(View.GONE);
         if (s.length() != 0) {
             findPositionButton.setVisibility(View.VISIBLE);
@@ -318,6 +320,10 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         Log.e("TAG", "size - " +  parsedList.size());
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(contextWeakRefer.get(),
                 android.R.layout.simple_list_item_1,  City.getArrayFromList(parsedList)));
+        if (!autoCompleteTextView.isPopupShowing() &&
+                dropdownForceToBeShown) {
+            autoCompleteTextView.showDropDown();
+        }
 
     }
 

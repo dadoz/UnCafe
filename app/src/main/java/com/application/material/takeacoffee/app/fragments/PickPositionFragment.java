@@ -177,7 +177,7 @@ public class PickPositionFragment extends Fragment implements
         sharedPref.setValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY,
                         Utils.getLatLngString(latLng));
         sharedPref.setValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY,
-                        selectedLocationName);
+                Utils.capitalize(selectedLocationName));
     }
 
 

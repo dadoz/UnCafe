@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.UserDictionary;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -657,7 +658,7 @@ public class PlacesFragment extends Fragment implements
      * TODO move on presenter
      */
     private void changingPlace() {
-        selectedLocationName = changePlaceFilterAutocompleteTextview.getText().toString() + " Italia";
+        selectedLocationName = changePlaceFilterAutocompleteTextview.getText().toString();
         GeocoderManager.getInstance(new WeakReference<GeocoderManager.OnHandleGeocoderResult>(this),
                 new WeakReference<>(getContext()))
                 .getLatLongByLocationName(selectedLocationName);
@@ -774,7 +775,7 @@ public class PlacesFragment extends Fragment implements
         sharedPref.setValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY,
                 Utils.getLatLngString(latLng));
         sharedPref.setValueByKey(SharedPrefManager.LOCATION_NAME_SHAREDPREF_KEY,
-                selectedLocationName);
+                Utils.capitalize(selectedLocationName));
     }
 
 }
