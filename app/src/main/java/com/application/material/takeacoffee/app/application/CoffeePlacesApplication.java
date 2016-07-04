@@ -1,8 +1,12 @@
 package com.application.material.takeacoffee.app.application;
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.http.HttpResponseCache;
+import android.os.Bundle;
 
 import com.application.material.takeacoffee.app.R;
+import com.flurry.android.FlurryAgent;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +29,21 @@ public class CoffeePlacesApplication extends Application {
         super.onCreate();
         initCalligraph();
         initCacheFile();
+
+        try {
+            initFlurry();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initFlurry() throws PackageManager.NameNotFoundException {
+        ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(),
+                PackageManager.GET_META_DATA);
+        new FlurryAgent.Builder()
+                .withLogEnabled(false)
+                .build(this, ai.metaData.getString("FLURRY_API_KEY"));
+
     }
 
     /**

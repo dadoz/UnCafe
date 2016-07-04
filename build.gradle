@@ -12,5 +12,7 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+        jcenter()
+
     }
 }

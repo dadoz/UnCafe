@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.application.material.takeacoffee.app" >
+    package="com.application.material.takeacoffee.app">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -45,5 +45,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAWf-vfZJNezNMeFMSXl7UJ8Glusipor5E"/>
+
+        <meta-data
+            android:name="FLURRY_API_KEY"
+            android:value="KQ2Y8SXVGPBSKY9BCYW8"/>
     </application>
 </manifest>

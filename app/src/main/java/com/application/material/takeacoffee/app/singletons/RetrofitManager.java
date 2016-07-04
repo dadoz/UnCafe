@@ -10,7 +10,6 @@ import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.CoffeePlace.PageToken;
 import com.application.material.takeacoffee.app.models.Review;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
