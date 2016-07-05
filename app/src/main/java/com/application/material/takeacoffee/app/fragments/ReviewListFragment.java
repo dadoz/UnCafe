@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -221,11 +222,22 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_position:
-                Toast.makeText(getContext(), getString(R.string.available_soon), Toast.LENGTH_SHORT).show();
+                openMapIntent();
                 break;
         }
         return true;
 
+    }
+
+    /**
+     *
+     */
+    private void openMapIntent() {
+        String uriString = "geo:" + placeCoordinates + "?q=" + placeName;
+        Uri gmmIntentUri = Uri.parse(uriString);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     @Override
