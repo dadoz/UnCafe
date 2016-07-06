@@ -43,7 +43,7 @@
     <string name="sending_email">Mandando l\'email&#8230;&#8230;&#8230;</string>
 
     <!--PICK POSITION-->
-    <string name="pick_a_city_description">Scegli una città&#8230;&#8230;&#8230;\nBETA disponibile solo per l\'Italia!</string>
+    <string name="pick_a_city_description">Scegli una città&#8230;&#8230;&#8230;\nin versione BETA!</string>
     <string name="city">città&#8230;&#8230;&#8230;</string>
     <string name="find">TROVA</string>
     <string name="done">FATTO</string>
