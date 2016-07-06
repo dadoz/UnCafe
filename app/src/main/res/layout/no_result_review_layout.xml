@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coffeePlacesEmptyResultReviewId"
+    android:visibility="gone"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:id="@+id/emptyResultReviewTextId"
+        android:gravity="center_horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:textColor="@color/material_brown800"
+        android:textSize="@dimen/text_big_24"
+        android:text="@string/no_review_found_id"/>
+</RelativeLayout>

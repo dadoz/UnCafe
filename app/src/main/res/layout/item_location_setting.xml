@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="@dimen/small_padding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/settingLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textColor="@color/material_brown800"
+        android:gravity="center"
+        android:textSize="@dimen/text_big_18"/>
+    <TextView
+        android:id="@+id/settingLocationId"
+        android:layout_below="@id/settingLabelId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textColor="@color/material_red400"
+        android:textSize="@dimen/text_big_26"/>
+</RelativeLayout>

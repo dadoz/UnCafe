@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,6 +14,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+
+import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
 
 import java.lang.ref.WeakReference;
 
@@ -24,7 +28,7 @@ public class PermissionManager {
     public static final int ACTION_LOCATION_SOURCE_SETTINGS = 1;
     private static PermissionManager instance;
     private OnHandleGrantPermissionCallbackInterface listener;
-    private OnEnablePositionCallbackInterface locationListener;
+    private WeakReference<OnEnablePositionCallbackInterface> locationListener;
 
     public static PermissionManager getInstance() {
         return instance == null ?
@@ -69,12 +73,78 @@ public class PermissionManager {
 
         listener.onHandleGrantPermissionCallback();
     }
+    /**
+     *
+     * @param activityWeakRef
+     */
+    public void checkLocationServiceIsEnabled(WeakReference<AppCompatActivity> activityWeakRef,
+                                              WeakReference<OnEnablePositionCallbackInterface> locationListener) {
+        this.locationListener = locationListener;
+        final LocationManager manager = (LocationManager) activityWeakRef.get()
+                .getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps(activityWeakRef);
+            return;
+        }
+
+        locationListener.get().onEnablePositionCallback();
+    }
+
+    /**
+     *
+     * @param activityWeakRef
+     */
+    private void buildAlertMessageNoGps(final WeakReference<AppCompatActivity> activityWeakRef) {
+        final AlertDialog alert = new AlertDialog.Builder(activityWeakRef.get(),
+                   R.style.CustomAlertDialogStyle)
+                .setMessage("Your GPS is not activated,\n do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog,  final int id) {
+                        enablePosition(activityWeakRef);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                        locationListener.get().onEnablePositionErrorCallback();
+                    }
+                })
+                .create();
+        alert.show();
+    }
+
+    /**
+     *
+     * @param activityWeakRef
+     */
+    public void enablePosition(final WeakReference<AppCompatActivity> activityWeakRef) {
+        activityWeakRef.get()
+                .startActivityForResult(new Intent(android.provider.Settings
+                        .ACTION_LOCATION_SOURCE_SETTINGS), ACTION_LOCATION_SOURCE_SETTINGS);
+    }
+
+    /**
+     *
+     * @param activityWeakRef
+     * @param networkListener
+     */
+    public void checkNetworkServiceIsEnabled(WeakReference<Context> activityWeakRef,
+                                             OnEnableNetworkCallbackInterface networkListener) {
+        if (((CoffeePlacesApplication) activityWeakRef.get().getApplicationContext()).isCacheValid() ||
+                ConnectivityUtils.isConnected(activityWeakRef)) {
+            networkListener.onEnableNetworkCallback();
+            return;
+        }
+        networkListener.onEnableNetworkErrorCallback();
+    }
 
     /**
      *
      */
     public void onEnablePositionResult() {
-        locationListener.onEnablePositionCallback();
+        locationListener.get().onEnablePositionCallback();
     }
 
     /**
@@ -98,75 +168,6 @@ public class PermissionManager {
      */
     public interface OnHandleGrantPermissionCallbackInterface {
         void onHandleGrantPermissionCallback();
-    }
-
-    /**
-     *
-     * @param activityWeakRef
-     */
-    public void checkLocationServiceIsEnabled(WeakReference<AppCompatActivity> activityWeakRef,
-                                              OnEnablePositionCallbackInterface locationListener) {
-        this.locationListener = locationListener;
-        final LocationManager manager = (LocationManager) activityWeakRef.get()
-                .getSystemService(Context.LOCATION_SERVICE);
-
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps(activityWeakRef);
-            return;
-        }
-
-        locationListener.onEnablePositionCallback();
-    }
-
-    /**
-     *
-     * @param activityWeakRef
-     */
-    private void buildAlertMessageNoGps(final WeakReference<AppCompatActivity> activityWeakRef) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activityWeakRef.get());
-        builder.setMessage("Your GPS is not activated,\n do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog,  final int id) {
-                        enablePosition(activityWeakRef);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        dialog.cancel();
-                        locationListener.onEnablePositionErrorCallback();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    /**
-     *
-     * @param activityWeakRef
-     */
-    public void enablePosition(final WeakReference<AppCompatActivity> activityWeakRef) {
-        activityWeakRef.get()
-                .startActivityForResult(new Intent(android.provider.Settings
-                        .ACTION_LOCATION_SOURCE_SETTINGS), ACTION_LOCATION_SOURCE_SETTINGS);
-    }
-
-    /**
-     *
-     * @param activityWeakRef
-     * @param networkListener
-     */
-    public void checkNetworkServiceIsEnabled(WeakReference<AppCompatActivity> activityWeakRef,
-                                              OnEnableNetworkCallbackInterface networkListener) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) activityWeakRef.get()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null &&
-                networkInfo.isConnectedOrConnecting()) {
-            networkListener.onEnableNetworkCallback();
-            return;
-        }
-        networkListener.onEnableNetworkErrorCallback();
     }
 
 }

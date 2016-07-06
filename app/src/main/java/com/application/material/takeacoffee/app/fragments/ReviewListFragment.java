@@ -2,82 +2,98 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.*;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
-import com.application.material.takeacoffee.app.HandleReviewActivity;
-import com.application.material.takeacoffee.app.BuildConfig;
-import com.application.material.takeacoffee.app.ReviewListActivity;
 import com.application.material.takeacoffee.app.R;
+import com.application.material.takeacoffee.app.ReviewListActivity;
+import com.application.material.takeacoffee.app.ReviewListActivity.OnHandleBackPressedInterface;
 import com.application.material.takeacoffee.app.adapters.ReviewRecyclerViewAdapter;
-import com.application.material.takeacoffee.app.decorator.DividerItemDecoration;
+import com.application.material.takeacoffee.app.application.CoffeePlacesApplication;
+import com.application.material.takeacoffee.app.decorators.DividerItemDecoration;
 import com.application.material.takeacoffee.app.models.*;
+import com.application.material.takeacoffee.app.observer.ReviewAdapterObserver;
 import com.application.material.takeacoffee.app.singletons.EventBusSingleton;
-import com.application.material.takeacoffee.app.singletons.FirebaseManager;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton.PicassoCallbacksInterface;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
-import com.application.material.takeacoffee.app.utils.CacheManager;
-import com.firebase.client.FirebaseError;
+import com.application.material.takeacoffee.app.singletons.PlaceApiManager.RequestType;
+import com.application.material.takeacoffee.app.utils.ExpandableTextView;
+import com.application.material.takeacoffee.app.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
+
 /**
  * Created by davide on 08/04/14.
  */
 public class ReviewListFragment extends Fragment implements AdapterView.OnItemLongClickListener,
-        ReviewRecyclerViewAdapter.CustomItemClickListener, View.OnClickListener,
+        ReviewRecyclerViewAdapter.CustomItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, PlaceApiManager.OnHandlePlaceApiResult,
-        GoogleApiClient.OnConnectionFailedListener, FirebaseManager.OnRetrieveFirebaseDataInterface {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, PicassoCallbacksInterface,
+        OnHandleBackPressedInterface {
     private static final String TAG = "ReviewListFragment";
-    private static AppCompatActivity mainActivityRef = null;
-    private ArrayList<Review> reviewList = new ArrayList<>();
+    public static String REVIEW_LIST_FRAG_TAG = "REVIEW_LIST_FRAG_TAG";
     private String coffeePlaceId;
+    private String placeName;
     private PlaceApiManager placesApiManager;
-    private GoogleApiClient mGoogleApiClient;
+    private String photoReference;
 
     @Bind(R.id.reviewRecyclerViewId)
     RecyclerView reviewRecyclerView;
     @Bind(R.id.swipeRefreshLayoutId)
     SwipeRefreshLayout swipeRefreshLayout;
     @Bind(R.id.coffeePlacesProgressId)
-    ProgressBar coffeePlacesProgress;
+    ProgressBar reviewProgress;
+    @Bind(R.id.coffeePlacesEmptyResultReviewId)
+    View coffeePlacesEmptyResultReview;
+    private ImageView coffeePlaceImageView;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private String placeCoordinates;
+    private Subscription obsSubscription;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mainActivityRef =  (ReviewListActivity) context;
     }
 
-    /**
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstance
-     * @return
-     */
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
-        View reviewListView = getActivity().getLayoutInflater()
+        return getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_review_list, container, false);
-        ButterKnife.bind(this, reviewListView);
+    }
+
+    @Override
+    public void onViewCreated(View view, @NonNull Bundle savedInstance) {
+        ButterKnife.bind(this, view);
         initView();
-        return reviewListView;
     }
 
     @Override
@@ -92,43 +108,85 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         super.onPause();
     }
 
+    @Override
+    public void onDestroy() {
+        unsubscribeObservable();
+        super.onDestroy();
+    }
+
     /**
      * init view to handle review data
      */
     public void initView() {
+        setHasOptionsMenu(true);
+
+        collapsingToolbar = (CollapsingToolbarLayout) getActivity()
+                .findViewById(R.id.collapsingToolbarLayoutId);
+        coffeePlaceImageView = ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId));
+
         swipeRefreshLayout.setOnRefreshListener(this);
-        mainActivityRef.findViewById(R.id.addReviewFabId).setOnClickListener(this);
+        getActivity().findViewById(R.id.addReviewFabId).setOnClickListener(this);
         initListView();
+        initGooglePlaces();
     }
 
     /**
      * samplePlacesApi
      */
     private void initGooglePlaces() {
-        if (mGoogleApiClient != null) {
-            return;
-        }
+        placesApiManager = PlaceApiManager
+                .getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
+                        new WeakReference<>(getContext()));
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
-        placesApiManager = PlaceApiManager.getInstance(new WeakReference<PlaceApiManager.OnHandlePlaceApiResult>(this),
-                mGoogleApiClient);
     }
-
 
     /**
      *
      */
     private void initActionbar(String name) {
         ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionbar != null) {
+        if (getActivity() != null &&
+                actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setTitle(name);
+            setCoolapsingToolbarTitleFont();
+            Utils.setStatusBarColor(getActivity().getWindow(),
+                    ContextCompat.getColor(getContext(), android.R.color.transparent));
+        }
+    }
+
+    /**
+     *
+     */
+    private void setCoolapsingToolbarTitleFont() {
+        final Typeface tf = Typeface
+                .createFromAsset(getActivity().getAssets(), CoffeePlacesApplication.FONT_BOLD_PATH);
+        collapsingToolbar.setCollapsedTitleTypeface(tf);
+        collapsingToolbar.setExpandedTitleTypeface(tf);
+
+    }
+    /**
+     *
+     */
+    private void setCoolapsingToolbarTitleColor() {
+        try {
+            new Palette.Builder(((BitmapDrawable) coffeePlaceImageView.getDrawable()).getBitmap())
+                    .generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    int grey = ContextCompat.getColor(getActivity().getApplicationContext(),
+                            R.color.material_grey400);
+                    int brown = ContextCompat.getColor(getActivity().getApplicationContext(),
+                            R.color.material_brown800);
+//                    collapsingToolbar.setContentScrimColor(palette.getMutedColor(brown));
+//                    collapsingToolbar.setCollapsedTitleTextColor(palette.getLightVibrantColor(grey));
+                    collapsingToolbar.setExpandedTitleColor(palette.getLightVibrantColor(grey));
+//                    Utils.setStatusBarColor(getActivity().getWindow(), palette.getDarkMutedColor(brown));
+
+                }
+            }).get();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -137,12 +195,14 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     private void initListView() {
         ReviewRecyclerViewAdapter adapter = new ReviewRecyclerViewAdapter(
-                new WeakReference<Context>(getActivity()), reviewList);
+                new WeakReference<Context>(getActivity()), new ArrayList<Review>());
+        adapter.registerAdapterDataObserver(new ReviewAdapterObserver(new WeakReference<>(reviewRecyclerView),
+                reviewProgress, coffeePlacesEmptyResultReview));
         adapter.setOnItemClickListener(this);        //TODO booooo ????
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        reviewRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                LinearLayoutManager.VERTICAL));
+//        reviewRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+//                LinearLayoutManager.VERTICAL));
         reviewRecyclerView.setAdapter(adapter);
         reviewRecyclerView.setLayoutManager(layoutManager);
     }
@@ -155,26 +215,29 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.review, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return true;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.addReviewFabId:
-
-                Bundle bundle = new Bundle();
-                bundle.putString(Review.REVIEW_ID_KEY, "090Xg3rDmx");
-                bundle.putString(Review.REVIEW_CONTENT_KEY, "balsdlllasldlflalsl llsadf lalsll sdlfl lalsd");
-                EventBusSingleton.getInstance().postSticky(bundle);
-                Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
-                startActivity(intent);
+        switch (item.getItemId()) {
+            case R.id.action_position:
+                openMapIntent();
                 break;
         }
+        return true;
+
+    }
+
+    /**
+     *
+     */
+    private void openMapIntent() {
+        String uriString = "geo:" + placeCoordinates + "?q=" + placeName;
+        Uri gmmIntentUri = Uri.parse(uriString);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     @Override
@@ -182,68 +245,62 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(Bundle bundle) {
-        //TODO refactor
-        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
-        String placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
+    /**
+     *
+     */
+    private void setPlaceName() {
+        initActionbar(placeName);
+    }
 
-        onSetCoffeePlaceInfoOnListCallback(placeName);
-        onUpdatePhotoOnListCallback();
-
-        if (BuildConfig.DEBUG) {
-            Log.e("TAG", "BLA");
-            reviewList = getReviewListTest();
-            ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).addAllItems(reviewList);
-//            reviewRecyclerView.getAdapter().notifyDataSetChanged();
+    /**
+     *
+     */
+    private void setPlacePhotoByUrl() {
+        Drawable defaultIcon = ContextCompat.getDrawable(getContext(),
+                R.drawable.ic_local_see_black_24dp);
+        if (photoReference == null) {
+            coffeePlaceImageView.setImageDrawable(defaultIcon);
             return;
         }
-
-        //review
-        reviewList.clear();
-        FirebaseManager.getIstance()
-                .getReviewListAsync(new WeakReference<FirebaseManager.OnRetrieveFirebaseDataInterface>(this), "kFFMaPaytU");
+        PicassoSingleton.getInstance(new WeakReference<>(getContext()),
+                new WeakReference<PicassoCallbacksInterface>(this))
+                .setPhotoAsync(coffeePlaceImageView, photoReference, defaultIcon);
     }
+
 
     /**
      *
-     * @param title
+     * @param list
      */
-    public void onSetCoffeePlaceInfoOnListCallback(String title) {
-        initActionbar(title);
+    public void handleReviewOnListCallback(ArrayList<Review> list) {
+        reviewProgress.setVisibility(View.GONE);
+        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter())
+                .addAllItems(list);
     }
 
-    /**
-     *
-     * @param place
-     */
+
     @Override
-    public void onSetCoffeePlaceInfoOnListCallback(Place place) {
-        initActionbar(place.getName().toString());
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void onUpdatePhotoOnListCallback() {
-        //handle picture
-        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(coffeePlaceId);
-        if (cachedPic != null) {
-            ((ImageView) getActivity().findViewById(R.id.coffeePlaceImageViewId))
-                    .setImageBitmap(cachedPic);
+    public void onPlaceApiSuccess(Object result, RequestType type) {
+        Log.e("REVIEW", type.toString());
+        if (type == RequestType.PLACE_REVIEWS) {
+            handleReviewOnListCallback((ArrayList<Review>) result);
         }
     }
 
     @Override
-    public void handleEmptyList() {
+    public void onPlaceApiEmptyResult() {
+        Log.e("ReviewsFrag", "empty");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
-    public void emptyFirebaseDataCallback() {
+    public void onPlaceApiError(RequestType type) {
+        Log.e("ReviewsFrag", "error");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+        reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
+
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -252,31 +309,31 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onItemClick(int pos, View v) {
-        //TODO move
-        Bundle bundle = new Bundle();
-        bundle.putString(Review.REVIEW_ID_KEY, "000000");
-        bundle.putString(Review.REVIEW_CONTENT_KEY, "Hey content review, you can handle this by bla");
-        bundle.putBoolean(Review.REVIEW_RATING_KEY, true);
-        EventBusSingleton.getInstance().postSticky(bundle);
-
-        Intent intent = new Intent(getActivity(), HandleReviewActivity.class);
-        startActivity(intent);
-
+        ((ExpandableTextView) v.findViewById(R.id.reviewTextId)).toggleEllipsize();
     }
 
     @Override
-    public void retrieveFirebaseDataSuccessCallback(String type, ArrayList<Review> list) {
-        coffeePlacesProgress.setVisibility(View.GONE);
-        reviewList.addAll(list);
-        reviewRecyclerView.getAdapter().notifyDataSetChanged();
+    public void onClick(View v) {
+        shareReview(placeName, placeCoordinates, getResources().getString(R.string.found_this_place_at));
     }
 
-    @Override
-    public void retrieveFirebaseDataErrorCallback(FirebaseError error) {
-        Log.e(TAG, "error" + error.getMessage());
-        //TODO change view
-        ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
+    /**
+     *
+     * @param placeName
+     * @param placeCoordinates
+     * @param customText
+     */
+    private void shareReview(String placeName, String placeCoordinates, String customText) {
+        String BASE_URL = "http://www.google.com/maps/place/";
+        String url = BASE_URL + placeCoordinates;
+        String text = placeName + "\n\n" + customText + "\n";
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text + url);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share_place_info)));
     }
+
 
     /**
      *
@@ -284,19 +341,53 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
      */
     public ArrayList<Review> getReviewListTest() {
         ArrayList<Review> list = new ArrayList<Review>();
-        list.add(new Review("0", "1", "heheeheheheh", "hadshfjefhsejkfhakejh", 1234342, null));
-//        list.add(new Review("1", "blalallalll", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Bla", "1", null, null));
-//        list.add(new Review("2", "blalallalll2", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Davide", "1", null, null));
-//        list.add(new Review("3", "blalallall3", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Andrea", "1", null, null));
-//        list.add(new Review("4", "blalallall4", "balal", 1234342, "Davide", "1", null, null));
-//        list.add(new Review("5", "blalallall5", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "Guest Hey", "1", null, null));
-//        list.add(new Review("6", "blalallall6", "balal", 1234342, "1", "1", null, null));
-//        list.add(new Review("7", "blalallall6", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
-//        list.add(new Review("7", "blalallall7", "balal", 1234342, "1", "1", null, null));
-//        list.add(new Review("8", "blalallall8", "hadshfjefhsejkfhakejh adfaklsjd kj klsdfkj alskjd lksdj flksd fa", 1234342, "1", "1", null, null));
-//        list.add(new Review("9", "blalallall9", "balal", 1234342, "1", "1", null, null));
-//        list.add(new Review("10", "blalallall10", "balal", 1234342, "1", "1", null, null));
+//        list.add(new Review("0", "1", "heheeheheheh", "hadshfjefhsejkfhakejh", 1234342, null));
         return list;
+    }
+
+    /**
+     *
+     * @param bundle
+     */
+    private void parseBundle(Bundle bundle) {
+        coffeePlaceId = bundle.getString(CoffeePlace.COFFEE_PLACE_ID_KEY);
+        placeName = bundle.getString(CoffeePlace.COFFEE_PLACE_NAME_KEY);
+        photoReference = bundle.getString(CoffeePlace.COFFEE_PLACE_PHOTO_REFERENCE_KEY);
+        placeCoordinates = bundle.getString(CoffeePlace.COFFEE_PLACE_LATLNG_REFERENCE_KEY);
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(Bundle bundle) {
+        parseBundle(bundle);
+
+        setPlaceName();
+        setPlacePhotoByUrl();
+        obsSubscription = placesApiManager.retrieveReviewsAsync(coffeePlaceId);
+    }
+
+
+    @Override
+    public void onPicassoSuccessCallback() {
+        if (getActivity() != null) {
+            setCoolapsingToolbarTitleFont();
+            setCoolapsingToolbarTitleColor();
+        }
+
+    }
+
+    @Override
+    public void onPicassoErrorCallback() {
+    }
+
+    @Override
+    public void handleBackPressed() {
+        unsubscribeObservable();
+    }
+
+    public void unsubscribeObservable() {
+        if (obsSubscription != null) {
+            obsSubscription.unsubscribe();
+        }
     }
 }
 

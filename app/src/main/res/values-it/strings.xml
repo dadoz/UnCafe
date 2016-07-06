@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info_description">Questa applicazione non è a scopo di lucro ed è stata creata per aiutare la scelta di un buon caffe\n\nI suoi servizi sono basati suGoogle Places API,
+        \nu(nder its licence free to use: https://developers.google.com/places).
+        \n\nControlla il sito web oppure contattaci per email.
+        \n\n\n@2016 Davide LM</string>
+
+    <string name="app_name">Un Café</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="HTTP_generic_error">Hey! C\'è stato un errore. Controlla la tua connessione Internet!</string>
+    <string name="generic_error">Hey! C\'è stato un errore. Contattaci per supporto.</string>
+    <string name="review_actionbar_title">Coffee reviews</string>
+    <string name="coffee_place_actionbar">Bar</string>
+    <string name="map_name">Mappa</string>
+    <string name="pick_pos_name">Scegli una città</string>
+    <string name="no_review_found_id">Nessuna review trovata</string>
+    <string name="found_this_place_at" type="id">Puoi trovare questo bar:</string>
+    <string name="contact_subject">Richiesta Info</string>
+    <string name="no_place_found">Nessun bar trovato!</string>
+    <string name="change_place_button">CAMBIA CITTA\'</string>
+    <string name="tap_to_get_place_map">Apri la mappa</string>
+    <string name="retrieving_more_place">Sto caricando altri bar</string>
+
+    <!--MENU-->
+    <string name="setting_menu">Impostazioni</string>
+    <string name="map_menu">Mappa</string>
+    <string name="about_uncafe_menu">Info UnCafe</string>
+
+    <!-- SETTINGS -->
+    <string name="location_settings">Città:</string>
+    <string name="last_sync_settings">Ultimo sync:</string>
+    <string name="rate_now_settings" >Rate now!</string>
+    <string name="contact_settings" >Contattaci!</string>
+    <string name="language_settings">Lingua:</string>
+    <string name="version_settings">Versione</string>
+
+    <!--PLACES-->
+    <string name="rating">voto</string>
+
+    <!--REVIEWS-->
+    <string name="share_place_info">Condividi questo Bar</string>
+    <string name="available_soon">Disponibile a breve</string>
+    <string name="sending_email">Mandando l\'email&#8230;&#8230;&#8230;</string>
+
+    <!--PICK POSITION-->
+    <string name="pick_a_city_description">Scegli una città&#8230;&#8230;&#8230;\nBETA disponibile solo per l\'Italia!</string>
+    <string name="city">città&#8230;&#8230;&#8230;</string>
+    <string name="find">TROVA</string>
+    <string name="done">FATTO</string>
+    <string name="no_place_from_geocode_found">Città non trovata</string>
+    <string name="main_app_description">Caffè, bars and reviews nella tua città</string>
+    <string name="no_internet_connection">Nessuna connessione dati attiva.</string>
+
+    <string name="contact_email">tunnusandroid.dev@gmail.com</string>
+
+</resources>

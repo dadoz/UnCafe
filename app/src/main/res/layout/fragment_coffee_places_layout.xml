@@ -4,33 +4,49 @@
     android:id="@+id/coffeeMachineFragmentLayoutId"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/coffee_place_filter_template"/>
-
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/coffeePlaceSwipeRefreshLayoutId"
-        android:layout_below="@id/coffeePlaceFilterLayoutId"
+        android:layout_marginTop="@dimen/actionbar_filter_height"
+        android:paddingTop="@dimen/actionbar_filter_padding_top"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/coffeePlacesRecyclerViewId"
-            android:layout_below="@id/coffeePlaceFilterLayoutId"
             android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
     <ProgressBar
         android:visibility="gone"
         android:id="@+id/coffeePlacesProgressId"
-        style="@android:style/Widget.Material.Light.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:indeterminateTint="@color/material_brown600"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:indeterminateTint="@color/material_brown900"
         android:indeterminateTintMode="src_in"/>
     <include layout="@layout/no_location_service_layout" />
     <include layout="@layout/no_network_service_layout" />
     <include layout="@layout/no_result_layout" />
+
+    <!--filter layout-->
+    <FrameLayout
+        android:id="@+id/coffeePlaceFilterBackgroundFrameLayoutId"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/material_brown800">
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/coffeePlaceFilterBackgroundProgressbarId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:indeterminateTint="@color/material_grey50"
+            android:indeterminateTintMode="src_in"/>
+
+    </FrameLayout>
+    <include layout="@layout/coffee_place_filter_template"/>
 </RelativeLayout>

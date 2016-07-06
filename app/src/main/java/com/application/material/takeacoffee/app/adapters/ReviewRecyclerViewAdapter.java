@@ -1,8 +1,9 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
-import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.models.Review;
-import com.application.material.takeacoffee.app.utils.CacheManager;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
+import com.application.material.takeacoffee.app.utils.ExpandableTextView;
+import com.application.material.takeacoffee.app.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -25,39 +27,72 @@ import java.util.ArrayList;
 public class ReviewRecyclerViewAdapter extends
         RecyclerView.Adapter<ReviewRecyclerViewAdapter.ViewHolder> {
     private final ArrayList<Review> itemList;
+    private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
     private ReviewRecyclerViewAdapter.ViewHolder holder;
     private String GUEST_USER = "Guest";
+    private boolean empty;
 
-    public ReviewRecyclerViewAdapter(WeakReference<Context> context,
+    public ReviewRecyclerViewAdapter(WeakReference<Context> ctx,
                                      ArrayList<Review> itemList) {
         this.itemList = itemList;
+        this.contextWeakRef = ctx;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.review_template, parent, false);
+                .inflate(R.layout.item_review, parent, false);
         holder = new ReviewRecyclerViewAdapter.ViewHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        holder.usernameText.setText(itemList.get(position).getUser() == null ? GUEST_USER :
-                itemList.get(position).getUser().getUsername());
-        holder.dateText.setText("" + itemList.get(position).getTimestamp());
-        holder.reviewText.setText(itemList.get(position).getComment());
+        Review item = itemList.get(position);
+        holder.usernameText.setText(item.getUser() == null ? GUEST_USER :
+                item.getUser());
+        holder.dateText.setText(Utils.getFormattedTimestamp(item.getTimestamp()));
+        holder.reviewText.setText(item.getComment());
+        holder.reviewRating.setText(item.getRating() + ".0"); //TODO change it
+        setProfilePicByUrl(item.getProfilePhotoUrl(), holder.profilePictureImageView);
     }
 
+    /**
+     *
+     * @param photoRef
+     */
+    private void setProfilePicByUrl(String photoRef, final ImageView imageView) {
+        Drawable defaultIcon = ContextCompat.getDrawable(contextWeakRef.get(),
+                R.drawable.ic_perm_identity_black_48dp);
+        if (photoRef == null) {
+            imageView.setImageDrawable(defaultIcon);
+            return;
+        }
+        PicassoSingleton.getInstance(contextWeakRef, null)
+                .setProfilePictureAsync(imageView, photoRef, defaultIcon);
+    }
+    
     @Override
     public int getItemCount() {
         return itemList.size();
     }
 
+    /**
+     *
+     * @param emptyResult
+     */
     public void setEmptyResult(boolean emptyResult) {
+        this.empty = emptyResult;
         Log.e("TAG", "empty result");
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isEmpty() {
+        return empty;
     }
 
     /**
@@ -66,13 +101,17 @@ public class ReviewRecyclerViewAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView usernameText;
         private final TextView dateText;
-        private final TextView reviewText;
+        private final ExpandableTextView reviewText;
+        private final TextView reviewRating;
+        private final ImageView profilePictureImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             usernameText = ((TextView) itemView.findViewById(R.id.usernameTextId));
             dateText = ((TextView) itemView.findViewById(R.id.dateTextId));
-            reviewText = (TextView) itemView.findViewById(R.id.reviewTextId);
+            reviewText = (ExpandableTextView) itemView.findViewById(R.id.reviewTextId);
+            reviewRating = (TextView) itemView.findViewById(R.id.reviewRatingTextViewId);
+            profilePictureImageView = (ImageView) itemView.findViewById(R.id.profilePictureViewId);
             itemView.setOnClickListener(this);
         }
 

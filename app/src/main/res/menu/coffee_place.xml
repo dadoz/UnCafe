@@ -1,16 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.application.material.takeacoffee.app.CoffeePlacesActivity" >
+    tools:context=".PlacesActivity" >
     <item
+        android:visible="false"
         android:id="@+id/action_position"
-        android:title="Map"
-        android:icon="@drawable/map"
+        android:title="@string/map_menu"
+        android:icon="@drawable/ic_map_white_48dp"
         android:orderInCategory="100"
-        app:showAsAction="always" />
+        app:showAsAction="withText" />
     <item
         android:id="@+id/action_settings"
-        android:title="Settings"
+        android:title="@string/setting_menu"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_policy"
+        android:title="@string/about_uncafe_menu"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

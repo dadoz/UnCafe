@@ -1,9 +1,16 @@
 package com.application.material.takeacoffee.app.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +19,10 @@ import android.widget.TextView;
 
 import com.application.material.takeacoffee.app.R;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
-import com.application.material.takeacoffee.app.utils.CacheManager;
+import com.application.material.takeacoffee.app.singletons.PicassoSingleton;
+import com.application.material.takeacoffee.app.singletons.RetrofitManager;
+import com.application.material.takeacoffee.app.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -24,7 +34,6 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     private final ArrayList<CoffeePlace> itemList;
     private final WeakReference<Context> contextWeakRef;
     private CustomItemClickListener listener;
-    private PlacesGridViewAdapter.ViewHolder holder;
     private boolean isEmptyResult;
 
 
@@ -35,40 +44,46 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.coffee_place_template, parent, false);
-        holder = new PlacesGridViewAdapter.ViewHolder(view);
-        return holder;
+                .inflate(R.layout.item_coffee_place, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        //TODO mv onBind function on vh
         holder.nameTextView.setText(itemList.get(position).getName());
         holder.addressTextView.setText(itemList.get(position).getAddress());
-        holder.iconImageView.setImageBitmap(getPicture(itemList.get(position).getId()));
+        holder.ratingTextView.setText(getRatingByPos(position));
+        String photoRef = itemList.get(position).getPhotoReference();
+        setPhotoByUrl(photoRef, holder.iconImageView);
+    }
+
+    /**
+     *
+     * @param position
+     * @return
+     */
+    private String getRatingByPos(int position) {
+        int rating = itemList.get(position).getRating();
+        return rating == 0 ? "-" : rating + ".0";
+    }
+
+    /**
+     *
+     * @param photoRef
+     */
+    private void setPhotoByUrl(String photoRef, final ImageView imageView) {
+        if (photoRef == null) {
+            imageView.setImageDrawable(getDefaultIcon());
+            return;
+        }
+        PicassoSingleton.getInstance(contextWeakRef, null)
+                .setPhotoAsync(imageView, photoRef, getDefaultIcon());
     }
 
     @Override
     public int getItemCount() {
         return itemList.size();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getCardviewWidth() {
-        return holder.itemView.getWidth();
-    }
-
-    /**
-     *
-     * @param placeId
-     */
-    public Bitmap getPicture(String placeId) {
-        Bitmap cachedPic = CacheManager.getInstance().getBitmapFromMemCache(placeId);
-        return cachedPic == null ? BitmapFactory
-                .decodeResource(contextWeakRef.get().getResources(),R.drawable.coffee_cup_icon) :
-                cachedPic;
     }
 
     /**
@@ -83,7 +98,47 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      *
      */
     public boolean isEmptyResult() {
-        return this.isEmptyResult;
+        return isEmptyResult &&
+                itemList.size() == 0;
+    }
+
+    /**
+     *
+     * @param pos
+     * @return
+     */
+    public CoffeePlace getItem(int pos) {
+        return itemList.get(pos);
+    }
+
+    /**
+     *
+     */
+    public void clearAllItems() {
+        itemList.clear();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getPageToken() {
+        if (itemList == null ||
+                itemList.size() == 0 ||
+                itemList.get(0) == null) {
+            return null;
+        }
+        return itemList.get(0).getPageToken().getToken();
+    }
+
+    /**
+     * TODO move
+     * @return
+     */
+    public Drawable getDefaultIcon() {
+        return Utils.getColoredDrawable(ContextCompat.getDrawable(contextWeakRef.get(),
+                R.drawable.ic_local_see_black_24dp),
+                ContextCompat.getColor(contextWeakRef.get(), R.color.material_brown600));
     }
 
     /**
@@ -94,13 +149,15 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
         private final TextView nameTextView;
         private final TextView addressTextView;
         private final View itemView;
+        private final TextView ratingTextView;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            nameTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineNameTextId));
-            addressTextView = ((TextView) itemView.findViewById(R.id.coffeeMachineAddressTextId));
-            iconImageView = (ImageView) itemView.findViewById(R.id.coffeeIconId);
-            this.itemView = itemView;
+        public ViewHolder(View view) {
+            super(view);
+            nameTextView = ((TextView) view.findViewById(R.id.coffeeMachineNameTextId));
+            addressTextView = ((TextView) view.findViewById(R.id.coffeeMachineAddressTextId));
+            iconImageView = (ImageView) view.findViewById(R.id.coffeeIconId);
+            ratingTextView = (TextView) view.findViewById(R.id.coffeePlaceRatingId);
+            itemView = view;
             itemView.setOnClickListener(this);
         }
 
@@ -130,6 +187,16 @@ public class PlacesGridViewAdapter extends RecyclerView.Adapter<PlacesGridViewAd
      * @param data
      */
     public void addAllItems(ArrayList<CoffeePlace> data) {
+        itemList.clear();
         itemList.addAll(data);
     }
+
+    /**
+     *
+     * @param data
+     */
+    public void appendAllItems(ArrayList<CoffeePlace> data) {
+        itemList.addAll(data);
+    }
+
 }

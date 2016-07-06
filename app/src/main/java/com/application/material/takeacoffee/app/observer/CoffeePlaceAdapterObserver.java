@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.application.material.takeacoffee.app.adapters.PlacesGridViewAdapter;
+import com.application.material.takeacoffee.app.utils.ConnectivityUtils;
 
 import java.lang.ref.WeakReference;
 
