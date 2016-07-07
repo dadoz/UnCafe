@@ -281,7 +281,7 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onPlaceApiSuccess(Object result, RequestType type) {
-        Log.e("REVIEW", type.toString());
+//        Log.e("REVIEW", type.toString());
         if (type == RequestType.PLACE_REVIEWS) {
             handleReviewOnListCallback((ArrayList<Review>) result);
         }
@@ -289,14 +289,14 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
 
     @Override
     public void onPlaceApiEmptyResult() {
-        Log.e("ReviewsFrag", "empty");
+//        Log.e("ReviewsFrag", "empty");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
         reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void onPlaceApiError(RequestType type) {
-        Log.e("ReviewsFrag", "error");
+//        Log.e("ReviewsFrag", "error");
         ((ReviewRecyclerViewAdapter) reviewRecyclerView.getAdapter()).setEmptyResult(true);
         reviewRecyclerView.getAdapter().notifyDataSetChanged();
     }

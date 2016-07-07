@@ -237,7 +237,6 @@ public class RetrofitManager {
         public ArrayList<City>  deserialize(final JsonElement json, final Type typeOfT,
                                                 final JsonDeserializationContext context)
                 throws JsonParseException {
-            Log.e("TAG", json.toString());
             JsonArray citiesArray = json.getAsJsonObject().get("predictions").getAsJsonArray();
             return new Gson().fromJson(citiesArray,
                     new TypeToken<ArrayList<City>>(){}.getType());

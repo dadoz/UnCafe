@@ -1,6 +1,8 @@
 package com.application.material.takeacoffee.app;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.application.material.takeacoffee.app.fragments.PlacesFragment;
 import com.application.material.takeacoffee.app.utils.PermissionManager;
+import com.flurry.android.FlurryAgent;
 
 public class PlacesActivity extends AppCompatActivity {
     private PermissionManager permissionManager;
@@ -35,6 +38,8 @@ public class PlacesActivity extends AppCompatActivity {
         Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_coffee_places);
         ButterKnife.bind(this);
+
+        FlurryAgent.onStartSession(this);
 
         permissionManager = PermissionManager.getInstance();
         initView();

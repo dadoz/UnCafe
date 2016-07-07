@@ -204,7 +204,7 @@ public class PlacesFragment extends Fragment implements
      *
      */
     private void initViewFromSavedInstance() {
-        Log.e("placelist size ", "" + placeList.size());
+//        Log.e("placelist size ", "" + placeList.size());
         if (placeList.size() != 0) {
             handleInfo(placeList);
             return;
@@ -459,7 +459,7 @@ public class PlacesFragment extends Fragment implements
      */
     @Override
     public void onPlaceApiSuccess(Object result, RequestType type) {
-        Log.e("TAG", type.toString());
+//        Log.e("TAG", type.toString());
         if (type == RequestType.PLACE_INFO) {
             ArrayList<CoffeePlace> list = (ArrayList<CoffeePlace>) result;
             handleInfo(list);
@@ -505,7 +505,7 @@ public class PlacesFragment extends Fragment implements
         } else if (type == RequestType.PLACE_CITES) {
             changePlaceAutocompletePresenter.onCitiesRetrieveError(type);
         }
-        Log.e("TAG", "ERROR on retrieve result");
+//        Log.e("TAG", "ERROR on retrieve result");
     }
 
     /**
@@ -783,7 +783,7 @@ public class PlacesFragment extends Fragment implements
         if (getActivity() == null) {
             return;
         }
-        Log.e("PICK", "start activity location ->" + Utils.getLatLngString(latLng));
+//        Log.e("PICK", "start activity location ->" + Utils.getLatLngString(latLng));
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(new WeakReference<>(getContext()));
         sharedPref.setValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY,
                 Utils.getLatLngString(latLng));

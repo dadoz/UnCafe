@@ -4,6 +4,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.http.HttpResponseCache;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.application.material.takeacoffee.app.R;
 import com.flurry.android.FlurryAgent;
@@ -41,9 +42,8 @@ public class CoffeePlacesApplication extends Application {
         ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(),
                 PackageManager.GET_META_DATA);
         new FlurryAgent.Builder()
-                .withLogEnabled(false)
+                .withLogEnabled(true)
                 .build(this, ai.metaData.getString("FLURRY_API_KEY"));
-
     }
 
     /**

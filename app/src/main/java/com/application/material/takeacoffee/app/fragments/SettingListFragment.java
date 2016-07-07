@@ -101,7 +101,7 @@ public class SettingListFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.e("SETTING", "hey click item");
+//        Log.e("SETTING", "hey click item");
         switch (position) {
             case 2:
                 rateByIntent();

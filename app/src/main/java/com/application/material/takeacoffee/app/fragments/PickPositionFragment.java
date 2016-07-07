@@ -84,7 +84,6 @@ public class PickPositionFragment extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-
         locationAutocompletePres = LocationAutocompletePresenter
                 .getInstance(new WeakReference<>(getContext()),
                         new WeakReference<PickLocationInterface>(this),
@@ -92,8 +91,7 @@ public class PickPositionFragment extends Fragment implements
                         locationTextInputLayout,
                         new View[]{pickDescription, errorPickIcon, successPickIcon,
                                 locationPickIcon, locationDoneButton, locationDoneBorderLayout,
-                                pickLocationProgress, findPositionButton, locationSelectedTextview,
-                                pickView});
+                                pickLocationProgress, findPositionButton, locationSelectedTextview});
         geocoder = GeocoderManager
                 .getInstance(new WeakReference<OnHandleGeocoderResult>(this),
                         new WeakReference<>(getContext()));
@@ -143,6 +141,7 @@ public class PickPositionFragment extends Fragment implements
                 onActionDone();
                 break;
             case R.id.findPositionButtonId:
+                locationAutocompletePres.updatePositionNotSelected();
                 locationAutocompletePres.updateUIOnFindPosition();
                 break;
         }
@@ -172,7 +171,7 @@ public class PickPositionFragment extends Fragment implements
      * on action done
      */
     private void saveLocationOnStorage(LatLng latLng) {
-        Log.e("PICK", "start activity location ->" + Utils.getLatLngString(latLng));
+//        Log.e("PICK", "start activity location ->" + Utils.getLatLngString(latLng));
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(new WeakReference<>(getContext()));
         sharedPref.setValueByKey(SharedPrefManager.LATLNG_SHAREDPREF_KEY,
                         Utils.getLatLngString(latLng));

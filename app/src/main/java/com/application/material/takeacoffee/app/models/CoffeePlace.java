@@ -182,7 +182,7 @@ public class CoffeePlace implements Serializable {
          * @param location
          */
         public Geometry(Location location) {
-            Log.e("TAG", location.toString());
+//            Log.e("TAG", location.toString());
             this.location = location;
         }
 

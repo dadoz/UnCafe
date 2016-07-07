@@ -65,8 +65,8 @@ public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher, A
      */
     public void onCitiesRetrieveSuccess(Object list, PlaceApiManager.RequestType type) {
         ArrayList<City> parsedList = (ArrayList<City>) list;
-        Log.e("TAG", "tag - " + parsedList.get(0).getDescription() + parsedList.get(0).getTypes().toString());
-        Log.e("TAG", "size - " + parsedList.size());
+//        Log.e("TAG", "tag - " + parsedList.get(0).getDescription() + parsedList.get(0).getTypes().toString());
+//        Log.e("TAG", "size - " + parsedList.size());
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(contextWeakRefer.get(),
                 android.R.layout.simple_list_item_1, City.getArrayFromList(parsedList)));
         if (!autoCompleteTextView.isPopupShowing() &&
@@ -95,7 +95,7 @@ public class ChangeLocationAutocompleteFilterPresenter implements TextWatcher, A
 
     @Override
     public void afterTextChanged(Editable s) {
-        Log.e("TAG CHANGE", s.toString());
+//        Log.e("TAG CHANGE", s.toString());
         dropdownForceToBeShown = s.length() == 2;
         if (s.length() > 1) {
             setAutocompleteLocationAdapterAsync(s.toString());

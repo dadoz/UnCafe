@@ -1,6 +1,8 @@
 package com.application.material.takeacoffee.app;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 
 import com.application.material.takeacoffee.app.fragments.PickPositionFragment;
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
+import com.flurry.android.FlurryAgent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

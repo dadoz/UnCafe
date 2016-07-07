@@ -104,12 +104,12 @@ public class PlaceApiManager {
 
                     @Override
                     public void onCompleted() {
-                        Log.e("TAG", "completed observable");
+//                        Log.e("TAG", "completed observable");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("BLA", "error" + e.getMessage());
+//                        Log.e("BLA", "error" + e.getMessage());
                         if (listener.get() != null) {
                             listener.get().onPlaceApiError(requestType);
                         }
