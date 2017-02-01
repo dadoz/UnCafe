@@ -2,6 +2,7 @@ package com.application.material.takeacoffee.app.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -10,14 +11,19 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.material.takeacoffee.app.PlacesActivity;
 import com.application.material.takeacoffee.app.R;
@@ -34,6 +40,10 @@ import java.lang.ref.WeakReference;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.rx.ObservableFactory;
+import rx.Observable;
+import rx.functions.Action1;
 
 public class PickPositionFragment extends Fragment implements
         View.OnClickListener, PickLocationInterface, OnHandleGeocoderResult,
@@ -45,8 +55,6 @@ public class PickPositionFragment extends Fragment implements
     TextInputLayout locationTextInputLayout;
     @Bind(R.id.locationDoneButtonId)
     View locationDoneButton;
-    @Bind(R.id.locationDoneBorderLayoutId)
-    View locationDoneBorderLayout;
     @Bind(R.id.findPositionButtonId)
     View findPositionButton;
     @Bind(R.id.pickLocationProgressId)
@@ -90,8 +98,19 @@ public class PickPositionFragment extends Fragment implements
                         locationAutocompleteTextView,
                         locationTextInputLayout,
                         new View[]{pickDescription, errorPickIcon, successPickIcon,
-                                locationPickIcon, locationDoneButton, locationDoneBorderLayout,
+                                locationPickIcon, locationDoneButton, null,
                                 pickLocationProgress, findPositionButton, locationSelectedTextview});
+
+        Observable<Location> locationObservable = ObservableFactory.from(SmartLocation.with(getContext()).location());
+        locationObservable.subscribe(new Action1<Location>() {
+            @Override
+            public void call(Location location) {
+                // Do your stuff here :)
+                saveLocationOnStorage(new LatLng(location.getLatitude(), location.getLongitude()));
+
+            }
+        });
+
         geocoder = GeocoderManager
                 .getInstance(new WeakReference<OnHandleGeocoderResult>(this),
                         new WeakReference<>(getContext()));

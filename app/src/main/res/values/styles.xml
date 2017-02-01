@@ -5,18 +5,21 @@
         <item name="colorPrimary">@color/material_brown800</item>
         <item name="colorAccent">@color/material_brown700</item>
         <item name="android:itemBackground">@color/material_brown700</item>
-
+        <item name="android:textColorHighlight">@color/material_brown900</item>
     </style>
+
     <style name="ReviewToolbarTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:textColorSecondary">@color/material_grey800</item>
         <item name="android:colorBackground">@color/material_grey200</item>
         <item name="android:textColor">@color/material_brown800</item>
     </style>
+
     <style name="EditTextTheme" parent="TextAppearance.Design.Hint">
         <item name="colorControlNormal">@color/material_brown400</item>
         <item name="colorControlActivated">@color/material_brown400</item>
         <item name="colorControlHighlight">@color/material_brown400</item>
     </style>
+
     <style name="TextLabel" parent="TextAppearance.Design.Hint">
         <item name="android:textSize">20sp</item>
         <!--<item name="android:textColor">@color/material_grey50</item>-->
@@ -30,6 +33,7 @@
         <!-- Used for the background -->
         <!--<item name="android:background">#4CAF50</item>-->
     </style>
+
     <style name="CustomButtonColored" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/material_grey50</item>
     </style>

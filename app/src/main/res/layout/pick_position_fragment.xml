@@ -45,7 +45,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="@dimen/huge_padding"
-        android:src="@drawable/ic_place_white_48dp"/>
+        android:src="@mipmap/ic_launcher"/>
 
 
     <TextView
@@ -60,6 +60,7 @@
         android:text="@string/city"/>
     <android.support.design.widget.TextInputLayout
         android:id="@+id/locationTextInputLayoutId"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -100,27 +101,19 @@
         android:textColor="@color/material_grey200"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <TextView
+
+    <Button
         android:visibility="gone"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:id="@+id/locationDoneButtonId"
+        android:layout_below="@id/locationTextInputLayoutId"
+        style="@style/CustomButtonColored"
         android:textSize="@dimen/text_big_18"
-        android:padding="@dimen/medium_padding"
         android:clickable="true"
-        android:background="?attr/selectableItemBackground"
         android:textColor="@color/material_grey200"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/done"/>
-    <View
-        android:visibility="gone"
-        android:id="@+id/locationDoneBorderLayoutId"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/locationDoneButtonId"
-        android:background="@color/material_brown600"/>
 
     <ProgressBar
         android:visibility="gone"

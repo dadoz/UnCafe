@@ -7,7 +7,7 @@
 
     <string name="contact_email">tunnusandroid.dev@gmail.com</string>
 
-    <string name="app_name">Un Café</string>
+    <string name="app_name">Cafe Finder Light</string>
     <string name="action_settings">Settings</string>
     <string name="HTTP_generic_error">Hey! Smthing has gone wrong! Check your connection and try again!</string>
     <string name="generic_error">Hey! Smthing has gone wrong! Restart your application.</string>
@@ -43,7 +43,7 @@
     <string name="sending_email">Sending mail&#8230;&#8230;&#8230;</string>
 
     <!--PICK POSITION-->
-    <string name="pick_a_city_description">Pick a city&#8230;&#8230;&#8230; \non BETA version!</string>
+    <string name="pick_a_city_description">Pick a city!</string>
     <string name="city">city&#8230;&#8230;&#8230;</string>
     <string name="find">find</string>
     <string name="done">DONE</string>

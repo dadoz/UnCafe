@@ -27,9 +27,6 @@ import com.application.material.takeacoffee.app.utils.Utils;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-/**
- * Created by davide on 02/05/16.
- */
 public class LocationAutocompletePresenter implements AdapterView.OnItemClickListener,
         TextWatcher, PlaceApiManager.OnHandlePlaceApiResult {
     private static AutoCompleteTextView autoCompleteTextView;
@@ -46,7 +43,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
     private static View findPositionButton;
     private static View locationSelectedTextview;
     private static final long MIN_DELAY = 500;
-    private static View locationDoneBorderLayout;
     private static PlaceApiManager placeApiManager;
     private boolean dropdownForceToBeShown;
     private static final int MIN_DEFAULT_HEIGHT = 2000; //TODO patch
@@ -77,7 +73,7 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
         successPickIcon = viewArray[2];
         locationPickIcon = viewArray[3];
         locationDoneButton = viewArray[4];
-        locationDoneBorderLayout = viewArray[5];
+//        locationDoneBorderLayout = viewArray[5];
         pickLocationProgress = viewArray[6];
         findPositionButton = viewArray[7];
         locationSelectedTextview = viewArray[8];
@@ -291,7 +287,6 @@ public class LocationAutocompletePresenter implements AdapterView.OnItemClickLis
      */
     public void setDoneButtonVisible(boolean visible) {
         locationDoneButton.setVisibility(visible ? View.VISIBLE : View.GONE);
-        locationDoneBorderLayout.setVisibility(visible? View.VISIBLE : View.GONE);
     }
 
     /**

@@ -17,8 +17,6 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class PickPositionActivity extends AppCompatActivity {
-    @Bind(R.id.coffeeToolbarId)
-    public Toolbar toolbar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -28,23 +26,8 @@ public class PickPositionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coffee_places);
-        ButterKnife.bind(this);
-
-        initActionBar();
+        setContentView(R.layout.activity_coffee_places_no_toolbar_layout);
         initView();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * init action bar
-     */
-    private void initActionBar() {
-        setSupportActionBar(toolbar);
     }
 
     /**
