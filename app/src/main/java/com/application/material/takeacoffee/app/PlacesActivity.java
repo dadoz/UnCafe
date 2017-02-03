@@ -9,8 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import icepick.Icepick;
 import icepick.State;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -24,8 +25,9 @@ public class PlacesActivity extends AppCompatActivity {
     @State
     public String currentFragmentTag = PlacesFragment.COFFEE_MACHINE_FRAG_TAG;
 
-    @Bind(R.id.coffeeToolbarId)
+    @BindView(R.id.toolbarId)
     public Toolbar toolbar;
+    private Unbinder unbinder;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -37,12 +39,17 @@ public class PlacesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_coffee_places);
-        ButterKnife.bind(this);
-
+        unbinder = ButterKnife.bind(this);
         FlurryAgent.onStartSession(this);
 
         permissionManager = PermissionManager.getInstance();
         initView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     /**
@@ -57,11 +64,7 @@ public class PlacesActivity extends AppCompatActivity {
      */
     private void initView() {
         initActionBar();
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.coffeeAppFragmentContainerId, getSuitableFragment(), currentFragmentTag)
-                .commit();
+        injectFrag();
     }
 
     @Override
@@ -85,9 +88,9 @@ public class PlacesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PermissionManager.ACTION_LOCATION_SOURCE_SETTINGS) {
             //TODO handle ok or no from dialog
-//            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 permissionManager.onEnablePositionResult();
-//            }
+            }
         }
     }
 
@@ -95,6 +98,18 @@ public class PlacesActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        this.currentFragmentTag = PlacesFragment.COFFEE_MACHINE_FRAG_TAG;
+        Fragment frag;
+        if ((frag = getSupportFragmentManager().findFragmentByTag(currentFragmentTag)) != null &&
+                ((OnHandleFilterBackPressedInterface) frag).handleFilterBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     /**
@@ -107,23 +122,22 @@ public class PlacesActivity extends AppCompatActivity {
 
     /**
      *
+     */
+    private void injectFrag() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.coffeeAppFragmentContainerId, getSuitableFragment(), currentFragmentTag)
+                .commit();
+    }
+
+    /**
+     *
      * @return
      */
     public Fragment getSuitableFragment() {
         Fragment frag;
         return (frag = getSupportFragmentManager().findFragmentByTag(this.currentFragmentTag)) == null ?
                 new PlacesFragment() : frag;
-    }
-
-    @Override
-    public void onBackPressed() {
-        this.currentFragmentTag = PlacesFragment.COFFEE_MACHINE_FRAG_TAG;
-        Fragment frag;
-        if ((frag = getSupportFragmentManager().findFragmentByTag(currentFragmentTag)) != null &&
-                ((OnHandleFilterBackPressedInterface) frag).handleFilterBackPressed()) {
-            return;
-        }
-        super.onBackPressed();
     }
 
     /**

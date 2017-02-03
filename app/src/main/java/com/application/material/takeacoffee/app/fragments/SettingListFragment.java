@@ -17,7 +17,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.PlacesActivity;
 import com.application.material.takeacoffee.app.R;
@@ -31,7 +31,7 @@ import java.util.List;
 public class SettingListFragment extends Fragment
         implements AdapterView.OnItemClickListener {
     public static final String SETTING_LIST_FRAG_TAG = "SETTING_LIST_FRAG_TAG";
-    @Bind(R.id.settingsContainerListViewId)
+    @BindView(R.id.settingsContainerListViewId)
     ListView listView;
 
     @Override

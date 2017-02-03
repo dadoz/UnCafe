@@ -7,8 +7,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import com.application.material.takeacoffee.app.models.CoffeePlace;
 import com.application.material.takeacoffee.app.singletons.PlaceApiManager;
 import com.application.material.takeacoffee.app.utils.SharedPrefManager;
@@ -23,13 +21,17 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.application.material.takeacoffee.app.models.CoffeePlace.BAR_PLACE_TYPE;
 import static com.application.material.takeacoffee.app.models.CoffeePlace.PLACE_RANKBY;
 
 public class MapActivity extends AppCompatActivity implements
         OnMapReadyCallback, PlaceApiManager.OnHandlePlaceApiResult, GoogleMap.OnMarkerClickListener {
     private static final float ZOOM_LEVEL = 15;
-    @Bind(R.id.mapToolbarId)
+    @BindView(R.id.mapToolbarId)
     public Toolbar toolbar;
     private PlaceApiManager placesApiManager;
     private GoogleMap map;

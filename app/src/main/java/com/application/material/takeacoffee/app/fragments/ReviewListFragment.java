@@ -21,7 +21,7 @@ import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.*;
 import rx.Observable;
@@ -66,13 +66,13 @@ public class ReviewListFragment extends Fragment implements AdapterView.OnItemLo
     private PlaceApiManager placesApiManager;
     private String photoReference;
 
-    @Bind(R.id.reviewRecyclerViewId)
+    @BindView(R.id.reviewRecyclerViewId)
     RecyclerView reviewRecyclerView;
-    @Bind(R.id.swipeRefreshLayoutId)
+    @BindView(R.id.swipeRefreshLayoutId)
     SwipeRefreshLayout swipeRefreshLayout;
-    @Bind(R.id.coffeePlacesProgressId)
+    @BindView(R.id.coffeePlacesProgressId)
     ProgressBar reviewProgress;
-    @Bind(R.id.coffeePlacesEmptyResultReviewId)
+    @BindView(R.id.coffeePlacesEmptyResultReviewId)
     View coffeePlacesEmptyResultReview;
     private ImageView coffeePlaceImageView;
     private CollapsingToolbarLayout collapsingToolbar;

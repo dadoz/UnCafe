@@ -80,7 +80,8 @@ dependencies {
     compile 'joda-time:joda-time:2.6'
 
     //butterknife
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     //picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -94,6 +95,9 @@ dependencies {
 
     //flurry
     compile 'com.flurry.android:analytics:6.3.1'
+
+    //material search view
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
     compile ('io.nlopez.smartlocation:library:3.2.9') {
         transitive = false

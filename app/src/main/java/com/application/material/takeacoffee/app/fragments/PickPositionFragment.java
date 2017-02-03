@@ -1,5 +1,6 @@
 package com.application.material.takeacoffee.app.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -38,7 +39,7 @@ import com.application.material.takeacoffee.app.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 import java.lang.ref.WeakReference;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.nlopez.smartlocation.SmartLocation;
 import io.nlopez.smartlocation.rx.ObservableFactory;
@@ -49,27 +50,27 @@ public class PickPositionFragment extends Fragment implements
         View.OnClickListener, PickLocationInterface, OnHandleGeocoderResult,
         PermissionManager.OnEnablePositionCallbackInterface {
     private static final String TAG = "PickPositionFragment";
-    @Bind(R.id.locationAutocompleteTextViewId)
+    @BindView(R.id.locationAutocompleteTextViewId)
     AutoCompleteTextView locationAutocompleteTextView;
-    @Bind(R.id.locationTextInputLayoutId)
+    @BindView(R.id.locationTextInputLayoutId)
     TextInputLayout locationTextInputLayout;
-    @Bind(R.id.locationDoneButtonId)
+    @BindView(R.id.locationDoneButtonId)
     View locationDoneButton;
-    @Bind(R.id.findPositionButtonId)
+    @BindView(R.id.findPositionButtonId)
     View findPositionButton;
-    @Bind(R.id.pickLocationProgressId)
+    @BindView(R.id.pickLocationProgressId)
     ProgressBar pickLocationProgress;
-    @Bind(R.id.locationSelectedTextviewId)
+    @BindView(R.id.locationSelectedTextviewId)
     View locationSelectedTextview;
-    @Bind(R.id.pickDescriptionId)
+    @BindView(R.id.pickDescriptionId)
     View pickDescription;
-    @Bind(R.id.successPickIconId)
+    @BindView(R.id.successPickIconId)
     View successPickIcon;
-    @Bind(R.id.errorPickIconId)
+    @BindView(R.id.errorPickIconId)
     View errorPickIcon;
-    @Bind(R.id.pickIconId)
+    @BindView(R.id.pickIconId)
     View locationPickIcon;
-    @Bind(R.id.pickViewId)
+    @BindView(R.id.pickViewId)
     View pickView;
     private LocationAutocompletePresenter locationAutocompletePres;
     private String selectedLocationName;
@@ -173,7 +174,7 @@ public class PickPositionFragment extends Fragment implements
     private void checkPositionPermissionAndTriggerAction(LocationActionTypeEnum actionType) {
         this.locationActionType = actionType;
         PermissionManager.getInstance()
-                .checkLocationServiceIsEnabled(new WeakReference<>((AppCompatActivity) getActivity()),
+                .checkLocationServiceIsEnabled(new WeakReference<Activity>(getActivity()),
                 new WeakReference<PermissionManager.OnEnablePositionCallbackInterface>(this));
     }
 

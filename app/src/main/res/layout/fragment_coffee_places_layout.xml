@@ -31,22 +31,8 @@
     <include layout="@layout/no_result_layout" />
 
     <!--filter layout-->
-    <FrameLayout
-        android:id="@+id/coffeePlaceFilterBackgroundFrameLayoutId"
-        android:visibility="gone"
+    <com.application.material.takeacoffee.app.views.PlaceFilterView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/material_brown800">
-        <ProgressBar
-            android:visibility="gone"
-            android:id="@+id/coffeePlaceFilterBackgroundProgressbarId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            style="@style/Base.Widget.AppCompat.ProgressBar"
-            android:indeterminateTint="@color/material_grey50"
-            android:indeterminateTintMode="src_in"/>
+        android:layout_height="wrap_content" />
 
-    </FrameLayout>
-    <include layout="@layout/coffee_place_filter_template"/>
 </RelativeLayout>

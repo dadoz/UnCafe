@@ -12,8 +12,6 @@ import com.application.material.takeacoffee.app.fragments.PickPositionFragment;
 import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
 import com.flurry.android.FlurryAgent;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class PickPositionActivity extends AppCompatActivity {

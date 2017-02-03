@@ -27,12 +27,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         initView();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-
     /**
      *
      */
@@ -40,12 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isLocationSet()) {
-                    startPlaceActivity();
-                    return;
-                }
-
-                startPickPositionActivity();
+                startPlaceActivity();
             }
         }, 1500);
     }
@@ -66,14 +55,5 @@ public class SplashScreenActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), PlacesActivity.class));
         finish();
     }
-
-    /**
-     *
-     */
-    private void startPickPositionActivity() {
-        startActivity(new Intent(getApplicationContext(), PickPositionActivity.class));
-        finish();
-    }
-
 
 }

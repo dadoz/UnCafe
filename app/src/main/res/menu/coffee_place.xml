@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PlacesActivity" >
     <item
+        android:id="@+id/action_search"
+        android:title="@android:string/search_go"
+        android:icon="@drawable/ic_action_action_search"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+    <item
         android:visible="false"
         android:id="@+id/action_position"
         android:title="@string/map_menu"

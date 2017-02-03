@@ -27,7 +27,7 @@ public class PermissionManager {
     private static final int PERMISSIONS_TO_REQUEST_FINE_LOCATION = 0;
     public static final int ACTION_LOCATION_SOURCE_SETTINGS = 1;
     private static PermissionManager instance;
-    private OnHandleGrantPermissionCallbackInterface listener;
+    private WeakReference<OnHandleGrantPermissionCallbackInterface> listener;
     private WeakReference<OnEnablePositionCallbackInterface> locationListener;
 
     public static PermissionManager getInstance() {
@@ -48,7 +48,8 @@ public class PermissionManager {
             case PERMISSIONS_TO_REQUEST_FINE_LOCATION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    listener.onHandleGrantPermissionCallback();
+                    if (listener.get() != null)
+                        listener.get().onHandleGrantPermissionCallback();
                 }
             }
         }
@@ -59,8 +60,8 @@ public class PermissionManager {
      *
      * @param listener
      */
-    public void onRequestPermissions(WeakReference<AppCompatActivity> activityWeakRef,
-            OnHandleGrantPermissionCallbackInterface listener) {
+    public void onRequestPermissions(WeakReference<Activity> activityWeakRef,
+            WeakReference<OnHandleGrantPermissionCallbackInterface> listener) {
         this.listener = listener;
         if (ContextCompat.checkSelfPermission(activityWeakRef.get(),
                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -71,13 +72,14 @@ public class PermissionManager {
             return;
         }
 
-        listener.onHandleGrantPermissionCallback();
+        if (listener.get() != null)
+            listener.get().onHandleGrantPermissionCallback();
     }
     /**
      *
      * @param activityWeakRef
      */
-    public void checkLocationServiceIsEnabled(WeakReference<AppCompatActivity> activityWeakRef,
+    public void checkLocationServiceIsEnabled(WeakReference<Activity> activityWeakRef,
                                               WeakReference<OnEnablePositionCallbackInterface> locationListener) {
         this.locationListener = locationListener;
         final LocationManager manager = (LocationManager) activityWeakRef.get()
@@ -95,7 +97,7 @@ public class PermissionManager {
      *
      * @param activityWeakRef
      */
-    private void buildAlertMessageNoGps(final WeakReference<AppCompatActivity> activityWeakRef) {
+    private void buildAlertMessageNoGps(final WeakReference<Activity> activityWeakRef) {
         final AlertDialog alert = new AlertDialog.Builder(activityWeakRef.get(),
                    R.style.CustomAlertDialogStyle)
                 .setMessage("Your GPS is not activated,\n do you want to enable it?")
@@ -119,7 +121,7 @@ public class PermissionManager {
      *
      * @param activityWeakRef
      */
-    public void enablePosition(final WeakReference<AppCompatActivity> activityWeakRef) {
+    public void enablePosition(final WeakReference<Activity> activityWeakRef) {
         activityWeakRef.get()
                 .startActivityForResult(new Intent(android.provider.Settings
                         .ACTION_LOCATION_SOURCE_SETTINGS), ACTION_LOCATION_SOURCE_SETTINGS);
@@ -131,13 +133,15 @@ public class PermissionManager {
      * @param networkListener
      */
     public void checkNetworkServiceIsEnabled(WeakReference<Context> activityWeakRef,
-                                             OnEnableNetworkCallbackInterface networkListener) {
+                                             WeakReference<OnEnableNetworkCallbackInterface> networkListener) {
         if (((CoffeePlacesApplication) activityWeakRef.get().getApplicationContext()).isCacheValid() ||
                 ConnectivityUtils.isConnected(activityWeakRef)) {
-            networkListener.onEnableNetworkCallback();
+            if (networkListener.get() != null)
+                networkListener.get().onEnableNetworkCallback();
             return;
         }
-        networkListener.onEnableNetworkErrorCallback();
+        if (networkListener.get() != null)
+            networkListener.get().onEnableNetworkErrorCallback();
     }
 
     /**

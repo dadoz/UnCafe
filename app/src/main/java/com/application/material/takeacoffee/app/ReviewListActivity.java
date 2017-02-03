@@ -12,12 +12,12 @@ import com.application.material.takeacoffee.app.fragments.ReviewListFragment;
 import java.lang.ref.WeakReference;
 import java.util.Dictionary;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ReviewListActivity extends AppCompatActivity {
-    @Bind(R.id.reviewsToolbarId)
+    @BindView(R.id.reviewsToolbarId)
     public Toolbar toolbar;
     private WeakReference<OnHandleBackPressedInterface> listener;
 
